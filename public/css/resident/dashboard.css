@@ -1,0 +1,98 @@
+/* dashboard.css */
+
+/* General styling for the dashboard page */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    display: flex;
+    
+}
+
+main {
+    width: 100%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    color: #4d4d4d;
+}
+
+h1, h2 {
+    color: #800080;
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+/* Profile Form Styles */
+.profile-form {
+    background-color: #f0eaff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e6d7f8;
+    margin-bottom: 30px;
+}
+
+.profile-form h2 {
+    margin-bottom: 20px;
+}
+
+.profile-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #800080;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.profile-form button {
+    padding: 10px 20px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-form button:hover {
+    background-color: #800080;
+}
+
+.profile-form .btn-delete {
+    background-color: #e53935;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-form .btn-delete:hover {
+    background-color: #c62828;
+}
+
+/* Ensure consistent spacing and alignment */
+.profile-form-container {
+    display: flex;
+    flex-direction: column;
+}
