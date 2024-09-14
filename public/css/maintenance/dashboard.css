@@ -9,6 +9,7 @@ main {
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
+  margin-left: 260px; /* Adjust based on sidebar width */
 }
 
 h1, h2 {
@@ -16,19 +17,18 @@ h1, h2 {
   margin-bottom: 20px;
 }
 
-.security-actions .form-group {
+.maintenance-actions .form-group {
   margin-bottom: 20px;
 }
 
-.security-actions label {
+.maintenance-actions label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-.security-actions input,
-.security-actions select,
-.security-actions textarea {
+.maintenance-actions input,
+.maintenance-actions textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -41,15 +41,8 @@ textarea {
   height: 150px;
 }
 
-.profile-buttons,
-.security-actions button {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.btn-update, .btn-verify, .btn-log {
-  background-color: #28a745;
+.maintenance-actions button {
+  background-color: #007bff;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -57,14 +50,6 @@ textarea {
   cursor: pointer;
 }
 
-.btn-delete {
-  background-color: #dc3545;
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 4px;
-}
-
-button:hover {
+.maintenance-actions button:hover {
   opacity: 0.8;
 }

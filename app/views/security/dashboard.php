@@ -1,33 +1,76 @@
-<!-- app/views/security/dashboard.php -->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Dashboard</title>
-    <link rel="stylesheet" href="../../public/css/security/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
+    <title>Security Dashboard | <?php echo SITENAME; ?></title>
 </head>
+
 <body>
-    <header>
-        <h1>Security Dashboard</h1>
-    </header>
+    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <section class="dashboard-content">
-        <div class="status-panel">
-            <h2>Status Overview</h2>
-            <p>All systems operational.</p>
-        </div>
+    <div class="dashboard-container">
+        <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
-        <div class="resident-info">
-            <h2>Residents Activity</h2>
-            <p>View and manage residents' activity logs here.</p>
-        </div>
+        <main>
+            <h1>Security Management</h1>
+            <p>Manage security operations including visitor passes, schedules, and incident reports.</p>
 
-        <div class="reports">
-            <h2>Security Reports</h2>
-            <p>Generate and view security reports.</p>
-        </div>
-    </section>
+            <section class="security-actions">
+                <!-- View Visitor Passes -->
+                <h2>View Visitor Passes</h2>
+                <div class="form-group">
+                    <label for="visitor_passes">Visitor Passes:</label>
+                    <textarea id="visitor_passes" name="visitor_passes" readonly>Passes will be displayed here...</textarea>
+                </div>
+
+                <!-- Verify Visitor Details -->
+                <h2>Verify Visitor Details</h2>
+                <form action="<?php echo URLROOT; ?>/security/verifyVisitor" method="POST">
+                    <div class="form-group">
+                        <label for="visitor_id">Visitor ID:</label>
+                        <input type="text" id="visitor_id" name="visitor_id" required>
+                    </div>
+                    <button type="submit" class="btn-verify">Verify Visitor</button>
+                </form>
+
+                <!-- Login Visitor Times -->
+                <h2>Log Visitor Times</h2>
+                <form action="<?php echo URLROOT; ?>/security/logVisitorTime" method="POST">
+                    <div class="form-group">
+                        <label for="visitor_id_time">Visitor ID:</label>
+                        <input type="text" id="visitor_id_time" name="visitor_id_time" required>
+                    </div>
+                    <button type="submit" class="btn-log">Log Time</button>
+                </form>
+
+                <!-- Update Duty Schedule -->
+                <h2>Update Duty Schedule</h2>
+                <form action="<?php echo URLROOT; ?>/security/updateDutySchedule" method="POST">
+                    <div class="form-group">
+                        <label for="duty_schedule">Duty Schedule:</label>
+                        <textarea id="duty_schedule" name="duty_schedule">Enter updated schedule...</textarea>
+                    </div>
+                    <button type="submit" class="btn-update">Update Schedule</button>
+                </form>
+
+                <!-- Manage User Incident Reports -->
+                <h2>Manage User Incident Reports</h2>
+                <form action="<?php echo URLROOT; ?>/security/manageIncidents" method="POST">
+                    <div class="form-group">
+                        <label for="incident_reports">Incident Reports:</label>
+                        <textarea id="incident_reports" name="incident_reports" readonly>Incident reports will be displayed here...</textarea>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
+
 </html>
