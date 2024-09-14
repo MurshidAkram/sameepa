@@ -1,36 +1,33 @@
-<!-- app/views/security/dashboard.php  malith -->
+<!-- app/views/security/dashboard.php -->
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <title>Security Dashboard | <?php echo SITENAME; ?></title>
+    <title>Security Dashboard</title>
+    <link rel="stylesheet" href="../../public/css/security/dashboard.css">
 </head>
-
 <body>
-    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+    <header>
+        <h1>Security Dashboard</h1>
+    </header>
 
-    <div class="dashboard-container">
-        <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
+    <section class="dashboard-content">
+        <div class="status-panel">
+            <h2>Status Overview</h2>
+            <p>All systems operational.</p>
+        </div>
 
-        <main>
-            <h1>Security Guard Dashboard</h1>
-            <section class="dashboard-content">
-                <h2>Welcome, Security Guard</h2>
-                <p>Manage visitor passes, monitor suspicious activities, and update duty schedules.</p>
+        <div class="resident-info">
+            <h2>Residents Activity</h2>
+            <p>View and manage residents' activity logs here.</p>
+        </div>
 
-                <div class="dashboard-links">
-
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+        <div class="reports">
+            <h2>Security Reports</h2>
+            <p>Generate and view security reports.</p>
+        </div>
+    </section>
 </body>
-
 </html>

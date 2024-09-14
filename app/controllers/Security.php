@@ -1,13 +1,16 @@
 <?php
+// app/controllers/Security.php
 
-class Security extends Controller
-{
-    public function dashboard()
-    {
-        $this->view('security/dashboard');
+class Security {
+
+    // Constructor
+    public function __construct() {
+        // Load any required models, libraries, etc.
     }
 
-    // Add other methods specific to security guards
-
-
+    // Method to load the dashboard view
+    public function dashboard() {
+        // Assuming a view loader method exists
+        include_once '../app/views/security/dashboard.php';
+    }
 }
