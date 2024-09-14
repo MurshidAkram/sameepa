@@ -25,9 +25,11 @@
             <p>Welcome to the Events Management page. Here, you can add, view, or remove community events.</p>
 
             <section class="events-overview">
-                <h2>Upcoming Events</h2>
-                <p>Below is a list of your upcoming events. You can delete the events you’ve created or view details for the ones you’ve joined.</p>
-
+                <!-- <h2>Upcoming Events</h2> -->
+                <div class="header-container">
+                    <h2>Upcoming Events</h2>
+                    <a href="#" class="btn btn-create">Create New Events</a>
+                </div>
                 <table class="events-table">
                     <thead>
                         <tr>
@@ -67,12 +69,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </section>
-
-            <section class="create-event">
-                <h2>Create a New Event</h2>
-                <p>Want to organize an event for your fellow residents? Fill in the details and create an event to bring the community together!</p>
-                <a href="<?php echo URLROOT; ?>/resident/create_event" class="btn-create">Create Event</a>
             </section>
         </main>
     </div>

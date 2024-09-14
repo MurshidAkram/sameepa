@@ -25,4 +25,16 @@ class Admin extends Controller
         // Load admin dashboard view
         $this->view('admin/announcements');
     }
+
+    public function payments()
+    {
+        // Load admin dashboard view
+        $this->view('admin/payments');
+    }
+
+    public function complaints()
+    {
+        // Load admin dashboard view
+        $this->view('admin/complaints');
+    }
 }

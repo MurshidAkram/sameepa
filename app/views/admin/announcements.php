@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin/announcements.css">
-    <title>Manage Announcements | <?php echo SITENAME; ?></title>
+    <title>Announcements | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
@@ -18,8 +18,11 @@
         <?php require APPROOT . '/views/inc/components/side_panel_admin.php'; ?>
           <main>
               <div class="header-container">
-                  <h1>Manage Announcements</h1>
-                  <a href="#" class="btn btn-history">View Announcements History</a>
+                    <h1>Announcements</h1>
+                    <div class="button-container">
+                        <a href="#" class="btn-create">Create New Announcements</a>
+                        <a href="#" class="btn-history">View Announcements History</a>
+                    </div>
               </div>
               <table class="announcements-table">
                     <tr>
@@ -54,13 +57,6 @@
                     </tr>
                 </tbody>
             </table>
-
-            <section class="create-announcement">
-                <h2>Create a New Announcement</h2>
-                <p>Want to notify a annoouncement ? </p>
-                <a href="<?php echo URLROOT; ?>/resident/create_event" class="btn-create">Create Event</a>
-            </section>
-
         </main>
     </div>
 

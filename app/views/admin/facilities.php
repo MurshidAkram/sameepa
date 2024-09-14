@@ -25,7 +25,10 @@
             <h1>Manage Facilities</h1>
             <p>Welcome to the Facilities Management page. Here, you can add, edit, or remove community facilities.</p>
               <section class="facility-bookings-overview">
-                  <h2>Existing Facilities</h2>
+                <div class="header-container">
+                    <h1>Existing Facilities</h1>
+                    <a href="#" class="btn btn-create">Create New Facility</a>
+                </div>
                   <table class="facility-bookings-table">
                       <thead>
                           <tr>
@@ -69,14 +72,17 @@
                       </tbody>
                   </table>
               </section>
-              <section class="create-facility-booking">
-                <h2>Create a New Facility</h2>
-                <p>Need to add a new facility for your community? Select the details of the newest facility in your community and let the residents use it.</p>
-                <a href="<?php echo URLROOT; ?>/resident/create_facility_booking" class="btn-create">Book Facility</a>
-            </section>
 
             <section class="facility-booking-requests">
-                <h2>Facility Booking Requests</h2>
+                <!-- <h2>Facility Booking Requests</h2> -->
+                <div class="header-container">
+                    <h1>Manage Facilities</h1>
+                    <div class="button-container">
+                        <a href="#" class="btn-create">Create New Booking</a>
+                        <a href="#" class="btn-history">View Booking History</a>
+                    </div>
+                </div>
+
                 <table class="facility-bookings-table">
                     <thead>
                         <tr>
@@ -134,11 +140,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </section>
-            <section class="create-facility-booking">
-                <h2>Create a New Facility</h2>
-                <p>Need to add a new facility for your community? Select the details of the newest facility in your community and let the residents use it.</p>
-                <a href="<?php echo URLROOT; ?>/resident/create_facility_booking" class="btn-create">Book Facility</a>
             </section>
         </main>
     </div>
