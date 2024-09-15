@@ -1,0 +1,52 @@
+aside ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+aside ul li {
+    margin-bottom: 15px;
+}
+
+aside ul li a {
+    display: block;
+    padding: 10px;
+    color: #800080;
+    text-decoration: none;
+    border-radius: 5px;
+    position: relative; /* Needed for ::after positioning */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect */
+aside ul li a:hover {
+    background-color: #800080;
+    color: white;
+}
+
+/* After-click (focus) effect */
+aside ul li a:focus,
+aside ul li a:focus::after {
+    background-color: #800080;
+    color: white;
+    outline: none;
+}
+
+/* Adding ::after visual indicator */
+aside ul li a:focus::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background-color: #800080; /* Highlight color */
+    border-radius: 5px 0 0 5px;
+}
+
+/* Ensure the side panel doesn't overlap with the main content */
+.dashboard-container {
+    margin-left: 100px; /* Adjust margin to match the side panel width */
+}
+
+
