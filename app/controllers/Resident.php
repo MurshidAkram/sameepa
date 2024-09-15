@@ -8,6 +8,12 @@ class Resident extends Controller
         $this->view('resident/dashboard');
     }
 
+    public function announcements()
+    {
+        // Load resident dashboard view
+        $this->view('resident/announcements');
+    }
+
     public function events()
     {
         // Load resident dashboard view
@@ -22,5 +28,10 @@ class Resident extends Controller
     public function facilities()
     {
         $this->view('resident/facilities');
+    }
+
+    public function groups()
+    {
+        $this->view('resident/groups');
     }
 }
