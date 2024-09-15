@@ -10,8 +10,6 @@ body {
     display: flex;
 }
 
-
-
 .payments-dashboard {
     flex: 1;
     padding: 20px;
@@ -75,6 +73,7 @@ p {
     padding: 15px;
     width: 22%;
     text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .summary-card h3 {

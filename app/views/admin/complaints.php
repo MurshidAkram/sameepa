@@ -59,19 +59,13 @@
                         </div>                    
                     </div>   
                     <div class="chart-container">
-                      <h2>Complaint Status</h2>
+                      <h2>Complaints Status</h2>
                       <div class="pie-chart-container">
                           <canvas id="complaintsChart"></canvas>
                       </div>
                     </div>
                     
-              </div>
-
-              <div class="bar-chart-container">
-                  <canvas id="monthlyComplaintsChart"></canvas>
-              </div>
-
-              
+              </div>              
         </main>
     </div>
 
@@ -98,28 +92,6 @@
                                 return `${context.label}: ${context.raw}`;
                             }
                         }
-                    }
-                }
-            }
-        });
-
-        // Bar Chart
-        const barCtx = document.getElementById('monthlyComplaintsChart').getContext('2d');
-        new Chart(barCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Number of Complaints',
-                    data: [12, 19, 3, 5, 2, 3, 8, 14, 7, 10, 6, 9],
-                    backgroundColor: '#3498db'
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
                     }
                 }
             }

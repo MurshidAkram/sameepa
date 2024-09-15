@@ -37,4 +37,17 @@ class Admin extends Controller
         // Load admin dashboard view
         $this->view('admin/complaints');
     }
+
+    public function forums()
+    {
+        // Load admin dashboard view
+        $this->view('admin/forums');
+    }
+
+
+    public function users()
+    {
+        // Load admin dashboard view
+        $this->view('admin/users');
+    }
 }
