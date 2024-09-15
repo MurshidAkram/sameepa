@@ -1,0 +1,15 @@
+.content-container {
+  padding: 20px;
+}
+
+.duty-schedule table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.duty-schedule th, .duty-schedule td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}

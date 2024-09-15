@@ -23,8 +23,7 @@
             <section class="security-actions">
                 <!-- View Visitor Passes -->
                 <h2>View Visitor Passes</h2>
-                <div class="form-group">
-                    <label for="visitor_passes">Visitor Passes:</label>
+                <div class="card">
                     <textarea id="visitor_passes" name="visitor_passes" readonly>Passes will be displayed here...</textarea>
                 </div>
 
@@ -38,7 +37,7 @@
                     <button type="submit" class="btn-verify">Verify Visitor</button>
                 </form>
 
-                <!-- Login Visitor Times -->
+                <!-- Log Visitor Times -->
                 <h2>Log Visitor Times</h2>
                 <form action="<?php echo URLROOT; ?>/security/logVisitorTime" method="POST">
                     <div class="form-group">
@@ -60,12 +59,9 @@
 
                 <!-- Manage User Incident Reports -->
                 <h2>Manage User Incident Reports</h2>
-                <form action="<?php echo URLROOT; ?>/security/manageIncidents" method="POST">
-                    <div class="form-group">
-                        <label for="incident_reports">Incident Reports:</label>
-                        <textarea id="incident_reports" name="incident_reports" readonly>Incident reports will be displayed here...</textarea>
-                    </div>
-                </form>
+                <div class="card">
+                    <textarea id="incident_reports" name="incident_reports" readonly>Incident reports will be displayed here...</textarea>
+                </div>
             </section>
         </main>
     </div>

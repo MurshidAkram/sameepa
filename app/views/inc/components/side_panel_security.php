@@ -2,9 +2,9 @@
 <aside>
     <ul>
         <li><a href="<?php echo URLROOT; ?>/security/dashboard">Dashboard</a></li>
-        <li><a href="<?php echo URLROOT; ?>/security/visitor_passes">Manage Visitor Passes</a></li>
-        <li><a href="<?php echo URLROOT; ?>/security/suspicious_activities">Suspicious Activities</a></li>
-        <li><a href="<?php echo URLROOT; ?>/security/duty_schedules">Duty Schedules</a></li>
+        <li><a href="<?php echo URLROOT; ?>/security/manageVisitorPasses">Manage Visitor Passes</a></li>
+        <li><a href="<?php echo URLROOT; ?>/security/suspiciousactivities">Suspicious Activities</a></li>
+        <li><a href="<?php echo URLROOT; ?>/security/dutyschedules">Duty Schedules</a></li>
 
     </ul>
 </aside>

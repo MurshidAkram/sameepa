@@ -11,58 +11,116 @@
 </head>
 
 <body>
-    <!-- Include the navbar -->
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
-        <!-- Include the maintenance sidebar -->
         <?php require APPROOT . '/views/inc/components/side_panel_maintenance.php'; ?>
 
         <main>
             <h1>Maintenance Management</h1>
-            <p>Manage maintenance requests, tasks, and schedules.</p>
+            <p>Manage maintenance operations including history, issue reporting, assistance requests, schedules, and status updates.</p>
 
             <section class="maintenance-actions">
-                <!-- View Maintenance Requests -->
-                <h2>View Maintenance Requests</h2>
-                <div class="form-group">
-                    <label for="maintenance_requests">Requests:</label>
-                    <textarea id="maintenance_requests" name="maintenance_requests" readonly>Requests will be displayed here...</textarea>
+                <!-- View Maintenance History -->
+                <h2>View Maintenance History</h2>
+                <div class="card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Maintenance ID</th>
+                                <th>Date</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example dynamic content; replace with actual data -->
+                            <tr>
+                                <td>MH001</td>
+                                <td>2024-09-10</td>
+                                <td>AC unit repair</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>MH002</td>
+                                <td>2024-09-12</td>
+                                <td>Light fixture replacement</td>
+                                <td>In Progress</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
                 </div>
 
-                <!-- Log Maintenance Tasks -->
-                <h2>Log Maintenance Tasks</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/logTask" method="POST">
+                <!-- Report Issues -->
+                <h2>Report Issues</h2>
+                <form action="<?php echo URLROOT; ?>/maintenance/report" method="POST">
                     <div class="form-group">
-                        <label for="task_description">Task Description:</label>
-                        <textarea id="task_description" name="task_description" required></textarea>
+                        <label for="issue-description">Issue Description:</label>
+                        <textarea id="issue-description" name="description" required></textarea>
                     </div>
-                    <button type="submit" class="btn-log">Log Task</button>
+                    <button type="submit" class="btn-report">Report Issue</button>
                 </form>
 
-                <!-- Update Maintenance Schedule -->
-                <h2>Update Maintenance Schedule</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/updateSchedule" method="POST">
+                <!-- Request Assistance -->
+                <h2>Request Assistance</h2>
+                <form action="<?php echo URLROOT; ?>/maintenance/request" method="POST">
                     <div class="form-group">
-                        <label for="maintenance_schedule">Schedule:</label>
-                        <textarea id="maintenance_schedule" name="maintenance_schedule">Enter updated schedule...</textarea>
+                        <label for="request-details">Request Details:</label>
+                        <textarea id="request-details" name="details" required></textarea>
                     </div>
-                    <button type="submit" class="btn-update">Update Schedule</button>
+                    <button type="submit" class="btn-request">Request Assistance</button>
                 </form>
 
-                <!-- Manage Maintenance Reports -->
-                <h2>Manage Maintenance Reports</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/manageReports" method="POST">
+                <!-- View Schedule -->
+                <h2>View Schedule</h2>
+                <div class="card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Task</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example dynamic content; replace with actual data -->
+                            <tr>
+                                <td>2024-09-15</td>
+                                <td>Check fire alarms</td>
+                                <td>Scheduled</td>
+                            </tr>
+                            <tr>
+                                <td>2024-09-16</td>
+                                <td>Inspect elevators</td>
+                                <td>Scheduled</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Update Maintenance Status -->
+                <h2>Update Maintenance Status</h2>
+                <form action="<?php echo URLROOT; ?>/maintenance/update" method="POST">
                     <div class="form-group">
-                        <label for="maintenance_reports">Reports:</label>
-                        <textarea id="maintenance_reports" name="maintenance_reports" readonly>Reports will be displayed here...</textarea>
+                        <label for="maintenance-id">Maintenance ID:</label>
+                        <input type="text" id="maintenance-id" name="maintenance_id" required>
                     </div>
+                    <div class="form-group">
+                        <label for="status">New Status:</label>
+                        <select id="status" name="status" required>
+                            <option value="Completed">Completed</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-update">Update Status</button>
                 </form>
             </section>
         </main>
     </div>
 
-    <!-- Include the footer -->
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
 
