@@ -1,0 +1,106 @@
+/* General Dashboard Styling */
+.dashboard-container {
+    display: flex;
+}
+
+main {
+    width: 100%;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Section Styling */
+.settings-section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section h2 {
+    font-size: 1.75em;
+    margin-bottom: 1rem;
+    color: #800080;
+}
+
+/* Individual Setting Option Styling */
+.setting-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.setting-option label {
+    font-size: 1.1em;
+    color: #555;
+}
+
+.btn-settings {
+    background-color: #800080;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    width:auto;
+}
+
+.btn-settings:hover {
+    background-color: #800080;
+}
+
+.btn-settings:active {
+    background-color: #800080;
+}
+
+/* General styling for modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    overflow: auto;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: slideIn 0.3s;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close:hover {
+    color: #000;
+}
+

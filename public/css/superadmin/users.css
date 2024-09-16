@@ -1,0 +1,76 @@
+/* General styling for the user management section */
+.settings-detail-section {
+    display: none;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.settings-detail-section h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.settings-detail-section .user-management-option {
+    margin-bottom: 20px;
+}
+
+.settings-detail-section .form-group {
+    margin-bottom: 15px;
+}
+
+.settings-detail-section .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.settings-detail-section .form-group input,
+.settings-detail-section .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.settings-detail-section .btn-action {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.settings-detail-section .btn-action:hover {
+    background-color: #45a049;
+}
+
+/* Styling for user list table */
+.user-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.user-list th, .user-list td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.user-list th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.user-list td {
+    background-color: #f9f9f9;
+}
+
+.user-list tr:hover {
+    background-color: #f1f1f1;
+}
+
