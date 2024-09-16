@@ -24,7 +24,32 @@
                 <!-- View Visitor Passes -->
                 <h2>View Visitor Passes</h2>
                 <div class="card">
-                    <textarea id="visitor_passes" name="visitor_passes" readonly>Passes will be displayed here...</textarea>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pass ID</th>
+                                <th>Visitor Name</th>
+                                <th>Date Issued</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example dynamic content; replace with actual data -->
+                            <tr>
+                                <td>VP001</td>
+                                <td>John Doe</td>
+                                <td>2024-09-10</td>
+                                <td>Active</td>
+                            </tr>
+                            <tr>
+                                <td>VP002</td>
+                                <td>Jane Smith</td>
+                                <td>2024-09-12</td>
+                                <td>Expired</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
                 </div>
 
                 <!-- Verify Visitor Details -->
@@ -60,7 +85,32 @@
                 <!-- Manage User Incident Reports -->
                 <h2>Manage User Incident Reports</h2>
                 <div class="card">
-                    <textarea id="incident_reports" name="incident_reports" readonly>Incident reports will be displayed here...</textarea>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Incident ID</th>
+                                <th>Date</th>
+                                <th>Report</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example dynamic content; replace with actual data -->
+                            <tr>
+                                <td>IR001</td>
+                                <td>2024-09-11</td>
+                                <td>Unauthorized entry</td>
+                                <td>Investigating</td>
+                            </tr>
+                            <tr>
+                                <td>IR002</td>
+                                <td>2024-09-13</td>
+                                <td>Property damage</td>
+                                <td>Resolved</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </main>

@@ -1,5 +1,5 @@
 <!-- side_panel_maintenance.php -->
-<aside class="side-panel">
+<aside>
     <h2>Maintenance Menu</h2>
     <ul>
         <li><a href="<?php echo URLROOT; ?>/maintenance/dashboard">Dashboard</a></li>
