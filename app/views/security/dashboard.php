@@ -18,100 +18,52 @@
 
         <main>
             <h1>Security Management</h1>
-            <p>Manage security operations including visitor passes, schedules, and incident reports.</p>
+            <p>Manage security operations including visitor passes, incident reports, duty schedules, and visitor log times.</p>
+
+            <!-- Dashboard Widgets -->
+            <section class="dashboard-widgets">
+                <div class="widget">
+                    <h2>Visitor Pass Count</h2>
+                    <div class="widget-content">
+                        <p>Today: <span id="visitor-pass-today">10</span></p>
+                        <p>This Week: <span id="visitor-pass-week">50</span></p>
+                        <p>This Month: <span id="visitor-pass-month">200</span></p>
+                    </div>
+                </div>
+                
+                <div class="widget">
+                    <h2>Duty Schedule Overview</h2>
+                    <div class="widget-content">
+                        <p>Next Shift: <span id="next-shift">2024-09-18 14:00</span></p>
+                        <p>Current Duty Officer: <span id="current-officer">Officer Smith</span></p>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>Incident Reports Status</h2>
+                    <div class="widget-content">
+                        <p>Open: <span id="incident-open">5</span></p>
+                        <p>In-Progress: <span id="incident-in-progress">3</span></p>
+                        <p>Resolved: <span id="incident-resolved">12</span></p>
+                    </div>
+                </div>
+            </section>
 
             <section class="security-actions">
-                <!-- View Visitor Passes -->
                 <h2>View Visitor Passes</h2>
-                <div class="card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pass ID</th>
-                                <th>Visitor Name</th>
-                                <th>Date Issued</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Example dynamic content; replace with actual data -->
-                            <tr>
-                                <td>VP001</td>
-                                <td>John Doe</td>
-                                <td>2024-09-10</td>
-                                <td>Active</td>
-                            </tr>
-                            <tr>
-                                <td>VP002</td>
-                                <td>Jane Smith</td>
-                                <td>2024-09-12</td>
-                                <td>Expired</td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
-                </div>
+                <a href="<?php echo URLROOT; ?>/security/view_visitor_pass" class="btn">View Visitor Passes</a>
 
-                <!-- Verify Visitor Details -->
-                <h2>Verify Visitor Details</h2>
-                <form action="<?php echo URLROOT; ?>/security/verifyVisitor" method="POST">
-                    <div class="form-group">
-                        <label for="visitor_id">Visitor ID:</label>
-                        <input type="text" id="visitor_id" name="visitor_id" required>
-                    </div>
-                    <button type="submit" class="btn-verify">Verify Visitor</button>
-                </form>
-
-                <!-- Log Visitor Times -->
                 <h2>Log Visitor Times</h2>
-                <form action="<?php echo URLROOT; ?>/security/logVisitorTime" method="POST">
-                    <div class="form-group">
-                        <label for="visitor_id_time">Visitor ID:</label>
-                        <input type="text" id="visitor_id_time" name="visitor_id_time" required>
-                    </div>
-                    <button type="submit" class="btn-log">Log Time</button>
-                </form>
+                <a href="<?php echo URLROOT; ?>/security/log_in_visitor_times" class="btn">Log Visitor Times</a>
 
-                <!-- Update Duty Schedule -->
-                <h2>Update Duty Schedule</h2>
-                <form action="<?php echo URLROOT; ?>/security/updateDutySchedule" method="POST">
-                    <div class="form-group">
-                        <label for="duty_schedule">Duty Schedule:</label>
-                        <textarea id="duty_schedule" name="duty_schedule">Enter updated schedule...</textarea>
-                    </div>
-                    <button type="submit" class="btn-update">Update Schedule</button>
-                </form>
-
-                <!-- Manage User Incident Reports -->
                 <h2>Manage User Incident Reports</h2>
-                <div class="card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Incident ID</th>
-                                <th>Date</th>
-                                <th>Report</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Example dynamic content; replace with actual data -->
-                            <tr>
-                                <td>IR001</td>
-                                <td>2024-09-11</td>
-                                <td>Unauthorized entry</td>
-                                <td>Investigating</td>
-                            </tr>
-                            <tr>
-                                <td>IR002</td>
-                                <td>2024-09-13</td>
-                                <td>Property damage</td>
-                                <td>Resolved</td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
-                </div>
+                <a href="<?php echo URLROOT; ?>/security/manage_user_incident_report" class="btn">Manage User Incident Reports</a>
+
+                <h2>Update Duty Schedule</h2>
+                <a href="<?php echo URLROOT; ?>/security/update_duty_schedule" class="btn">Update Duty Schedule</a>
+
+                <h2>Verify Visitor Details</h2>
+                <a href="<?php echo URLROOT; ?>/security/verify_visitor_details" class="btn">Verify Visitor Details</a>
             </section>
         </main>
     </div>

@@ -103,3 +103,170 @@ button:hover {
 .btn-update:hover {
   background-color: #e0a800;
 }
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.dashboard-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-bar {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 200px;
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+}
+
+.filter-options select {
+  margin-left: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.quick-links a {
+  margin-left: 10px;
+  text-decoration: none;
+  color: #007bff;
+}
+
+.quick-links a:hover {
+  text-decoration: underline;
+}
+
+.card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.maintenance-actions {
+  margin-top: 20px;
+}
+
+h1, h2 {
+  color: #333;
+}
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  animation: bounceIn 0.8s ease-in;
+}
+
+.search-bar {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 200px;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar:focus {
+  border-color: #007bff;
+}
+
+.quick-links img {
+  width: 25px;
+  height: 25px;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.quick-links img:hover {
+  transform: scale(1.2);
+}
+
+.card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.animated-card {
+  animation: fadeInUp 0.8s ease-in-out;
+}
+
+.table-row-hover:hover {
+  background-color: #f0f8ff;
+  transition: background-color 0.3s ease;
+}
+
+.animated-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.animated-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+      transform: translateY(20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+      transform: scale(0.8);
+      opacity: 0.8;
+  }
+  100% {
+      transform: scale(1);
+      opacity: 1;
+  }
+}

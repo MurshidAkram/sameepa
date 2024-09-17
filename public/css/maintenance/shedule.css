@@ -1,0 +1,65 @@
+/* Calendar section styling */
+.calendar-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Filters styling */
+.filters {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.filters h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.filters form {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.filters label, .filters select {
+  font-size: 1rem;
+}
+
+/* Task summary styling */
+.task-summary {
+  margin-top: 30px;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+
+.task-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.task-item.pending {
+  background-color: #fff5f5;
+  color: #d9534f;
+}
+
+.task-item.in-progress {
+  background-color: #fffacd;
+  color: #f0ad4e;
+}
+
+.task-item.completed {
+  background-color: #f0fff0;
+  color: #5cb85c;
+}

@@ -17,6 +17,31 @@
         <?php require APPROOT . '/views/inc/components/side_panel_maintenance.php'; ?>
 
         <main>
+            <!-- Dashboard Header -->
+            <header class="dashboard-header">
+                <div class="user-info">
+                    <p>Welcome, <strong><?php echo $_SESSION['user_name']; ?></strong> (Maintenance Personnel)</p>
+                    <p id="current-date-time"></p>
+                </div>
+
+                <div class="dashboard-controls">
+                    <input type="text" placeholder="Search..." class="search-bar">
+                    <div class="filter-options">
+                        <label for="filter-status">Filter by Status:</label>
+                        <select id="filter-status">
+                            <option value="all">All</option>
+                            <option value="completed">Completed</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="quick-links">
+                        <a href="#">Notifications</a>
+                        <a href="#">Settings</a>
+                    </div>
+                </div>
+            </header>
+
             <h1>Maintenance Management</h1>
             <p>Manage maintenance operations including history, issue reporting, assistance requests, schedules, and status updates.</p>
 
@@ -99,29 +124,21 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Update Maintenance Status -->
-                <h2>Update Maintenance Status</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/update" method="POST">
-                    <div class="form-group">
-                        <label for="maintenance-id">Maintenance ID:</label>
-                        <input type="text" id="maintenance-id" name="maintenance_id" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">New Status:</label>
-                        <select id="status" name="status" required>
-                            <option value="Completed">Completed</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Pending">Pending</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-update">Update Status</button>
-                </form>
             </section>
         </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+
+    <script>
+        // JavaScript to display current date and time
+        const dateTimeElement = document.getElementById('current-date-time');
+        function updateDateTime() {
+            const now = new Date();
+            dateTimeElement.textContent = now.toLocaleString();
+        }
+        setInterval(updateDateTime, 1000);
+    </script>
 </body>
 
 </html>

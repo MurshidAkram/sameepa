@@ -2,10 +2,7 @@
 
 class Maintenance extends Controller
 {
-    public function __construct()
-    {
-        // You can load models here if needed in the future.
-    }
+   
 
     public function dashboard()
     {
@@ -32,8 +29,7 @@ class Maintenance extends Controller
     {
         $this->view('maintenance/shedule');
     }
-    public function update()
-    {
+    public function update() {
         $this->view('maintenance/update');
     }
     
