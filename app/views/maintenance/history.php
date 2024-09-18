@@ -7,83 +7,8 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/history.css">
     <title>View Maintenance History | <?php echo SITENAME; ?></title>
-    <style>
-        /* Custom styling for the history table and filters */
-        .filters {
-            margin-bottom: 1rem;
-        }
-
-        .filters label {
-            margin-right: 0.5rem;
-        }
-
-        .filters select,
-        .filters input {
-            padding: 0.5rem;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-        }
-
-        .btn-export {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-export:hover {
-            background-color: #0056b3;
-        }
-
-        .card table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .card table, .card th, .card td {
-            border: 1px solid #ddd;
-        }
-
-        .card th, .card td {
-            padding: 0.75rem;
-            text-align: left;
-        }
-
-        .card th {
-            background-color: #f8f9fa;
-        }
-
-        .card td {
-            cursor: pointer;
-        }
-
-        .card td:hover {
-            background-color: #f1f1f1;
-        }
-
-        /* Detailed View */
-        .detailed-view {
-            display: none;
-            margin-top: 1rem;
-        }
-
-        .detailed-view.active {
-            display: block;
-        }
-
-        .detailed-view h2 {
-            margin-top: 0;
-        }
-
-        .detailed-view .details {
-            margin-bottom: 1rem;
-        }
-    </style>
 </head>
 
 <body>
@@ -118,7 +43,6 @@
                         <option value="completed">Completed</option>
                         <option value="in-progress">In Progress</option>
                         <option value="pending">Pending</option>
-                        <!-- Add more options as needed -->
                     </select>
 
                     <button type="submit" class="btn-filter">Apply Filters</button>
@@ -131,9 +55,13 @@
                 </form>
             </section>
 
-            <!-- Maintenance History Table -->
+            <!-- Maintenance History Table with Search -->
+            <section class="search-bar">
+                <input type="text" id="search-bar" placeholder="Search by Maintenance ID or Details..." onkeyup="searchHistory()">
+            </section>
+
             <div class="card">
-                <table>
+                <table id="history-table">
                     <thead>
                         <tr>
                             <th>Maintenance ID</th>
@@ -172,6 +100,7 @@
                     <p><strong>Notes:</strong> The unit was repaired and tested successfully.</p>
                 </div>
             </div>
+
             <div id="details-MH002" class="detailed-view">
                 <h2>Maintenance ID: MH002</h2>
                 <div class="details">
@@ -182,25 +111,12 @@
                     <p><strong>Notes:</strong> The light fixture was replaced with a new one.</p>
                 </div>
             </div>
-            <!-- Add more detailed views as needed -->
         </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <script>
-        function showDetails(id) {
-            // Hide all details
-            const details = document.querySelectorAll('.detailed-view');
-            details.forEach(detail => detail.classList.remove('active'));
-
-            // Show the clicked detail
-            const detailToShow = document.getElementById('details-' + id);
-            if (detailToShow) {
-                detailToShow.classList.add('active');
-            }
-        }
-    </script>
+    <script src="<?php echo URLROOT; ?>/js/history.js"></script>
 </body>
 
 </html>

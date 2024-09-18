@@ -36,7 +36,7 @@
                         </select>
                     </div>
                     <div class="quick-links">
-                        <a href="#">Notifications</a>
+                        <a href="#">Notifications <span class="badge">3</span></a>
                         <a href="#">Settings</a>
                     </div>
                 </div>
@@ -56,6 +56,7 @@
                                 <th>Date</th>
                                 <th>Details</th>
                                 <th>Status</th>
+                                <th>Progress</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,12 +66,14 @@
                                 <td>2024-09-10</td>
                                 <td>AC unit repair</td>
                                 <td>Completed</td>
+                                <td><div class="progress-bar"><div class="progress" style="width: 100%;"></div></div></td>
                             </tr>
                             <tr>
                                 <td>MH002</td>
                                 <td>2024-09-12</td>
                                 <td>Light fixture replacement</td>
                                 <td>In Progress</td>
+                                <td><div class="progress-bar"><div class="progress" style="width: 60%;"></div></div></td>
                             </tr>
                             <!-- Add more rows as needed -->
                         </tbody>
@@ -79,20 +82,20 @@
 
                 <!-- Report Issues -->
                 <h2>Report Issues</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/report" method="POST">
+                <form action="<?php echo URLROOT; ?>/maintenance/report" method="POST" class="form-report">
                     <div class="form-group">
                         <label for="issue-description">Issue Description:</label>
-                        <textarea id="issue-description" name="description" required></textarea>
+                        <textarea id="issue-description" name="description" placeholder="Describe the issue..." required></textarea>
                     </div>
                     <button type="submit" class="btn-report">Report Issue</button>
                 </form>
 
                 <!-- Request Assistance -->
                 <h2>Request Assistance</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/request" method="POST">
+                <form action="<?php echo URLROOT; ?>/maintenance/request" method="POST" class="form-request">
                     <div class="form-group">
                         <label for="request-details">Request Details:</label>
-                        <textarea id="request-details" name="details" required></textarea>
+                        <textarea id="request-details" name="details" placeholder="Provide details..." required></textarea>
                     </div>
                     <button type="submit" class="btn-request">Request Assistance</button>
                 </form>
@@ -113,12 +116,12 @@
                             <tr>
                                 <td>2024-09-15</td>
                                 <td>Check fire alarms</td>
-                                <td>Scheduled</td>
+                                <td><span class="status scheduled">Scheduled</span></td>
                             </tr>
                             <tr>
                                 <td>2024-09-16</td>
                                 <td>Inspect elevators</td>
-                                <td>Scheduled</td>
+                                <td><span class="status scheduled">Scheduled</span></td>
                             </tr>
                             <!-- Add more rows as needed -->
                         </tbody>

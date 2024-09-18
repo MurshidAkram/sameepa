@@ -1,23 +1,102 @@
-/* history.css */
-.card {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 20px 0;
+/* Styling for history page */
+
+.dashboard-container {
+  display: flex;
+}
+
+main {
+  width: 100%;
+  padding: 2rem;
+  background-color: #f9f9f9;
+}
+
+h1 {
+  color: #333;
+  font-size: 2rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filters label {
+  font-weight: bold;
+}
+
+.filters select,
+.filters input {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+}
+
+.btn-filter {
+  padding: 0.5rem 1.5rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-filter:hover {
+  background-color: #218838;
+}
+
+.search-bar {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-bar input {
+  padding: 0.5rem;
+  width: 300px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
 }
 
 .card table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 1rem;
 }
 
-.card table th, .card table td {
+.card table, .card th, .card td {
   border: 1px solid #ddd;
-  padding: 8px;
 }
 
-.card table th {
-  background-color: #f4f4f4;
+.card th, .card td {
+  padding: 0.75rem;
   text-align: left;
+}
+
+.card th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.card td:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.detailed-view {
+  display: none;
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-top: 1rem;
+}
+
+.detailed-view.active {
+  display: block;
+}
+
+.details p {
+  margin: 0.5rem 0;
+  color: #333;
+  font-size: 1rem;
 }
