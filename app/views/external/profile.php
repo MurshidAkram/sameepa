@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/external/request.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/external/profile.css">
     <!-- <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/external/u_profile.css"> -->
     <title>Edit Profile | <?php echo SITENAME; ?></title>
 </head>
