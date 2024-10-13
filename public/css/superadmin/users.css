@@ -1,141 +1,99 @@
-/* General Styling */
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
 }
 
 h1, h2, h3, h4 {
     color: #333;
 }
 
+/* Dashboard Container */
 .dashboard-container {
     display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
 }
 
+/* Main Section */
 main {
-    padding: 20px;
-    width: 100%;
-    background-color: #fff;
-}
-
-/* Section Styling */
-.settings-section {
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.settings-section h2 {
-    margin-bottom: 10px;
-    font-size: 22px;
-    color: #333;
-}
-
-.setting-option {
-    margin-bottom: 10px;
-}
-
-.btn-settings {
-    padding: 8px 12px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-settings:hover {
-    background-color: #218838;
-}
-
-.popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.popup-content {
-    background-color: #fff;
-    padding: 20px;
+    background: #ffffff;
     border-radius: 8px;
-    width: 80%;
-    max-width: 600px;
-    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
 }
 
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
+/* Section Styles */
+.settings-section {
+    margin-bottom: 30px;
+}
+
+.user-management-option {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Tables */
+.user-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.user-list th,
+.user-list td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.user-list th {
+    background-color: #eaeaea;
     color: #333;
 }
 
-.close-btn:hover {
-    color: #e74c3c;
-}
-
-/* Form and Table Styles */
+/* Form Styles */
 .form-group {
     margin-bottom: 15px;
 }
 
-.form-group label {
+label {
     display: block;
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
+/* Button Styles */
 .btn-action {
-    padding: 10px 15px;
-    background-color: #007bff;
+    background-color: #800080; /* Purple color for buttons */
     color: white;
+    padding: 10px 15px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .btn-action:hover {
-    background-color: #0056b3;
+    background-color: #6a006a; /* Darker purple on hover */
 }
 
-.user-list {
-    width: 100%;
-    border-collapse: collapse;
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    main {
+        padding: 15px;
+    }
 }
 
-.user-list th, .user-list td {
-    padding: 10px;
-    border: 1px solid #ccc;
-}
 
-.user-list th {
-    background-color: #f1f1f1;
-}
-
-.user-list td.active {
-    color: green;
-}
-
-.user-list td.inactive {
-    color: red;
-}
