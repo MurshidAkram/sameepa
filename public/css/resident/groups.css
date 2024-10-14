@@ -1,34 +1,41 @@
-/* app/public/css/resident/events.css */
+/* app/public/css/resident/groups.css */
 
-.events-main {
+.dashboard-container {
     display: flex;
-    gap: 20px;
 }
 
-.events-sidebar {
-    width: 250px;
+.groups-main {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f8f8ff;
+}
+
+.groups-sidebar {
+    width: 1250px;
     background-color: #f0f0f0;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
-.events-sidebar h2 {
+.groups-sidebar h2 {
     color: #800080;
     margin-bottom: 15px;
 }
 
-.events-nav {
+.groups-nav {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.events-content {
+.groups-content {
     flex-grow: 1;
+    padding-left: 20px;
 }
 
-.btn-create-event, .btn-joined-events, .btn-my-events {
+.btn-create-group, .btn-joined-groups, .btn-my-groups {
     display: block;
     padding: 10px;
     border-radius: 5px;
@@ -37,80 +44,71 @@
     transition: background-color 0.3s ease;
     color: white;
     text-align: center;
-
 }
 
-.btn-create-event {
+.btn-create-group {
     background-color: #0fa52d;
 }
 
-.btn-create-event:hover {
+.btn-create-group:hover {
     background-color: #14de22;
 }
 
-.btn-joined-events {
+.btn-joined-groups {
     background-color: #FFC107;
 }
 
-.btn-joined-events:hover {
+.btn-joined-groups:hover {
     background-color: #FFA000;
 }
 
-.btn-my-events {
+.btn-my-groups {
     background-color: #9C27B0;
 }
 
-.btn-my-events:hover {
+.btn-my-groups:hover {
     background-color: #7B1FA2;
 }
 
-.events-container {
+.groups-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 20px;
 }
 
-.event-card {
+.group-card {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: calc(50% - 50px);
+    width: 100%;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.event-card:hover {
+.group-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.event-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.event-title {
+.group-name {
     color: #800080;
     font-size: 1.2rem;
     margin-bottom: 10px;
 }
 
-.event-details {
+.group-details {
     color: #555;
     font-size: 0.9rem;
     margin-bottom: 15px;
 }
 
-.event-actions {
+.group-actions {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
-.btn-view-event, .btn-join-event {
+.btn-view-group, .btn-join-group {
     padding: 8px 15px;
     border-radius: 5px;
     text-decoration: none;
@@ -118,92 +116,54 @@
     transition: background-color 0.3s ease;
 }
 
-.btn-view-event {
+.btn-view-group {
     background-color: #800080;
     color: white;
 }
 
-.btn-view-event:hover {
+.btn-view-group:hover {
     background-color: #9a009a;
 }
 
-.btn-join-event {
+.btn-join-group {
     background-color: #4CAF50;
     color: white;
 }
 
-.btn-join-event:hover {
+.btn-join-group:hover {
     background-color: #45a049;
 }
 
-.calendar-component {
-    margin-top: 30px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
-
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
-
-.calendar-day {
-    aspect-ratio: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f8f8ff;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    color: #555;
-}
-
-.calendar-day.has-event {
-    background-color: #e6d7f8;
-    color: #800080;
-    font-weight: bold;
-    cursor: pointer;
-}
-
 @media (max-width: 1024px) {
-    .events-main {
+    .dashboard-container {
         flex-direction: column;
     }
 
-    .events-sidebar {
+    .groups-sidebar {
         width: 100%;
+        margin-bottom: 20px;
     }
 
-    .events-nav {
+    .groups-nav {
         flex-direction: row;
         justify-content: space-between;
     }
 
-    .btn-create-event, .btn-joined-events, .btn-my-events {
+    .btn-create-group, .btn-joined-groups, .btn-my-groups {
         width: 30%;
     }
 
-    .event-card {
-        width: 100%;
+    .groups-content {
+        padding-left: 0;
     }
 }
 
 @media (max-width: 768px) {
-    .events-nav {
+    .groups-nav {
         flex-direction: column;
     }
 
-    .btn-create-event, .btn-joined-events, .btn-my-events {
+    .btn-create-group, .btn-joined-groups, .btn-my-groups {
         width: 100%;
     }
 }

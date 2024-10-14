@@ -1,0 +1,132 @@
+/* app/public/css/resident/forums.css */
+
+.forums-main {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f8f8ff;
+}
+
+.forums-main h1 {
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+.forums-main p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.forums-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.btn-create-forum, .btn-my-forums {
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-create-forum {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-create-forum:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.btn-my-forums {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-my-forums:hover {
+    background-color: #1e87db;
+    transform: translateY(-2px);
+}
+
+.forums-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.forum-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.forum-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.forum-title {
+    color: #800080;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.forum-description {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.forum-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.btn-view-forum {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #800080;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-view-forum:hover {
+    background-color: #9a009a;
+}
+
+.forum-comments{
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.forum-creator{
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .forums-actions {
+        flex-direction: column;
+    }
+
+    .btn-create-forum, .btn-my-forums {
+        width: 100%;
+        text-align: center;
+    }
+
+    .forums-list {
+        grid-template-columns: 1fr;
+    }
+}
