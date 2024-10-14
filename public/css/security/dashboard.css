@@ -1,0 +1,106 @@
+/* security/dashboard.css */
+.dashboard-container {
+    display: flex;
+    padding: 20px;
+  }
+  
+  main {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .security-actions {
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f4f4f4;
+  }
+  
+  form {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  textarea, input[type="text"], select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  textarea {
+    height: 100px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .btn-verify {
+    background-color: #28a745;
+  }
+  
+  .btn-verify:hover {
+    background-color: #218838;
+  }
+  
+  .btn-log {
+    background-color: #17a2b8;
+  }
+  
+  .btn-log:hover {
+    background-color: #138496;
+  }
+  
+  .btn-update {
+    background-color: #ffc107;
+  }
+  
+  .btn-update:hover {
+    background-color: #e0a800;
+  }
+  
