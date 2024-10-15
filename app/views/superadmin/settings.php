@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/superadmin/settings.css">
     <title>Super Admin Settings | <?php echo SITENAME; ?></title>
 </head>
@@ -15,32 +16,31 @@
 
     <div class="dashboard-container">
         <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
-
         <main>
-            <h1>Super Admin Settings</h1>
+            <h1 >Settings</h1>
 
             <!-- System Settings -->
             <section class="settings-section">
                 <h2>System Settings</h2>
                 <div class="setting-option">
-                    <label>Communication:</label>
-                    <button class="btn-settings" onclick="openModal('communicationModal')">Email & Notifications</button>
+                    <label>Community Policies:</label>
+                    <button class="btn-settings" onclick="openModal('policiesModal')">Manage Policies</button>
                 </div>
                 <div class="setting-option">
-                    <label>Backup & Restore:</label>
-                    <button class="btn-settings" onclick="openModal('backupRestoreModal')">Backup & Restore</button>
+                    <label>Notification Preferences:</label>
+                    <button class="btn-settings" onclick="openModal('notificationModal')">Manage Notifications</button>
                 </div>
                 <div class="setting-option">
-                    <label>Logs & Reports:</label>
-                    <button class="btn-settings" onclick="openModal('logsReportsModal')">View Logs & Reports</button>
+                    <label>Security Settings:</label>
+                    <button class="btn-settings" onclick="openModal('securityModal')">Security Settings</button>
                 </div>
             </section>
 
-            <!-- Customization -->
+            <!-- Customization Settings -->
             <section class="settings-section">
                 <h2>Customization</h2>
                 <div class="setting-option">
-                    <label>Branding:</label>
+                    <label>Community Branding:</label>
                     <button class="btn-settings" onclick="openModal('brandingModal')">Manage Branding & Theme</button>
                 </div>
                 <div class="setting-option">
@@ -49,113 +49,127 @@
                 </div>
             </section>
 
-            <!-- Popups -->
-           <!-- Communication Modal -->
-<div id="communicationModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('communicationModal')" tabindex="0">&times;</span>
-        <h2>Email & Notifications</h2>
-        <p>Configure how the system handles communication. Set up email servers, notification preferences, and automated messaging rules.</p>
-        <ul>
-            <li><strong>Email Server:</strong> Configure the outgoing email server (SMTP) settings.</li>
-            <li><strong>Notification Preferences:</strong> Choose which events trigger email or SMS notifications to users and admins.</li>
-            <li><strong>Autoresponders:</strong> Set automated replies for specific user interactions like registration or support tickets.</li>
-        </ul>
-        <button class="btn-settings">Save Settings</button>
-    </div>
-</div>
+            <!-- Communication Settings -->
+            <section class="settings-section">
+                <h2>Communication Settings</h2>
+                <div class="setting-option">
+                    <label>Email Setup:</label>
+                    <button class="btn-settings" onclick="openModal('emailSetupModal')">Manage Email Settings</button>
+                </div>
+                <div class="setting-option">
+                    <label>SMS Configuration:</label>
+                    <button class="btn-settings" onclick="openModal('smsConfigModal')">Manage SMS Settings</button>
+                </div>
+            </section>
 
-<!-- Backup & Restore Modal -->
-<div id="backupRestoreModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('backupRestoreModal')" tabindex="0">&times;</span>
-        <h2>Backup & Restore</h2>
-        <p>Manage system backups to ensure data security and recovery. Schedule automatic backups or perform manual backups.</p>
-        <ul>
-            <li><strong>Backup Now:</strong> Perform an immediate backup of the system data.</li>
-            <li><strong>Schedule Backups:</strong> Set a regular backup schedule (e.g., daily, weekly).</li>
-            <li><strong>Restore Data:</strong> Select a backup file to restore system data to a previous state.</li>
-        </ul>
-        <button class="btn-settings">Perform Backup</button>
-    </div>
-</div>
+            <!-- Advanced Settings -->
+            <section class="settings-section">
+                <h2>Advanced Settings</h2>
+                <div class="setting-option">
+                    <label>Audit Logs:</label>
+                    <button class="btn-settings" onclick="openModal('auditLogsModal')">View Audit Logs</button>
+                </div>
+                <div class="setting-option">
+                    <label>Data Backup & Restore:</label>
+                    <button class="btn-settings" onclick="openModal('backupRestoreModal')">Backup & Restore</button>
+                </div>
+            </section>
 
-<!-- Logs & Reports Modal -->
-<div id="logsReportsModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('logsReportsModal')" tabindex="0">&times;</span>
-        <h2>Logs & Reports</h2>
-        <p>View system logs and generate reports to track user activities, system events, and more. Useful for monitoring and troubleshooting.</p>
-        <ul>
-            <li><strong>Activity Logs:</strong> View logs of user actions, including login attempts, data changes, and system interactions.</li>
-            <li><strong>Error Logs:</strong> Check logs for system errors and warnings.</li>
-            <li><strong>Generate Reports:</strong> Create detailed reports for system performance, user engagement, and other metrics.</li>
-        </ul>
-        <button class="btn-settings">Generate Report</button>
-    </div>
-</div>
+            <!-- Modals -->
+            <div id="policiesModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('policiesModal')">&times;</span>
+                    <h2>Manage Community Policies</h2>
+                    <p>Update community rules and guidelines.</p>
+                    <button class="btn-action2">Save Policies</button>
+                </div>
+            </div>
 
-<!-- Branding Modal -->
-<div id="brandingModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('brandingModal')" tabindex="0">&times;</span>
-        <h2>Manage Branding & Theme</h2>
-        <p>Customize the platform's look and feel to align with your organization's branding. Update logos, colors, and themes.</p>
-        <ul>
-            <li><strong>Logo:</strong> Upload your organization's logo for display across the platform.</li>
-            <li><strong>Color Scheme:</strong> Choose a primary color scheme that matches your brand identity.</li>
-            <li><strong>Theme:</strong> Select from light or dark themes or create a custom theme for your users.</li>
-        </ul>
-        <button class="btn-settings">Save Branding</button>
-    </div>
-</div>
+            <div id="notificationModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('notificationModal')">&times;</span>
+                    <h2>Manage Notification Preferences</h2>
+                    <p>Set notification preferences for residents and staff.</p>
+                    <button class="btn-action2">Save Notifications</button>
+                </div>
+            </div>
 
-<!-- Language Modal -->
-<div id="languageModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('languageModal')" tabindex="0">&times;</span>
-        <h2>Language Settings</h2>
-        <p>Set the platform's default language and configure multi-language support for users.</p>
-        <ul>
-            <li><strong>Default Language:</strong> Set the primary language for the system.</li>
-            <li><strong>Available Languages:</strong> Enable other languages for users to choose from.</li>
-            <li><strong>Translation Management:</strong> Upload or edit translations for the platform's content.</li>
-        </ul>
-        <button class="btn-settings">Save Language Settings</button>
-    </div>
-</div>
+            <div id="securityModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('securityModal')">&times;</span>
+                    <h2>Security Settings</h2>
+                    <p>Manage security features, including user access levels.</p>
+                    <button class="btn-action2">Save Security Settings</button>
+                </div>
+            </div>
 
-            <!-- Add more modals for the other buttons as needed -->
+            <div id="brandingModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('brandingModal')">&times;</span>
+                    <h2>Manage Community Branding & Theme</h2>
+                    <p>Customize the platform's branding and appearance.</p>
+                    <button class="btn-action2">Save Branding</button>
+                </div>
+            </div>
+
+            <div id="languageModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('languageModal')">&times;</span>
+                    <h2>Language Settings</h2>
+                    <p>Manage available languages for the platform.</p>
+                    <button class="btn-action2">Save Language Settings</button>
+                </div>
+            </div>
+
+            <div id="emailSetupModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('emailSetupModal')">&times;</span>
+                    <h2>Email & Notification Setup</h2>
+                    <p>Configure email server settings and notifications.</p>
+                    <button class="btn-action2">Save Email Settings</button>
+                </div>
+            </div>
+
+            <div id="smsConfigModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('smsConfigModal')">&times;</span>
+                    <h2>SMS Gateway Configuration</h2>
+                    <p>Configure SMS gateway for sending community alerts.</p>
+                    <button class="btn-action2">Save SMS Settings</button>
+                </div>
+            </div>
+
+            <div id="auditLogsModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('auditLogsModal')">&times;</span>
+                    <h2>View Audit Logs</h2>
+                    <p>Review system activity logs.</p>
+                    <button class="btn-action2">Close</button>
+                </div>
+            </div>
+
+            <div id="backupRestoreModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('backupRestoreModal')">&times;</span>
+                    <h2>Data Backup & Restore</h2>
+                    <p>Backup and restore system data.</p>
+                    <button class="btn-action2">Perform Backup</button>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
-    <!-- JavaScript for opening and closing modals -->
     <script>
         function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = 'block';
-            modal.setAttribute('aria-hidden', 'false');
+            document.getElementById(modalId).style.display = 'block';
         }
 
         function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = 'none';
-            modal.setAttribute('aria-hidden', 'true');
+            document.getElementById(modalId).style.display = 'none';
         }
-
-        // Close modal with escape key for accessibility
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(modal => {
-                    if (modal.style.display === 'block') {
-                        modal.style.display = 'none';
-                    }
-                });
-            }
-        });
     </script>
+
 </body>
 
 </html>

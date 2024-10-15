@@ -60,7 +60,6 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn-action">Deactivate</button>
-
                         </form>
                     </div>
                 </section>
@@ -108,7 +107,6 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn-action">Deactivate</button>
-
                         </form>
                     </div>
                 </section>
@@ -121,4 +119,3 @@
 </body>
 
 </html>
-

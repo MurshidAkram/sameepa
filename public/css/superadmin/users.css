@@ -7,24 +7,34 @@ body {
 }
 
 h1, h2, h3, h4 {
-    color: #333;
+    color:#800080;
 }
 
-/* Dashboard Container */
+/* Dashboard Container - Flexbox Layout */
 .dashboard-container {
-    display: flex;
-    flex-direction: column;
+    display: flex; /* Flexbox for horizontal layout */
+    flex-direction: row; /* Sidebar and main content in a row */
     width: 100%;
+    min-height: 100vh; /* Full viewport height */
+}
+
+/* Side Panel (Sidebar) */
+.side-panel {
+    width: 20%; /* Sidebar width */
+    background-color: #333; /* Example background color */
+    color: white;
     padding: 20px;
+    min-height: 100vh; /* Ensure sidebar takes full height */
 }
 
 /* Main Section */
 main {
+    flex-grow: 1; /* Take up remaining space */
     background: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-top: 20px;
+    margin-left: 20px; /* Create space between sidebar and main content */
 }
 
 /* Section Styles */
@@ -74,7 +84,7 @@ label {
 .btn-action {
     background-color: #800080; /* Purple color for buttons */
     color: white;
-    padding: 10px 15px;
+    padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -88,12 +98,15 @@ label {
 /* Responsive Styles */
 @media (max-width: 768px) {
     .dashboard-container {
-        padding: 10px;
+        flex-direction: column; /* Stack sidebar and main content vertically */
+    }
+
+    .side-panel {
+        width: 100%; /* Sidebar takes full width */
     }
 
     main {
+        margin-left: 0; /* Remove left margin on smaller screens */
         padding: 15px;
     }
 }
-
-

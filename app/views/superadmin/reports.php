@@ -18,7 +18,7 @@
         <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
 
         <main>
-            <h1>Reports</h1>
+            <h1 style="color:#800080">Reports</h1>
             <section class="dashboard-overview">
                 <div class="reports-section">
 
