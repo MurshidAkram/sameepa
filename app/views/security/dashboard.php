@@ -17,53 +17,80 @@
         <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
         <main>
-            <h1>Security Management</h1>
-            <p>Manage security operations including visitor passes, incident reports, duty schedules, and visitor log times.</p>
-
-            <!-- Dashboard Widgets -->
-            <section class="dashboard-widgets">
-                <div class="widget">
-                    <h2>Visitor Pass Count</h2>
-                    <div class="widget-content">
-                        <p>Today: <span id="visitor-pass-today">10</span></p>
-                        <p>This Week: <span id="visitor-pass-week">50</span></p>
-                        <p>This Month: <span id="visitor-pass-month">200</span></p>
-                    </div>
-                </div>
-                
-                <div class="widget">
-                    <h2>Duty Schedule Overview</h2>
-                    <div class="widget-content">
-                        <p>Next Shift: <span id="next-shift">2024-09-18 14:00</span></p>
-                        <p>Current Duty Officer: <span id="current-officer">Officer Smith</span></p>
-                    </div>
-                </div>
-
-                <div class="widget">
-                    <h2>Incident Reports Status</h2>
-                    <div class="widget-content">
-                        <p>Open: <span id="incident-open">5</span></p>
-                        <p>In-Progress: <span id="incident-in-progress">3</span></p>
-                        <p>Resolved: <span id="incident-resolved">12</span></p>
-                    </div>
-                </div>
+            <!-- Dashboard Header -->
+            <section class="dashboard-header">
+                <h1>Security Management</h1>
+                <p>Manage security operations including visitor passes, incident reports, duty schedules, and visitor log times.</p>
             </section>
 
+            <hr> <!-- Horizontal rule to separate sections -->
+
+            <!-- Security Operations Overview (Using Table for Clear Display) -->
+            <section class="dashboard-overview">
+                <h2>Overview of Operations</h2>
+                <table>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Details</th>
+                    </tr>
+                    <tr>
+                        <td>Visitor Pass Count</td>
+                        <td>Today: <span id="visitor-pass-today">10</span><br>This Week: <span id="visitor-pass-week">50</span><br>This Month: <span id="visitor-pass-month">200</span></td>
+                    </tr>
+                    <tr>
+                        <td>Duty Schedule</td>
+                        <td>Next Shift: <span id="next-shift">2024-09-18 14:00</span><br>Current Duty Officer: <span id="current-officer">Officer Smith</span></td>
+                    </tr>
+                    <tr>
+                        <td>Incident Reports</td>
+                        <td>Open: <span id="incident-open">5</span><br>In-Progress: <span id="incident-in-progress">3</span><br>Resolved: <span id="incident-resolved">12</span></td>
+                    </tr>
+                </table>
+            </section>
+
+            <hr> <!-- Another Horizontal Rule -->
+
+            <!-- Security Actions Section (Table with Action Buttons) -->
             <section class="security-actions">
-                <h2>View Visitor Passes</h2>
-                <a href="<?php echo URLROOT; ?>/security/view_visitor_pass" class="btn">View Visitor Passes</a>
+                <h2>Security Actions</h2>
 
-                <h2>Log Visitor Times</h2>
-                <a href="<?php echo URLROOT; ?>/security/log_in_visitor_times" class="btn">Log Visitor Times</a>
+                <!-- Security Actions Table -->
+                <table class="action-table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Link</th>
+                    </tr>
 
-                <h2>Manage User Incident Reports</h2>
-                <a href="<?php echo URLROOT; ?>/security/manage_user_incident_report" class="btn">Manage User Incident Reports</a>
+                    <!-- View Visitor Passes -->
+                    <tr>
+                        <td>View Visitor Passes</td>
+                        <td><a href="<?php echo URLROOT; ?>/security/view_visitor_pass" class="btn">View Visitor Passes</a></td>
+                    </tr>
 
-                <h2>Update Duty Schedule</h2>
-                <a href="<?php echo URLROOT; ?>/security/update_duty_schedule" class="btn">Update Duty Schedule</a>
+                    <!-- Log Visitor Times -->
+                    <tr>
+                        <td>Log Visitor Times</td>
+                        <td><a href="<?php echo URLROOT; ?>/security/log_in_visitor_times" class="btn">Log Visitor Times</a></td>
+                    </tr>
 
-                <h2>Verify Visitor Details</h2>
-                <a href="<?php echo URLROOT; ?>/security/verify_visitor_details" class="btn">Verify Visitor Details</a>
+                    <!-- Manage User Incident Reports -->
+                    <tr>
+                        <td>Manage User Incident Reports</td>
+                        <td><a href="<?php echo URLROOT; ?>/security/manage_user_incident_report" class="btn">Manage User Incident Reports</a></td>
+                    </tr>
+
+                    <!-- Update Duty Schedule -->
+                    <tr>
+                        <td>Update Duty Schedule</td>
+                        <td><a href="<?php echo URLROOT; ?>/security/update_duty_schedule" class="btn">Update Duty Schedule</a></td>
+                    </tr>
+
+                    <!-- Verify Visitor Details -->
+                    <tr>
+                        <td>Verify Visitor Details</td>
+                        <td><a href="<?php echo URLROOT; ?>/security/verify_visitor_details" class="btn">Verify Visitor Details</a></td>
+                    </tr>
+                </table>
             </section>
         </main>
     </div>

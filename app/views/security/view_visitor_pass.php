@@ -12,16 +12,42 @@
         /* Custom styles for the view visitor pass page */
         .visitor-pass-section {
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
         }
+
+        .visitor-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .visitor-card h3 {
+            margin: 0 0 10px;
+        }
+
+        .visitor-card p {
+            margin: 5px 0;
+        }
+
+        .visitor-card .status {
+            font-weight: bold;
+        }
+
         .search-bar {
             margin-bottom: 20px;
         }
+
         .search-bar input {
             padding: 8px;
             width: 300px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+
         .search-bar button {
             padding: 8px 16px;
             border: none;
@@ -30,9 +56,11 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .search-bar button:hover {
             background-color: #0056b3;
         }
+
         .btn-action {
             margin-top: 20px;
             margin-right: 10px;
@@ -42,21 +70,27 @@
             color: white;
             cursor: pointer;
         }
+
         .btn-issue {
             background-color: #28a745;
         }
+
         .btn-issue:hover {
             background-color: #218838;
         }
+
         .btn-verify {
             background-color: #007bff;
         }
+
         .btn-verify:hover {
             background-color: #0056b3;
         }
+
         .btn-delete {
             background-color: #dc3545;
         }
+
         .btn-delete:hover {
             background-color: #c82333;
         }
@@ -85,37 +119,26 @@
                 <button class="btn-action btn-delete" onclick="deletePass()">Delete Pass</button>
             </section>
 
-            <!-- Visitor Pass Table -->
+            <!-- Visitor Pass Section with Cards -->
             <section class="visitor-pass-section">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Visitor Pass ID</th>
-                            <th>Visitor Name</th>
-                            <th>Pass Type</th>
-                            <th>Entry Time</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Example dynamic content; replace with actual data -->
-                        <tr>
-                            <td>VP001</td>
-                            <td>John Doe</td>
-                            <td>Guest</td>
-                            <td>2024-09-17 10:00</td>
-                            <td>Verified</td>
-                        </tr>
-                        <tr>
-                            <td>VP002</td>
-                            <td>Jane Smith</td>
-                            <td>Delivery</td>
-                            <td>2024-09-18 11:00</td>
-                            <td>Pending</td>
-                        </tr>
-                        <!-- Add more rows as needed -->
-                    </tbody>
-                </table>
+                <!-- Example Visitor Cards -->
+                <div class="visitor-card">
+                    <h3>Visitor Pass ID: VP001</h3>
+                    <p><strong>Visitor Name:</strong> John Doe</p>
+                    <p><strong>Pass Type:</strong> Guest</p>
+                    <p><strong>Entry Time:</strong> 2024-09-17 10:00</p>
+                    <p class="status"><strong>Status:</strong> Verified</p>
+                </div>
+
+                <div class="visitor-card">
+                    <h3>Visitor Pass ID: VP002</h3>
+                    <p><strong>Visitor Name:</strong> Jane Smith</p>
+                    <p><strong>Pass Type:</strong> Delivery</p>
+                    <p><strong>Entry Time:</strong> 2024-09-18 11:00</p>
+                    <p class="status"><strong>Status:</strong> Pending</p>
+                </div>
+
+                <!-- Add more cards dynamically as needed -->
             </section>
         </main>
     </div>
