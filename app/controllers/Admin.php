@@ -82,5 +82,9 @@ class Admin extends Controller
     public function create_event() {
         $this->view('admin/create_event');
     }
-    
+    public function create_new_user(){
+        $this->view('admin/create_new_user');
+    }
 }
+
+

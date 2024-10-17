@@ -19,7 +19,7 @@
         <main>
             <div class="header-container">
                 <h1>Manage Users</h1>
-                <a href="#" class="btn-create">Create New User</a>
+                <a href="<?php echo URLROOT; ?>/admin/create_new_user" class="btn-create">Create New User</a>
             </div>
             <div class="user-stats">
                 <div class="stat-box">
