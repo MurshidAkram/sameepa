@@ -50,4 +50,13 @@ class Admin extends Controller
         // Load admin dashboard view
         $this->view('admin/users');
     }
+
+    public function create_booking() {
+        $this->view('admin/create_booking');
+    }
+    
+    public function view_complaint_history(){
+        $this->view('admin/view_complaint_history');
+    }
+
 }

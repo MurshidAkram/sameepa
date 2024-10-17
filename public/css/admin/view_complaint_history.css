@@ -1,0 +1,84 @@
+/* Styles for the View Complaint History page */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+}
+
+.btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: #e22d2d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #c62828;
+}
+
+.complaint-history-dashboard {
+    position: relative;
+    padding-top: 60px;
+}
+
+main {
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    color: #4d4d4d;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #800080;
+    margin-bottom: 20px;
+}
+
+.complaint-overview {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.complaint-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.complaint-table th, .complaint-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.complaint-table th {
+    background-color: #800080;
+    color: white;
+}
+
+.complaint-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .complaint-table {
+        font-size: 14px;
+    }
+
+    .complaint-table th, .complaint-table td {
+        padding: 10px;
+    }
+}

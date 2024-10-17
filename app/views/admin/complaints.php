@@ -20,7 +20,7 @@
         <main>
             <div class="header-container">
                 <h1>Complaints Dashboard</h1>
-                <a href="#" class="btn-history">View Complaints History</a>
+                <a href="<?php echo URLROOT; ?>/admin/view_complaint_history" class="btn-history">View Complaints History</a>
             </div>
               <div class="stats-container">
                     <div class="total-complaints">

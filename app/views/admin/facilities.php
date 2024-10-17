@@ -76,9 +76,9 @@
             <section class="facility-booking-requests">
                 <!-- <h2>Facility Booking Requests</h2> -->
                 <div class="header-container">
-                    <h1>Manage Facilities</h1>
+                    <h1>Manage Bookings</h1>
                     <div class="button-container">
-                        <a href="#" class="btn-create">Create New Booking</a>
+                        <a href="<?php echo URLROOT; ?>/admin/create_booking" class="btn-create">Create New Booking</a>
                         <a href="#" class="btn-history">View Booking History</a>
                     </div>
                 </div>
