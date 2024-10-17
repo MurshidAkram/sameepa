@@ -18,8 +18,8 @@
             <main class="complaint-history-dashboard">
                 <a href="<?php echo URLROOT; ?>/admin/complaints" class="btn-back">Back</a>
                 <h1>Complaint History</h1>
-            <div class="table-container">
-                <table class="complaint-history-table">
+            <section class="complaint-overview">
+                <table class="complaint-table">
                     <thead>
                         <tr>
                             <th>Complaint Title</th>
@@ -50,7 +50,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </section>
         </main>
     </div>
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

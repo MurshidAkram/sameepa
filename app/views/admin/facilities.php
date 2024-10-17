@@ -90,6 +90,7 @@
                             <th>Facility</th>
                             <th>Date</th>
                             <th>Time</th>
+                            <th>Duration</th>
                             <th>Status</th>
                             <th>Permisson</th>
                             <th>More Actions</th>
@@ -100,7 +101,8 @@
                             <td>John Doe</td>
                             <td>Community Pool</td>
                             <td>June 20, 2023</td>
-                            <td>2:00 PM - 4:00 PM</td>
+                            <td>2:00 PM</td>
+                            <td>2 hours</td>
                             <td>Confirmed</td>
                             <td>
                                 <a href="#" class="btn-accept">Accept</a> |
@@ -114,7 +116,8 @@
                             <td>Jane Smith</td>
                             <td>Tennis Court</td>
                             <td>June 21, 2023</td>
-                            <td>10:00 AM - 12:00 PM</td>
+                            <td>10:00 AM</td>
+                            <td>2 hours</td>
                             <td>Pending</td>
                             <td>
                                 <a href="#" class="btn-accept">Accept</a> |
@@ -128,7 +131,8 @@
                             <td>Mike Johnson</td>
                             <td>Gym</td>
                             <td>June 22, 2023</td>
-                            <td>6:00 PM - 8:00 PM</td>
+                            <td>6:00 PM</td>
+                            <td>2 hours</td>
                             <td>Cancelled</td>
                             <td>
                                 <a href="#" class="btn-accept">Accept</a> |

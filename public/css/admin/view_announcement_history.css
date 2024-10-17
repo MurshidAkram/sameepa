@@ -1,4 +1,4 @@
-/* Styles for the View Complaint History page */
+/* Styles for the View Announcement History page */
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -29,7 +29,7 @@ body {
     background-color: #c62828;
 }
 
-.complaint-history-dashboard {
+.announcement-history-dashboard {
     position: relative;
     padding-top: 60px;
 }
@@ -48,36 +48,38 @@ h1 {
     margin-bottom: 20px;
 }
 
-.complaint-overview {
+.announcement-overview {
     width: 100%;
     overflow-x: auto;
 }
 
-.complaint-table {
+.announcement-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.complaint-table th, .complaint-table td {
+.announcement-table th, .announcement-table td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
 }
-  .complaint-table th {
-      background-color: #800080;
-      color: white;
-  }
-.complaint-table tr:nth-child(even) {
+
+.announcement-table th {
+    background-color: #800080;
+    color: white;
+}
+
+.announcement-table tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
 /* Responsive design */
 @media screen and (max-width: 768px) {
-    .complaint-table {
+    .announcement-table {
         font-size: 14px;
     }
 
-    .complaint-table th, .complaint-table td {
+    .announcement-table th, .announcement-table td {
         padding: 10px;
     }
 }

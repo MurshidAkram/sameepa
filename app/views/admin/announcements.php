@@ -21,7 +21,7 @@
                     <h1>Announcements</h1>
                     <div class="button-container">
                         <a href="#" class="btn-create">Create New Announcements</a>
-                        <a href="#" class="btn-history">View Announcements History</a>
+                        <a href="<?php echo URLROOT; ?>/admin/viewAnnouncementHistory" class="btn-history">View Announcement History</a>
                     </div>
               </div>
               <table class="announcements-table">

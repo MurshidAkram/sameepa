@@ -59,4 +59,15 @@ class Admin extends Controller
         $this->view('admin/view_complaint_history');
     }
 
+    public function viewAnnouncementHistory() {
+        $data = [
+            'title' => 'Announcement History'
+        ];
+        $this->view('admin/view_announcement_history', $data);
+    }
+
+    public function viewEventHistory(){
+        $this->view('admin/view_event_history');
+    }
+
 }

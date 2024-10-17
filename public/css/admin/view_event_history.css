@@ -1,4 +1,4 @@
-/* Styles for the View Complaint History page */
+/* Styles for the View Event History page */
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -29,7 +29,7 @@ body {
     background-color: #c62828;
 }
 
-.complaint-history-dashboard {
+.event-history-dashboard {
     position: relative;
     padding-top: 60px;
 }
@@ -48,36 +48,38 @@ h1 {
     margin-bottom: 20px;
 }
 
-.complaint-overview {
+.event-overview {
     width: 100%;
     overflow-x: auto;
 }
 
-.complaint-table {
+.event-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.complaint-table th, .complaint-table td {
+.event-table th, .event-table td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
 }
-  .complaint-table th {
-      background-color: #800080;
-      color: white;
-  }
-.complaint-table tr:nth-child(even) {
+
+.event-table th {
+    background-color: #800080;
+    color: white;
+}
+
+.event-table tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
 /* Responsive design */
 @media screen and (max-width: 768px) {
-    .complaint-table {
+    .event-table {
         font-size: 14px;
     }
 
-    .complaint-table th, .complaint-table td {
+    .event-table th, .event-table td {
         padding: 10px;
     }
 }

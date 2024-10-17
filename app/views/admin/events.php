@@ -20,7 +20,7 @@
         <main>
             <div class="header-container">
                 <h1>Manage Events</h1>
-                <a href="#" class="btn btn-history">View Events History</a>
+                <a href="<?php echo URLROOT; ?>/admin/viewEventHistory" class="btn-history">View Event History</a>
             </div>
             <p>Welcome to the Events Management page. Here, you can add, view, or remove community events.</p>
 
