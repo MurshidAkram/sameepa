@@ -66,7 +66,7 @@ class Admin extends Controller
         $this->view('admin/view_announcement_history', $data);
     }
 
-    public function viewEventHistory(){
+    public function view_event_history(){
         $this->view('admin/view_event_history');
     }
 
