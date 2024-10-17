@@ -27,7 +27,7 @@
               <section class="facility-bookings-overview">
                 <div class="header-container">
                     <h1>Existing Facilities</h1>
-                    <a href="#" class="btn btn-create">Create New Facility</a>
+                    <a href="<?php echo URLROOT; ?>/admin/create_facility" class="btn btn-create">Create New Facility</a>
                 </div>
                   <table class="facility-bookings-table">
                       <thead>
@@ -79,7 +79,7 @@
                     <h1>Manage Bookings</h1>
                     <div class="button-container">
                         <a href="<?php echo URLROOT; ?>/admin/create_booking" class="btn-create">Create New Booking</a>
-                        <a href="#" class="btn-history">View Booking History</a>
+                        <a href="<?php echo URLROOT; ?>/admin/view_facilities_history" class="btn-history">View Booking History</a>
                     </div>
                 </div>
 

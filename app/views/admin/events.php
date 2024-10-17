@@ -20,7 +20,7 @@
         <main>
             <div class="header-container">
                 <h1>Manage Events</h1>
-                <a href="<?php echo URLROOT; ?>/admin/viewEventHistory" class="btn-history">View Event History</a>
+                <a href="#" class="btn btn-history">View Events History</a>
             </div>
             <p>Welcome to the Events Management page. Here, you can add, view, or remove community events.</p>
 
@@ -28,7 +28,7 @@
                 <!-- <h2>Upcoming Events</h2> -->
                 <div class="header-container">
                     <h2>Upcoming Events</h2>
-                    <a href="#" class="btn btn-create">Create New Events</a>
+                    <a href="<?php echo URLROOT; ?>/admin/create_event" class="btn-create">Create New Event</a>
                 </div>
                 <table class="events-table">
                     <thead>

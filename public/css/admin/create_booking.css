@@ -1,29 +1,52 @@
-  .create-booking-main {
-      padding: 20px;
-  }
+  .btn-back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
 
-  .booking-container {
-      display: flex;
-      gap: 30px;
-      margin-bottom: 30px;
-  }
+.btn-back:hover {
+    background-color: #45a049;
+}
 
-  #calendar {
-      flex: 1;
-      background-color: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-  }
+.create-booking-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-  #calendarHeader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-  }
+.booking-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
 
-  #calendarHeader button {
+#calendar,
+#bookingForm {
+    width: 48%;
+}
+
+#calendar {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#calendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#calendarHeader button {
       background-color: #800080;
       color: white;
       border: none;

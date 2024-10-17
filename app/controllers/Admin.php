@@ -70,4 +70,17 @@ class Admin extends Controller
         $this->view('admin/view_event_history');
     }
 
+    public function view_facilities_history(){
+        $this->view('admin/view_facilities_history');
+    }
+    public function create_announcement() {
+         $this->view('admin/create_announcement');
+    }
+    public function create_facility() {
+        $this->view('admin/create_facility');
+    }
+    public function create_event() {
+        $this->view('admin/create_event');
+    }
+    
 }
