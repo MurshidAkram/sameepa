@@ -1,52 +1,64 @@
+/* Sidebar Styling */
+aside {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #f8f8f8;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease;
+}
+
+/* Sidebar Links Styling */
 aside ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     margin: 0;
 }
 
 aside ul li {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 aside ul li a {
     display: block;
-    padding: 10px;
+    padding: 12px 20px;
     color: #800080;
     text-decoration: none;
     border-radius: 5px;
-    position: relative; /* Needed for ::after positioning */
+    position: relative;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-weight: 500;
 }
 
-/* Hover effect */
+/* Hover Effect */
 aside ul li a:hover {
     background-color: #800080;
     color: white;
 }
 
-/* After-click (focus) effect */
-aside ul li a:focus,
-aside ul li a:focus::after {
-    background-color: #800080;
+/* Active State Styling */
+aside ul li a.active {
+    background-color: #800080; /* Background color for the active item */
     color: white;
-    outline: none;
 }
 
-/* Adding ::after visual indicator */
-aside ul li a:focus::after {
+/* Adding Visual Indicator for Active Links */
+aside ul li a.active::after {
     content: '';
     position: absolute;
     left: 0;
     top: 0;
     width: 5px;
     height: 100%;
-    background-color: #800080; /* Highlight color */
+    background-color: #ffbf00; /* Contrasting color for the indicator */
     border-radius: 5px 0 0 5px;
 }
 
-/* Ensure the side panel doesn't overlap with the main content */
+/* Main Content Styling */
 .dashboard-container {
-    margin-left: 100px; /* Adjust margin to match the side panel width */
+    margin-left: 200px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
 }
-
-

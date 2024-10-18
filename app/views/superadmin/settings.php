@@ -169,7 +169,7 @@
             document.getElementById(modalId).style.display = 'none';
         }
     </script>
-
+<?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
 
 </html>

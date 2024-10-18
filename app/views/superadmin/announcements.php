@@ -37,7 +37,6 @@
                             <option value="event">Event</option>
                             <option value="emergency">Emergency</option>
                         </select>
-
                         <label for="target">Target Audience:</label>
                         <select id="target" name="target">
                             <option value="all">All Residents</option>
@@ -53,6 +52,7 @@
                         </select>
 
                         <button type="submit" class="btn-primary">Submit</button>
+                        <button type="submit" class="btn-primary">Update</button>
                     </form>
                 </section>
 
@@ -77,7 +77,7 @@
                                     <a href="<?php echo URLROOT; ?>/superadmin/pinAnnouncement/<?php echo $announcement->id; ?>" class="btn-pin">Pin</a>
 
                                     <!-- Edit and Delete Buttons -->
-                                    <a href="<?php echo URLROOT; ?>/superadmin/editAnnouncement/<?php echo $announcement->id; ?>" class="btn-edit">Edit</a>
+                                    <a href="#update-form" class="btn-edit" onclick="fillUpdateForm('<?php echo $announcement->id; ?>', '<?php echo htmlspecialchars($announcement->title, ENT_QUOTES); ?>', '<?php echo htmlspecialchars($announcement->body, ENT_QUOTES); ?>', '<?php echo $announcement->category; ?>', '<?php echo $announcement->target; ?>', '<?php echo $announcement->priority; ?>')">Edit</a>
                                     <a href="<?php echo URLROOT; ?>/superadmin/deleteAnnouncement/<?php echo $announcement->id; ?>" class="btn-delete">Delete</a>
                                 </li>
                             <?php endforeach; ?>
@@ -86,11 +86,62 @@
                         <p>No announcements available.</p>
                     <?php endif; ?>
                 </section>
+
+                <!-- Update Form Section -->
+                <section id="update-form" class="announcement-form" style="display: none;">
+                    <h2>Update Announcement</h2>
+                    <form action="<?php echo URLROOT; ?>/superadmin/updateAnnouncement" method="POST">
+                        <input type="hidden" id="update_id" name="id">
+                        
+                        <label for="update_title">Title:</label>
+                        <input type="text" id="update_title" name="title" required>
+
+                        <label for="update_body">Announcement:</label>
+                        <textarea id="update_body" name="body" rows="5" required></textarea>
+
+                        <label for="update_category">Category:</label>
+                        <select id="update_category" name="category">
+                            <option value="general">General</option>
+                            <option value="event">Event</option>
+                            <option value="emergency">Emergency</option>
+                        </select>
+
+                        <label for="update_target">Target Audience:</label>
+                        <select id="update_target" name="target">
+                            <option value="all">All Residents</option>
+                            <option value="building_a">Building A</option>
+                            <option value="security">Security Personnel</option>
+                        </select>
+
+                        <label for="update_priority">Priority:</label>
+                        <select id="update_priority" name="priority">
+                            <option value="normal">Normal</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+
+                        <button type="submit" class="btn-primary">Update</button>
+                    </form>
+                </section>
             </section>
         </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+    
+    <script>
+        function fillUpdateForm(id, title, body, category, target, priority) {
+            document.getElementById('update_id').value = id;
+            document.getElementById('update_title').value = title;
+            document.getElementById('update_body').value = body;
+            document.getElementById('update_category').value = category;
+            document.getElementById('update_target').value = target;
+            document.getElementById('update_priority').value = priority;
+            
+            // Show the update form
+            document.getElementById('update-form').style.display = 'block';
+        }
+    </script>
 </body>
 
 </html>

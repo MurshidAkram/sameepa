@@ -7,14 +7,14 @@ body {
 }
 
 h1, h2, h3, h4 {
-    color:#800080;
+    color: #800080;
 }
 
 /* Dashboard Container - Flexbox Layout */
 .dashboard-container {
     display: flex; /* Flexbox for horizontal layout */
     flex-direction: row; /* Sidebar and main content in a row */
-    width: 100%;
+    width: auto;
     min-height: 100vh; /* Full viewport height */
 }
 
@@ -34,7 +34,8 @@ main {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-left: 20px; /* Create space between sidebar and main content */
+    max-width: 100%; /* Set a maximum width */
+    width: 100%; /* Adjusted width for better alignment */
 }
 
 /* Section Styles */
@@ -48,6 +49,63 @@ main {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
+    width: 100%;
+}
+
+/* Deactivate Section Styles */
+.deactivate-section {
+    margin-bottom: 30px; /* Spacing from other sections */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f7f7f7; /* Light background for deactivate section */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for form */
+    width:auto;
+}
+
+/* Deactivate Form Group */
+.deactivate-section .form-group {
+    margin-bottom: 20px; /* Extra spacing between form elements */
+}
+
+.deactivate-section label {
+    font-weight: 600; /* Bolder labels for better readability */
+    color: #333; /* Darker label color */
+    margin-bottom: 8px; /* Increased space under labels */
+}
+
+.deactivate-section select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for select */
+    transition: border-color 0.3s;
+}
+
+.deactivate-section select:focus {
+    border-color: #800080; /* Purple border on focus */
+    outline: none;
+}
+
+/* Deactivate Button */
+.deactivate-section .btn-action {
+    display: inline-block;
+    width: 300px; /* Full-width button for mobile and desktop */
+    padding: 12px;
+    font-size: 16px; /* Slightly larger font for the button */
+    text-align: center;
+    background-color: #ff4c4c; /* Red color for "deactivate" action */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.deactivate-section .btn-action:hover {
+    background-color: #cc0000; /* Darker red on hover */
 }
 
 /* Tables */
@@ -97,6 +155,10 @@ label {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+    main {
+        width: 90%; /* Full width on smaller screens */
+        margin: 10px auto; /* Center with some margin */
+    }
     .dashboard-container {
         flex-direction: column; /* Stack sidebar and main content vertically */
     }
@@ -107,6 +169,7 @@ label {
 
     main {
         margin-left: 0; /* Remove left margin on smaller screens */
-        padding: 15px;
+        width: 100%; /* Full width on smaller screens */
+        padding: 15px; /* Adjust padding for smaller screens */
     }
 }

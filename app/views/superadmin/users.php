@@ -49,7 +49,7 @@
                     </div>
 
                     <!-- Deactivate Resident -->
-                    <div class="user-management-option">
+                    <div class="user-management-option deactivate-section">
                         <h4>Deactivate Resident</h4>
                         <form id="deactivateResidentForm" action="#" method="post">
                             <div class="form-group">
@@ -96,7 +96,7 @@
                     </div>
 
                     <!-- Deactivate Admin/Security -->
-                    <div class="user-management-option">
+                    <div class="user-management-option deactivate-section">
                         <h4>Deactivate Admin/Security</h4>
                         <form id="deactivateAdminSecurityForm" action="#" method="post">
                             <div class="form-group">
@@ -111,7 +111,9 @@
                     </div>
                 </section>
             </section>
+           
         </main>
+        
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

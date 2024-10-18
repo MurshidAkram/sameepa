@@ -6,7 +6,7 @@
 main {
     width: 100%;
     padding: 20px;
-    background-color: white;
+    background-color: #ffffff; /* Set main background color to white */
 }
 
 h1 {
@@ -15,47 +15,72 @@ h1 {
 }
 
 /* Announcement Form Styling */
-.announcement-form {
-    background-color: white;
+.announcement-form, 
+#update-form { /* Combine styles for both forms */
+    background-color: #f9f9f9; /* Set form background color */
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
 }
 
-.announcement-form h2 {
+.announcement-form:hover, 
+#update-form:hover { /* Add hover effect for form */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.announcement-form h2, 
+#update-form h2 {
     font-size: 1.5em;
     margin-bottom: 1rem;
 }
 
-.announcement-form label {
+.announcement-form label, 
+#update-form label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
 }
 
+/* Input Fields */
 .announcement-form input[type="text"], 
 .announcement-form textarea,
-.announcement-form select {
+.announcement-form select,
+#update-form input[type="text"], 
+#update-form textarea,
+#update-form select {
     width: 100%;
     padding: 10px;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    transition: border-color 0.3s ease;
 }
 
-.btn-primary {
-    background-color:#800080;
+.announcement-form input[type="text"]:focus,
+.announcement-form textarea:focus,
+.announcement-form select:focus,
+#update-form input[type="text"]:focus,
+#update-form textarea:focus,
+#update-form select:focus {
+    border-color: #800080; /* Change border color on focus */
+}
+
+/* Button Styles */
+.btn-primary, .btn-update {
+    background-color: #800080; /* Purple background for primary buttons */
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
-    background-color: #800080;
-    
+.btn-primary:hover,
+.btn-update:hover {
+    background-color: #700070; /* Darker purple on hover */
 }
 
 /* Announcement List Styling */
@@ -93,6 +118,7 @@ h1 {
     color: #555;
 }
 
+/* Button Styles for Edit, Delete, Pin */
 .btn-edit, .btn-delete, .btn-pin {
     display: inline-block;
     margin-right: 10px;
@@ -104,28 +130,34 @@ h1 {
 }
 
 .btn-edit {
-    background-color: #ffc107;
+    background-color: #ffc107; /* Yellow background for edit button */
     color: white;
 }
 
 .btn-delete {
-    background-color: #dc3545;
+    background-color: #dc3545; /* Red background for delete button */
     color: white;
 }
 
 .btn-pin {
-    background-color: #28a745;
+    background-color: #28a745; /* Green background for pin button */
     color: white;
 }
 
 .btn-edit:hover {
-    background-color: #e0a800;
+    background-color: #e0a800; /* Darker yellow on hover */
 }
 
 .btn-delete:hover {
-    background-color: #c82333;
+    background-color: #c82333; /* Darker red on hover */
 }
 
 .btn-pin:hover {
-    background-color: #218838;
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Update Form Specific Styles */
+#update-form {
+    display: none; /* Initially hidden */
+    margin-top: 20px; /* Space between forms */
 }

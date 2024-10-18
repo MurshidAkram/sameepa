@@ -48,6 +48,7 @@
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+    <script src="script.js"></script>
 </body>
 
 </html>
