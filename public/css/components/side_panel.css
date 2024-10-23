@@ -1,13 +1,15 @@
 /* Sidebar Styling */
 aside {
-    width: 200px;
-    position: fixed;
-    top: 0;
+    width: 250px;
+    top: 120px; /* Set to match the height of the navbar */
     left: 0;
-    height: 100%;
+    position: sticky;
+    bottom: 60px; /* Set to match the height of the footer */
     background-color: #f8f8f8;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: width 0.3s ease;
+    z-index: 1;
+    overflow-y: auto; /* Allows scrolling if content exceeds the viewport */
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Sidebar Links Styling */
@@ -40,25 +42,15 @@ aside ul li a:hover {
 
 /* Active State Styling */
 aside ul li a.active {
-    background-color: #800080; /* Background color for the active item */
+    background-color: #800080;
     color: white;
-}
-
-/* Adding Visual Indicator for Active Links */
-aside ul li a.active::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 5px;
-    height: 100%;
-    background-color: #ffbf00; /* Contrasting color for the indicator */
-    border-radius: 5px 0 0 5px;
 }
 
 /* Main Content Styling */
 .dashboard-container {
-    margin-left: 200px;
-    padding: 20px;
-    transition: margin-left 0.3s ease;
-}
+    margin-left: 10px; /* Leave space for the sidebar */
+    padding: 5px;
+    margin-top: 10px; /* Leave space for the navbar */
+ }
+
+

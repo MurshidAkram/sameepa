@@ -10,14 +10,13 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Super Admin Dashboard | <?php echo SITENAME; ?></title>
 </head>
-
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
-        <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
-
+    <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
         <main>
+       
             <h1>Super Admin Dashboard</h1>
             <section class="dashboard-overview">
                 <div class="dashboard-item">
