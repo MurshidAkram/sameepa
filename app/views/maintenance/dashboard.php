@@ -66,14 +66,22 @@
                                 <td>2024-09-10</td>
                                 <td>AC unit repair</td>
                                 <td>Completed</td>
-                                <td><div class="progress-bar"><div class="progress" style="width: 100%;"></div></div></td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 100%;"></div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>MH002</td>
                                 <td>2024-09-12</td>
                                 <td>Light fixture replacement</td>
                                 <td>In Progress</td>
-                                <td><div class="progress-bar"><div class="progress" style="width: 60%;"></div></div></td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 60%;"></div>
+                                    </div>
+                                </td>
                             </tr>
                             <!-- Add more rows as needed -->
                         </tbody>
@@ -136,6 +144,7 @@
     <script>
         // JavaScript to display current date and time
         const dateTimeElement = document.getElementById('current-date-time');
+
         function updateDateTime() {
             const now = new Date();
             dateTimeElement.textContent = now.toLocaleString();

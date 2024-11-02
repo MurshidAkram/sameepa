@@ -2,7 +2,7 @@
 
 class Maintenance extends Controller
 {
-   
+
 
     public function dashboard()
     {
@@ -29,8 +29,8 @@ class Maintenance extends Controller
     {
         $this->view('maintenance/shedule');
     }
-    public function update() {
+    public function update()
+    {
         $this->view('maintenance/update');
     }
-    
 }

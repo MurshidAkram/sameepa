@@ -24,54 +24,54 @@
 
             <h1>Manage Facilities</h1>
             <p>Welcome to the Facilities Management page. Here, you can add, edit, or remove community facilities.</p>
-              <section class="facility-bookings-overview">
+            <section class="facility-bookings-overview">
                 <div class="header-container">
                     <h1>Existing Facilities</h1>
                     <a href="#" class="btn btn-create">Create New Facility</a>
                 </div>
-                  <table class="facility-bookings-table">
-                      <thead>
-                          <tr>
-                              <th>Facility Name</th>
-                              <th>Capacity</th>
-                              <th>Status</th>
-                              <th>Actions</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>Community Pool</td>
-                              <td>50</td>
-                              <td>Available</td>
-                              <td>
-                                  <a href="#">View</a> |
-                                  <a href="#">Edit</a> |
-                                  <a href="#">Delete</a> 
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Tennis Court</td>
-                              <td>4</td>
-                              <td>Unavailable</td>
-                              <td>
-                                  <a href="#">View</a> |
-                                  <a href="#">Edit</a> |
-                                  <a href="#">Delete</a>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Gym</td>
-                              <td>30</td>
-                              <td>Available</td>
-                              <td>
-                                  <a href="#">View</a> |
-                                  <a href="#">Edit</a> |
-                                  <a href="#">Delete</a>
-                              </td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </section>
+                <table class="facility-bookings-table">
+                    <thead>
+                        <tr>
+                            <th>Facility Name</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Community Pool</td>
+                            <td>50</td>
+                            <td>Available</td>
+                            <td>
+                                <a href="#">View</a> |
+                                <a href="#">Edit</a> |
+                                <a href="#">Delete</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tennis Court</td>
+                            <td>4</td>
+                            <td>Unavailable</td>
+                            <td>
+                                <a href="#">View</a> |
+                                <a href="#">Edit</a> |
+                                <a href="#">Delete</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gym</td>
+                            <td>30</td>
+                            <td>Available</td>
+                            <td>
+                                <a href="#">View</a> |
+                                <a href="#">Edit</a> |
+                                <a href="#">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
             <section class="facility-booking-requests">
                 <!-- <h2>Facility Booking Requests</h2> -->
@@ -104,10 +104,10 @@
                             <td>Confirmed</td>
                             <td>
                                 <a href="#" class="btn-accept">Accept</a> |
-                                <a href="#" class="btn-decline">Decline</a>                     
+                                <a href="#" class="btn-decline">Decline</a>
                             </td>
                             <td>
-                                <a href="#" class="btn-view">View Details</a> 
+                                <a href="#" class="btn-view">View Details</a>
                             </td>
                         </tr>
                         <tr>
@@ -118,10 +118,10 @@
                             <td>Pending</td>
                             <td>
                                 <a href="#" class="btn-accept">Accept</a> |
-                                <a href="#" class="btn-decline">Decline</a> 
+                                <a href="#" class="btn-decline">Decline</a>
                             </td>
                             <td>
-                                <a href="#" class="btn-view">View Details</a> 
+                                <a href="#" class="btn-view">View Details</a>
                             </td>
                         </tr>
                         <tr>
@@ -132,10 +132,10 @@
                             <td>Cancelled</td>
                             <td>
                                 <a href="#" class="btn-accept">Accept</a> |
-                                <a href="#" class="btn-decline">Decline</a> 
+                                <a href="#" class="btn-decline">Decline</a>
                             </td>
                             <td>
-                                <a href="#" class="btn-view">View Details</a> 
+                                <a href="#" class="btn-view">View Details</a>
                             </td>
                         </tr>
                     </tbody>
@@ -148,4 +148,5 @@
 </body>
 
 </html>
+
 </html>

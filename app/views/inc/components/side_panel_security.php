@@ -1,6 +1,6 @@
 <!-- app/views/inc/components/side_panel_security.php -->
 <aside>
-      <h2>Security</h2>
+    <h2>Security</h2>
     <ul>
         <li><a href="<?php echo URLROOT; ?>/security/dashboard">Dashboard</a></li>
         <li><a href="<?php echo URLROOT; ?>/security/view_visitor_pass">Visitor Passes View</a></li>

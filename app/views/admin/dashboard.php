@@ -22,10 +22,10 @@
             <div class="user-count">
                 <span>Active Users: 150</span>
             </div>
-            
+
             <h1>Welcome to the Admin Dashboard</h1>
-            
-            <div class="dashboard-grid">                             
+
+            <div class="dashboard-grid">
                 <div class="card bookings-card">
                     <h2>Today's Bookings</h2>
                     <table class="bookings-table">
@@ -89,7 +89,7 @@
                             <td class="booked">Harry Kane</td>
                             <td></td>
                         </tr>
-                        
+
                     </table>
                 </div>
 
@@ -106,12 +106,12 @@
                         <li>Pool Maintenance Schedule</li>
                     </ul>
                 </div>
-                
+
                 <div class="bar-chart-container">
                     <h2>Complaints Status</h2>
                     <canvas id="monthlyComplaintsChart"></canvas>
                 </div>
-                
+
                 <div class="card events-card">
                     <h2>Today's Events</h2>
                     <ul>
@@ -159,34 +159,33 @@
         });
 
         // Payment Chart
-    const paymentCtx = document.getElementById('paymentChart').getContext('2d');
-    new Chart(paymentCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Paid', 'Unpaid'],
-            datasets: [{
-                data: [175, 25],
-                backgroundColor: ['#800080', '#e0e0e0']
-            }]
-        },
-        options: {
-            responsive: true,
-            cutout: '70%',
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return context.label + ': ' + context.parsed + '';
+        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+        new Chart(paymentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Paid', 'Unpaid'],
+                datasets: [{
+                    data: [175, 25],
+                    backgroundColor: ['#800080', '#e0e0e0']
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '';
+                            }
                         }
                     }
                 }
             }
-        }
-    });
-
+        });
     </script>
 </body>
 

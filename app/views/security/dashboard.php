@@ -30,7 +30,7 @@
                         <p>This Month: <span id="visitor-pass-month">200</span></p>
                     </div>
                 </div>
-                
+
                 <div class="widget">
                     <h2>Duty Schedule Overview</h2>
                     <div class="widget-content">
