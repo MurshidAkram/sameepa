@@ -4,6 +4,7 @@
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
       <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
       <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
       <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin/create_announcement.css">
