@@ -51,6 +51,18 @@ class Admin extends Controller
         $this->view('admin/users');
     }
 
+    public function groups()
+    {
+        // Load admin dashboard view
+        $this->view('admin/groups');
+    }
+
+    public function exchange()
+    {
+        // Load admin dashboard view
+        $this->view('admin/exchange');
+    }
+
     public function create_booking() {
         $this->view('admin/create_booking');
     }
@@ -85,6 +97,7 @@ class Admin extends Controller
     public function create_new_user(){
         $this->view('admin/create_new_user');
     }
+
 }
 
 
