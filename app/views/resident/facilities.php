@@ -1,3 +1,4 @@
+<!-- app/views/resident/facility_bookings.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,76 +8,81 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/facilities.css">
-    <title>Facility Booking | <?php echo SITENAME; ?></title>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <title>Facility Bookings | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="dashboard-container side-panel-open">
+    <div class="dashboard-container">
         <?php require APPROOT . '/views/inc/components/side_panel_resident.php'; ?>
 
-        <main>
-            <h1>Your Facility Bookings</h1>
-            <p>Here you can view and manage your facility bookings such as gym, pool, halls, and more.</p>
+        <main class="facility-bookings-main">
+            <h1>Facility Bookings</h1>
+            <p>Book community facilities or view your booking history.</p>
 
-            <section class="facility-bookings-overview">
-                <h2>Active Bookings</h2>
-                <p>Below is a list of your active facility bookings. You can update or cancel them as necessary.</p>
+            <div class="facility-booking-container">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button id="prevMonth">&lt;</button>
+                        <h2 id="currentMonth"></h2>
+                        <button id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
 
-                <table class="facility-bookings-table">
+                <div class="booking-form-container">
+                    <h2>Book a Facility</h2>
+                    <form id="bookingForm">
+                        <div class="form-group">
+                            <label for="facility">Facility:</label>
+                            <select id="facility" name="facility" required>
+                                <option value="">Select a facility</option>
+                                <option value="pool">Swimming Pool</option>
+                                <option value="gym">Gym</option>
+                                <option value="hall">Community Hall</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date:</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">Time:</label>
+                            <input type="time" id="time" name="time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration (hours):</label>
+                            <input type="number" id="duration" name="duration" min="1" max="4" required>
+                        </div>
+                        <button type="submit" class="btn-book">Book Facility</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="booking-history">
+                <h2>Your Booking History</h2>
+                <table id="bookingHistoryTable">
                     <thead>
                         <tr>
-                            <th>Facility Name</th>
+                            <th>Facility</th>
                             <th>Date</th>
                             <th>Time</th>
+                            <th>Duration</th>
                             <th>Status</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Community Hall</td>
-                            <td>Sept 22, 2024</td>
-                            <td>4:00 PM - 6:00 PM</td>
-                            <td>Confirmed</td>
-                            <td>
-                                <a href="#">Update</a> |
-                                <a href="#">Cancel</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Swimming Pool</td>
-                            <td>Sept 24, 2024</td>
-                            <td>10:00 AM - 11:00 AM</td>
-                            <td>Pending</td>
-                            <td>
-                                <a href="#">Update</a> |
-                                <a href="#">Cancel</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Gym</td>
-                            <td>Sept 27, 2024</td>
-                            <td>5:00 PM - 6:00 PM</td>
-                            <td>Cancelled</td>
-                            <td>
-                                <a href="#">Rebook</a>
-                            </td>
-                        </tr>
+                        <!-- Booking history will be populated here by JavaScript -->
                     </tbody>
                 </table>
-            </section>
-
-            <section class="create-facility-booking">
-                <h2>Book a New Facility</h2>
-                <p>Need to book a facility? Select from the available facilities and choose your preferred date and time.</p>
-                <a href="<?php echo URLROOT; ?>/resident/create_facility_booking" class="btn-create">Book Facility</a>
-            </section>
+            </div>
         </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+    <script src="<?php echo URLROOT; ?>/js/facility_bookings.js"></script>
 </body>
 
 </html>
