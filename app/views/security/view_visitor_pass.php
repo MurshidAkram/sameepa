@@ -7,94 +7,8 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
+    <link rel="stylesheet" href="path/to/visitor_pass.css">
     <title>View Visitor Pass | <?php echo SITENAME; ?></title>
-    <style>
-        /* Custom styles for the view visitor pass page */
-        .visitor-pass-section {
-            margin-top: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .visitor-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: 300px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .visitor-card h3 {
-            margin: 0 0 10px;
-        }
-
-        .visitor-card p {
-            margin: 5px 0;
-        }
-
-        .visitor-card .status {
-            font-weight: bold;
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-        }
-
-        .search-bar input {
-            padding: 8px;
-            width: 300px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .search-bar button {
-            padding: 8px 16px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .search-bar button:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-action {
-            margin-top: 20px;
-            margin-right: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .btn-issue {
-            background-color: #28a745;
-        }
-
-        .btn-issue:hover {
-            background-color: #218838;
-        }
-
-        .btn-verify {
-            background-color: #007bff;
-        }
-
-        .btn-verify:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-        }
-
-        .btn-delete:hover {
-            background-color: #c82333;
-        }
-    </style>
 </head>
 
 <body>
@@ -117,6 +31,7 @@
                 <button class="btn-action btn-issue" onclick="issueNewPass()">Issue New Pass</button>
                 <button class="btn-action btn-verify" onclick="verifyPass()">Verify Pass</button>
                 <button class="btn-action btn-delete" onclick="deletePass()">Delete Pass</button>
+                <button class="btn-action btn-update" onclick="updatePass()">Update Pass</button>
             </section>
 
             <!-- Visitor Pass Section with Cards -->
@@ -165,6 +80,11 @@
         function deletePass() {
             // Implement delete pass logic here
             alert('Delete Pass function triggered');
+        }
+
+        function updatePass() {
+            // Implement update pass logic here
+            alert('Update Pass function triggered');
         }
     </script>
 </body>
