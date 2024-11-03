@@ -23,7 +23,7 @@ main {
 
 /* Heading styles */
 h1, h2 {
-    color: #64ce2f;
+    color: #800080;
     margin-bottom: 20px;
 }
 
@@ -45,12 +45,12 @@ p {
 }
 
 .events-table th {
-    background-color: #64ce2f;
+    background-color: #800080;
     color: white;
 }
 
 .events-table td a {
-    color: #64ce2f;
+    color: #800080;
     text-decoration: none;
     font-weight: bold;
 }
