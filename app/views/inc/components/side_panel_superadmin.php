@@ -4,11 +4,11 @@
 
 <aside>
     <ul>
-        <!-- <li>
+        <li>
             <a href="<?php echo URLROOT; ?>/superadmin/dashboard">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
             </a>
-        </li> -->
+        </li>
         <li>
             <a href="<?php echo URLROOT; ?>/superadmin/users">
                 <i class="fas fa-users"></i> Manage Users
