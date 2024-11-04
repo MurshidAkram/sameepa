@@ -97,6 +97,13 @@ class Admin extends Controller
     public function create_new_user(){
         $this->view('admin/create_new_user');
     }
+    public function create_forum(){
+        $this->view('admin/create_forum');
+    }
+
+    public function create_group(){
+        $this->view('admin/create_group');
+    }
 
 }
 

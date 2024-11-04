@@ -22,7 +22,7 @@
             <div class="header-container">
                 <h1>Manage Groups</h1>
                 <div class="button-container">
-                    <a href="<?php echo URLROOT; ?>/admin/create_event" class="btn-create">Create New Groups</a>
+                    <a href="<?php echo URLROOT; ?>/admin/create_group" class="btn-create">Create New Groups</a>
                 </div>
             </div>
             <p>Welcome to the Groups Management page. Here, you can add, view, or remove groups.</p>

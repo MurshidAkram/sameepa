@@ -22,7 +22,7 @@
             <div class="header-container">
                 <h1>Manage Forums</h1>
                 <div class="button-container">
-                    <a href="<?php echo URLROOT; ?>/admin/create_event" class="btn-create">Create New Forums</a>
+                    <a href="<?php echo URLROOT; ?>/admin/create_forum" class="btn-create">Create New Forums</a>
                 </div>
             </div>
             <p>Welcome to the Forums Management page. Here, you can add, view, or remove forums.</p>
@@ -34,7 +34,7 @@
                         <tr>
                             <th>Forum Title</th>
                             <th>Posted by</th>
-                            <th>Replies</th>
+                            <th>Comments</th>
                             <th>Actions</th>
                         </tr>
                     </thead>

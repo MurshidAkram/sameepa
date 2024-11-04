@@ -22,16 +22,16 @@
             <aside class="events-sidebar">
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
-                    <a href="<?php echo URLROOT; ?>/resident/create_event" class="btn-create-event">Create Event</a>
+                    <a href="<?php echo URLROOT; ?>/admin/create_event" class="btn-create-event">Create Event</a>
                     <a href="<?php echo URLROOT; ?>/resident/joined_events" class="btn-joined-events">Joined Events</a>
                     <a href="<?php echo URLROOT; ?>/resident/my_events" class="btn-my-events">My Events</a>
                 </nav>
             </aside>
 
             <div class="events-content">
-                <h1>Managee Community Events</h1>
-                <p>Discover and join exciting events happening in your community!</p>
-
+                <h1>Manage Community Events</h1>
+                <p>Manage events happening in your community!</p>
+                <h2>Upcoming Events</h2>
                 <div class="events-container">
                     <?php
                     // Dummy events data
