@@ -44,7 +44,7 @@
                             <td>Jhon</td>
                             <td>12</td>
                             <td>
-                                <a href="#">View</a> |
+                                <a href="<?php echo URLROOT; ?>/admin/view_forum">View</a> |
                                 <a href="#">Edit</a> |
                                 <a href="#">Delete</a>
                             </td>

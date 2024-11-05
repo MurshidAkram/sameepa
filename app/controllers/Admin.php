@@ -105,6 +105,13 @@ class Admin extends Controller
         $this->view('admin/create_group');
     }
 
+    public function view_forum(){
+        $this->view('admin/view_forum');
+    }
+    public function view_group(){
+        $this->view('admin/view_group');
+    }
+
 }
 
 
