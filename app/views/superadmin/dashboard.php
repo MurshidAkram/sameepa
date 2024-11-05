@@ -148,7 +148,7 @@
                 datasets: [{
                     label: 'Number of Complaints',
                     data: [12, 19, 3, 5, 2, 3, 8, 14, 7, 10, 6, 9],
-                    backgroundColor: '#3498db'
+                    backgroundColor: '#6a006a'
                 }]
             },
             options: {
@@ -163,32 +163,32 @@
 
         // Payment Chart
         const paymentCtx = document.getElementById('paymentChart').getContext('2d');
-        new Chart(paymentCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Paid', 'Unpaid'],
-                datasets: [{
-                    data: [175, 25],
-                    backgroundColor: ['#800080', '#e0e0e0']
-                }]
+new Chart(paymentCtx, {
+    type: 'pie', // Change from 'doughnut' to 'pie'
+    data: {
+        labels: ['Paid', 'Unpaid'],
+        datasets: [{
+            data: [175, 25],
+            backgroundColor: ['#800080', '#e0e0e0']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
             },
-            options: {
-                responsive: true,
-                cutout: '70%',
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '';
-                            }
-                        }
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.parsed + '';
                     }
                 }
             }
-        });
+        }
+    }
+});
+
     </script>
 </body>
 

@@ -27,7 +27,7 @@ h1 {
 
 .user-count {
     position: absolute;
-    top: 150px; /* Adjust this value based on your navbar height */
+    top: 170px; /* Adjust this value based on your navbar height */
     right: 20px;
     background-color: #FCC4F0;
     padding: 10px;
@@ -39,7 +39,7 @@ h1 {
 
 .user-count {
     display: block;
-    font-size: 1.2em;
+    font-size: 1em;
     font-weight: bold;
 }
 

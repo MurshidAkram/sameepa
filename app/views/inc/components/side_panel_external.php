@@ -1,11 +1,11 @@
 <!-- app/views/inc/components/side_panel_external.php -->
 <aside>
     <ul>
-        <!-- <li>
+        <li>
             <a href="<?php echo URLROOT; ?>/external/dashboard">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
             </a>
-        </li> -->
+        </li>
         <li>
             <a href="<?php echo URLROOT; ?>/external/requests">
                 <i class="fas fa-list-alt"></i> Service Requests
