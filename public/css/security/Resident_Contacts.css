@@ -1,0 +1,40 @@
+/* Style for the residents contacts form */
+.residents-contacts-form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.residents-contacts-form .form-group {
+  margin-bottom: 15px;
+}
+
+.residents-contacts-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.residents-contacts-form input[type="text"],
+.residents-contacts-form input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.residents-contacts-form button.btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.residents-contacts-form button.btn:hover {
+  background-color: #0056b3;
+}

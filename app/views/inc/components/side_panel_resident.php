@@ -2,8 +2,9 @@
 <aside>
     <ul>
         <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li>
-        <li><a href="<?php echo URLROOT; ?>/resident/events">My Events</a></li>
-        <li><a href="<?php echo URLROOT; ?>/resident/groups">My Groups</a></li>
+        <li><a href="<?php echo URLROOT; ?>/resident/announcements">Community Announcements</a></li>
+        <li><a href="<?php echo URLROOT; ?>/resident/events">Events</a></li>
+        <li><a href="<?php echo URLROOT; ?>/resident/groups">Groups</a></li>
         <li><a href="<?php echo URLROOT; ?>/resident/forums">Forums</a></li>
         <li><a href="<?php echo URLROOT; ?>/resident/exchange">Product/Resource Exchange</a></li>
         <li><a href="<?php echo URLROOT; ?>/resident/facilities">Facility Booking</a></li>

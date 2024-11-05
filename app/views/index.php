@@ -19,12 +19,12 @@
                 <p>Your community management system. SAMEEPA is designed to streamline and enhance your community living experience.</p>
                 <ul class="dashboard-links">
                     <!-- Links to all dashboards -->
-                    <li><a href="<?php echo URLROOT; ?>/admin/dashboard">Admin Dashboard</a></li>
-                    <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Resident Dashboard</a></li>
-                    <li><a href="<?php echo URLROOT; ?>/security/dashboard">Security Dashboard</a></li>
-                    <li><a href="<?php echo URLROOT; ?>/maintenance/dashboard">Maintenance Dashboard</a></li>
-                    <li><a href="<?php echo URLROOT; ?>/external/dashboard">External Service Provider Dashboard</a></li>
-                    <li><a href="<?php echo URLROOT; ?>/superadmin/dashboard">Super Admin Dashboard</a></li>
+                    <li><a href="<?php echo URLROOT; ?>/admin/dashboard">Admin</a></li>
+                    <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Resident</a></li>
+                    <li><a href="<?php echo URLROOT; ?>/security/dashboard">Security</a></li>
+                    <li><a href="<?php echo URLROOT; ?>/maintenance/dashboard">Maintenance</a></li>
+                    <li><a href="<?php echo URLROOT; ?>/external/dashboard">External Service Provider</a></li>
+                    <li><a href="<?php echo URLROOT; ?>/superadmin/dashboard">Super Admin</a></li>
                 </ul>
             </div>
             <div class="right-section" style="background-image: url('<?php echo URLROOT; ?>/public/img/homelogo.jpg');"></div>
