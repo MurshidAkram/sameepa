@@ -20,7 +20,7 @@
             <!-- Dashboard Header -->
             <section class="dashboard-header">
                 <h1>Security Management</h1>
-                <p>Manage security operations including visitor passes, incident reports, duty schedules, and visitor log times.</p>
+                <p> Manage security operations including visitor passes, incident reports, duty schedules, and visitor log times. </p>
             </section>
 
             <hr> <!-- Horizontal rule to separate sections -->

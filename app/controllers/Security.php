@@ -5,38 +5,36 @@ class Security extends Controller
     // Dashboard view
     public function dashboard()
     {
-        // Load the security dashboard view
         $this->view('security/dashboard');
     }
 
-    // Manage Visitor Passes view
-    public function view_visitor_pass()
+    public function Manage_Visitor_Passes()
     {
-        // Load the manage visitor passes view
-        $this->view('security/view_visitor_pass');
+        $this->view('security/Manage_Visitor_Passes');
     }
 
-    // Suspicious Activities view
-    public function verify_visitor_details()
+    public function Resident_Contacts()
     {
-        // Load the suspicious activities view
-        $this->view('security/verify_visitor_details');
+        $this->view('security/Resident_Contacts');
     }
 
-    // Duty Schedules view
-    public function log_in_visitor_times()
+    public function Manage_Incident_Reports()
     {
-        // Load the duty schedules view
-        $this->view('security/log_in_visitor_times');
+        $this->view('security/Manage_Incident_Reports');
     }
-    public function update_duty_schedule()
+
+    public function Emergency_Contacts()
     {
-        // Load the duty schedules view
-        $this->view('security/update_duty_schedule');
+        $this->view('security/Emergency_Contacts');
     }
-    public function manage_user_incident_report()
+    public function Manage_Alerts()
     {
-        // Load the duty schedules view
-        $this->view('security/manage_user_incident_report');
+        $this->view('security/Manage_Alerts');
     }
+
+    public function Duty_Schedule()
+    {
+        $this->view('security/Duty_Schedule');
+    }
+
 }
