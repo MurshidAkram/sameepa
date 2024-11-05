@@ -63,16 +63,10 @@
             </div>
 
             <div class="booking-history">
-                <h2>Your Booking History</h2>
+
                 <table id="bookingHistoryTable">
                     <thead>
-                        <tr>
-                            <th>Facility</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Duration</th>
-                            <th>Status</th>
-                        </tr>
+                        
                     </thead>
                     <tbody>
                         <!-- Booking history will be populated here by JavaScript -->
