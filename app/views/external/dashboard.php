@@ -1,4 +1,3 @@
-<!-- app/views/external_provider_dashboard.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,6 +23,28 @@
                 <h1>Welcome to Your Dashboard</h1>
                 <p>Manage your service requests, track payments, and view insights on your performance.</p>
 
+                <!-- Profile Information Card (Full-width Row) -->
+                <div class="profile-card card">
+                    <h2>Your Profile</h2>
+                    <div class="profile-content">
+                        <!-- Profile Image -->
+                        <div class="profile-image">
+                            <img src="<?php echo URLROOT; ?>/img/external_provider.jpg" alt="External Provider" />
+                        </div>
+
+                        <!-- Profile Details -->
+                        <div class="profile-details">
+                            <ul>
+                                <li><strong>Name:</strong> John Doe</li>
+                                <li><strong>Service Type:</strong> Plumbing</li>
+                                <li><strong>Contact:</strong> johndoe@example.com</li>
+                                <li><a href="<?php echo URLROOT; ?>/external/profile" class="dashboard-link">Update Profile</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Dashboard Cards in Grid Layout -->
                 <div class="dashboard-grid">
                     <!-- Service Requests Card -->
                     <div class="card requests-card">
@@ -63,17 +84,6 @@
                         <h2>Service Analytics</h2>
                         <canvas id="serviceAnalyticsChart"></canvas>
                     </div>
-
-                    <!-- Profile Information Card -->
-                    <div class="card profile-card">
-                        <h2>Your Profile</h2>
-                        <ul>
-                            <li><strong>Name:</strong> John Doe</li>
-                            <li><strong>Service Type:</strong> Plumbing</li>
-                            <li><strong>Contact:</strong> johndoe@example.com</li>
-                            <li><a href="<?php echo URLROOT; ?>/external/profile" class="dashboard-link">Update Profile</a></li>
-                        </ul>
-                    </div>
                 </div>
             </section>
         </main>
@@ -102,7 +112,7 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.label + ': ' + context.parsed + '';
+                                return context.label + ': ' + context.parsed;
                             }
                         }
                     }
@@ -135,3 +145,6 @@
 </body>
 
 </html>
+
+
+

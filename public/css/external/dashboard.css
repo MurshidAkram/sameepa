@@ -76,6 +76,69 @@ main {
     margin-bottom: 8px;
 }
 
+/* Profile Card Full Width */
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Title Styling */
+.profile-title {
+    font-size: 20px;
+    color: #800080;
+    margin-bottom: 15px;
+    text-align: center;
+    width: 100%;
+}
+
+/* Profile Content Styling */
+.profile-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Profile Image Styling */
+.profile-image {
+    flex: 0 0 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-image img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Profile Details Styling */
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-end;
+}
+
+.profile-details ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 100%;
+}
+
+.profile-details li {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
 /* Table Styles */
 .requests-table {
     width: 100%;
@@ -109,14 +172,14 @@ main {
 /* Link Button Style */
 .dashboard-link {
     display: inline-block;
-    margin-top: 15px;
-    padding: 10px 15px;
+    margin-top: 10px;
+    padding: 8px 12px;
     background-color: #800080;
     color: #fff;
     border-radius: 5px;
     font-size: 14px;
-    text-align: center;
     text-decoration: none;
+    text-align: center;
     transition: background-color 0.3s ease;
 }
 
@@ -160,4 +223,4 @@ main {
         font-size: 13px;
         padding: 8px 12px;
     }
-} 
+}
