@@ -19,7 +19,7 @@
         <?php require APPROOT . '/views/inc/components/side_panel_resident.php'; ?>
 
         <main>
-            <h1>Welcome, Murshid</h1>
+            <h1>Welcome, <?php echo $_SESSION['name'] ?></h1>
 
             <section class="dashboard-overview">
                 <div class="overview-card announcements">

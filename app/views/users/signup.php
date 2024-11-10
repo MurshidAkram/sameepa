@@ -27,12 +27,32 @@
                 <?php endif; ?>
                 <form action="<?php echo URLROOT; ?>/users/signup" method="POST">
                     <div class="form-group">
-                        <label for="username">Name:</label>
-                        <input type="text" name="username" id="username" value="<?php echo isset($data['username']) ? $data['username'] : ''; ?>">
+                        <label for="name">Name:</label>
+                        <input type="text" name="name" id="name" value="<?php echo isset($data['name']) ? $data['name'] : ''; ?>">
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" name="email" id="email" value="<?php echo isset($data['email']) ? $data['email'] : ''; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role:</label>
+                        <select name="role" id="role">
+                            <option value="">Select Role</option>
+                            <option value="1">Resident</option>
+                            <option value="2">Admin</option>
+                            <option value="3">SuperAdmin</option>
+                            <option value="4">Maintenance</option>
+                            <option value="5">Security</option>
+                            <option value="6">External Service Provider</option>
+                        </select>
+                    </div>
+                    <div class="form-group resident-only">
+                        <label for="address">Address:</label>
+                        <input type="text" name="address" id="address" value="<?php echo isset($data['address']) ? $data['address'] : ''; ?>">
+                    </div>
+                    <div class="form-group resident-only">
+                        <label for="phonenumber">Phone No.</label>
+                        <input type="text" name="phonenumber" id="phonenumber" value="<?php echo isset($data['phonenumber']) ? $data['phonenumber'] : ''; ?>">
                     </div>
                     <div class="form-group">
                         <label for="password">Password:</label>
@@ -48,6 +68,18 @@
         </div>
         <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/public/img/signup.jpg');"></div>
     </div>
+
+    <script>
+        // Show/hide the resident-only fields based on the selected role
+        const roleSelect = document.getElementById('role');
+        const residentOnlyFields = document.querySelectorAll('.resident-only');
+
+        roleSelect.addEventListener('change', () => {
+            residentOnlyFields.forEach(field => {
+                field.style.display = roleSelect.value === '1' ? 'block' : 'none';
+            });
+        });
+    </script>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
