@@ -30,11 +30,12 @@ class SuperAdmin extends Controller
         // Load the Settings view
         $this->view('superadmin/reports');
     }
-    public function announcements()
+    /*public function announcements()
     {
         // Load the Settings view
         $this->view('superadmin/announcements');
     }
+        */
 
 
 
