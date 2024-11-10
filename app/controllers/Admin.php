@@ -14,11 +14,7 @@ class Admin extends Controller
         $this->view('admin/facilities');
     }
 
-    public function events()
-    {
-        // Load admin dashboard view
-        $this->view('admin/events');
-    }
+    
 
     public function announcements()
     {

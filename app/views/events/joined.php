@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/events.css">
-    <title>Community Events | <?php echo SITENAME; ?></title>
+    <title>Joined Events | <?php echo SITENAME; ?></title>
 </head>
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
@@ -33,14 +33,14 @@
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
                     <a href="<?php echo URLROOT; ?>/events/create" class="btn-create-event">Create Event</a>
-                    <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events active">Joined Events</a>
                     <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
                 </nav>
             </aside>
 
             <div class="events-content">
-                <h1>Community Events</h1>
-                <p>Discover and join exciting events happening in your community!</p>
+                <h1>My Joined Events</h1>
+                <p>Here are all the events you've joined!</p>
 
                 <div class="events-grid">
                     <?php foreach($data['events'] as $event): ?>
@@ -84,8 +84,8 @@
 
                 <?php if(empty($data['events'])): ?>
                     <div class="no-events">
-                        <p>No events found. Be the first to create one!</p>
-                        <a href="<?php echo URLROOT; ?>/events/create" class="btn-create-event">Create Event</a>
+                        <p>You haven't joined any events yet.</p>
+                        <a href="<?php echo URLROOT; ?>/events" class="btn-browse-events">Browse Events</a>
                     </div>
                 <?php endif; ?>
             </div>
