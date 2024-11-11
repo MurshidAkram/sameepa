@@ -2,11 +2,42 @@
 
 class Security extends Controller
 {
-    // Dashboard view
+    private $securityModel;
+
+    public function __construct()
+    {
+        $this->checkSecurityAuth();
+
+        
+    }
+
+    private function checkSecurityAuth()
+    {
+        // Check if user is logged in
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        // Check if user is a resident (role_id = 1)
+        if ($_SESSION['user_role_id'] != 5) {
+            // Redirect to unauthorized page
+            header('Location: ' . URLROOT . '/pages/unauthorized');
+            exit();
+        }
+    }
+
     public function dashboard()
     {
-        // Load the security dashboard view
-        $this->view('security/dashboard');
+        // Get any necessary data for the dashboard
+        $data = [
+            'user_id' => $_SESSION['user_id'],
+            'email' => $_SESSION['user_email'],
+            'role' => $_SESSION['user_role']
+        ];
+
+        // Load resident dashboard view with data
+        $this->view('security/dashboard', $data);
     }
 
     // Manage Visitor Passes view

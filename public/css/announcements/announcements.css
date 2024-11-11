@@ -1,6 +1,3 @@
-/* public/css/announcements.css */
-
-/* General Layout */
 .announcements-header {
     display: flex;
     justify-content: space-between;
@@ -93,22 +90,30 @@
     gap: 0.5rem;
 }
 
+
 .btn {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 20px;
     border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 300px;
+    text-decoration: none;
 }
 
 .btn-primary {
-    background: #2196f3;
-    color: white;
+    background-color: #2196f3;
+    color: #fff;
 }
 
 .btn-primary:hover {
-    background: #1976d2;
+    background-color: #1976d2;
+    transform: translateY(-2px);
 }
 
 .btn-edit {
@@ -189,6 +194,31 @@
     margin-top: 0.25rem;
 }
 
+.btn-cancel {
+    background-color: #c81313;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+    background-color: #a30f0f;
+    transform: translateY(-2px);
+}
+
+.btn-back {
+    background-color: #757575;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    width: 250px;
+}
+
+.btn-back:hover {
+    background-color: #616161;
+    transform: translateY(-2px);
+}
 /* No Announcements Message */
 .no-announcements {
     text-align: center;

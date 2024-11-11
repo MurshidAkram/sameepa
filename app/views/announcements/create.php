@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/announcements/announcements.css">
+    
     <title>Create Announcement | <?php echo SITENAME; ?></title>
 </head>
 
@@ -33,7 +34,7 @@
             <div class="create-announcement-container">
                 <div class="page-header">
                     <h1>Create New Announcement</h1>
-                    <a href="<?php echo URLROOT; ?>/announcements" class="btn btn-back">
+                    <a href="<?php echo URLROOT; ?>/announcements/index" class="btn btn-back">
                         <i class="fas fa-arrow-left"></i> Back to Announcements
                     </a>
                 </div>
@@ -56,9 +57,9 @@
                         <span class="invalid-feedback"><?php echo $data['content_err']; ?></span>
                     </div>
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Create Announcement</button>
+                    <div class="form-actions">
                         <a href="<?php echo URLROOT; ?>/announcements/index" class="btn btn-cancel">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Announcement</button>
                     </div>
                 </form>
             </div>
