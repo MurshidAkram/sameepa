@@ -143,6 +143,26 @@
     background: #616161;
 }
 
+.announcements-search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .announcements-search input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 300px;
+    margin-right: 0.5rem;
+  }
+  
+  .announcements-search button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+
 /* Create Announcement Page */
 .create-announcement-container {
     max-width: 800px;

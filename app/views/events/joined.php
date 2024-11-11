@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/events.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/events/events.css">
     <title>Joined Events | <?php echo SITENAME; ?></title>
 </head>
 <body>

@@ -65,13 +65,25 @@ class M_Announcements {
     return $this->db->single();
 }
 
-    public function getAllAnnouncements() {
-        $this->db->query('SELECT a.*, u.name as creator_name,
-                         (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "like") as likes,
-                         (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "dislike") as dislikes
-                         FROM announcements a 
-                         JOIN users u ON a.created_by = u.id 
-                         ORDER BY a.created_at DESC');
+    public function getAllAnnouncements($searchTerm = '') {
+        $query = 'SELECT a.*, u.name as creator_name,
+                  (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "like") as likes,
+                  (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "dislike") as dislikes
+                  FROM announcements a
+                  JOIN users u ON a.created_by = u.id';
+
+        if (!empty($searchTerm)) {
+            $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+        }
+
+        $query .= ' ORDER BY a.created_at DESC';
+
+        $this->db->query($query);
+
+        if (!empty($searchTerm)) {
+            $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
+        }
+
         return $this->db->resultSet();
     }
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/events.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/events/events.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/event_view.css">
     <title><?php echo $data['event']['title']; ?> | <?php echo SITENAME; ?></title>
 </head>
