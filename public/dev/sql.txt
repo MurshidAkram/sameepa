@@ -1,0 +1,10 @@
+CREATE TABLE Users(
+    id INT AUTO_INCREMENT,
+    name VARCHAR(255),
+    age INT,
+    PRIMARY KEY(id)
+);
+
+INSERT INTO Users (name, age)VALUES('murshid', 21);
+INSERT INTO Users (name, age)VALUES('amjad', 19);
+INSERT INTO Users (name, age)VALUES('polly', 3);
