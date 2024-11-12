@@ -1,0 +1,112 @@
+/* app/public/css/resident/announcements.css */
+
+.dashboard-container {
+    display: flex;
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f8f8ff;
+}
+
+h1 {
+    color: #800080;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.announcements-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.announcement-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.announcement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.announcement-card h2 {
+    color: #800080;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.announcement-date {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.announcement-preview {
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.announcement-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reaction-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-react {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.btn-react:hover {
+    color: #800080;
+}
+
+.btn-like:hover {
+    color: #4CAF50;
+}
+
+.btn-dislike:hover {
+    color: #F44336;
+}
+
+.btn-view-full {
+    background-color: #800080;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-view-full:hover {
+    background-color: #9a009a;
+}
+
+@media (max-width: 768px) {
+    .announcements-list {
+        grid-template-columns: 1fr;
+    }
+}
