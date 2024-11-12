@@ -41,11 +41,11 @@ class Admin extends Controller
         $this->view('admin/dashboard', $data);
     }
 
-    public function facilities()
+    /*public function facilities()
     {
         // Load admin dashboard view
         $this->view('admin/facilities');
-    }
+    }*/
 
     
 

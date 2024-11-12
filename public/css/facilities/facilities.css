@@ -1,0 +1,196 @@
+/* Main Layout */
+.facilities-main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.facilities-main h1 {
+    color: #800080;
+    margin-bottom: 2rem;
+}
+
+/* Create Facility Button */
+.btn-create {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: background-color 0.3s;
+}
+
+.btn-create:hover {
+    background-color: #45a049;
+}
+
+/* Facilities Grid */
+.facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+/* Facility Card */
+.facility-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.facility-card:hover {
+    transform: translateY(-5px);
+}
+
+.facility-card h3 {
+    color: #800080;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.facility-card p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.facility-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.facility-actions {
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+/* Action Buttons */
+.btn-view, .btn-edit, .btn-delete {
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: opacity 0.3s;
+}
+
+.btn-view {
+    background-color: #800080;
+    color: white;
+}
+
+.btn-edit {
+    background-color: #f39c12;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-view:hover, .btn-edit:hover, .btn-delete:hover {
+    opacity: 0.9;
+}
+
+/* Create/Edit Form Styles */
+.create-facility {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    width: 100px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-cancel {
+    background-color: #95a5a6;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.btn-submit:hover {
+    background-color: #45a049;
+}
+
+.btn-cancel:hover {
+    background-color: #7f8c8d;
+}
+
+/* Status Indicators */
+.status-available {
+    color: #27ae60;
+    font-weight: 500;
+}
+
+.status-unavailable {
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .facilities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .facility-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-view, .btn-edit, .btn-delete {
+        text-align: center;
+    }
+}

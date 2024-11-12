@@ -7,7 +7,7 @@
                 <li><a href="<?php echo URLROOT; ?>/resident/groups">Groups</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/forums">Forums</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/exchange">Product/Resource Exchange</a></li>
-                <li><a href="<?php echo URLROOT; ?>/resident/facilities">Facility Booking</a></li>
+                <li><a href="<?php echo URLROOT; ?>/facilities/index">Facility Booking</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/maintenance">Maintenance Requests</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/visitor_passes">Visitor Passes</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/external_services">External Service Requests</a></li>
