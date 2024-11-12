@@ -71,11 +71,32 @@ class M_Forums {
 
     // Report a comment
     public function reportComment($data) {
-        $this->db->query("INSERT INTO forum_reports (forum_comment_id, reported_by, reason) VALUES (:forum_comment_id, :reported_by, :reason)");
-        $this->db->bind(':forum_comment_id', $data['forum_comment_id']);
-        $this->db->bind(':reported_by', $data['reported_by']);
-        $this->db->bind(':reason', $data['reason']);
-        return $this->db->execute();
+        // Start transaction
+        $this->db->beginTransaction();
+        
+        try {
+            // Insert into forum_reports table
+            $this->db->query("INSERT INTO forum_reports (forum_comment_id, reported_by, reason) 
+                             VALUES (:forum_comment_id, :reported_by, :reason)");
+            $this->db->bind(':forum_comment_id', $data['forum_comment_id']);
+            $this->db->bind(':reported_by', $data['reported_by']);
+            $this->db->bind(':reason', $data['reason']);
+            $this->db->execute();
+            
+            // Update the reported flag in forum_comments table
+            $this->db->query("UPDATE forum_comments SET reported = 1 
+                             WHERE id = :forum_comment_id");
+            $this->db->bind(':forum_comment_id', $data['forum_comment_id']);
+            $this->db->execute();
+            
+            // Commit transaction
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->rollbackTransaction();
+            return false;
+        }
     }
 
     // Delete a comment
@@ -85,20 +106,38 @@ class M_Forums {
         return $this->db->execute();
     }
 
-    public function ignoreReport($id){
-
-        $this->db->query("UPDATE forum_comments SET reported = 0 WHERE id = :id");
-        $this->db->bind(':id', $id);
-        return $this->db->execute();
-    
+    public function ignoreReport($id) {
+        // Start transaction
+        $this->db->beginTransaction();
+        
+        try {
+            // Update the reported flag in forum_comments
+            $this->db->query("UPDATE forum_comments SET reported = 0 WHERE id = :id");
+            $this->db->bind(':id', $id);
+            $this->db->execute();
+            
+            // Delete the report from forum_reports
+            $this->db->query("DELETE FROM forum_reports WHERE forum_comment_id = :id");
+            $this->db->bind(':id', $id);
+            $this->db->execute();
+            
+            // Commit transaction
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->rollbackTransaction();
+            return false;
+        }
     }
 
     // Get all reported comments for a forum
     public function getReportedCommentsByForumId($forum_id) {
-        $this->db->query("SELECT fc.*, fr.id AS report_id, fr.reason, fr.reported_by 
+        $this->db->query("SELECT fc.*, fr.id AS report_id, fr.reason, fr.reported_by, fr.created_at AS report_date
                          FROM forum_comments fc
-                         LEFT JOIN forum_reports fr ON fc.id = fr.forum_comment_id
-                         WHERE fc.forum_id = :forum_id AND fc.reported = 1");
+                         INNER JOIN forum_reports fr ON fc.id = fr.forum_comment_id
+                         WHERE fc.forum_id = :forum_id AND fc.reported = 1
+                         ORDER BY fr.created_at DESC");
         $this->db->bind(':forum_id', $forum_id);
         return $this->db->resultSet();
     }
@@ -116,5 +155,30 @@ class M_Forums {
     $this->db->query("SELECT * FROM forum_comments WHERE id = :id");
     $this->db->bind(':id', $id);
     return $this->db->single();
+}
+
+public function deleteReportedComment($id) {
+    // Start transaction
+    $this->db->beginTransaction();
+    
+    try {
+        // Delete from forum_reports first (due to foreign key constraint)
+        $this->db->query("DELETE FROM forum_reports WHERE forum_comment_id = :id");
+        $this->db->bind(':id', $id);
+        $this->db->execute();
+        
+        // Then delete from forum_comments
+        $this->db->query("DELETE FROM forum_comments WHERE id = :id");
+        $this->db->bind(':id', $id);
+        $this->db->execute();
+        
+        // Commit transaction
+        $this->db->commit();
+        return true;
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $this->db->rollbackTransaction();
+        return false;
+    }
 }
 }

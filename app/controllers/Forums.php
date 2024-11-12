@@ -152,13 +152,16 @@ public function report_comment($id)
     }
 }
 
+// In Forums.php controller, update the delete_reported_comment method:
 public function delete_reported_comment($id)
 {
     // Check if user has admin or super admin role
     if ($_SESSION['user_role_id'] >= 2) {
-        if ($this->forumsModel->deleteComment($id)) {
+        // Get the forum_id before deleting the comment
+        $comment = $this->forumsModel->getCommentById($id);
+        if ($comment && $this->forumsModel->deleteReportedComment($id)) {
             //flash('comment_message', 'Reported comment deleted successfully.');
-            redirect('forums/index');
+            redirect('forums/reported_comments/' . $comment['forum_id']); // Redirect back to reported comments page
         } else {
             die('Something went wrong.');
         }
