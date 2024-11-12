@@ -8,3 +8,36 @@ CREATE TABLE Users(
 INSERT INTO Users (name, age)VALUES('murshid', 21);
 INSERT INTO Users (name, age)VALUES('amjad', 19);
 INSERT INTO Users (name, age)VALUES('polly', 3);
+
+
+//security => visitor pass
+
+CREATE DATABASE sameepa;
+
+USE sameepa;
+
+CREATE TABLE visitor_passes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    visitor_name VARCHAR(100) NOT NULL,
+    visitor_count INT NOT NULL,
+    visit_date DATE NOT NULL,
+    visit_time TIME NOT NULL,
+    duration INT NOT NULL,
+    purpose TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+//security => resident contact
+
+CREATE TABLE security_resident_details (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    resident_name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(15),
+    fixed_line VARCHAR(15),
+    email VARCHAR(100),
+    address TEXT
+);
+
+
+

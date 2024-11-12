@@ -1,9 +1,10 @@
 /* General Styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f9f9f9;
+  background-color: #f7f7f7;
+  color: #333;
 }
 
 .container {
@@ -12,91 +13,199 @@ body {
 
 /* Navbar Styles */
 .navbar {
-  background-color: #333;
+  background-color: #2C3E50;
   color: #fff;
   padding: 15px;
   text-align: center;
+  font-size: 1.2em;
 }
 
 .navbar h1 {
   margin: 0;
+  font-weight: 700;
 }
 
 /* Dashboard Container */
 .dashboard-container {
   display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
 }
 
 /* Side Panel Styles */
 .side-panel {
-  width: 200px;
-  background-color: #eee;
-  padding: 15px;
-  border-right: 1px solid #ccc;
+  width: 250px;
+  background-color: #34495E;
+  padding: 20px;
+  border-right: 2px solid #2C3E50;
+  position: fixed;
+  height: 100%;
+  color: #fff;
+}
+
+.side-panel h3 {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  color: #ecf0f1;
+}
+
+.side-panel a {
+  text-decoration: none;
+  color: #ecf0f1;
+  padding: 12px;
+  display: block;
+  margin: 10px 0;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.side-panel a:hover {
+  background-color: #007bff;
+  padding-left: 20px;
 }
 
 /* Main Content Styles */
 main {
   flex: 1;
-  padding: 20px;
+  padding: 30px;
+  margin-left: 270px;
+  background-color: #fff;
 }
 
 /* Page Title */
-h2 {
-  color: #333;
-}
-
-/* Form Styles */
-.visitor-pass-form {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
+h2, h3 {
+  color: #2C3E50;
+  font-size: 24px;
   margin-bottom: 15px;
 }
 
+h3 {
+  font-size: 20px;
+  color: #007bff;
+  font-weight: 600;
+}
+
+/* Form Styles */
+form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
 label {
-  display: block;
-  margin-bottom: 5px;
   font-weight: bold;
+  color: #34495E;
+  display: block;
+  margin-bottom: 8px;
 }
 
 input[type="text"],
 input[type="number"],
-input[type="datetime-local"] {
+input[type="date"],
+input[type="time"],
+textarea {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus,
-input[type="datetime-local"]:focus {
+input[type="date"]:focus,
+input[type="time"]:focus,
+textarea:focus {
   border-color: #007bff;
   outline: none;
+  background-color: #fff;
+}
+
+textarea {
+  resize: vertical;
+  height: 120px;
 }
 
 /* Button Styles */
-.btn {
+button[type="submit"] {
   background-color: #007bff;
-  color: #fff;
-  padding: 10px 15px;
+  color: white;
+  padding: 12px 25px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.btn:hover {
+button[type="submit"]:hover {
   background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 /* Success Message */
 #success-message {
   margin-top: 15px;
   font-weight: bold;
+  color: #27ae60;
+  display: none;
+}
+
+/* Table Styles */
+.pass-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 0;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pass-table th, .pass-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.pass-table th {
+  background-color: #f2f2f2;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.pass-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.pass-table td {
+  color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .side-panel {
+    width: 100%;
+    position: static;
+    margin-bottom: 20px;
+  }
+
+  main {
+    margin-left: 0;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
 }
