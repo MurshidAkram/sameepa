@@ -6,13 +6,29 @@ class M_Events {
         $this->db = new Database;
     }
 
-    public function getAllEvents() {
-        $this->db->query('SELECT e.*, u.name as creator_name 
-                         FROM events e 
-                         JOIN users u ON e.created_by = u.id 
-                         ORDER BY e.date ASC');
-        return $this->db->resultSet();
+    // In M_Events.php, update the getAllEvents method:
+public function getAllEvents($search = '') {
+    $sql = 'SELECT e.*, u.name as creator_name 
+            FROM events e 
+            JOIN users u ON e.created_by = u.id 
+            WHERE 1=1 ';
+    
+    if (!empty($search)) {
+        $sql .= 'AND (e.title LIKE :search 
+                 OR e.description LIKE :search 
+                 OR e.location LIKE :search) ';
     }
+    
+    $sql .= 'ORDER BY e.updated_at DESC, e.created_at DESC';
+    
+    $this->db->query($sql);
+    
+    if (!empty($search)) {
+        $this->db->bind(':search', '%' . $search . '%');
+    }
+    
+    return $this->db->resultSet();
+}
 
     public function createEvent($data) {
         $this->db->query('INSERT INTO events (title, description, date, time, location, image_data, image_type, created_by) 

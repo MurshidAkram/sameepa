@@ -73,10 +73,11 @@ class Resident extends Controller
         $this->view('resident/exchange');
     }
 
-    public function forums()
+    /*public function forums()
     {
         $this->view('resident/forums');
     }
+        */
 
     public function maintenance()
     {

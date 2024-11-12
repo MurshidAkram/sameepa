@@ -32,7 +32,8 @@
             <aside class="events-sidebar">
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
-                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-create-event">Create Event</a>
+                <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
                     <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events active">Joined Events</a>
                     <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
                 </nav>
@@ -85,7 +86,7 @@
                 <?php if(empty($data['events'])): ?>
                     <div class="no-events">
                         <p>You haven't joined any events yet.</p>
-                        <a href="<?php echo URLROOT; ?>/events" class="btn-browse-events">Browse Events</a>
+                        <a href="<?php echo URLROOT; ?>/events/index" class="btn-browse-events">Browse Events</a>
                     </div>
                 <?php endif; ?>
             </div>

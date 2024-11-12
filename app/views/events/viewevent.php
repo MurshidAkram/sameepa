@@ -5,12 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/events/events.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/event_view.css">
     <title><?php echo $data['event']['title']; ?> | <?php echo SITENAME; ?></title>
 </head>
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
+    <div class="dashboard-container">
+        <?php 
+        // Load appropriate side panel based on user role
+        switch($_SESSION['user_role_id']) {
+            case 1:
+                require APPROOT . '/views/inc/components/side_panel_resident.php';
+                break;
+            case 2:
+                require APPROOT . '/views/inc/components/side_panel_admin.php';
+                break;
+            case 3:
+                require APPROOT . '/views/inc/components/side_panel_superadmin.php';
+                break;
+        }
+        ?>
+
+    
+    <main class="events-main">
+            <aside class="events-sidebar">
+                <h2>Event Navigation</h2>
+                <nav class="events-nav">
+                    <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
+                    <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
+                </nav>
+            </aside>
     <div class="event-view-container">
         <a href="<?php echo URLROOT; ?>/events" class="back-button">
             <i class="fas fa-arrow-left"></i> Back to Events
@@ -66,6 +95,8 @@
             </div>
         </div>
     </div>
+                </main>
+</div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <script>
