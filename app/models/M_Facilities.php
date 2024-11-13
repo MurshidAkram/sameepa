@@ -62,6 +62,50 @@ class M_Facilities {
         return $this->db->execute();
     }
     
+    public function validateUser($userId) {
+        $this->db->query('SELECT id FROM users WHERE id = :id');
+        $this->db->bind(':id', $userId);
+        return $this->db->single();
+    }
 
+    public function createBooking($data) {
+        $userId = $_SESSION['user_id'];
+        $userName = $_SESSION['name'];
+        
+        $this->db->query('INSERT INTO bookings (facility_id, facility_name, booking_date, booking_time, duration, booked_by, user_id) 
+                          VALUES (:facility_id, :facility_name, :booking_date, :booking_time, :duration, :booked_by, :user_id)');
+                          
+        $this->db->bind(':facility_id', $data['facility_id']);
+        $this->db->bind(':facility_name', $data['facility_name']);
+        $this->db->bind(':booking_date', date('Y-m-d'));
+        $this->db->bind(':booking_time', date('H:i:s'));
+        $this->db->bind(':duration', $data['duration']);
+        $this->db->bind(':booked_by', $userName);
+        $this->db->bind(':user_id', $userId);
+    
+        return $this->db->execute();
+    }
+    
+    
+    public function getBookingsByDate($facilityId, $date) {
+        $this->db->query('SELECT * FROM bookings WHERE facility_id = :facility_id AND booking_date = :date');
+        $this->db->bind(':facility_id', $facilityId);
+        $this->db->bind(':date', $date);
+        return $this->db->resultSet();
+    }
+    
+    public function getUserBookings($facilityId, $userId) {
+        $this->db->query('SELECT * FROM bookings WHERE facility_id = :facility_id AND resident_id = :resident_id ORDER BY booking_date DESC');
+        $this->db->bind(':facility_id', $facilityId);
+        $this->db->bind(':resident_id', $userId);
+        return $this->db->resultSet();
+    }
+    
+    public function getResidentId($userId) {
+        $this->db->query('SELECT id FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->single();
+    }
+    
 }
 

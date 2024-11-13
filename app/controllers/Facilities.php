@@ -112,4 +112,47 @@ class Facilities extends Controller {
             }
         }
     }
+      public function book($id) {
+          if (!isset($_SESSION['user_id'])) {
+              redirect('users/login');
+          }
+
+          if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+              // Get facility details
+              $facility = $this->facilityModel->getFacilityById($id);
+        
+              $bookingData = [
+                  'facility_id' => $id,
+                  'facility_name' => $facility['name'],
+                  'user_id' => $_SESSION['user_id'],
+                  'booking_date' => $_POST['booking_date'],
+                  'booking_time' => $_POST['booking_time'],
+                  'duration' => $_POST['duration'],
+                  'booked_by' => $_SESSION['name'] // Get from session
+              ];
+
+              if ($this->facilityModel->createBooking($bookingData)) {
+                  $_SESSION['success_message'] = 'Facility booked successfully';
+                  redirect('facilities');
+              } else {
+                  die('Something went wrong');
+              }
+          }
+
+          $data = [
+              'facility' => $this->facilityModel->getFacilityById($id)
+          ];
+
+          $this->view('facilities/book', $data);
+      }    public function getBookings($facilityId, $date) {
+        $bookings = $this->facilityModel->getBookingsByDate($facilityId, $date);
+        header('Content-Type: application/json');
+        echo json_encode($bookings);
+    }
+    
+    public function getUserBookings($facilityId) {
+        $bookings = $this->facilityModel->getUserBookings($facilityId, $_SESSION['user_id']);
+        header('Content-Type: application/json');
+        echo json_encode($bookings);
+    }    
 }

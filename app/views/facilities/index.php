@@ -46,6 +46,7 @@
                         </div>
                         <div class="facility-actions">
                             <button onclick="viewFacility(<?php echo $facility->id; ?>)" class="btn-view">View</button>
+                            <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="btn-book">Book Facility</a>
                             <?php if($_SESSION['user_role_id'] == 2): ?>
                                 <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">Delete</button>
@@ -200,3 +201,4 @@
       </script>
   </body>
   </html>
+

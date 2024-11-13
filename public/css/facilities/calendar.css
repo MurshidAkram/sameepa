@@ -1,0 +1,99 @@
+.time-slots {
+    margin: 20px 0;
+}
+
+.time-slot {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.time-slot.available {
+    background-color: #e8f5e9;
+    border: 1px solid #81c784;
+}
+
+.time-slot.booked {
+    background-color: #ffebee;
+    border: 1px solid #e57373;
+}
+
+.time-slot.selected {
+    background-color: #bbdefb;
+    border: 2px solid #1976d2;
+}
+
+.calendar {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.calendar-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-date {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.calendar-date:hover {
+    background-color: #f0f0f0;
+}
+
+.calendar-date.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.calendar-date.today {
+    border: 2px solid #4CAF50;
+}
+
+.empty {
+    padding: 10px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.month-nav {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.month-nav:hover {
+    background: #45a049;
+}
