@@ -1,3 +1,7 @@
+<?php
+// Your PHP logic here (e.g., initializing variables, handling requests, etc.)
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,64 +11,56 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/form-styles.css">
+
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/Resident_Contacts.css">
-    <title>Manage Residents Contacts | <?php echo SITENAME; ?></title>
+    <title >Manage Residents Contacts | <?php echo SITENAME; ?></title>
     
     <style>
-        /* Add styles for the colorful table */
-        .resident-contacts-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        /* Ensure that the dashboard layout accounts for the side panel */
+        .dashboard-container {
+            display: flex;
+            padding: 20px;
         }
 
-        .resident-contacts-table th {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px;
-            text-align: left;
+        main {
+            flex: 1;
+            padding-left: 20px;
+            padding-right: 20px;
         }
 
-        .resident-contacts-table td {
-            padding: 12px;
-            text-align: left;
+        .to{
+            color :#800080;
+            font-size: 34px;
         }
 
-        .resident-contacts-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .resident-contacts-table tr:nth-child(odd) {
-            background-color: #e6f7ff;
-        }
-
-        .resident-contacts-table tr:hover {
-            background-color: #ddd;
-        }
-
-        .btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
+        .too{
             text-align: center;
-            border: none;
-            cursor: pointer;
+            color :#800080;
+            padding-right: 95px;
+            font-size: 24px;
+        }
+        /* Center the heading "Find Resident Contact" */
+        #search-section h2 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* Flexbox to align the search bar and button */
+        .search-residents-form {
+            display: flex;
+            justify-content: center; /* Center the form contents */
+            align-items: center;
+            gap: 10px;
             margin-top: 20px;
         }
 
-        .btn:hover {
-            background-color: #45a049;
-        }
-
-        /* Style for the Search Bar */
         .search-residents-form input[type="text"] {
-            width: 100%;
+            width: 300px; /* Limit width of the input field */
             padding: 12px 20px;
             border-radius: 25px;
             border: 1px solid #ddd;
             font-size: 16px;
-            margin-top: 10px;
             transition: border-color 0.3s ease;
         }
 
@@ -81,7 +77,6 @@
             border: none;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
             transition: background-color 0.3s ease;
         }
 
@@ -89,11 +84,51 @@
             background-color: #45a049;
         }
 
-        #add-contact .topic {
-    font-size: 26px;
-    text-align: center;
-    color: violet;
+        /* Style for the search results table */
+        .resident-contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto;
+            max-height: 400px;
+            display: block;
+        }
 
+        .resident-contacts-table th, .resident-contacts-table td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .resident-contacts-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .resident-contacts-table tr:nth-child(odd) {
+            background-color: #e6f7ff;
+        }
+
+        .resident-contacts-table tr:hover {
+            background-color: #ddd;
+        }
+
+        .form-submit {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+  }
+
+        #add-contact .topic {
+            font-size: 32px;
+            text-align: center;
+            color: blueviolet;
+            padding-top : 52px;
+        }
     </style>
 </head>
 
@@ -104,14 +139,15 @@
         <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
         <main>
-            <h2>Manage Residents Contacts</h2>
+            <h2 class="to">Manage Residents Contacts</h2>
 
             <!-- Search Bar for Finding Resident Contacts -->
             <section id="search-section">
-                <h2>Find Resident Contact</h2>
+                
+                <h3 class="too">Find Resident Contact</h3>
                 <form method="GET" class="search-residents-form" onsubmit="searchResidentContact(event)">
                     <div class="form-group">
-                        <label for="search_query">Search by Name or Address:</label>
+                        <label for="search_query" style="display: none;">Search by Name or Address:</label>
                         <input type="text" id="search_query" name="search_query" required>
                     </div>
                     <button type="submit" class="btn">Search</button>
@@ -158,7 +194,7 @@
                         <label for="resident_email">Email Address:</label>
                         <input type="email" id="resident_email" name="resident_email" required>
                     </div>
-                    <button type="submit" class="btn">Save Contact</button>
+                    <button type="submit" class="form-submit">Save</button>
                 </form>
 
                 <p id="success-message" style="display: none; color: green;">Contact saved successfully!</p>
@@ -186,7 +222,7 @@
                     if (data.length > 0) {
                         data.forEach(resident => {
                             const row = document.createElement('tr');
-                            row.innerHTML = `
+                            row.innerHTML = ` 
                                 <td>${resident.resident_name}</td>
                                 <td>${resident.address}</td>
                                 <td>${resident.phone_number}</td>

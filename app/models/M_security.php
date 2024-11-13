@@ -12,7 +12,7 @@ class M_security
     // Method to create a new visitor pass
     public function createVisitorPass($data)
     {
-        $this->db->query("INSERT INTO visitor_passes (visitor_name, visitor_count, visit_date, visit_time, duration, purpose, resident_id, resident_name) 
+        $this->db->query("INSERT INTO visitor_passes (visitor_name, visitor_count, visit_date, visit_time, duration, purpose, resident_name) 
                           VALUES (:visitor_name, :visitor_count, :visit_date, :visit_time, :duration, :purpose, :resident_name)");
 
         // Bind parameters

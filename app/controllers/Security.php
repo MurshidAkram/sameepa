@@ -10,7 +10,17 @@ class Security extends Controller
         $this->securityModel = $this->model('M_security');
     }
 
-    // Method to manage visitor passes
+    // Dashboard method that fetches data for the dashboard view
+    public function Dashboard()
+    {
+        // Fetch necessary data for the dashboard
+       
+
+        // Load the dashboard view with the fetched data
+        $this->view('security/dashboard');
+    }
+
+    // Manage Visitor Passes method
     public function Manage_Visitor_Passes()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -27,42 +37,84 @@ class Security extends Controller
 
             // Call the model to create the visitor pass
             if ($this->securityModel->createVisitorPass($data)) {
-                // On success, redirect to the same page to refresh the visitor pass list
+                // On success, refresh the visitor pass list
                 header("Location: " . URLROOT . "/security/Manage_Visitor_Passes");
             } else {
                 die("Something went wrong, please try again!");
             }
         }
 
-        // Fetch today's active visitor passes and all pass history
+        // Fetch data for today’s active passes and pass history
         $activePasses = $this->securityModel->getTodayPasses();
         $passHistory = $this->securityModel->getAllPasses();
         
-        // Load the view with the data
+        // Load the view with the fetched data
         $this->view('security/Manage_Visitor_Passes', [
             'activePasses' => $activePasses,
             'passHistory' => $passHistory
         ]);
     }
 
-    // Method to handle resident contacts and search functionality
+    // Manage Duty Schedule
+    public function Manage_Duty_Schedule()
+    {
+        // Logic to manage duty schedules (e.g., fetch, update, delete duty schedule)
+       
+        
+        // Load the view with the schedule data
+        $this->view('security/Manage_Duty_Schedule');
+    }
+
+    // Manage Emergency Contacts
+    public function Emergency_Contacts()
+    {
+        // Logic to manage emergency contacts (e.g., view, add, edit, delete contacts)
+       
+        
+        // Load the view with the contacts data
+        $this->view('security/Emergency_Contacts');
+    }
+
+    // Manage Alerts (e.g., view and manage security alerts)
+    public function Manage_Alerts()
+    {
+        // Fetch alert data
+      
+        
+        // Load the view with alert data
+        $this->view('security/Manage_Alerts', [
+           
+        ]);
+    }
+
+    // Manage Incident Reports
+    public function Manage_Incident_Reports()
+    {
+        // Logic to manage incident reports (e.g., view, update, resolve incidents)
+       
+        
+        // Load the view with the incident reports data
+        $this->view('security/Manage_Incident_Reports', [
+       
+        ]);
+    }
+
+    // Resident Contacts Management (including searching functionality)
     public function Resident_Contacts()
     {
-        // Handle search request if it's a GET request
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search_query'])) {
             $searchQuery = trim($_GET['search_query']);
             
-            // Fetch matching results based on the search query
+            // Fetch matching resident details based on the search query
             $residentDetails = $this->securityModel->getResidentDetailsByName($searchQuery);
             
-            // Return the results as JSON to be used by JavaScript
+            // Return the search results as JSON
             echo json_encode($residentDetails);
             return;
         }
 
         // Handle form submission for adding a new resident contact
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Collect data from the form submission
             $data = [
                 'resident_name' => trim($_POST['resident_name']),
                 'resident_address' => trim($_POST['resident_address']),
@@ -71,9 +123,9 @@ class Security extends Controller
                 'resident_email' => trim($_POST['resident_email'])
             ];
 
-            // Call the model to add a new resident contact
+            // Add new resident contact
             if ($this->securityModel->addResidentContact($data)) {
-                // On success, redirect to the same page to refresh the resident contacts list
+                // On success, redirect to the same page to refresh the contacts list
                 header("Location: " . URLROOT . "/security/Resident_Contacts");
             } else {
                 die("Something went wrong, please try again.");

@@ -70,17 +70,6 @@
     border-color: #800080;
   }
   
-  .form-submit {
-    background-color: #800080;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    width: 100%;
-  }
   
   .form-submit:hover {
     background-color: #9a009a;

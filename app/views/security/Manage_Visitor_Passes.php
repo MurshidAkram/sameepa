@@ -7,12 +7,18 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/form-styles.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/Manage_Visitor_Passes.css">
     <title>Manage Visitor Passes | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
+
+<style>
+
+
+
+
+</style>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
