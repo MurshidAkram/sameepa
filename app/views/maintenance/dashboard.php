@@ -4,10 +4,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
     <title>Maintenance Dashboard | <?php echo SITENAME; ?></title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f8fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-header p {
+            margin: 0;
+        }
+
+        .dashboard-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .overview-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            flex: 1 1 calc(25% - 20px);
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .card h3 {
+            color: #ff5a5f;
+            margin: 0 0 10px;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .charts-section {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            flex: 1;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-card h4 {
+            color: #ff5a5f;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .reminders, .summary {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .reminders h4, .summary h4 {
+            color: #ff5a5f;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .reminders ul, .summary ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reminders ul li, .summary ul li {
+            font-size: 1rem;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
 </head>
 
 <body>
@@ -43,90 +159,62 @@
             </header>
 
             <h1>Maintenance Management</h1>
-            <p>Manage maintenance operations including history, issue reporting, assistance requests, schedules, and status updates.</p>
+            <p>Manage maintenance operations, including history, reporting, assistance requests, schedules, and updates.</p>
 
-            <section class="maintenance-actions">
-                <!-- View Maintenance History -->
-                <h2>View Maintenance History</h2>
+            <!-- Overview Cards -->
+            <section class="overview-cards">
                 <div class="card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Maintenance ID</th>
-                                <th>Date</th>
-                                <th>Details</th>
-                                <th>Status</th>
-                                <th>Progress</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Example dynamic content; replace with actual data -->
-                            <tr>
-                                <td>MH001</td>
-                                <td>2024-09-10</td>
-                                <td>AC unit repair</td>
-                                <td>Completed</td>
-                                <td><div class="progress-bar"><div class="progress" style="width: 100%;"></div></div></td>
-                            </tr>
-                            <tr>
-                                <td>MH002</td>
-                                <td>2024-09-12</td>
-                                <td>Light fixture replacement</td>
-                                <td>In Progress</td>
-                                <td><div class="progress-bar"><div class="progress" style="width: 60%;"></div></div></td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
+                    <h3>Resident Requests</h3>
+                    <p>Active: 10 | Resolved: 20 | Overdue: 5</p>
                 </div>
-
-                <!-- Report Issues -->
-                <h2>Report Issues</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/report" method="POST" class="form-report">
-                    <div class="form-group">
-                        <label for="issue-description">Issue Description:</label>
-                        <textarea id="issue-description" name="description" placeholder="Describe the issue..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn-report">Report Issue</button>
-                </form>
-
-                <!-- Request Assistance -->
-                <h2>Request Assistance</h2>
-                <form action="<?php echo URLROOT; ?>/maintenance/request" method="POST" class="form-request">
-                    <div class="form-group">
-                        <label for="request-details">Request Details:</label>
-                        <textarea id="request-details" name="details" placeholder="Provide details..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn-request">Request Assistance</button>
-                </form>
-
-                <!-- View Schedule -->
-                <h2>View Schedule</h2>
                 <div class="card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Task</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Example dynamic content; replace with actual data -->
-                            <tr>
-                                <td>2024-09-15</td>
-                                <td>Check fire alarms</td>
-                                <td><span class="status scheduled">Scheduled</span></td>
-                            </tr>
-                            <tr>
-                                <td>2024-09-16</td>
-                                <td>Inspect elevators</td>
-                                <td><span class="status scheduled">Scheduled</span></td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
+                    <h3>Scheme Maintenance</h3>
+                    <p>Upcoming: 8 | Ongoing: 3 | Past: 15</p>
                 </div>
+                <div class="card">
+                    <h3>Inventory Stock</h3>
+                    <p>Low: 5 | Critical: 2</p>
+                </div>
+                <div class="card">
+                    <h3>Team Productivity</h3>
+                    <p>Avg Tasks/Day: 7 | Completion Rate: 95%</p>
+                </div>
+            </section>
+
+            <!-- Detailed Charts -->
+            <section class="charts-section">
+                <div class="chart-card">
+                    <h4>Repair Categories</h4>
+                    <div id="repair-category-chart">[Chart Placeholder]</div>
+                </div>
+                <div class="chart-card">
+                    <h4>Response Time Metrics</h4>
+                    <div id="response-time-chart">[Chart Placeholder]</div>
+                </div>
+                <div class="chart-card">
+                    <h4>Resident Satisfaction</h4>
+                    <div id="satisfaction-chart">[Chart Placeholder]</div>
+                </div>
+            </section>
+
+            <!-- Task Reminders -->
+            <section class="reminders">
+                <h4>Upcoming Task Reminders</h4>
+                <ul>
+                    <li>High-priority Task 1 - Due Today</li>
+                    <li>High-priority Task 2 - Due in 3 Days</li>
+                    <li>High-priority Task 3 - Due This Week</li>
+                </ul>
+            </section>
+
+            <!-- Daily/Weekly Summary -->
+            <section class="summary">
+                <h4>Daily/Weekly Summary</h4>
+                <ul>
+                    <li>Total Requests Submitted: 15</li>
+                    <li>Total Tasks Completed: 12</li>
+                    <li>Major Issues Logged: 2</li>
+                </ul>
             </section>
         </main>
     </div>
