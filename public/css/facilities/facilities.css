@@ -75,10 +75,11 @@
 }
 
 /* Action Buttons */
-.btn-view, .btn-edit, .btn-delete {
+.btn-view, .btn-book, .btn-delete {
     padding: 8px 16px;
     border-radius: 4px;
     text-decoration: none;
+    text-align: center;
     font-size: 0.9rem;
     transition: opacity 0.3s;
 }
@@ -88,7 +89,7 @@
     color: white;
 }
 
-.btn-edit {
+.btn-book {
     background-color: #f39c12;
     color: white;
 }
@@ -98,7 +99,7 @@
     color: white;
 }
 
-.btn-view:hover, .btn-edit:hover, .btn-delete:hover {
+.btn-view:hover, .btn-book:hover, .btn-delete:hover {
     opacity: 0.9;
 }
 

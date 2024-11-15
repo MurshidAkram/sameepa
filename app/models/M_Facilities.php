@@ -77,8 +77,8 @@ class M_Facilities {
                           
         $this->db->bind(':facility_id', $data['facility_id']);
         $this->db->bind(':facility_name', $data['facility_name']);
-        $this->db->bind(':booking_date', date('Y-m-d'));
-        $this->db->bind(':booking_time', date('H:i:s'));
+        $this->db->bind(':booking_date', $data['booking_date']);
+        $this->db->bind(':booking_time', $data['booking_time']);
         $this->db->bind(':duration', $data['duration']);
         $this->db->bind(':booked_by', $userName);
         $this->db->bind(':user_id', $userId);
@@ -87,19 +87,31 @@ class M_Facilities {
     }
     
     
-    public function getBookingsByDate($facilityId, $date) {
+    public function getBookingsByDate($facility_id, $date) {
         $this->db->query('SELECT * FROM bookings WHERE facility_id = :facility_id AND booking_date = :date');
-        $this->db->bind(':facility_id', $facilityId);
+        $this->db->bind(':facility_id', $facility_id);
         $this->db->bind(':date', $date);
         return $this->db->resultSet();
     }
     
-    public function getUserBookings($facilityId, $userId) {
-        $this->db->query('SELECT * FROM bookings WHERE facility_id = :facility_id AND resident_id = :resident_id ORDER BY booking_date DESC');
-        $this->db->bind(':facility_id', $facilityId);
-        $this->db->bind(':resident_id', $userId);
-        return $this->db->resultSet();
+    public function getUserBookings($userId, $facilityId, $date = null) {
+        $sql = "SELECT * FROM bookings WHERE resident_id = :user_id AND facility_id = :facility_id";
+        if ($date) {
+            $sql .= " AND booking_date = :date";
+        }
+        $sql .= " ORDER BY booking_date DESC, booking_time ASC";
+    
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':user_id', $userId);
+        $stmt->bindValue(':facility_id', $facilityId);
+        if ($date) {
+            $stmt->bindValue(':date', $date);
+        }
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
     public function getResidentId($userId) {
         $this->db->query('SELECT id FROM residents WHERE user_id = :user_id');

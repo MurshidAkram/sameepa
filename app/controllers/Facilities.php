@@ -144,14 +144,15 @@ class Facilities extends Controller {
           ];
 
           $this->view('facilities/book', $data);
-      }    public function getBookings($facilityId, $date) {
+      }    
+      public function getBookings($facilityId, $date) {
         $bookings = $this->facilityModel->getBookingsByDate($facilityId, $date);
         header('Content-Type: application/json');
         echo json_encode($bookings);
     }
     
-    public function getUserBookings($facilityId) {
-        $bookings = $this->facilityModel->getUserBookings($facilityId, $_SESSION['user_id']);
+    public function getUserBookings($facilityId, $date = null) {
+        $bookings = $this->facilityModel->getUserBookings($_SESSION['user_id'], $facilityId, $date);
         header('Content-Type: application/json');
         echo json_encode($bookings);
     }    
