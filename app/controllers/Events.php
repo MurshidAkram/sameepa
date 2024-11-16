@@ -18,16 +18,24 @@ class Events extends Controller {
         $this->eventModel = $this->model('M_Events');
     }
 
-    public function index() {
-        $events = $this->eventModel->getAllEvents(); 
-        foreach($events as $event) {
-            $event->participant_count = $this->eventModel->getParticipantCount($event->id);
-        }
-        $data = [
-            'events' => $events
-        ];
-        $this->view('events/index', $data);
+    // In Events.php controller, update the index method:
+public function index() {
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+    
+    // Get events with search parameter
+    $events = $this->eventModel->getAllEvents($search);
+    
+    foreach($events as $event) {
+        $event->participant_count = $this->eventModel->getParticipantCount($event->id);
     }
+    
+    $data = [
+        'events' => $events,
+        'search' => $search
+    ];
+    
+    $this->view('events/index', $data);
+}
 
     public function create() {
         if($_SERVER['REQUEST_METHOD'] == 'POST') {

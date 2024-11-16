@@ -31,7 +31,7 @@
             <aside class="events-sidebar">
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
-                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-create-event">Create Event</a>
+                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
                     <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
                     <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events active">My Events</a>
                 </nav>

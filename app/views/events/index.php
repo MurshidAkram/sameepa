@@ -32,7 +32,7 @@
             <aside class="events-sidebar">
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
-                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-create-event">Create Event</a>
+                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
                     <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
                     <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
                 </nav>
@@ -40,6 +40,16 @@
 
             <div class="events-content">
                 <h1>Community Events</h1>
+                <!-- In index.php view, add this after the <h1> tag -->
+                <form class="events-search" method="GET" action="<?php echo URLROOT; ?>/events">
+                     <input 
+                        type="text" 
+                        name="search" 
+                        placeholder="Search events..."
+                        value="<?php echo isset($data['search']) ? htmlspecialchars($data['search']) : ''; ?>"
+                        >
+                    <button type="submit">Search</button>
+                </form>
                 <p>Discover and join exciting events happening in your community!</p>
 
                 <div class="events-grid">
