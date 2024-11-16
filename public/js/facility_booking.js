@@ -1,10 +1,30 @@
 const facilityId = document.querySelector('input[name="facility_id"]').value;
 
 document.addEventListener('DOMContentLoaded', function() {
-    loadUserBookings(); // Load bookings when page loads
     const calendar = new Calendar();
     calendar.init();
     generateTimeSlots();
+
+    // Update time slots when date changes
+    dateInput.addEventListener('change', async function() {
+        const selectedDate = this.value;
+        await showTimeSlots(selectedDate);
+    });
+
+    // Handle form submission
+    bookingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get the selected date and format it
+        const selectedDate = document.getElementById('booking_date').value;
+        const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+        
+        // Update the hidden date input before submission
+        document.getElementById('booking_date').value = formattedDate;
+        
+        // Submit the form
+        this.submit();
+    });
 });
 
 class Calendar {
@@ -53,14 +73,44 @@ class Calendar {
            this.currentYear === today.getFullYear();
     }
 
+    async handleDateClick(date, facilityId) {
+        try {
+            const response = await fetch(`${URLROOT}/facilities/getUserBookings/${facilityId}/${date}`);
+            const bookings = await response.json();
+            
+            const tableBody = document.getElementById('bookingsTableBody');
+            if (bookings.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center;">No bookings found for this date</td>
+                    </tr>`;
+            } else {
+                tableBody.innerHTML = bookings.map(booking => `
+                    <tr>
+                        <td>${booking.booking_date}</td>
+                        <td>${booking.booking_time}</td>
+                        <td>${booking.duration}</td>
+                        <td>${booking.status || 'Pending'}</td>
+                    </tr>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+        }
+    }
+
     addDateListeners() {
         document.querySelectorAll('.calendar-date').forEach(date => {
             date.addEventListener('click', async (e) => {
                 document.querySelectorAll('.calendar-date').forEach(d => 
                     d.classList.remove('selected'));
                 e.target.classList.add('selected');
+                
                 const selectedDate = e.target.dataset.date;
                 document.getElementById('booking_date').value = selectedDate;
+                const facilityId = document.querySelector('.calendar').dataset.facilityId;
+                
+                await this.handleDateClick(selectedDate, facilityId);
                 await showTimeSlots(selectedDate);
             });
         });
@@ -88,33 +138,39 @@ class Calendar {
         });
     }
 }
-
-function generateTimeSlots() {
+  // Update the existing showTimeSlots function
+async function showTimeSlots(date) {
     const timeSlotsContainer = document.getElementById('timeSlots');
-    timeSlotsContainer.innerHTML = '<p class="select-date-message">Please select a date to view available time slots</p>';
+    const openingHour = 8;
+    const closingHour = 22;
+    let timeSlotHTML = '';
+
+    try {
+        const response = await fetch(`${URLROOT}/Facilities/getBookings/${facilityId}/${date}`);
+        const bookings = await response.json();
+
+        for (let hour = openingHour; hour < closingHour; hour++) {
+            const timeString = `${hour.toString().padStart(2, '0')}:00`;
+            const isBooked = bookings.some(booking => {
+                const bookingHour = parseInt(booking.booking_time.split(':')[0]);
+                return bookingHour === hour;
+            });
+
+            timeSlotHTML += `
+                <div class="time-slot ${isBooked ? 'booked' : 'available'}" data-time="${timeString}">
+                    <span class="time">${timeString}</span>
+                    <span class="status">${isBooked ? 'Booked' : 'Available'}</span>
+                </div>
+            `;
+        }
+
+        timeSlotsContainer.innerHTML = timeSlotHTML;
+        addTimeSlotListeners();
+
+    } catch (error) {
+        console.error('Error loading time slots:', error);
+    }
 }
-  async function showTimeSlots(date) {
-      const timeSlotsContainer = document.getElementById('timeSlots');
-      const openingHour = 8;
-      const closingHour = 22;
-      let timeSlotHTML = '';
-
-      for (let hour = openingHour; hour < closingHour; hour++) {
-          const formattedHour = hour.toString().padStart(2, '0');
-          const timeString = `${formattedHour}:00`;
-        
-          timeSlotHTML += `
-              <div class="time-slot" data-time="${timeString}">
-                  <span class="time">${timeString}</span>
-                  <span class="status">Available</span>
-              </div>
-          `;
-      }
-
-      timeSlotsContainer.innerHTML = timeSlotHTML;
-      await checkAvailability(date);
-      addTimeSlotListeners();
-  }
 
   function addTimeSlotListeners() {
       const timeSlots = document.querySelectorAll('.time-slot');
@@ -155,51 +211,5 @@ async function checkAvailability(date) {
     } catch (error) {
         console.error('Error checking availability:', error);
     }
-    
-}function updateBookingsTable(bookings) {
-    const tbody = document.getElementById('bookingsTableBody');
-    
-    if (bookings.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="no-bookings-message">No bookings found for this date</td>
-            </tr>
-        `;
-        return;
-    }
+}
 
-    tbody.innerHTML = bookings.map(booking => `
-        <tr>
-            <td>${new Date(booking.booking_date).toLocaleDateString()}</td>
-            <td>${booking.booking_time}</td>
-            <td>${booking.duration} hours</td>
-            <td>
-                <span class="booking-status ${booking.status.toLowerCase()}">
-                    ${booking.status}
-                </span>
-            </td>
-        </tr>
-    `).join('');
-}
-async function loadUserBookings() {
-    try {
-        const facilityId = document.querySelector('input[name="facility_id"]').value;
-        const response = await fetch(`${URLROOT}/Facilities/getUserBookings/${facilityId}`);
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch bookings');
-        }
-        
-        const bookings = await response.json();
-        
-        const tbody = document.getElementById('bookingsTableBody');
-        if (!tbody) {
-            console.error('Bookings table body element not found');
-            return;
-        }
-        
-        updateBookingsTable(bookings);
-    } catch (error) {
-        console.error('Error loading bookings:', error);
-    }
-}

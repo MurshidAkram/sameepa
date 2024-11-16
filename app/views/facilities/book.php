@@ -32,7 +32,7 @@
         <main class="content">
             <div class="booking-container">
                 <div class="booking-left-panel">
-                    <div class="calendar">
+                    <div class="calendar" data-facility-id="<?php echo $data['facility']['id']; ?>">
                         <div class="calendar-header">
                             <button class="month-nav" id="prevMonth"><</button>
                             <h2 id="currentMonth">August 2023</h2>

@@ -94,22 +94,17 @@ class M_Facilities {
         return $this->db->resultSet();
     }
     
-    public function getUserBookings($userId, $facilityId, $date = null) {
-        $sql = "SELECT * FROM bookings WHERE resident_id = :user_id AND facility_id = :facility_id";
-        if ($date) {
-            $sql .= " AND booking_date = :date";
-        }
-        $sql .= " ORDER BY booking_date DESC, booking_time ASC";
-    
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':user_id', $userId);
-        $stmt->bindValue(':facility_id', $facilityId);
-        if ($date) {
-            $stmt->bindValue(':date', $date);
-        }
-        $stmt->execute();
-    
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function getUserBookingsByDate($userId, $facilityId, $date) {
+        $this->db->query('SELECT * FROM bookings 
+                          WHERE user_id = :userId 
+                          AND facility_id = :facilityId 
+                          AND booking_date = :date');
+        
+        $this->db->bind(':userId', $userId);
+        $this->db->bind(':facilityId', $facilityId);
+        $this->db->bind(':date', $date);
+        
+        return $this->db->resultSet();
     }
     
     
@@ -117,6 +112,43 @@ class M_Facilities {
         $this->db->query('SELECT id FROM residents WHERE user_id = :user_id');
         $this->db->bind(':user_id', $userId);
         return $this->db->single();
+    }
+
+    public function getallmyBookings($user_id) {
+        $this->db->query('SELECT b.*, f.name as facility_name 
+                          FROM bookings b 
+                          JOIN facilities f ON b.facility_id = f.id 
+                          WHERE b.user_id = :user_id 
+                          ORDER BY b.booking_date DESC');
+        
+        $this->db->bind(':user_id', $user_id);
+        
+        return $this->db->resultSet();
+    }
+    
+    public function getAllBookings() {
+        $this->db->query('SELECT b.*, f.name as facility_name 
+                          FROM bookings b 
+                          JOIN facilities f ON b.facility_id = f.id 
+                          ORDER BY b.booking_date DESC');
+        return $this->db->resultSet();
+    }
+    public function updateBooking($data) {
+        $this->db->query('UPDATE bookings SET booking_date = :booking_date, 
+                          booking_time = :booking_time, duration = :duration 
+                          WHERE id = :id');
+    
+        $this->db->bind(':id', $data['id']);
+        $this->db->bind(':booking_date', $data['booking_date']);
+        $this->db->bind(':booking_time', $data['booking_time']);
+        $this->db->bind(':duration', $data['duration']);
+    
+        return $this->db->execute();
+    }
+    public function deleteBooking($id) {
+        $this->db->query('DELETE FROM bookings WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
     }
     
 }

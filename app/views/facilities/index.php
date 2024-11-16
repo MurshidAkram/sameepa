@@ -28,13 +28,16 @@
                 break;
         }
         ?>
-        
         <main class="facilities-main">
             <h1>Facility Management</h1>
-            <?php if($_SESSION['user_role_id'] == 2): ?>
-                <a href="<?php echo URLROOT; ?>/facilities/create" class="btn-create">Create New Facility</a>
-            <?php endif; ?>
-
+            <div class="action-buttons">
+                <?php if($_SESSION['user_role_id'] == 2): ?>
+                    <a href="<?php echo URLROOT; ?>/facilities/create" class="btn-create">Create New Facility</a>
+                    <a href="<?php echo URLROOT; ?>/facilities/allbookings" class="btn-admin-bookings">All Bookings</a>
+                <?php endif; ?>
+                <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="btn-bookings">My Bookings</a>
+            </div>
+                                    
             <div class="facilities-grid">
                 <?php foreach($data['facilities'] as $facility): ?>
                     <div class="facility-card">
@@ -46,7 +49,7 @@
                         </div>
                         <div class="facility-actions">
                             <button onclick="viewFacility(<?php echo $facility->id; ?>)" class="btn-view">View</button>
-                            <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="btn-book">Book Facility</a>
+                            <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="btn-book">Book</a>
                             <?php if($_SESSION['user_role_id'] == 2): ?>
                                 <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">Delete</button>

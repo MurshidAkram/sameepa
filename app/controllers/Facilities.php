@@ -151,9 +151,74 @@ class Facilities extends Controller {
         echo json_encode($bookings);
     }
     
-    public function getUserBookings($facilityId, $date = null) {
-        $bookings = $this->facilityModel->getUserBookings($_SESSION['user_id'], $facilityId, $date);
+    public function getUserBookings($facilityId, $date) {
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode([]);
+            return;
+        }
+        
+        $bookings = $this->facilityModel->getUserBookingsByDate(
+            $_SESSION['user_id'], 
+            $facilityId, 
+            $date
+        );
+        
         header('Content-Type: application/json');
         echo json_encode($bookings);
-    }    
+    }
+      
+    
+    public function allmybookings() {
+        $user_id = $_SESSION['user_id'];
+        $bookings = $this->facilityModel->getallmyBookings($user_id);
+        
+        $data = [
+            'bookings' => $bookings
+        ];
+        
+        $this->view('facilities/allmybookings', $data);
+    }
+    
+    public function allbookings() {
+        if ($_SESSION['user_role_id'] != 2) {
+            redirect('facilities');
+        }
+        
+        $bookings = $this->facilityModel->getAllBookings();
+        $data = [
+            'bookings' => $bookings
+        ];
+        
+        $this->view('facilities/allbookings', $data);
+    }
+    public function updateBooking($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get the POST data
+            $data = json_decode(file_get_contents("php://input"));
+            
+            $bookingData = [
+                'id' => $id,
+                'booking_date' => $data->booking_date,
+                'booking_time' => $data->booking_time,
+                'duration' => $data->duration
+            ];
+    
+            // Update booking in database through model
+            if ($this->facilityModel->updateBooking($bookingData)) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false]);
+            }
+        }
+    }
+    public function cancelBooking($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($this->facilityModel->deleteBooking($id)) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false]);
+            }
+        }
+    }
+    
 }
