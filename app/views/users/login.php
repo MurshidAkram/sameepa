@@ -35,6 +35,7 @@
                         <input type="password" id="password" name="password" required>
                     </div>
                     <button type="submit" class="form-submit">Login</button>
+                    <a href=" <?php echo URLROOT; ?>/users/forgotpassword">Forgot password?</a>
                 </form>
             </div>
         </div>

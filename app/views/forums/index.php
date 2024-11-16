@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/forums.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/forums.css">
     <title>Community Forums | <?php echo SITENAME; ?></title>
 </head>
 
@@ -38,7 +38,7 @@
             <div class="forums-actions">
                 <a href="<?php echo URLROOT; ?>/forums/create" class="btn-create-forum">Create New Forum</a>
                 <a href="<?php echo URLROOT; ?>/forums/myforums" class="btn-my-forums">My Forums</a>
-                
+
             </div>
 
             <div class="forums-list">
@@ -48,13 +48,13 @@
                         <p class="forum-description"><?php echo $forum->description; ?></p>
                         <div class="forum-details">
                             <span class="forum-creator">Created by: <?php echo $this->getUserNameById($forum->created_by); ?></span>
-                            <span class="forum-comments">💬: <?php echo $this->getCommentCountByForumId($forum->id); ?></span>
+                            <span class="forum-comments-index">💬: <?php echo $this->getCommentCountByForumId($forum->id); ?></span>
                         </div>
                         <div class="forum-actions">
                             <a href="<?php echo URLROOT; ?>/forums/view_forum/<?php echo $forum->id; ?>" class="btn-view-forum">View Forum</a>
                             <?php if ($_SESSION['user_role_id'] >= 2) : ?>
                                 <a href="<?php echo URLROOT; ?>/forums/delete/<?php echo $forum->id; ?>" class="btn-delete-forum">Delete</a>
-                                <a href="<?php echo URLROOT; ?>/forums/reported_comments/<?php  echo $forum->id; ?>" class="btn-reported-comments">Reported Comments</a>
+                                <a href="<?php echo URLROOT; ?>/forums/reported_comments/<?php echo $forum->id; ?>" class="btn-reported-comments">Reported Comments</a>
                             <?php endif; ?>
                         </div>
                     </div>

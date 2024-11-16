@@ -5,34 +5,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <title><?php echo SITENAME; ?> - Create Forum</title>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/forums.css">
+    <title>Create Forum | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="container">
-        <h1>Create Forum</h1>
+    <div class="dashboard-container">
+        <?php
+        switch ($_SESSION['user_role_id']) {
+            case 1:
+                require APPROOT . '/views/inc/components/side_panel_resident.php';
+                break;
+            case 2:
+                require APPROOT . '/views/inc/components/side_panel_admin.php';
+                break;
+            case 3:
+                require APPROOT . '/views/inc/components/side_panel_superadmin.php';
+                break;
+        }
+        ?>
 
-        <?php if (!empty($data['errors'])): ?>
-            <div class="alert alert-danger">
-                <?php foreach ($data['errors'] as $error): ?>
-                    <p><?php echo $error; ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+        <main>
+            <div class="create-announcement-container">
+                <div class="page-header">
+                    <h1>Create New Forum</h1>
+                    <a href="<?php echo URLROOT; ?>/forums" class="btn btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to Forums
+                    </a>
+                </div>
 
-        <form action="<?php echo URLROOT; ?>/forums/create" method="POST">
-            <div class="form-group">
-                <label for="title">Title:</label>
-                <input type="text" name="title" id="title" class="form-control" value="<?php echo isset($data['title']) ? $data['title'] : ''; ?>">
+                <?php if (!empty($data['errors'])): ?>
+                    <div class="alert alert-danger">
+                        <?php foreach ($data['errors'] as $error): ?>
+                            <p><?php echo $error; ?></p>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <form action="<?php echo URLROOT; ?>/forums/create" method="POST" class="announcement-form">
+                    <div class="form-group">
+                        <label for="title">Forum Title:</label>
+                        <input type="text" name="title" id="title"
+                            class="form-control <?php echo (!empty($data['title_err'])) ? 'is-invalid' : ''; ?>"
+                            value="<?php echo isset($data['title']) ? $data['title'] : ''; ?>"
+                            placeholder="Enter forum title">
+                        <span class="invalid-feedback"><?php echo isset($data['title_err']) ? $data['title_err'] : ''; ?></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Forum Description:</label>
+                        <textarea name="description" id="description" rows="10"
+                            class="form-control <?php echo (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>"
+                            placeholder="Enter forum description"><?php echo isset($data['description']) ? $data['description'] : ''; ?></textarea>
+                        <span class="invalid-feedback"><?php echo isset($data['description_err']) ? $data['description_err'] : ''; ?></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="<?php echo URLROOT; ?>/forums" class="btn btn-cancel">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Forum</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea name="description" id="description" class="form-control"><?php echo isset($data['description']) ? $data['description'] : ''; ?></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Create Forum</button>
-        </form>
+        </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

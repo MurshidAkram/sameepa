@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/forums.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/forums.css">
     <title>Reported Comments | <?php echo SITENAME; ?></title>
 </head>
 
@@ -33,6 +33,9 @@
 
         <main class="forums-main">
             <h1>Reported Comments</h1>
+            <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Forums
+            </a>
 
             <?php if (empty($data['reported_comments'])) : ?>
                 <p>No reported comments found.</p>
