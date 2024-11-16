@@ -163,11 +163,13 @@
                     <p>Entries Over Time</p>
                     <canvas id="visitorFlowCanvas"></canvas>
                 </div>
-                
-                <div class="chart">
-                    <h3>Incident Trends</h3>
-                    <p>Types Breakdown (e.g., theft, fire)</p>
-                    <canvas id="incidentTrendsCanvas"></canvas>
+
+                <div class="widget">
+                    <h2>Duty Schedule Overview</h2>
+                    <div class="widget-content">
+                        <p>Next Shift: <span id="next-shift">2024-09-18 14:00</span></p>
+                        <p>Current Duty Officer: <span id="current-officer">Officer Smith</span></p>
+                    </div>
                 </div>
                 
                 <div class="chart">

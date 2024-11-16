@@ -2,23 +2,56 @@
 
 class Resident extends Controller
 {
-    public function dashboard()
+    private $residentModel;
+
+    public function __construct()
     {
-        // Load resident dashboard view
-        $this->view('resident/dashboard');
+        $this->checkResidentAuth();
+
+        // Initialize any resident-specific models if needed
+        // $this->residentModel = $this->model('M_Resident');
     }
 
-    public function announcements()
+    private function checkResidentAuth()
+    {
+        // Check if user is logged in
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        // Check if user is a resident (role_id = 1)
+        if ($_SESSION['user_role_id'] != 1) {
+            // Redirect to unauthorized page
+            header('Location: ' . URLROOT . '/pages/unauthorized');
+            exit();
+        }
+    }
+
+    public function dashboard()
+    {
+        // Get any necessary data for the dashboard
+        $data = [
+            'user_id' => $_SESSION['user_id'],
+            'email' => $_SESSION['user_email'],
+            'role' => $_SESSION['user_role']
+        ];
+
+        // Load resident dashboard view with data
+        $this->view('resident/dashboard', $data);
+    }
+
+    /*public function announcements()
     {
         // Load resident dashboard view
         $this->view('resident/announcements');
-    }
+    }*/
 
-    public function events()
+    /*public function events()
     {
         // Load resident dashboard view
         $this->view('resident/events');
-    }
+    }*/
 
     public function visitor_passes()
     {
@@ -40,10 +73,11 @@ class Resident extends Controller
         $this->view('resident/exchange');
     }
 
-    public function forums()
+    /*public function forums()
     {
         $this->view('resident/forums');
     }
+        */
 
     public function maintenance()
     {

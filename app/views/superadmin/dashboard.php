@@ -41,7 +41,7 @@
                 <div class="dashboard-item">
                     <h2>Announcements</h2>
                     <p>Create and manage community announcements.</p>
-                    <a href="<?php echo URLROOT; ?>/superadmin/announcements">Manage Announcements</a>
+                    <a href="<?php echo URLROOT; ?>/announcements/index">Manage Announcements</a>
                 </div>
             </section>
         </main>

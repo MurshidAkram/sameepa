@@ -22,10 +22,10 @@
                 <h2>Welcome, Service Provider</h2>
                 <p>Here you can manage service requests and update your profile.</p>
 
-                <div class="dashboard-links">
+                <!-- <div class="dashboard-links">
                     <a href="<?php echo URLROOT; ?>/external/requests" class="dashboard-link">View Service Requests</a>
                     <a href="<?php echo URLROOT; ?>/external/profile" class="dashboard-link">Update Profile</a>
-                </div>
+                </div> -->
             </section>
         </main>
     </div>
