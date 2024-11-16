@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.getElementById('duration').addEventListener('change', function() {
+    const selectedDate = document.getElementById('booking_date').value;
+    const facilityId = document.querySelector('.calendar').dataset.facilityId;
+    if(selectedDate) {
+        updateTimeSlots(selectedDate, facilityId);
+    }
+});
+
 class Calendar {
     constructor() {
         this.date = new Date();
@@ -90,7 +98,6 @@ class Calendar {
                         <td>${booking.booking_date}</td>
                         <td>${booking.booking_time}</td>
                         <td>${booking.duration}</td>
-                        <td>${booking.status || 'Pending'}</td>
                     </tr>
                 `).join('');
             }
@@ -138,11 +145,24 @@ class Calendar {
         });
     }
 }
-  // Update the existing showTimeSlots function
+function isTimeSlotOverlapping(selectedHour, selectedDuration, bookings) {
+    const selectedEnd = selectedHour + selectedDuration;
+
+    return bookings.some(booking => {
+        const bookingHour = parseInt(booking.booking_time.split(':')[0]);
+        const bookingDuration = parseInt(booking.duration);
+        const bookingEnd = bookingHour + bookingDuration;
+
+        // Check if either start or end of new booking overlaps with existing booking
+        return (selectedHour < bookingEnd && selectedEnd > bookingHour);
+    });
+}
+
 async function showTimeSlots(date) {
     const timeSlotsContainer = document.getElementById('timeSlots');
     const openingHour = 8;
     const closingHour = 22;
+    const selectedDuration = parseInt(document.getElementById('duration').value);
     let timeSlotHTML = '';
 
     try {
@@ -151,15 +171,12 @@ async function showTimeSlots(date) {
 
         for (let hour = openingHour; hour < closingHour; hour++) {
             const timeString = `${hour.toString().padStart(2, '0')}:00`;
-            const isBooked = bookings.some(booking => {
-                const bookingHour = parseInt(booking.booking_time.split(':')[0]);
-                return bookingHour === hour;
-            });
+            const isOverlapping = isTimeSlotOverlapping(hour, selectedDuration, bookings);
 
             timeSlotHTML += `
-                <div class="time-slot ${isBooked ? 'booked' : 'available'}" data-time="${timeString}">
+                <div class="time-slot ${isOverlapping ? 'booked' : 'available'}" data-time="${timeString}">
                     <span class="time">${timeString}</span>
-                    <span class="status">${isBooked ? 'Booked' : 'Available'}</span>
+                    <span class="status">${isOverlapping ? 'Booked' : 'Available'}</span>
                 </div>
             `;
         }
@@ -171,6 +188,47 @@ async function showTimeSlots(date) {
         console.error('Error loading time slots:', error);
     }
 }
+
+
+function updateTimeSlots(date, facilityId) {    
+    fetch(`${URLROOT}/facilities/getBookedTimeSlots/${facilityId}/${date}`)
+        .then(response => response.json())
+        .then(occupiedSlots => {
+            const timeSlots = document.getElementById('timeSlots');
+            timeSlots.innerHTML = '';
+            
+            // Generate time slots (e.g., 9 AM to 9 PM)
+            for(let hour = 9; hour < 21; hour++) {
+                const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
+                const duration = document.getElementById('duration').value;
+                
+                // Check if any slot within the duration is occupied
+                let isAvailable = true;
+                for(let i = 0; i < duration; i++) {
+                    const checkTime = new Date(date);
+                    checkTime.setHours(hour + i, 0, 0);
+                    const checkTimeString = checkTime.toTimeString().slice(0, 5);
+                    
+                    if(occupiedSlots.includes(checkTimeString)) {
+                        isAvailable = false;
+                        break;
+                    }
+                }
+                
+                const button = document.createElement('button');
+                button.textContent = timeSlot;
+                button.className = `time-slot ${isAvailable ? 'available' : 'occupied'}`;
+                button.disabled = !isAvailable;
+                
+                if(isAvailable) {
+                    button.onclick = () => selectTimeSlot(timeSlot);
+                }
+                
+                timeSlots.appendChild(button);
+            }
+        });
+}
+
 
   function addTimeSlotListeners() {
       const timeSlots = document.querySelectorAll('.time-slot');

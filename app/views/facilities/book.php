@@ -98,7 +98,6 @@
                                     <th>Date</th>
                                     <th>Time</th>
                                     <th>Duration</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody id="bookingsTableBody">

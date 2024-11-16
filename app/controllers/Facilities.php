@@ -220,5 +220,22 @@ class Facilities extends Controller {
             }
         }
     }
+    public function getBookedTimeSlots($facilityId, $date) {
+        $bookings = $this->facilityModel->getBookingsForDate($facilityId, $date);
+        $occupiedSlots = [];
+        
+        foreach($bookings as $booking) {
+            $startTime = strtotime($booking->booking_time);
+            $duration = $booking->duration;
+            
+            // Mark all slots within the duration as occupied
+            for($i = 0; $i < $duration; $i++) {
+                $timeSlot = date('H:i', $startTime + ($i * 3600));
+                $occupiedSlots[] = $timeSlot;
+            }
+        }
+        
+        return $occupiedSlots;
+    }
     
 }
