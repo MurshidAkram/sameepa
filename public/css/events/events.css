@@ -1,0 +1,331 @@
+/* Events Layout */
+.events-main {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* Sidebar Styling */
+.events-sidebar {
+    flex: 0 0 250px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: fit-content;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.events-sidebar h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.events-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.events-nav a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    color: #555;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.events-nav a:hover {
+    background: #f5f5f5;
+    color: #800080;
+}
+
+.btn-create-event {
+    background: #800080;
+    color: white !important;
+}
+
+.btn-create-event:hover {
+    background: #9a009a !important;
+}
+
+/* Events Content Area */
+.events-content {
+    flex: 1;
+}
+
+/* Events grid layout */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Search bar styling */
+.events-search {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    max-width: 600px;
+}
+
+.events-search input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.events-search button {
+    padding: 10px 20px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.events-search button:hover {
+    background-color: #9a009a;
+}
+
+/* Event card styling */
+.event-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 100%;
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.event-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.event-details {
+    padding: 15px;
+}
+
+.event-title {
+    color: #800080;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.event-info p {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.event-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+/* View Event Button */
+.btn-view-event {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #800080;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-view-event:hover {
+    background-color: #9a009a;
+    transform: translateY(-2px);
+}
+
+/* Create Event Form Styling */
+.create-event-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-event-container h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #800080;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2);
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+/* Form Buttons */
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-submit {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #9a009a;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+/* No Events Message */
+.no-events {
+    text-align: center;
+    padding: 3rem;
+    background: #fff;
+    border-radius: 8px;
+    color: #666;
+    margin-top: 2rem;
+}
+
+.no-events p {
+    margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .events-main {
+        flex-direction: column;
+    }
+
+    .events-sidebar {
+        flex: none;
+        width: 100%;
+    }
+
+    .events-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .events-nav a {
+        flex: 1;
+        min-width: 200px;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+        width: 100%;
+    }
+
+    .events-search {
+        flex-direction: column;
+    }
+
+    .events-search button {
+        width: 100%;
+    }
+}

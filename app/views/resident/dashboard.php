@@ -35,50 +35,7 @@
                 <div class="overview-card maintenance">
                     <h2>Maintenance Request</h2>
                     <p>Last request: Leaky faucet (In Progress)</p>
-                    <a href="<?php echo URLROOT; ?>/resident/maintenance" class="btn-view">Submit Request</a>
-                </div>
-            </section>
-
-            <section class="profile-section">
-                <h2>Your Profile</h2>
-                <p>Edit your account details below. You can update your information or delete your account.</p>
-
-                <div class="form-container">
-                    <div class="form-content">
-                        <div class="form-wrapper">
-                            <form action="<?php echo URLROOT; ?>/resident/updateProfile" method="POST">
-                                <div class="form-group">
-                                    <label for="username">Username:</label>
-                                    <input type="text" id="username" name="username" value="JohnDoe" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" value="john@example.com" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password">Password:</label>
-                                    <input type="password" id="password" name="password" value="******" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="phone">Phone Number:</label>
-                                    <input type="text" id="phone" name="phone" value="123-456-7890">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="address">Address:</label>
-                                    <textarea id="address" name="address">Apartment 48</textarea>
-                                </div>
-
-                                <div class="form-actions">
-                                    <button type="submit" class="form-submit btn-update">Update Profile</button>
-                                    <a href="<?php echo URLROOT; ?>/resident/deleteAccount" class="btn-delete">Delete Profile</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    <a href="<?php echo URLROOT; ?>/maintenance/index" class="btn-view">Submit Request</a>
                 </div>
             </section>
         </main>
