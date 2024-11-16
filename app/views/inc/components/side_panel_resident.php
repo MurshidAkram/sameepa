@@ -5,7 +5,7 @@
                 <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
                 <li><a href="<?php echo URLROOT; ?>/events/index">Events</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/groups">Groups</a></li>
-                <li><a href="<?php echo URLROOT; ?>/resident/forums">Forums</a></li>
+                <li><a href="<?php echo URLROOT; ?>/forums/index">Forums</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/exchange">Product/Resource Exchange</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/facilities">Facility Booking</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/maintenance">Maintenance Requests</a></li>
