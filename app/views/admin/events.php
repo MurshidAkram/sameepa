@@ -1,4 +1,4 @@
-<!-- app/views/resident/events.php -->
+<!-- app/views/events/index.php -->
 <!DOCTYPE html>
 <html lang="en">
 

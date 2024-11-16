@@ -1,4 +1,4 @@
-<!-- app/views/resident/announcements.php -->
+<!-- app/views/announcements/index.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -101,7 +101,7 @@
                                     👎 <span class="dislike-count"><?php echo $announcement['dislikes']; ?></span>
                                 </button>
                             </div>
-                            <a href="<?php echo URLROOT; ?>/resident/announcement/<?php echo $announcement['id']; ?>" class="btn-view-full">View</a>
+                            <a href="<?php echo URLROOT; ?><?php echo $announcement['id']; ?>" class="btn-view-full">View</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

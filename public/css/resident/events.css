@@ -130,6 +130,7 @@
 .btn-join-event {
     background-color: #4CAF50;
     color: white;
+    cursor: pointer;
 }
 
 .btn-join-event:hover {
@@ -173,6 +174,133 @@
     color: #800080;
     font-weight: bold;
     cursor: pointer;
+}
+
+.btn-delete-event {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-joined-event {
+    background-color: #28a745;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.event-details-main {
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+.event-details-container {
+    display: flex;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.event-image-container {
+    flex: 0 0 40%;
+}
+
+.event-detail-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.event-info-container {
+    flex: 1;
+}
+
+.event-detail-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.event-meta {
+    margin-bottom: 2rem;
+}
+
+.event-meta p {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.event-meta strong {
+    color: #333;
+}
+
+.event-description {
+    margin-bottom: 2rem;
+}
+
+.event-description h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.event-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-join-event,
+.btn-joined-event,
+.btn-delete-event {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-join-event {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.btn-join-event:hover {
+    background-color: #45a049;
+}
+
+.btn-joined-event {
+    background-color: #45a049;
+    color: white;
+    border: none;
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.delete-form {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .event-details-container {
+        flex-direction: column;
+    }
+    
+    .event-image-container {
+        flex: 0 0 auto;
+    }
 }
 
 @media (max-width: 1024px) {

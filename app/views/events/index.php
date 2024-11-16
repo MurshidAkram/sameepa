@@ -24,7 +24,7 @@
                 <nav class="events-nav">
                     <a href="<?php echo URLROOT; ?>/events/create" class="btn-create-event">Create Event</a>
                     <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
-                    <a href="<?php echo URLROOT; ?>/events/myevents" class="btn-my-events">My Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/viewevent" class="btn-my-events">My Events</a>
                 </nav>
             </aside>
 
@@ -33,51 +33,38 @@
                 <p>Discover and join exciting events happening in your community!</p>
 
                 <div class="events-container">
-                    <?php
-                    // Dummy events data
-                    $events = [
-                        [
-                            'id' => 1,
-                            'title' => 'Community BBQ',
-                            'date' => '2023-07-15',
-                            'time' => '18:00',
-                            'location' => 'Central Park',
-                            'posted_by' => 'John Doe',
-                            'image' => 'bbq.jpg'
-                        ],
-                        [
-                            'id' => 2,
-                            'title' => 'Yoga in the Park',
-                            'date' => '2023-07-20',
-                            'time' => '09:00',
-                            'location' => 'Community Garden',
-                            'posted_by' => 'Jane Smith',
-                            'image' => 'yoga.jpg'
-                        ],
-                        [
-                            'id' => 3,
-                            'title' => 'Movie Night',
-                            'date' => '2023-07-25',
-                            'time' => '20:00',
-                            'location' => 'Community Center',
-                            'posted_by' => 'Mike Johnson',
-                            'image' => 'movie.jpg'
-                        ]
-                    ];
-
-                    foreach ($events as $event) :
-                    ?>
+                    <?php foreach ($data['events'] as $event) : ?>
                         <div class="event-card">
-                            <img src="<?php echo URLROOT; ?>/img/bbq.jpeg" alt="<?php echo $event['title']; ?>" class="event-image">
-                            <h2 class="event-title"><?php echo $event['title']; ?></h2>
+                            <img src="<?php echo URLROOT; ?>/img/events/<?php echo !empty($event->image) ? $event->image : 'default.jpg'; ?>"
+                                alt="<?php echo $event->title; ?>"
+                                class="event-image">
+                            <h2 class="event-title"><?php echo $event->title; ?></h2>
                             <div class="event-details">
-                                <p>Date: <?php echo $event['date']; ?> at <?php echo $event['time']; ?></p>
-                                <p>Location: <?php echo $event['location']; ?></p>
-                                <p>Posted by: <?php echo $event['posted_by']; ?></p>
+                                <p>Date: <?php echo date('F j, Y', strtotime($event->date)); ?>
+                                    at <?php echo date('g:i A', strtotime($event->time)); ?></p>
+                                <p>Location: <?php echo $event->location; ?></p>
+                                <p>Posted by: <?php echo $event->created_by_name; ?></p>
                             </div>
                             <div class="event-actions">
-                                <a href="<?php echo URLROOT; ?>/event/viewevent<?php echo $event['id']; ?>" class="btn-view-event">View Event</a>
-                                <a href="<?php echo URLROOT; ?>/event/join<?php echo $event['id']; ?>" class="btn-join-event">Join Event</a>
+                                <a href="<?php echo URLROOT; ?>/events/viewevent/<?php echo $event->id; ?>"
+                                    class="btn-view-event">View Event</a>
+
+                                <?php if (!$event->isJoined) : ?>
+                                    <form action="<?php echo URLROOT; ?>/events/join/<?php echo $event->id; ?>"
+                                        method="POST" style="display: inline;">
+                                        <button type="submit" class="btn-join-event">Join Event</button>
+                                    </form>
+                                <?php else : ?>
+                                    <button class="btn-joined-event" disabled>Joined</button>
+                                <?php endif; ?>
+
+                                <?php if ($data['is_admin'] || $event->created_by == $data['user_id']) : ?>
+                                    <form action="<?php echo URLROOT; ?>/events/delete/<?php echo $event->id; ?>"
+                                        method="POST" style="display: inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                        <button type="submit" class="btn-delete-event">Delete Event</button>
+                                    </form>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>

@@ -2,10 +2,43 @@
 
 class Resident extends Controller
 {
+    private $residentModel;
+
+    public function __construct()
+    {
+        $this->checkResidentAuth();
+
+        // Initialize any resident-specific models if needed
+        // $this->residentModel = $this->model('M_Resident');
+    }
+
+    private function checkResidentAuth()
+    {
+        // Check if user is logged in
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        // Check if user is a resident (role_id = 1)
+        if ($_SESSION['user_role_id'] != 1) {
+            // Redirect to unauthorized page
+            header('Location: ' . URLROOT . '/pages/unauthorized');
+            exit();
+        }
+    }
+
     public function dashboard()
     {
-        // Load resident dashboard view
-        $this->view('resident/dashboard');
+        // Get any necessary data for the dashboard
+        $data = [
+            'user_id' => $_SESSION['user_id'],
+            'email' => $_SESSION['user_email'],
+            'role' => $_SESSION['user_role']
+        ];
+
+        // Load resident dashboard view with data
+        $this->view('resident/dashboard', $data);
     }
 
     public function announcements()
@@ -14,11 +47,11 @@ class Resident extends Controller
         $this->view('resident/announcements');
     }
 
-    public function events()
+    /*public function events()
     {
         // Load resident dashboard view
         $this->view('resident/events');
-    }
+    }*/
 
     public function visitor_passes()
     {

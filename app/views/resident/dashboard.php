@@ -19,18 +19,18 @@
         <?php require APPROOT . '/views/inc/components/side_panel_resident.php'; ?>
 
         <main>
-            <h1>Welcome, Murshid</h1>
+            <h1>Welcome, <?php echo $_SESSION['name'] ?></h1>
 
             <section class="dashboard-overview">
                 <div class="overview-card announcements">
                     <h2>Latest Announcement</h2>
                     <p>Community pool opening on June 1st!</p>
-                    <a href="<?php echo URLROOT; ?>/resident/announcements" class="btn-view">View All</a>
+                    <a href="<?php echo URLROOT; ?>/announcements/index" class="btn-view">View All</a>
                 </div>
                 <div class="overview-card events">
                     <h2>Upcoming Event</h2>
                     <p>Summer BBQ on July 4th</p>
-                    <a href="<?php echo URLROOT; ?>/resident/events" class="btn-view">View Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/index" class="btn-view">View Events</a>
                 </div>
                 <div class="overview-card maintenance">
                     <h2>Maintenance Request</h2>

@@ -2,8 +2,8 @@
 <aside>
         <ul>
                 <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li>
-                <li><a href="<?php echo URLROOT; ?>/resident/announcements">Community Announcements</a></li>
-                <li><a href="<?php echo URLROOT; ?>/resident/events">Events</a></li>
+                <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
+                <li><a href="<?php echo URLROOT; ?>/events/index">Events</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/groups">Groups</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/forums">Forums</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/exchange">Product/Resource Exchange</a></li>
