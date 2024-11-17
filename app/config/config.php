@@ -16,5 +16,5 @@ define('APPROOT', dirname(dirname(__FILE__)));
 define('URLROOT', 'http://localhost/sameepa');
 
 
-//WEBSITE
+//WEBSITE name
 define('SITENAME', 'sameepa');

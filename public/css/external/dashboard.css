@@ -101,42 +101,33 @@ main {
 /* Profile Content Styling */
 .profile-content {
     display: flex;
-    align-items: center;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
     width: 100%;
     gap: 20px;
-}
-
-/* Profile Image Styling */
-.profile-image {
-    flex: 0 0 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.profile-image img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
 }
 
 /* Profile Details Styling */
 .profile-details {
     display: flex;
     flex-direction: column;
-    justify-content:flex-end;
+    align-items: center; /* Center horizontally within the column */
+    justify-content: center; /* Center vertically within the container */
+    width: 100%; /* Optional: Ensures alignment within the container width */
 }
 
 .profile-details ul {
     list-style: none;
     padding: 0;
-    margin-left: 100%;
+    margin: 0;
+    text-align: center;
 }
+
 
 .profile-details li {
     margin-bottom: 8px;
     font-size: 16px;
+
 }
 
 /* Table Styles */

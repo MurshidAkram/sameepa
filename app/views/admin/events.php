@@ -7,24 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/events.css"> <!-- Include the new styles here -->
-    <title>Manage Your Events | <?php echo SITENAME; ?></title>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin/events.css"> <!-- Include the new styles here -->
+    <title>Manage Events | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container side-panel-open">
-        <?php require APPROOT . '/views/inc/components/side_panel_resident.php'; ?>
+        <?php require APPROOT . '/views/inc/components/side_panel_admin.php'; ?>
 
         <main>
-            <h1>Your Events</h1>
-            <p>Welcome to the Events page. Here, you can view and manage all the events you've created or joined within your community.</p>
+            <div class="header-container">
+                <h1>Manage Events</h1>
+                <a href="#" class="btn btn-history">View Events History</a>
+            </div>
+            <p>Welcome to the Events Management page. Here, you can add, view, or remove community events.</p>
 
             <section class="events-overview">
-                <h2>Upcoming Events</h2>
-                <p>Below is a list of your upcoming events. You can edit or delete the events you’ve created or view details for the ones you’ve joined.</p>
-
+                <!-- <h2>Upcoming Events</h2> -->
+                <div class="header-container">
+                    <h2>Upcoming Events</h2>
+                    <a href="#" class="btn btn-create">Create New Events</a>
+                </div>
                 <table class="events-table">
                     <thead>
                         <tr>
@@ -41,7 +46,6 @@
                             <td>Main Park</td>
                             <td>
                                 <a href="#">View</a> |
-                                <a href="#">Edit</a> |
                                 <a href="#">Delete</a>
                             </td>
                         </tr>
@@ -51,7 +55,6 @@
                             <td>Community Center</td>
                             <td>
                                 <a href="#">View</a> |
-                                <a href="#">Edit</a> |
                                 <a href="#">Delete</a>
                             </td>
                         </tr>
@@ -61,18 +64,11 @@
                             <td>Fitness Hall</td>
                             <td>
                                 <a href="#">View</a> |
-                                <a href="#">Edit</a> |
                                 <a href="#">Delete</a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </section>
-
-            <section class="create-event">
-                <h2>Create a New Event</h2>
-                <p>Want to organize an event for your fellow residents? Fill in the details and create an event to bring the community together!</p>
-                <a href="<?php echo URLROOT; ?>/resident/create_event" class="btn-create">Create Event</a>
             </section>
         </main>
     </div>

@@ -23,7 +23,7 @@
             <h1>Edit Profile</h1>
             <section class="profile-form">
                 <form action="<?php echo URLROOT; ?>/profile/update" method="post" enctype="multipart/form-data">
-                    <h2>Update Your Information</h2>
+                    <h2>Update Information</h2>
                     
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" value="John Doe" required>

@@ -20,18 +20,14 @@
 
         <main>
             <section class="dashboard-overview">
-                <h1>Welcome to Your Dashboard</h1>
+                <h1>Welcome to External Service Provider Dashboard</h1>
                 <p>Manage your service requests, track payments, and view insights on your performance.</p>
 
                 <!-- Profile Information Card (Full-width Row) -->
                 <div class="profile-card card">
-                    <h2>Your Profile</h2>
+                    <h2>My Profile</h2>
                     <div class="profile-content">
-                        <!-- Profile Image -->
-                        <div class="profile-image">
-                            <img src="<?php echo URLROOT; ?>/img/external_provider.jpg" alt="External Provider" />
-                        </div>
-
+                        
                         <!-- Profile Details -->
                         <div class="profile-details">
                             <ul>
