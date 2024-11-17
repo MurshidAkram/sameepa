@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
@@ -49,7 +50,7 @@
                     </div>
 
                     <!-- Deactivate Resident -->
-                    <div class="user-management-option">
+                    <div class="user-management-option deactivate-section">
                         <h4>Deactivate Resident</h4>
                         <form id="deactivateResidentForm" action="#" method="post">
                             <div class="form-group">
@@ -60,7 +61,6 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn-action">Deactivate</button>
-
                         </form>
                     </div>
                 </section>
@@ -97,7 +97,7 @@
                     </div>
 
                     <!-- Deactivate Admin/Security -->
-                    <div class="user-management-option">
+                    <div class="user-management-option deactivate-section">
                         <h4>Deactivate Admin/Security</h4>
                         <form id="deactivateAdminSecurityForm" action="#" method="post">
                             <div class="form-group">
@@ -108,17 +108,30 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn-action">Deactivate</button>
-
                         </form>
                     </div>
                 </section>
             </section>
+           
         </main>
+        
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+    <!-- Inline JavaScript to handle the active state for sidebar links -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('aside ul li a');
 
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Remove the 'active' class from all links
+                    sidebarLinks.forEach(link => link.classList.remove('active'));
+                    // Add the 'active' class to the clicked link
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
 </body>
-
 </html>
-

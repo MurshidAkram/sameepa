@@ -1,0 +1,226 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Dashboard Overview */
+.dashboard-overview {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dashboard-overview h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.dashboard-overview p {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Card Styles */
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    font-size: 20px;
+    color: #800080;
+    margin-bottom: 15px;
+}
+
+.card ul,
+.card table {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.card ul li {
+    margin-bottom: 8px;
+}
+
+/* Profile Card Full Width */
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Title Styling */
+.profile-title {
+    font-size: 20px;
+    color: #800080;
+    margin-bottom: 15px;
+    text-align: center;
+    width: 100%;
+}
+
+/* Profile Content Styling */
+.profile-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Profile Image Styling */
+.profile-image {
+    flex: 0 0 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-image img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Profile Details Styling */
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-end;
+}
+
+.profile-details ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 100%;
+}
+
+.profile-details li {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+/* Table Styles */
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.requests-table th, .requests-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.requests-table th {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.requests-table .status-pending {
+    color: #ff9900;
+}
+
+.requests-table .status-completed {
+    color: #28a745;
+}
+
+.requests-table .status-in-progress {
+    color: #007bff;
+}
+
+/* Link Button Style */
+.dashboard-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #800080;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-link:hover {
+    background-color: #5e005e;
+}
+
+/* Chart Container Styles */
+.payment-card, .analytics-card {
+    text-align: center;
+}
+
+.payment-card canvas, .analytics-card canvas {
+    max-width: 100%;
+    height: 200px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    main {
+        padding: 15px;
+    }
+
+    .dashboard-overview h1 {
+        font-size: 20px;
+    }
+
+    .card h2 {
+        font-size: 18px;
+    }
+
+    .requests-table th, .requests-table td {
+        font-size: 12px;
+    }
+
+    .dashboard-link {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+}
