@@ -1,6 +1,6 @@
 <?php
 class Announcements extends Controller {
-    private $announcementModel;
+    protected $announcementModel;
 
     public function __construct() {
         // Check if user is logged in

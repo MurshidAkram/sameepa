@@ -1,5 +1,7 @@
 <?php
 
+
+
 //database configuration
 
 define('DB_HOST', 'localhost');
@@ -18,3 +20,7 @@ define('URLROOT', 'http://localhost/sameepa');
 
 //WEBSITE name
 define('SITENAME', 'sameepa');
+
+
+require_once APPROOT.'/helpers/url_helper.php';
+require_once APPROOT.'/helpers/session_helper.php';

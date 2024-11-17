@@ -30,7 +30,7 @@
         ?>
 
         <main>
-            <div class="edit-announcement-container">
+            <div class="create-announcement-container">
                 <div class="page-header">
                     <h1>Edit Announcement</h1>
                     <a href="<?php echo URLROOT; ?>/announcements/index" class="btn btn-back">
@@ -56,9 +56,9 @@
                         <span class="invalid-feedback"><?php echo $data['content_err']; ?></span>
                     </div>
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Update Announcement</button>
+                    <div class="form-actions">
                         <a href="<?php echo URLROOT; ?>/announcements/index" class="btn btn-cancel">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Update Announcement</button>
                     </div>
                 </form>
             </div>

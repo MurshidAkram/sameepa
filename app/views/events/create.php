@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/events/events.css">
+
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/form-styles.css">
     <title>Create Event | <?php echo SITENAME; ?></title>
 </head>
@@ -27,6 +29,17 @@
                 break;
         }
         ?>
+
+        <main class="events-main">
+            <aside class="events-sidebar">
+                <h2>Event Navigation</h2>
+                <nav class="events-nav">
+                <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
+                    <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
+                    <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
+                </nav>
+            </aside>
 
         <main class="content">
             <div class="create-event-container">
@@ -82,11 +95,12 @@
 
                     <div class="form-buttons">
                         <button type="submit" class="btn-submit">Create Event</button>
-                        <a href="<?php echo URLROOT; ?>/events" class="btn-cancel">Cancel</a>
+                        <a href="<?php echo URLROOT; ?>/events/index" class="btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>
         </main>
+     </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

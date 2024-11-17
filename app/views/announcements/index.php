@@ -44,11 +44,23 @@
                 <?php endif; ?>
             </div>
 
+            <div class="announcements-search">
+                <input type="text" id="search-announcements" placeholder="Search announcements...">
+                <button class="btn btn-primary" onclick="searchAnnouncements()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+
             <?php //flash('announcement_message'); ?>
 
             <div class="announcements-list">
-                <?php if(!empty($data['announcements'])) : ?>
-                    <?php foreach($data['announcements'] as $announcement) : ?>
+                <?php
+                $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+                $announcements = $this->announcementModel->getAllAnnouncements($searchTerm);
+                ?>
+
+                <?php if(!empty($announcements)) : ?>
+                    <?php foreach($announcements as $announcement) : ?>
                         <div class="announcement-card">
                             <div class="announcement-content">
                                 <h2><?php echo $announcement->title; ?></h2>
@@ -141,6 +153,12 @@
                 }
             });
         });
+
+        // JavaScript for searching announcements
+        function searchAnnouncements() {
+            const searchTerm = document.getElementById('search-announcements').value;
+            window.location.href = '<?php echo URLROOT; ?>/announcements/index?search=' + encodeURIComponent(searchTerm);
+        }
     </script>
 </body>
 </html>
