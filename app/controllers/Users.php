@@ -318,4 +318,10 @@ class Users extends Controller
     {
         $this->view('users/forgotpassword');
     }
+
+    public function usermanagement()
+    {
+        // Load the Users management view
+        $this->view('users/usermanagement');
+    }
 }

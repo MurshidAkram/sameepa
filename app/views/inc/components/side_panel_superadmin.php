@@ -7,7 +7,7 @@
             </a>
         </li>
         <li>
-            <a href="<?php echo URLROOT; ?>/superadmin/users">
+            <a href="<?php echo URLROOT; ?>/users/usermanagement">
                 <i class="fas fa-users"></i> Manage Users
             </a>
         </li>

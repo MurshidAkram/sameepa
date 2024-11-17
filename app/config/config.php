@@ -22,5 +22,5 @@ define('URLROOT', 'http://localhost/sameepa');
 define('SITENAME', 'sameepa');
 
 
-require_once APPROOT.'/helpers/url_helper.php';
-require_once APPROOT.'/helpers/session_helper.php';
+require_once APPROOT . '/helpers/url_helper.php';
+require_once APPROOT . '/helpers/session_helper.php';
