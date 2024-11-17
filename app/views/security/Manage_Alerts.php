@@ -6,144 +6,261 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/form-styles.css">
     <title>Manage Alerts | <?php echo SITENAME; ?></title>
+   
+   <style>
+   body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f8fb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fbfd;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    padding: 20px;
+}
 
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-            padding: 20px;
-        }
+main {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
 
-        main {
-            flex: 1;
-            padding: 20px;
-        }
+h2 {
+    font-size: 2rem;
+    color: #4A90E2;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
 
-        h2 {
-            font-size: 2rem;
-            color: #ff5a5f;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
+h3 {
+    font-size: 1.5rem;
+    color: #4A90E2;
+    margin-bottom: 20px;
+}
 
-        .alerts-form, .alerts-list-container {
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
+.alerts-form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
 
-        .alerts-form h3, .alerts-list-container h3 {
-            font-size: 1.5rem;
-            color: #ff5a5f;
-            margin-bottom: 20px;
-        }
+.alerts-form h3 {
+    color: #4A90E2;
+    margin-bottom: 15px;
+}
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-        }
+.form-group {
+    margin-bottom: 20px;
+}
 
-        .form-group label {
-            font-weight: bold;
-            color: #6d6d6d;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
+label {
+    display: block;
+    font-weight: bold;
+    color: #4A90E2;
+    margin-bottom: 8px;
+}
 
-        input[type="text"], input[type="date"], textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    margin-bottom: 10px;
+    transition: border 0.3s ease;
+}
 
-        .btn, .notify-btn {
-            background-color: #ff5a5f;
-            color: #fff;
-            padding: 12px 20px;
+input:focus, textarea:focus, select:focus {
+    border-color: #4A90E2;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #357ABD;
+}
+
+button:active {
+    background-color: #276C9D;
+}
+
+.search-bar input {
+    padding: 12px;
+    font-size: 1rem;
+    width: 100%;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    margin-bottom: 20px;
+    transition: border 0.3s ease;
+}
+
+.search-bar input:focus {
+    border-color: #4A90E2;
+    outline: none;
+}
+
+.btn {
+            width: 48%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s;
-            width: 30%;
-            margin-top: 10px;
+            transition: background-color 0.3s ease;
         }
+.alerts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #333;
+}
 
-        .btn:hover, .notify-btn:hover {
-            background-color: #e04448;
-        }
+.alerts-table th, .alerts-table td {
+    text-align: left;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
 
-        #success-message {
-            color: #27ae60;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 15px;
-        }
+.alerts-table th {
+    background-color: #4A90E2;
+    color: white;
+}
 
-        .filter-group {
-            margin-bottom: 20px;
-        }
+.alerts-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 
-        /* CSS animation for alert items */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+.edit-btn, .delete-btn {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
 
-        .alert-item {
-            background-color: #f7f9fc;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            opacity: 0;
-            animation: fadeIn 0.5s forwards; /* Apply fade-in animation */
-        }
+.edit-btn {
+    background-color: #FFC107;
+    color: white;
+}
 
-        /* Transition effect for status change */
-        .alert-item .status {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+.edit-btn:hover {
+    background-color: #FF9800;
+}
 
-        /* Active status with smooth background transition */
-        .alert-item .status.Active {
-            background-color: #27ae60;
-            color: #fff;
-        
-            margin-top: 10px;
+.delete-btn {
+    background-color: #E74C3C;
+    color: white;
+}
 
-        }
+.delete-btn:hover {
+    background-color: #C0392B;
+}
 
-        /* Resolved status with smooth background transition */
-        .alert-item .status.Resolved {
-            background-color: #e74c3c;
-            color: #fff;
-        }
-    </style>
+.filter-bar select {
+    padding: 12px;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+.filter-bar select:hover {
+    background-color: #f2f2f2;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 450px; /* Adjust width as necessary */
+    position: relative;
+    max-height: 80vh; /* Limit height to avoid content overflow */
+    overflow-y: auto; /* Allow scrolling if the content exceeds the height */
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #E74C3C;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.form-buttons .cancel-btn {
+    background-color: #ddd;
+    color: #333;
+    border-radius: 8px;
+    padding: 12px 20px;
+}
+
+.form-buttons .cancel-btn:hover {
+    background-color: #ccc;
+}
+
+.form-buttons .cancel-btn:focus {
+    border-color: #4A90E2;
+}
+
+
+</style>
 </head>
-
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
@@ -153,56 +270,134 @@
         <main>
             <h2>Manage Alerts</h2>
 
-            <div class="filter-group">
-                <label for="alert_filter">Filter by:</label>
-                <select id="alert_filter" name="alert_filter">
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <select id="alert-filter" onchange="filterByTitle()">
                     <option value="all">All Alerts</option>
-                    <option value="active">Active Alerts</option>
-                    <option value="resolved">Resolved Alerts</option>
-                    <option value="emergency">Emergency Alerts</option>
+                    <option value="Scheduled Maintenance">Scheduled Maintenance</option>
+                    <option value="Emergency Alert">Emergency Alert</option>
                 </select>
             </div>
 
-            <form method="POST" class="alerts-form" id="create-alert-form">
-                <h3>Create a New Alert</h3>
-                <div class="form-group">
-                    <label for="alert_title">Alert Title:</label>
-                    <input type="text" id="alert_title" name="alert_title" placeholder="Enter the alert title" required>
-                </div>
-                <div class="form-group">
-                    <label for="alert_message">Message:</label>
-                    <textarea id="alert_message" name="alert_message" rows="4" placeholder="Enter alert details" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="alert_date">Alert Date:</label>
-                    <input type="date" id="alert_date" name="alert_date" required>
-                </div>
-                <button type="submit" class="btn" onclick="createAlert(event)">Create Alert</button>
-            </form>
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" id="search-date" placeholder="Search by date (YYYY-MM-DD)" onkeyup="searchAlerts()">
+            </div>
 
-            <p id="success-message" style="display: none;">Alert created and sent to all residents successfully!</p>
+            <!-- Create Alert Button -->
+            <button class="btn" onclick="showModal()">Create Alert</button>
 
+            <!-- Alerts Table -->
             <div class="alerts-list-container">
-                <h3>Active and Past Alerts</h3>
-                <div id="alerts-list">
-                    <div class="alert-item" id="alert-1">
-                        <div class="details">
-                            <h4>Scheduled Maintenance</h4>
-                            <p>Alert Type: Maintenance</p>
-                            <p>Date: 2024-11-20</p>
-                        </div>
-                        <div class="status Active">Active</div>
-                        <button class="notify-btn" onclick="notifyResidents('Scheduled Maintenance')">Notify</button>
+                <h3>All Alerts</h3>
+                <table class="alerts-table" id="alerts-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alerts-tbody">
+                        <!-- Example Data -->
+                        <tr>
+                            <td>Scheduled Maintenance</td>
+                            <td>System maintenance is scheduled.</td>
+                            <td>2024-11-20</td>
+                            <td>10:00 AM</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="edit-btn" onclick="editAlert(this)">Edit</button>
+                                <button class="delete-btn" onclick="deleteAlert(this)">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Emergency Alert</td>
+                            <td>Critical system failure detected.</td>
+                            <td>2024-11-22</td>
+                            <td>12:30 PM</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="edit-btn" onclick="editAlert(this)">Edit</button>
+                                <button class="delete-btn" onclick="deleteAlert(this)">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Scheduled Maintenance</td>
+                            <td>Database maintenance tomorrow.</td>
+                            <td>2024-11-21</td>
+                            <td>2:00 PM</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="edit-btn" onclick="editAlert(this)">Edit</button>
+                                <button class="delete-btn" onclick="deleteAlert(this)">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Scheduled Maintenance</td>
+                            <td>Network upgrades planned.</td>
+                            <td>2024-11-23</td>
+                            <td>8:00 AM</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="edit-btn" onclick="editAlert(this)">Edit</button>
+                                <button class="delete-btn" onclick="deleteAlert(this)">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Emergency Alert</td>
+                            <td>Server overheating detected.</td>
+                            <td>2024-11-24</td>
+                            <td>5:00 PM</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="edit-btn" onclick="editAlert(this)">Edit</button>
+                                <button class="delete-btn" onclick="deleteAlert(this)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal" id="alert-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modal-title">Create Alert</h3>
+                        <span class="close-btn" onclick="hideModal()">&times;</span>
                     </div>
-                    <div class="alert-item" id="alert-2">
-                        <div class="details">
-                            <h4>Network Downtime</h4>
-                            <p>Alert Type: Service</p>
-                            <p>Date: 2024-11-15</p>
-                        </div>
-                        <div class="status Active">Active</div>
-                        <button class="notify-btn" onclick="notifyResidents('Network Downtime')">Notify</button>
-                    </div>
+                    <form id="alert-form">
+    <div class="form-group">
+        <label for="alert-title">Title</label>
+        <select id="alert-title" required>
+            <option value="">Select Title</option>
+            <option value="Scheduled Maintenance">Scheduled Maintenance</option>
+            <option value="Emergency Alert">Emergency Alert</option>
+            <option value="System Update">System Update</option>
+            <option value="Network Outage">Network Outage</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="alert-message">Message</label>
+        <textarea id="alert-message" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="alert-date">Date</label>
+        <input type="date" id="alert-date" required>
+    </div>
+    <div class="form-group">
+        <label for="alert-time">Time</label>
+        <input type="time" id="alert-time" required>
+    </div>
+    <div class="form-buttons">
+        <button type="button" class="btn" onclick="saveAlert()">Save</button>
+        <button type="button" class="btn" onclick="hideModal()">Cancel</button>
+    </div>
+</form>
+
                 </div>
             </div>
         </main>
@@ -211,70 +406,85 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
     <script>
-        function createAlert(event) {
-            event.preventDefault();
-            const title = document.getElementById('alert_title').value;
-            const message = document.getElementById('alert_message').value;
-            const date = document.getElementById('alert_date').value;
-            notifyResidents(title, message);
-            document.getElementById('success-message').style.display = 'block';
-        }
+        function showModal() {
+    document.getElementById('alert-modal').classList.add('show');
+}
 
-        function notifyResidents(title, message = "A new alert has been issued. Please check your dashboard for details.") {
-            console.log(`Sending alert "${title}" with message "${message}" to all residents.`);
-        }
+function hideModal() {
+    document.getElementById('alert-modal').classList.remove('show');
+}
 
-        // Function to update alert status dynamically (Active -> Resolved)
-        function updateAlertStatus(alertId, newStatus) {
-            const alertItem = document.getElementById(alertId);
-            const statusElement = alertItem.querySelector('.status');
-            
-            // Update the status text and background color based on the new status
-            statusElement.textContent = newStatus;
-            
-            // Apply the appropriate class based on the new status
-            if (newStatus === 'Active') {
-                statusElement.classList.remove('Resolved');
-                statusElement.classList.add('Active');
-            } else if (newStatus === 'Resolved') {
-                statusElement.classList.remove('Active');
-                statusElement.classList.add('Resolved');
+
+        function saveAlert() {
+            const title = document.getElementById('alert-title').value;
+            const message = document.getElementById('alert-message').value;
+            const date = document.getElementById('alert-date').value;
+            const time = document.getElementById('alert-time').value;
+
+            if (title && message && date && time) {
+                const tbody = document.getElementById('alerts-tbody');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${title}</td>
+                    <td>${message}</td>
+                    <td>${date}</td>
+                    <td>${time}</td>
+                    <td>Active</td>
+                    <td>
+                        <button class="edit-btn" onclick="editAlert(this)">Edit</button>
+                        <button class="delete-btn" onclick="deleteAlert(this)">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+
+                document.getElementById('alert-form').reset();
+                hideModal();
+                alert('Alert created successfully!');
             }
-
-            // Optional: Smoothly animate the transition with a delay
-            setTimeout(() => {
-                alertItem.classList.add('animated');  // Trigger animation (fade-in effect or transition)
-            }, 300);
         }
 
-        // Function to add a new alert dynamically
-        function addNewAlert(title, type, date) {
-            const alertList = document.getElementById('alerts-list');
-            
-            // Create new alert item element
-            const newAlert = document.createElement('div');
-            newAlert.classList.add('alert-item');
-            newAlert.innerHTML = `
-                <div class="details">
-                    <h4>${title}</h4>
-                    <p>Alert Type: ${type}</p>
-                    <p>Date: ${date}</p>
-                </div>
-                <div class="status Active">Active</div>
-                <button class="notify-btn" onclick="notifyResidents('${title}')">Notify</button>
-            `;
-            
-            // Add it to the list and trigger animation
-            alertList.appendChild(newAlert);
-            newAlert.classList.add('animated');
+        function deleteAlert(button) {
+            if (confirm('Are you sure you want to delete this alert?')) {
+                const row = button.closest('tr');
+                row.remove();
+            }
         }
 
-        // Example of how to call the functions dynamically
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(() => {
-                addNewAlert('Emergency Alert', 'Emergency', '2024-11-30');
-            }, 2000);
-        });
+        function editAlert(button) {
+            const row = button.closest('tr');
+            const title = row.cells[0].textContent;
+            const message = row.cells[1].textContent;
+            const date = row.cells[2].textContent;
+            const time = row.cells[3].textContent;
+
+            document.getElementById('alert-title').value = title;
+            document.getElementById('alert-message').value = message;
+            document.getElementById('alert-date').value = date;
+            document.getElementById('alert-time').value = time;
+
+            row.remove();
+            showModal();
+        }
+
+        function searchAlerts() {
+            const filter = document.getElementById('search-date').value.toLowerCase();
+            const rows = document.querySelectorAll('#alerts-tbody tr');
+
+            rows.forEach(row => {
+                const date = row.cells[2].textContent.toLowerCase();
+                row.style.display = date.includes(filter) ? '' : 'none';
+            });
+        }
+
+        function filterByTitle() {
+            const filter = document.getElementById('alert-filter').value.toLowerCase();
+            const rows = document.querySelectorAll('#alerts-tbody tr');
+
+            rows.forEach(row => {
+                const title = row.cells[0].textContent.toLowerCase();
+                row.style.display = filter === 'all' || title.includes(filter) ? '' : 'none';
+            });
+        }
     </script>
 </body>
 </html>

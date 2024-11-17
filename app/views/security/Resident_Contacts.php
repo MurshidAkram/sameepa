@@ -11,9 +11,10 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/form-styles.css">
 
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/Resident_Contacts.css">
-    <title >Manage Residents Contacts | <?php echo SITENAME; ?></title>
+    <title >Residents Contacts | <?php echo SITENAME; ?></title>
     
     <style>
         /* Ensure that the dashboard layout accounts for the side panel */
@@ -65,14 +66,14 @@
         }
 
         .search-residents-form input[type="text"]:focus {
-            outline: none;
-            border-color: #4CAF50;
+            outline-color: #007bff;
+            border-color: #800080;
         }
 
         .search-residents-form button {
             padding: 12px 20px;
             border-radius: 25px;
-            background-color: #4CAF50;
+            background-color: blueviolet;
             color: white;
             border: none;
             font-size: 16px;
@@ -129,6 +130,11 @@
             color: blueviolet;
             padding-top : 52px;
         }
+        .tooh{
+            text-align: center;
+            padding-right: 95px;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -139,12 +145,14 @@
         <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
         <main>
-            <h2 class="to">Manage Residents Contacts</h2>
+            <h2 class="to">Residents Contacts</h2>
 
             <!-- Search Bar for Finding Resident Contacts -->
             <section id="search-section">
                 
                 <h3 class="too">Find Resident Contact</h3>
+
+                <h4 class="tooh">Find residents details using their name , number or address </h4>
                 <form method="GET" class="search-residents-form" onsubmit="searchResidentContact(event)">
                     <div class="form-group">
                         <label for="search_query" style="display: none;">Search by Name or Address:</label>
@@ -170,35 +178,7 @@
                 </table>
             </section>
 
-            <!-- Form to Add Resident Contacts -->
-            <section id="add-contact">
-                <div class="topic"> Add New Resident Contact</div>
-                <form method="POST" class="residents-contacts-form">
-                    <div class="form-group">
-                        <label for="resident_name">Resident Name:</label>
-                        <input type="text" id="resident_name" name="resident_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="resident_address">Resident Address:</label>
-                        <input type="text" id="resident_address" name="resident_address" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="resident_phone">Phone Number:</label>
-                        <input type="text" id="resident_phone" name="resident_phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="fixed_line">Fixed Line:</label>
-                        <input type="text" id="fixed_line" name="fixed_line" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="resident_email">Email Address:</label>
-                        <input type="email" id="resident_email" name="resident_email" required>
-                    </div>
-                    <button type="submit" class="form-submit">Save</button>
-                </form>
-
-                <p id="success-message" style="display: none; color: green;">Contact saved successfully!</p>
-            </section>
+           </section>
         </main>
     </div>
 

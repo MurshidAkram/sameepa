@@ -27,4 +27,6 @@ aside ul li a:hover {
 /* Make sure the side panel doesn't overlap with the main content */
 .dashboard-container {
     margin-left: 100px; /* Adjust margin to match the side panel width */
+
 }
+
