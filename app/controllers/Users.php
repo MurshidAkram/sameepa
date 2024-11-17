@@ -9,10 +9,21 @@ class Users extends Controller
         $this->userModel = $this->model('M_Users');
     }
 
+    public function index()
+    {
+        // Redirect to login if not logged in
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        // If logged in, redirect to appropriate dashboard based on role
+        $this->redirectToDashboard($_SESSION['user_role_id']);
+    }
+
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
             $data = [
                 'email' => trim($_POST['email']),
                 'password' => trim($_POST['password']),
@@ -20,37 +31,34 @@ class Users extends Controller
             ];
 
             // Validate form input
-            if (empty($data['email'])) {
-                $data['errors'][] = 'Email is required';
-            }
-            if (empty($data['password'])) {
-                $data['errors'][] = 'Password is required';
+            if (empty($data['email']) || empty($data['password'])) {
+                $data['errors'][] = 'Please fill in all fields';
             }
 
-            // Check if the user exists and the password is correct
             if (empty($data['errors'])) {
                 $user = $this->userModel->findUserByEmail($data['email']);
+
                 if ($user) {
-                    if (password_verify($data['password'], $user['password'])) {
-                        // Create a session for the logged-in user
+                    if (!$user['is_active'] && $user['role_id'] != 3) {
+                        $data['errors'][] = 'Your account is pending activation. Please wait for admin approval.';
+                    } else if (password_verify($data['password'], $user['password'])) {
                         $this->createUserSession($user);
-                        // Redirect to the appropriate dashboard based on the user's role
                         $this->redirectToDashboard($user['role_id']);
                     } else {
-                        $data['errors'][] = 'Invalid email or password';
+                        $data['errors'][] = 'Invalid credentials';
                     }
                 } else {
-                    $data['errors'][] = 'Invalid email or password';
+                    $data['errors'][] = 'Invalid credentials';
                 }
             }
 
-            // Load the login view with errors
             $this->view('users/login', $data);
         } else {
-            // Load the login form view
             $this->view('users/login');
         }
     }
+
+
 
     public function createUserSession($user)
     {
@@ -319,9 +327,57 @@ class Users extends Controller
         $this->view('users/forgotpassword');
     }
 
-    public function usermanagement()
+
+    public function manageUsers()
     {
-        // Load the Users management view
-        $this->view('users/usermanagement');
+        // Check if user is SuperAdmin
+        if (!isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
+            header('Location: ' . URLROOT);
+            exit();
+        }
+
+        $data = [
+            'pending_users' => $this->userModel->getPendingUsers(),
+            'residents' => $this->userModel->getUsersByRole(1),
+            'admins' => $this->userModel->getUsersByRole(2),
+            'security' => $this->userModel->getUsersByRole(5),
+            'maintenance' => $this->userModel->getUsersByRole(4),
+            'external' => $this->userModel->getUsersByRole(6)
+        ];
+
+        $this->view('users/manageUsers', $data);
+    }
+
+    public function activateUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
+            header('Location: ' . URLROOT);
+            exit();
+        }
+
+        $userId = $_POST['user_id'];
+        if ($this->userModel->activateUser($userId)) {
+            // Send email notification to user (implement this)
+            header('Location: ' . URLROOT . '/users/manageUsers?success=activated');
+        } else {
+            header('Location: ' . URLROOT . '/users/manageUsers?error=activation_failed');
+        }
+        exit();
+    }
+
+    public function deactivateUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
+            header('Location: ' . URLROOT);
+            exit();
+        }
+
+        $userId = $_POST['user_id'];
+        if ($this->userModel->deactivateUser($userId)) {
+            header('Location: ' . URLROOT . '/users/manageUsers?success=deactivated');
+        } else {
+            header('Location: ' . URLROOT . '/users/manageUsers?error=deactivation_failed');
+        }
+        exit();
     }
 }
