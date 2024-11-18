@@ -30,6 +30,7 @@ main {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-left: 30px;
 }
 
 h2 {
@@ -110,7 +111,7 @@ button:active {
 .search-bar input {
     padding: 12px;
     font-size: 1rem;
-    width: 100%;
+    width: 40%;
     border-radius: 8px;
     border: 2px solid #ddd;
     margin-bottom: 20px;
@@ -182,7 +183,7 @@ button:active {
 }
 
 .filter-bar select {
-    padding: 12px;
+    padding: 10px;
     font-size: 1rem;
     border: 2px solid #ddd;
     border-radius: 8px;
