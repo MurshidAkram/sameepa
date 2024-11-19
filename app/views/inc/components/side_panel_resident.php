@@ -1,7 +1,9 @@
 <!-- app/views/inc/components/side_panel_resident.php -->
 <aside>
         <ul>
+
                 <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li>
+                <li><a href="<?php echo URLROOT; ?>/posts/index">Feed</a></li>
                 <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
                 <li><a href="<?php echo URLROOT; ?>/events/index">Events</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/groups">Groups</a></li>

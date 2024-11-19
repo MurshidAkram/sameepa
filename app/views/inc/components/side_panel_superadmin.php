@@ -16,6 +16,7 @@
                 <i class="fas fa-file-alt"></i> Reports
             </a>
         </li>
+        <li><a href="<?php echo URLROOT; ?>/posts/index">Feed</a></li>
         <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
         <li><a href="<?php echo URLROOT; ?>/events/index">Manage Events</a></li>
         <li><a href="<?php echo URLROOT; ?>/forums/index">Manage Forums</a></li>
