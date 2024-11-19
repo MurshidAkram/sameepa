@@ -145,25 +145,16 @@ class Calendar {
         });
     }
 }
-function isTimeSlotOverlapping(selectedHour, selectedDuration, bookings) {
-    const selectedEnd = selectedHour + selectedDuration;
-
-    return bookings.some(booking => {
-        const bookingHour = parseInt(booking.booking_time.split(':')[0]);
-        const bookingDuration = parseInt(booking.duration);
-        const bookingEnd = bookingHour + bookingDuration;
-
-        // Check if either start or end of new booking overlaps with existing booking
-        return (selectedHour < bookingEnd && selectedEnd > bookingHour);
-    });
-}
-
 async function showTimeSlots(date) {
     const timeSlotsContainer = document.getElementById('timeSlots');
     const openingHour = 8;
     const closingHour = 22;
-    const selectedDuration = parseInt(document.getElementById('duration').value);
     let timeSlotHTML = '';
+    const selectedDuration = parseInt(document.getElementById('duration').value);
+    const errorMessageDiv = document.createElement('div');
+    errorMessageDiv.id = 'booking-error';
+    errorMessageDiv.style.color = 'red';
+    errorMessageDiv.style.marginTop = '10px';
 
     try {
         const response = await fetch(`${URLROOT}/Facilities/getBookings/${facilityId}/${date}`);
@@ -171,10 +162,21 @@ async function showTimeSlots(date) {
 
         for (let hour = openingHour; hour < closingHour; hour++) {
             const timeString = `${hour.toString().padStart(2, '0')}:00`;
-            const isOverlapping = isTimeSlotOverlapping(hour, selectedDuration, bookings);
+            
+            const isOverlapping = bookings.some(booking => {
+                const bookingHour = parseInt(booking.booking_time.split(':')[0]);
+                const bookingDuration = parseInt(booking.duration);
+                const newBookingEnd = hour + selectedDuration;
+                const existingBookingEnd = bookingHour + bookingDuration;
+                
+                return (hour >= bookingHour && hour < existingBookingEnd) || 
+                       (newBookingEnd > bookingHour && hour < existingBookingEnd);
+            });
 
             timeSlotHTML += `
-                <div class="time-slot ${isOverlapping ? 'booked' : 'available'}" data-time="${timeString}">
+                <div class="time-slot ${isOverlapping ? 'booked' : 'available'}" 
+                     data-time="${timeString}" 
+                     onclick="handleTimeSlotClick(this, ${isOverlapping})">
                     <span class="time">${timeString}</span>
                     <span class="status">${isOverlapping ? 'Booked' : 'Available'}</span>
                 </div>
@@ -182,6 +184,7 @@ async function showTimeSlots(date) {
         }
 
         timeSlotsContainer.innerHTML = timeSlotHTML;
+        timeSlotsContainer.appendChild(errorMessageDiv);
         addTimeSlotListeners();
 
     } catch (error) {
@@ -189,6 +192,20 @@ async function showTimeSlots(date) {
     }
 }
 
+function handleTimeSlotClick(slot, isOverlapping) {
+    const errorDiv = document.getElementById('booking-error');
+    if (isOverlapping) {
+        errorDiv.textContent = 'This time slot overlaps with an existing booking. Please select a different time.';
+        return false;
+    }
+    errorDiv.textContent = '';
+    // Continue with normal slot selection
+    const timeSlots = document.querySelectorAll('.time-slot');
+    timeSlots.forEach(s => s.classList.remove('selected'));
+    slot.classList.add('selected');
+    document.getElementById('booking_time').value = slot.dataset.time;
+}
+ 
 
 function updateTimeSlots(date, facilityId) {    
     fetch(`${URLROOT}/facilities/getBookedTimeSlots/${facilityId}/${date}`)

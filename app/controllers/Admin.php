@@ -140,6 +140,9 @@ class Admin extends Controller
     public function view_group(){
         $this->view('admin/view_group');
     }
+    public function create_payment(){
+        $this->view('admin/create_payment');
+    }
 
 }
 

@@ -1,8 +1,10 @@
 /* Main Layout */
 .facilities-main {
+    background-color: white;
     padding: 2rem;
-    max-width: 1200px;
     margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .facilities-main h1 {
@@ -34,13 +36,14 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     padding: 1rem 0;
+    max-width: 1200px;
 }
 
 /* Facility Card */
 .facility-card {
-    background: white;
+    background: #e3e0e0;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
     padding: 1.5rem;
     transition: transform 0.2s;
 }
