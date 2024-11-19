@@ -103,6 +103,7 @@ class M_Forums
             return false;
         }
     }
+
     // Report a comment
     public function reportComment($data)
     {

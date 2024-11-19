@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/posts/posts.css">
     <title>Community Posts | <?php echo SITENAME; ?></title>
 </head>
@@ -30,140 +31,101 @@
         ?>
 
         <main class="posts-main">
-            <aside class="posts-sidebar">
-                <h2>Posts Navigation</h2>
-                <nav class="posts-nav">
-                    <a href="<?php echo URLROOT; ?>/posts/index" class="btn-posts active">All Posts</a>
-                    <a href="<?php echo URLROOT; ?>/posts/create" class="btn-create-post">Create Post</a>
-                    <a href="<?php echo URLROOT; ?>/posts/my_posts" class="btn-my-posts">My Posts</a>
-                </nav>
-            </aside>
-
-            <div class="posts-content">
-                <h1>Community Posts</h1>
-
-                <!-- Create Post Quick Access -->
-                <div class="create-post-card">
-                    <img src="<?php echo URLROOT; ?>/img/default-avatar.png" alt="Profile" class="post-avatar">
-                    <a href="<?php echo URLROOT; ?>/posts/create" class="create-post-link">
-                        What's on your mind?
+            <div class="posts-header">
+                <div>
+                    <h1>Community Posts</h1>
+                    <p>Share and explore community updates!</p>
+                </div>
+                <div class="btn-container">
+                    <a href="<?php echo URLROOT; ?>/posts/create" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Post
+                    </a>
+                    <a href="<?php echo URLROOT; ?>/posts/myposts" class="btn btn-secondary">
+                        <i class="fas fa-list"></i> My Posts
                     </a>
                 </div>
+            </div>
 
-                <!-- Posts Feed -->
-                <div class="posts-feed">
-                    <?php foreach ($data['posts'] as $post): ?>
-                        <div class="post-card" data-post-id="<?php echo $post->id; ?>">
+
+            <div class="posts-feed">
+                <div class="posts-search">
+                    <form method="GET" action="<?php echo URLROOT; ?>/posts">
+                        <input type="text" name="search" placeholder="Search posts..."
+                            value="<?php echo isset($data['search']) ? htmlspecialchars($data['search']) : ''; ?>">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+
+                <?php if (!empty($data['posts'])) : ?>
+                    <?php foreach ($data['posts'] as $post) : ?>
+                        <div class="post-card">
                             <div class="post-header">
-                                <img src="<?php echo URLROOT; ?>/img/default-avatar.png" alt="Profile" class="post-avatar">
-                                <div class="post-meta">
-                                    <h3><?php echo $post->creator_name; ?></h3>
-                                    <span class="post-date"><?php echo date('F j, Y g:i A', strtotime($post->created_at)); ?></span>
-                                </div>
-                                <?php if (
-                                    $_SESSION['user_id'] == $post->user_id ||
-                                    $_SESSION['user_role_id'] == 3 ||
-                                    ($_SESSION['user_role_id'] == 2 && $post->creator_role_id == 1)
-                                ): ?>
-                                    <button class="delete-post" data-post-id="<?php echo $post->id; ?>">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                <?php endif; ?>
+                                <span class="post-creator">
+                                    <i class="fas fa-user"></i> <?php echo $post->creator_name; ?>
+                                </span>
+                                <span class="post-date">
+                                    <i class="fas fa-clock"></i>
+                                    <?php echo date('M d, Y H:i', strtotime($post->created_at)); ?>
+                                </span>
                             </div>
 
-                            <div class="post-content">
-                                <p><?php echo nl2br(htmlspecialchars($post->content)); ?></p>
+                            <?php if ($post->image_data) : ?>
+                                <div class="post-image">
+                                    <img src="<?php echo URLROOT; ?>/posts/image/<?php echo $post->id; ?>"
+                                        alt="Post image">
+                                </div>
+                            <?php endif; ?>
 
-                                <?php if (!empty($post->images)): ?>
-                                    <div class="post-images">
-                                        <?php foreach ($post->images as $image): ?>
-                                            <img src="data:<?php echo $image->image_type; ?>;base64,<?php echo base64_encode($image->image_data); ?>"
-                                                alt="Post image" class="post-image">
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
+                            <div class="post-content">
+                                <p><?php echo htmlspecialchars($post->description); ?></p>
                             </div>
 
                             <div class="post-actions">
                                 <div class="reaction-buttons">
-                                    <button class="like-btn <?php echo $post->user_reaction === true ? 'active' : ''; ?>"
-                                        data-post-id="<?php echo $post->id; ?>">
+                                    <button class="btn-react btn-like <?php echo ($post->user_reaction === 'like') ? 'active' : ''; ?>"
+                                        data-post-id="<?php echo $post->id; ?>"
+                                        data-reaction-type="like">
                                         <i class="fas fa-thumbs-up"></i>
-                                        <span class="likes-count"><?php echo $post->likes_count; ?></span>
+                                        <span class="like-count"><?php echo $post->likes; ?></span>
                                     </button>
-                                    <button class="dislike-btn <?php echo $post->user_reaction === false ? 'active' : ''; ?>"
-                                        data-post-id="<?php echo $post->id; ?>">
+                                    <button class="btn-react btn-dislike <?php echo ($post->user_reaction === 'dislike') ? 'active' : ''; ?>"
+                                        data-post-id="<?php echo $post->id; ?>"
+                                        data-reaction-type="dislike">
                                         <i class="fas fa-thumbs-down"></i>
-                                        <span class="dislikes-count"><?php echo $post->dislikes_count; ?></span>
+                                        <span class="dislike-count"><?php echo $post->dislikes; ?></span>
                                     </button>
                                 </div>
-                                <button class="comment-btn" data-post-id="<?php echo $post->id; ?>">
-                                    <i class="fas fa-comment"></i>
-                                    <span class="comments-count"><?php echo count($post->comments); ?> Comments</span>
-                                </button>
-                            </div>
 
-                            <!-- Comments Section -->
-                            <div class="comments-section" id="comments-<?php echo $post->id; ?>">
-                                <div class="comment-form">
-                                    <img src="<?php echo URLROOT; ?>/img/default-avatar.png" alt="Profile" class="comment-avatar">
-                                    <form class="add-comment-form" data-post-id="<?php echo $post->id; ?>">
-                                        <input type="text" name="content" placeholder="Write a comment..." required>
-                                        <button type="submit">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                <div class="post-details">
+                                    <a href="<?php echo URLROOT; ?>/posts/viewpost/<?php echo $post->id; ?>"
+                                        class="btn btn-view">
+                                        <i class="fas fa-comment"></i>
+                                        Comments (<?php echo $post->comment_count; ?>)
+                                    </a>
 
-                                <div class="comments-list">
-                                    <?php foreach ($post->comments as $comment): ?>
-                                        <div class="comment" data-comment-id="<?php echo $comment->id; ?>">
-                                            <img src="<?php echo URLROOT; ?>/img/default-avatar.png" alt="Profile" class="comment-avatar">
-                                            <div class="comment-content">
-                                                <div class="comment-header">
-                                                    <strong><?php echo $comment->user_name; ?></strong>
-                                                    <span class="comment-date">
-                                                        <?php echo date('F j, Y g:i A', strtotime($comment->created_at)); ?>
-                                                    </span>
-                                                </div>
-                                                <p><?php echo htmlspecialchars($comment->content); ?></p>
-                                            </div>
-                                            <?php if (
-                                                $_SESSION['user_id'] == $comment->user_id ||
-                                                $_SESSION['user_role_id'] == 3 ||
-                                                ($_SESSION['user_role_id'] == 2 && $comment->user_role_id == 1)
-                                            ): ?>
-                                                <button class="delete-comment" data-comment-id="<?php echo $comment->id; ?>">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
+                                    <?php if ($post->created_by == $_SESSION['user_id'] || $data['is_admin']) : ?>
+                                        <div class="post-management">
+                                            <?php if ($post->created_by == $_SESSION['user_id']) : ?>
+                                                <a href="<?php echo URLROOT; ?>/posts/update/<?php echo $post->id; ?>"
+                                                    class="btn btn-edit">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
                                             <?php endif; ?>
+                                            <button class="btn btn-delete delete-post"
+                                                data-post-id="<?php echo $post->id; ?>">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
                                         </div>
-                                    <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
-                </div>
-
-                <?php if (empty($data['posts'])): ?>
+                <?php else : ?>
                     <div class="no-posts">
-                        <p>No posts yet. Be the first to share something!</p>
-                        <a href="<?php echo URLROOT; ?>/posts/create" class="btn-create-post">Create Post</a>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Pagination -->
-                <?php if (isset($data['current_page'])): ?>
-                    <div class="pagination">
-                        <?php if ($data['current_page'] > 1): ?>
-                            <a href="<?php echo URLROOT; ?>/posts/index?page=<?php echo $data['current_page'] - 1; ?>" class="pagination-link">Previous</a>
-                        <?php endif; ?>
-
-                        <span class="current-page">Page <?php echo $data['current_page']; ?></span>
-
-                        <?php if (!empty($data['posts'])): ?>
-                            <a href="<?php echo URLROOT; ?>/posts/index?page=<?php echo $data['current_page'] + 1; ?>" class="pagination-link">Next</a>
-                        <?php endif; ?>
+                        <p>No posts found. Be the first to create one!</p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -171,14 +133,63 @@
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-    <!-- Add Font Awesome for icons -->
+
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <!-- Add jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Handle post reactions
+        document.querySelectorAll('.btn-react').forEach(button => {
+            button.addEventListener('click', async function() {
+                const postId = this.dataset.postId;
+                const reactionType = this.dataset.reactionType;
 
-    <!-- Custom JS for post interactions -->
-    <script src="<?php echo URLROOT; ?>/js/posts.js"></script>
+                try {
+                    const response = await fetch(`<?php echo URLROOT; ?>/posts/react/${postId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `reaction_type=${reactionType}`
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        location.reload();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        // Handle post deletion
+        document.querySelectorAll('.delete-post').forEach(button => {
+            button.addEventListener('click', async function() {
+                const postId = this.dataset.postId;
+
+                if (confirm('Are you sure you want to delete this post?')) {
+                    try {
+                        const response = await fetch(`<?php echo URLROOT; ?>/posts/delete/${postId}`, {
+                            method: 'POST'
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert(data.message || 'Failed to delete post');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the post');
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
