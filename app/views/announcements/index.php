@@ -8,8 +8,180 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/announcements/announcements.css">
+    <!-- <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/announcements/announcements.css"> -->
     <title>Community Announcements | <?php echo SITENAME; ?></title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+        color: #333;
+    }
+
+    .dashboard-container {
+        display: flex;
+        flex-direction: row;
+        min-height: 100vh;
+    }
+
+    main {
+        flex: 1;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        margin: 20px;
+    }
+
+    .announcements-header h1 {
+        font-size: 28px;
+        color: #800080;
+        margin-bottom: 5px;
+    }
+
+    .announcements-header p {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        margin-bottom: 30px;
+        background-color: #800080;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #660066;
+    }
+
+    .btn:active {
+        background-color: #4d004d;
+    }
+
+    .announcements-search {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .announcements-search input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    .announcements-search button {
+        background-color: #800080;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 30px;
+    }
+
+    .announcements-search button:hover {
+        background-color: #660066;
+    }
+
+    .announcement-card {
+        padding: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fff;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .announcement-content h2 {
+        font-size: 20px;
+        color: #800080;
+        margin-bottom: 10px;
+    }
+
+    .announcement-meta {
+        font-size: 12px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+    .announcement-preview {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .announcement-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .reaction-buttons .btn-react {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        /* background-color: #800080; */
+        color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-right: 5px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .reaction-buttons .btn-react.active {
+        background-color: #660066;
+    }
+
+    .reaction-buttons .btn-react:hover {
+        background-color: #660066;
+    }
+
+    .management-buttons .btn {
+        margin-right: 10px;
+    }
+
+    .no-announcements {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-top: 20px;
+    }
+    .btn-edit {
+        background-color: #0066cc;
+        color: #fff;
+    }
+
+    .btn-edit:hover {
+        background-color: #004999;
+    }
+
+    .btn-delete {
+        background-color: #cc0000;
+        color: #fff;
+    }
+
+    .btn-delete:hover {
+        background-color: #990000;
+    }
+</style>
+
 </head>
 
 <body>

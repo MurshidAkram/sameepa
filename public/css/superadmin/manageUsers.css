@@ -1,0 +1,239 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    color: #800080;
+}
+
+h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.side-panel {
+    width: 20%;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Main Content */
+main {
+    flex-grow: 1;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 100%;
+}
+
+/* Settings Section Container */
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+/* Updated Section Styling */
+.section {
+    display: flex;
+    justify-content: space-between; /* Ensure the elements are spaced apart */
+    align-items: center;
+    width: 100%; /* Ensure full width for correct alignment */
+   padding-bottom: 30px;
+}
+
+/* Title Styles */
+.section h2 {
+    margin: 0;
+}
+
+/* Button Container */
+.button-container {
+    margin-left: auto; /* Pushes the button container to the right */
+}
+
+
+/* Button Styles */
+.btn-create, .btn-accept, .btn-activate, .btn-view, .btn-deactivate, .btn-reject {
+    background-color: #800080;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-create:hover, .btn-accept:hover, .btn-activate:hover, .btn-view:hover {
+    background-color: #5d005d;
+}
+
+.btn-deactivate, .btn-reject {
+    background-color: #e74c3c;
+}
+
+.btn-deactivate:hover, .btn-reject:hover {
+    background-color: #c0392b;
+}
+
+/* Table Styling */
+.user-list-container {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.user-list {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.user-list th {
+    background-color: #800080;
+    color: white;
+    padding: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.user-list td {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+.user-list tr:hover td {
+    background-color: #f9f0ff;
+}
+
+.user-list tr:last-child td {
+    border-bottom: none;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #fff;
+    display: inline-block;
+}
+
+.status-active {
+    background-color: #28a745;
+}
+
+.status-inactive {
+    background-color: #e74c3c;
+}
+
+/* Modal */
+.user-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-modal-content {
+    background-color: #fff;
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.user-modal h2 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #800080;
+    text-align: center;
+}
+
+.user-modal p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #555;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #800080;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #5d005d;
+}
+
+/* Show Modal */
+.user-modal.show {
+    display: flex;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .side-panel {
+        width: 100%;
+    }
+
+    main {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .btn-create {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .user-list td, .user-list th {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
