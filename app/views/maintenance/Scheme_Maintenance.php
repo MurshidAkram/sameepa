@@ -9,49 +9,154 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
     <title>Scheme Maintenance | <?php echo SITENAME; ?></title>
     <style>
-        /* Internal CSS for Scheme Maintenance */
-        .dashboard-container {
-            display: flex;
-        }
+       /* General Styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(to bottom, #f5f7fa, #e9eff3);
+    margin: 0;
+    color: #333;
+}
 
-        .main-content {
-            flex-grow: 1;
-            padding: 20px;
-        }
+.dashboard-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
 
-        .task-table, .tracker-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
 
-        .task-table th, .task-table td, .tracker-table th, .tracker-table td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
+/* Headers */
+h1, h2 {
+    color: #3f51b5;
+    border-bottom: 2px solid #3f51b5;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
 
-        .task-table th, .tracker-table th {
-            background-color: #f0f0f0;
-        }
+h1 {
+    font-size: 2rem;
+}
 
-        .status-overdue { color: red; font-weight: bold; }
-        .status-critical { color: #d9534f; font-weight: bold; }
-        .status-normal { color: green; font-weight: bold; }
-        .priority-high { color: #d9534f; }
-        .priority-medium { color: #f0ad4e; }
-        .priority-low { color: #5bc0de; }
+h2 {
+    font-size: 1.5rem;
+}
 
-        .task-card {
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
+/* Tables */
+.task-table, .tracker-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.95rem;
+}
 
-        .urgent-alert { background-color: #f2dede; border-left: 5px solid #d9534f; padding: 10px; margin: 15px 0; }
-    </style>
+.task-table th, .tracker-table th {
+    background-color: #3f51b5;
+    color: #fff;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.task-table td, .tracker-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.task-table tbody tr:nth-child(odd), .tracker-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.task-table tbody tr:hover, .tracker-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Status and Priority Styling */
+.status-overdue {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.status-critical {
+    color: #f57c00;
+    font-weight: bold;
+}
+
+.status-normal {
+    color: #388e3c;
+    font-weight: bold;
+}
+
+.priority-high {
+    color: #d32f2f;
+}
+
+.priority-medium {
+    color: #ffa000;
+}
+
+.priority-low {
+    color: #0288d1;
+}
+
+/* Task Cards */
+.task-card {
+    background: linear-gradient(to bottom right, #ffffff, #f7f8fa);
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.task-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+.task-card h3 {
+    margin-top: 0;
+    color: #3f51b5;
+}
+
+/* Urgent Alerts */
+.urgent-alert {
+    background: linear-gradient(to right, #fbe9e7, #ef9a9a);
+    color: #d32f2f;
+    padding: 15px;
+    border-left: 5px solid #d32f2f;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .task-table, .tracker-table {
+        font-size: 0.85rem;
+    }
+
+    .task-card {
+        padding: 10px;
+    }
+
+    .urgent-alert {
+        padding: 10px;
+    }
+}
+</style>
 </head>
 
 <body>

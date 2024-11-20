@@ -11,7 +11,7 @@
 
     <style>
         /* General Styles */
-body {
+        body {
     font-family: Arial, sans-serif;
     background-color: #f4f7fb;
     margin: 0;
@@ -64,7 +64,7 @@ h3 {
     background-color: #397d3a;
 }
 
-/* Incident Form */
+/* Incident Report Form */
 .incident-report-form {
     background-color: white;
     padding: 20px;
@@ -81,25 +81,65 @@ h3 {
     display: none;
 }
 
+.incident-report-form h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #6c5ce7;
+    font-weight: 700;
+}
+
 .incident-report-form .form-group {
     margin-bottom: 15px;
+    text-align: left;
 }
 
 .incident-report-form label {
     display: block;
-    font-weight: bold;
+    font-size: 14px;
     color: #333;
+    margin-bottom: 5px;
 }
 
+.incident-report-form select,
 .incident-report-form input,
-.incident-report-form textarea,
-.incident-report-form select {
-    width: 100%;
+.incident-report-form textarea {
+    width: 90%;
     padding: 10px;
-    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 1rem;
-    box-sizing: border-box;
+}
+
+.incident-report-form textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.incident-report-form button {
+    width: 45%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #6c5ce7;
+    color: white;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.incident-report-form button:hover {
+    background-color: #5b4fe4;
+}
+
+.incident-report-form .btn1 {
+    background-color: #636e72;
+    color: white;
+}
+
+.incident-report-form .btn1:hover {
+    background-color: #555;
 }
 
 /* Incident Log Table */
@@ -247,7 +287,6 @@ main {
     color: #800080;
     padding-right: 95px;
     padding-bottom: 20px;
-  
 }
 
 /* Responsive Styles */
@@ -285,7 +324,6 @@ main {
         padding: 10px;
     }
 }
-
     </style>
 </head>
 <body>
@@ -345,7 +383,7 @@ main {
                     <td>Resolved</td>
                     <td>Warehouse</td>
                     <td>
-                        <button class="btn" onclick="viewIncidentDetails(1)">View</button>
+                        <button class="btn" onclick="viewIncidentDetails(1)">View </button>
                         <button class="btn" onclick="editIncident(1)">Edit</button>
                     </td>
                 </tr>
@@ -407,42 +445,43 @@ main {
 
         <!-- Incident Report Form -->
         <div class="incident-report-form" id="incidentForm">
-            <h3>Report New Incident</h3>
-            <form id="incidentFormElement">
-                <div class="form-group">
-                    <label for="incident_type">Incident Type</label>
-                    <select id="incident_type" name="incident_type">
-                        <option value="fire">Fire</option>
-                        <option value="theft">Theft</option>
-                        <option value="accident">Accident</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="incident_date">Date</label>
-                    <input type="date" id="incident_date" name="incident_date">
-                </div>
-                <div class="form-group">
-                    <label for="incident_time">Time</label>
-                    <input type="time" id="incident_time" name="incident_time">
-                </div>
-                <div class="form-group">
-                    <label for="incident_location">Location</label>
-                    <input type="text" id="incident_location" name="incident_location">
-                </div>
-                <div class="form-group">
-                    <label for="incident_description">Description</label>
-                    <textarea id="incident_description" name="incident_description"></textarea>
-                </div>
-                <div class="form-group">
-                    <button type="button" class="btn1" onclick="submitIncidentForm()">Submit Report</button>
-                    <button type="button" class="btn1" onclick="cancelIncidentForm()">Cancel</button>
-                </div>
-            </form>
+    <h3>Report New Incident</h3>
+    <form id="incidentFormElement">
+        <div class="form-group">
+            <label for="incident_type">Incident Type</label>
+            <select id="incident_type" name="incident_type">
+                <option value="fire">Fire</option>
+                <option value="theft">Theft</option>
+                <option value="accident">Accident</option>
+            </select>
         </div>
+        <div class="form-group">
+            <label for="incident_date">Date</label>
+            <input type="date" id="incident_date" name="incident_date">
+        </div>
+        <div class="form-group">
+            <label for="incident_time">Time</label>
+            <input type="time" id="incident_time" name="incident_time">
+        </div>
+        <div class="form-group">
+            <label for="incident_location">Location</label>
+            <input type="text" id="incident_location" name="incident_location">
+        </div>
+        <div class="form-group">
+            <label for="incident_description">Description</label>
+            <textarea id="incident_description" name="incident_description"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn1" onclick="submitIncidentForm()">Submit Report</button>
+            <button type="button" class="btn1" onclick="cancelIncidentForm()">Cancel</button>
+        </div>
+    </form>
+</div>
+
 
     </main>
 </div>
-
+<?php require APPROOT . '/views/inc/components/footer.php'; ?>
 <script>
     // Show the Incident Form
     function showIncidentForm() {

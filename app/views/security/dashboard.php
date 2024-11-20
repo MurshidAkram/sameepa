@@ -32,19 +32,27 @@
             flex-direction: column;
             gap: 20px;
         }
-
         .section {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+    display: flex;               /* Use flexbox for layout */
+    flex-direction: column;      /* Stack items vertically */
+    align-items: flex-start;     /* Align items to the start of the container */
+    justify-content: flex-start; /* Align items at the top */
+    gap: 20px;                   /* Add vertical spacing between child elements */
+    background: #ffffff;         /* Background color */
+    border-radius: 12px;         /* Rounded corners */
+    padding: 20px;               /* Inner padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 80%;                 /* Full width of the container */
+}
 
-        .section h2 {
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            color: #333;
-        }
+
+.section h2 {
+    margin-bottom: 15px;         /* Spacing below the heading */
+    font-size: 1.5em;            /* Increase font size for better visibility */
+    color: #333;                 /* Text color */
+    align-self: center;          /* Center align heading horizontally */
+}
+
 
         .grid {
             display: flex;
@@ -76,7 +84,9 @@
 
         .chart {
             flex: 1 1 calc(50% - 20px);
-            min-width: 300px;
+            max-width: 60%;
+            max-height: 50%;
+            flex-direction: row; 
         }
 
         canvas {
@@ -85,14 +95,15 @@
         }
 
         .action {
-            background-color: #3498db;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin-top: 10px;
+            width: 48%;
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
         }
 
         .action:hover {
@@ -100,6 +111,8 @@
         }
         /* Table Styling */
         .data-table {
+
+            
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
@@ -127,7 +140,7 @@
         }
 
         .data-table td {
-            font-size: 1.1em;
+            font-size: 0.9em;
         }
 
         .action.active {
@@ -172,17 +185,17 @@
             </section>
 
             <!-- Real-Time Monitoring Section with Charts -->
-            <section class="section">
-                <h3 class="too">Real-Time Monitoring</h3>
-                <div class="grid">
-                    <div class="chart">
+           
+                <!-- <h3 class="too">Real-Time Monitoring</h3> -->
+                <!-- <div class="grid">
+                    <!- <div class="chart">
                         <h3>Live Camera Feeds</h3>
                         <p>View ongoing surveillance</p>
                         <button class="action" onclick="toggleTable('camera')">View Feeds</button>
-                        <canvas id="cameraFeedsCanvas"></canvas>
+                        <canvas id="cameraFeedsCanvas"></canvas> -->
 
                         <!-- Camera Feeds Table -->
-                    <table class="data-table" id="cameraTable">
+                    <!-- <table class="data-table" id="cameraTable">
                         <thead>
                             <tr>
                                 <th>Camera ID</th>
@@ -219,11 +232,11 @@
                                 <td>2024-02-01</td>
                             </tr>
                         </tbody>
-                    </table>
-                    </div>
+                    </table> -->
+                    
 
                     
-                    <div class="chart">
+                <div class="chart">
                         <h3>Recent Access Logs</h3>
                         <p>Visitors: 12 | Residents: 45</p>
                         <button class="action" onclick="toggleTable('access')">View Logs</button>
@@ -267,14 +280,14 @@
                     </table>
 
                     </div>
-                    <div class="chart">
+                    <!-- <div class="chart">
                         <h3>Alarm Status</h3>
                         <p>Status: <span style="color: red;">Triggered</span></p>
                         <button class="action" onclick="toggleTable('alarm')">View Alarms</button>
-                        <canvas id="alarmStatusCanvas"></canvas>
+                        <canvas id="alarmStatusCanvas"></canvas> -->
 
                          <!-- Alarm Status Table -->
-                    <table class="data-table" id="alarmTable">
+                    <!-- <table class="data-table" id="alarmTable">
                         <thead>
                             <tr>
                                 <th>Alarm ID</th>
@@ -301,9 +314,9 @@
                             </tr>
                         </tbody>
                     </table>
-
-
-                    </div>
+ -->
+                  
+                <div> 
                     <div class="chart">
                         <h3>Incident Trends</h3>
                         <canvas id="incidentTrendsCanvas"></canvas>
@@ -313,10 +326,10 @@
                         <canvas id="visitorFlowCanvas"></canvas>
                     </div>
                 </div>
-            </section>
+            
 
             <!-- Charts Section -->
-            <section class="section">
+            <section class="chart">
                 <h3 class="too">Analytics and Reports</h3>
                 <div class="grid">
                     <div class="chart">
@@ -329,7 +342,11 @@
                     </div>
                 </div>
             </section>
+
+
+
         </div>
+    </div>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
@@ -352,21 +369,21 @@ function toggleTable(tableId) {
 
 
 
-        // Live Camera Feeds Chart (Line Chart example)
-        new Chart(document.getElementById('cameraFeedsCanvas').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM'],
-                datasets: [{
-                    label: 'Live Feeds Viewers',
-                    data: [5, 8, 3, 6, 9],
-                    borderColor: '#ff6347',  // Tomato color for the line
-                    fill: false,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderWidth: 2
-                }]
-            }
-        });
+        // // Live Camera Feeds Chart (Line Chart example)
+        // new Chart(document.getElementById('cameraFeedsCanvas').getContext('2d'), {
+        //     type: 'line',
+        //     data: {
+        //         labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM'],
+        //         datasets: [{
+        //             label: 'Live Feeds Viewers',
+        //             data: [5, 8, 3, 6, 9],
+        //             borderColor: '#ff6347',  // Tomato color for the line
+        //             fill: false,
+        //             backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        //             borderWidth: 2
+        //         }]
+        //     }
+        // });
 
         // Recent Access Logs Chart (Bar Chart example)
         new Chart(document.getElementById('accessLogsCanvas').getContext('2d'), {
@@ -383,17 +400,17 @@ function toggleTable(tableId) {
             }
         });
 
-        // Alarm Status Chart (Pie Chart example)
-        new Chart(document.getElementById('alarmStatusCanvas').getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: ['Triggered', 'Resolved', 'Pending'],
-                datasets: [{
-                    data: [3, 5, 2],  // Example data for different alarm statuses
-                    backgroundColor: ['#e74c3c', '#3498db', '#f39c12']
-                }]
-            }
-        });
+        // // Alarm Status Chart (Pie Chart example)
+        // new Chart(document.getElementById('alarmStatusCanvas').getContext('2d'), {
+        //     type: 'pie',
+        //     data: {
+        //         labels: ['Triggered', 'Resolved', 'Pending'],
+        //         datasets: [{
+        //             data: [3, 5, 2],  // Example data for different alarm statuses
+        //             backgroundColor: ['#e74c3c', '#3498db', '#f39c12']
+        //         }]
+        //     }
+        // });
 
         // Incident Trends Chart (Doughnut Chart example)
         new Chart(document.getElementById('incidentTrendsCanvas').getContext('2d'), {

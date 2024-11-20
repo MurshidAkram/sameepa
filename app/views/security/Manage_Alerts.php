@@ -9,258 +9,333 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/form-styles.css">
     <title>Manage Alerts | <?php echo SITENAME; ?></title>
    
-   <style>
-   body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f8fb;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f8fb;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
 
-.dashboard-container {
-    display: flex;
-    min-height: 100vh;
-    padding: 20px;
-}
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+        padding: 20px;
+    }
 
-main {
-    flex: 1;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    margin-left: 30px;
-}
+    main {
+        flex: 1;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        margin-left: 30px;
+    }
 
-h2 {
-    font-size: 2rem;
-    color: #4A90E2;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
+    h2, h3 {
+        font-size: 2rem;
+        color: #4A90E2;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
 
-h3 {
-    font-size: 1.5rem;
-    color: #4A90E2;
-    margin-bottom: 20px;
-}
+    label {
+        display: block;
+        font-weight: bold;
+        color: #4A90E2;
+        margin-bottom: 8px;
+    }
 
-.alerts-form {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
+    input, textarea, select {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        margin-bottom: 10px;
+        transition: border 0.3s ease;
+    }
 
-.alerts-form h3 {
-    color: #4A90E2;
-    margin-bottom: 15px;
-}
+    input:focus, textarea:focus, select:focus {
+        border-color: #4A90E2;
+        outline: none;
+    }
 
-.form-group {
-    margin-bottom: 20px;
-}
+    textarea {
+        resize: vertical;
+    }
 
-label {
-    display: block;
-    font-weight: bold;
-    color: #4A90E2;
-    margin-bottom: 8px;
-}
+    button {
+        background-color: #4A90E2;
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
 
-input, textarea, select {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 2px solid #ddd;
-    margin-bottom: 10px;
-    transition: border 0.3s ease;
-}
+    button:hover {
+        background-color: #357ABD;
+    }
 
-input:focus, textarea:focus, select:focus {
-    border-color: #4A90E2;
-    outline: none;
-}
+    button:active {
+        background-color: #276C9D;
+    }
 
-textarea {
-    resize: vertical;
-}
+    .search-bar input {
+        padding: 12px;
+        font-size: 1rem;
+        width: 40%;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        margin-bottom: 20px;
+        transition: border 0.3s ease;
+    }
 
-button {
-    background-color: #4A90E2;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-}
+    .search-bar input:focus {
+        border-color: #4A90E2;
+        outline: none;
+    }
 
-button:hover {
-    background-color: #357ABD;
-}
+    .btn {
+        width: 48%;
+        padding: 15px;
+        background-color: #4CAF50;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-button:active {
-    background-color: #276C9D;
-}
+    .alerts-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        color: #333;
+    }
 
-.search-bar input {
-    padding: 12px;
-    font-size: 1rem;
-    width: 40%;
-    border-radius: 8px;
-    border: 2px solid #ddd;
-    margin-bottom: 20px;
-    transition: border 0.3s ease;
-}
+    .alerts-table th, .alerts-table td {
+        text-align: left;
+        padding: 15px;
+        border: 1px solid #ddd;
+    }
 
-.search-bar input:focus {
-    border-color: #4A90E2;
-    outline: none;
-}
+    .alerts-table th {
+        background-color: #4A90E2;
+        color: white;
+    }
 
-.btn {
-            width: 48%;
-            padding: 15px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-.alerts-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    color: #333;
-}
+    .alerts-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
-.alerts-table th, .alerts-table td {
-    text-align: left;
-    padding: 15px;
-    border: 1px solid #ddd;
-}
+    .edit-btn, .delete-btn {
+        padding: 8px 15px;
+        margin: 0 5px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
 
-.alerts-table th {
-    background-color: #4A90E2;
-    color: white;
-}
+    .edit-btn {
+        background-color: #FFC107;
+        color: white;
+    }
 
-.alerts-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
+    .edit-btn:hover {
+        background-color: #FF9800;
+    }
 
-.edit-btn, .delete-btn {
-    padding: 8px 15px;
-    margin: 0 5px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
+    .delete-btn {
+        background-color: #E74C3C;
+        color: white;
+    }
 
-.edit-btn {
-    background-color: #FFC107;
-    color: white;
-}
+    .delete-btn:hover {
+        background-color: #C0392B;
+    }
 
-.edit-btn:hover {
-    background-color: #FF9800;
-}
+    .filter-bar select {
+        padding: 10px;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        margin-bottom: 20px;
+        transition: background-color 0.3s;
+    }
 
-.delete-btn {
-    background-color: #E74C3C;
-    color: white;
-}
+    .filter-bar select:hover {
+        background-color: #f2f2f2;
+    }
 
-.delete-btn:hover {
-    background-color: #C0392B;
-}
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease;
+    }
 
-.filter-bar select {
-    padding: 10px;
-    font-size: 1rem;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    margin-bottom: 20px;
-    transition: background-color 0.3s;
-}
+    .modal.show {
+        display: flex;
+        opacity: 1;
+    }
 
-.filter-bar select:hover {
-    background-color: #f2f2f2;
-}
+    .modal-content {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 450px;
+        position: relative;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
-}
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.modal.show {
-    display: flex;
-    opacity: 1;
-}
+    .close-btn {
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #E74C3C;
+    }
 
-.modal-content {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 450px; /* Adjust width as necessary */
-    position: relative;
-    max-height: 80vh; /* Limit height to avoid content overflow */
-    overflow-y: auto; /* Allow scrolling if the content exceeds the height */
-}
+    .modal-content input,
+    .modal-content select,
+    .modal-content textarea {
+        width: 90%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .modal-content button {
+        width: 45%;
+        margin: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
 
-.close-btn {
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: #E74C3C;
-}
+    .modal-content button:hover {
+        background-color: #6c5ce7;
+        color: white;
+    }
 
-.form-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
+    .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+    }
 
-.form-buttons .cancel-btn {
-    background-color: #ddd;
-    color: #333;
-    border-radius: 8px;
-    padding: 12px 20px;
-}
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
 
-.form-buttons .cancel-btn:hover {
-    background-color: #ccc;
-}
+    .form-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
 
-.form-buttons .cancel-btn:focus {
-    border-color: #4A90E2;
-}
+    .btn {
+        background-color: #6c5ce7;
+        color: white;
+    }
 
+    .btn:hover {
+        background-color: #5b4fe4;
+    }
 
+    /* Alerts Form Styles */
+    .alerts-form {
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .alerts-form h3 {
+        color: #4A90E2;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background-color: #f0f0f0;
+        font-size: 1em;
+        color: #333;
+        transition: box-shadow 0.3s ease, background 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        background-color: #ffffff;
+        border: 2px solid #4A90E2;
+    }
+
+    .form-buttons .cancel-btn,
+    .form-buttons .submit-btn {
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .form-buttons .cancel-btn {
+        background-color: #d6d6d6;
+        color: #333;
+    }
+
+    .form-buttons .cancel-btn:hover {
+        background-color: #cccccc;
+    }
+
+    .form-buttons .submit-btn {
+        background-color: #4A90E2;
+        color: #fff;
+    }
+
+    .form-buttons .submit-btn:hover {
+        background-color: #377ACB;
+    }
 </style>
+
+
 </head>
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
@@ -365,42 +440,41 @@ button:active {
 
             <!-- Modal -->
             <div class="modal" id="alert-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 id="modal-title">Create Alert</h3>
-                        <span class="close-btn" onclick="hideModal()">&times;</span>
-                    </div>
-                    <form id="alert-form">
-    <div class="form-group">
-        <label for="alert-title">Title</label>
-        <select id="alert-title" required>
-            <option value="">Select Title</option>
-            <option value="Scheduled Maintenance">Scheduled Maintenance</option>
-            <option value="Emergency Alert">Emergency Alert</option>
-            <option value="System Update">System Update</option>
-            <option value="Network Outage">Network Outage</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="alert-message">Message</label>
-        <textarea id="alert-message" rows="3" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="alert-date">Date</label>
-        <input type="date" id="alert-date" required>
-    </div>
-    <div class="form-group">
-        <label for="alert-time">Time</label>
-        <input type="time" id="alert-time" required>
-    </div>
-    <div class="form-buttons">
-        <button type="button" class="btn" onclick="saveAlert()">Save</button>
-        <button type="button" class="btn" onclick="hideModal()">Cancel</button>
-    </div>
-</form>
-
-                </div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Create Alert</h3>
+            <span class="close-btn" onclick="hideModal()">&times;</span>
+        </div>
+        <form id="alert-form">
+            <div class="form-group">
+                <label for="alert-title">Title</label>
+                <select id="alert-title" required>
+                    <option value="">Select Title</option>
+                    <option value="Scheduled Maintenance">Scheduled Maintenance</option>
+                    <option value="Emergency Alert">Emergency Alert</option>
+                    <option value="System Update">System Update</option>
+                    <option value="Network Outage">Network Outage</option>
+                </select>
             </div>
+            <div class="form-group">
+                <label for="alert-message">Message</label>
+                <textarea id="alert-message" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="alert-date">Date</label>
+                <input type="date" id="alert-date" required>
+            </div>
+            <div class="form-group">
+                <label for="alert-time">Time</label>
+                <input type="time" id="alert-time" required>
+            </div>
+            <div class="form-buttons">
+                <button type="button" class="btn" onclick="saveAlert()">Save</button>
+                <button type="button" class="btn" onclick="hideModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
         </main>
     </div>
 

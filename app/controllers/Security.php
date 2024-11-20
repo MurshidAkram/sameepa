@@ -40,41 +40,49 @@ class Security extends Controller
         $this->view('security/dashboard', $data);
     }
 
-    // Manage Visitor Passes method
+    // // Manage Visitor Passes method
+    // public function Manage_Visitor_Passes()
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         // Collect data from the form submission
+    //         $data = [
+    //             'visitor_name' => trim($_POST['visitorName']),
+    //             'visitor_count' => trim($_POST['visitorCount']),
+    //             'visit_date' => trim($_POST['visitDate']),
+    //             'visit_time' => trim($_POST['visitTime']),
+    //             'duration' => trim($_POST['duration']),
+    //             'purpose' => trim($_POST['purpose']),
+    //             'resident_name' => trim($_POST['residentName']),
+    //         ];
+
+    //         // Call the model to create the visitor pass
+    //         if ($this->securityModel->createVisitorPass($data)) {
+    //             // On success, refresh the visitor pass list
+    //             header("Location: " . URLROOT . "/security/Manage_Visitor_Passes");
+    //         } else {
+    //             die("Something went wrong, please try again!");
+    //         }
+    //     }
+
+    //     // Fetch data for today’s active passes and pass history
+    //     $activePasses = $this->securityModel->getTodayPasses();
+    //     $passHistory = $this->securityModel->getAllPasses();
+        
+    //     // Load the view with the fetched data
+    //     $this->view('security/Manage_Visitor_Passes', [
+    //         'activePasses' => $activePasses,
+    //         'passHistory' => $passHistory
+    //     ]);
+    // }
+
     public function Manage_Visitor_Passes()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Collect data from the form submission
-            $data = [
-                'visitor_name' => trim($_POST['visitorName']),
-                'visitor_count' => trim($_POST['visitorCount']),
-                'visit_date' => trim($_POST['visitDate']),
-                'visit_time' => trim($_POST['visitTime']),
-                'duration' => trim($_POST['duration']),
-                'purpose' => trim($_POST['purpose']),
-                'resident_name' => trim($_POST['residentName']),
-            ];
-
-            // Call the model to create the visitor pass
-            if ($this->securityModel->createVisitorPass($data)) {
-                // On success, refresh the visitor pass list
-                header("Location: " . URLROOT . "/security/Manage_Visitor_Passes");
-            } else {
-                die("Something went wrong, please try again!");
-            }
-        }
-
-        // Fetch data for today’s active passes and pass history
-        $activePasses = $this->securityModel->getTodayPasses();
-        $passHistory = $this->securityModel->getAllPasses();
+        // Logic to manage duty schedules (e.g., fetch, update, delete duty schedule)
+       
         
-        // Load the view with the fetched data
-        $this->view('security/Manage_Visitor_Passes', [
-            'activePasses' => $activePasses,
-            'passHistory' => $passHistory
-        ]);
+        // Load the view with the schedule data
+        $this->view('security/Manage_Visitor_Passes');
     }
-
     // Manage Duty Schedule
     public function Manage_Duty_Schedule()
     {

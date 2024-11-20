@@ -8,124 +8,218 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
 
-
     <title>Maintenance Dashboard | <?php echo SITENAME; ?></title>
     <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f8fa;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+       /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom, #f3f4f7, #e9e9ff);
+    margin: 0;
+    padding: 0;
+    color: #555;
+}
 
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-            padding: 20px;
-            gap: 20px;
-        }
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
 
-        main {
-            flex: 1;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+main {
+    flex: 1;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
 
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
 
-        .dashboard-header p {
-            margin: 0;
-        }
+.dashboard-header p {
+    margin: 0;
+    font-size: 1rem;
+    color: #777;
+}
 
-        .dashboard-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
+.dashboard-controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
 
-        .overview-cards {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
+.search-bar {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 200px;
+    transition: border-color 0.3s;
+}
 
-        .card {
-            flex: 1 1 calc(25% - 20px);
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            min-width: 200px;
-        }
+.search-bar:focus {
+    border-color: #3f51b5;
+    outline: none;
+}
 
-        .card h3 {
-            color: #ff5a5f;
-            margin: 0 0 10px;
-            font-size: 1.2rem;
-        }
+.filter-options select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f8f9fa;
+    color: #555;
+}
 
-        .card p {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0;
-        }
+.quick-links a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    background: linear-gradient(to right, #42a5f5, #2196f3);
+    box-shadow: 0 3px 8px rgba(33, 150, 243, 0.3);
+    transition: all 0.3s;
+}
 
-        .charts-section {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
+.quick-links a:hover {
+    background: linear-gradient(to right, #1e88e5, #1976d2);
+}
 
-        .chart-card {
-            flex: 1;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+/* Overview Cards */
+.overview-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
 
-        .chart-card h4 {
-            color: #ff5a5f;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
+.card {
+    flex: 1 1 calc(25% - 20px);
+    background: linear-gradient(to bottom right, #6200ea, #a991f2);
+    color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    min-width: 200px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
 
-        .reminders, .summary {
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
 
-        .reminders h4, .summary h4 {
-            color: #ff5a5f;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
+.card h3 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: #ffeb3b;
+}
 
-        .reminders ul, .summary ul {
-            list-style: none;
-            padding: 0;
-        }
+.card p {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0;
+}
 
-        .reminders ul li, .summary ul li {
-            font-size: 1rem;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+/* Charts Section */
+.charts-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 15px;
+    background: linear-gradient(to bottom right, yellow, #ffa726);
+    color: #000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.chart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.chart-card h4 {
+    margin: 0 0 15px;
+    font-size: 1.3rem;
+}
+
+/* Reminders & Summary */
+.reminders,
+.summary {
+    padding: 20px;
+    border-radius: 15px;
+    background: #e8f5e9;
+    color: #388e3c;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.reminders h4,
+.summary h4 {
+    margin: 0 0 15px;
+    font-size: 1.3rem;
+    color: #1b5e20;
+}
+
+.reminders ul li,
+.summary ul li {
+    font-size: 1rem;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s;
+}
+
+.reminders ul li:hover,
+.summary ul li:hover {
+    background: #dcedc8;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table thead {
+    background: #0288d1;
+    color: #fff;
+}
+
+table th,
+table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:hover {
+    background: #e3f2fd;
+}
+
+/* Footer */
+footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+}
+ /* Include the CSS from your previous message */
     </style>
 </head>
 
@@ -167,45 +261,6 @@
             <!-- Overview Cards -->
             <section class="overview-cards">
                 <div class="card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Maintenance ID</th>
-                                <th>Date</th>
-                                <th>Details</th>
-                                <th>Status</th>
-                                <th>Progress</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Example dynamic content; replace with actual data -->
-                            <tr>
-                                <td>MH001</td>
-                                <td>2024-09-10</td>
-                                <td>AC unit repair</td>
-                                <td>Completed</td>
-                                <td>
-                                    <div class="progress-bar">
-                                        <div class="progress" style="width: 100%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>MH002</td>
-                                <td>2024-09-12</td>
-                                <td>Light fixture replacement</td>
-                                <td>In Progress</td>
-                                <td>
-                                    <div class="progress-bar">
-                                        <div class="progress" style="width: 60%;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card">
                     <h3>Scheme Maintenance</h3>
                     <p>Upcoming: 8 | Ongoing: 3 | Past: 15</p>
                 </div>
@@ -223,15 +278,15 @@
             <section class="charts-section">
                 <div class="chart-card">
                     <h4>Repair Categories</h4>
-                    <div id="repair-category-chart">[Chart Placeholder]</div>
+                    <canvas id="repair-category-chart"></canvas>
                 </div>
                 <div class="chart-card">
                     <h4>Response Time Metrics</h4>
-                    <div id="response-time-chart">[Chart Placeholder]</div>
+                    <canvas id="response-time-chart"></canvas>
                 </div>
                 <div class="chart-card">
                     <h4>Resident Satisfaction</h4>
-                    <div id="satisfaction-chart">[Chart Placeholder]</div>
+                    <canvas id="satisfaction-chart"></canvas>
                 </div>
             </section>
 
@@ -259,10 +314,69 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Repair Categories Chart
+        const repairCategoryCtx = document.getElementById('repair-category-chart').getContext('2d');
+        new Chart(repairCategoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Electrical', 'Plumbing', 'HVAC', 'Other'],
+                datasets: [{
+                    data: [25, 30, 20, 25],
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0'],
+                }]
+            }
+        });
+
+        // Response Time Metrics Chart
+        const responseTimeCtx = document.getElementById('response-time-chart').getContext('2d');
+        new Chart(responseTimeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1-2 hrs', '2-4 hrs', '4-8 hrs', '8+ hrs'],
+                datasets: [{
+                    label: 'Tasks',
+                    data: [10, 20, 15, 5],
+                    backgroundColor: '#4caf50',
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Resident Satisfaction Chart
+        const satisfactionCtx = document.getElementById('satisfaction-chart').getContext('2d');
+        new Chart(satisfactionCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Satisfaction Rate (%)',
+                    data: [85, 88, 90, 92, 91, 95],
+                    borderColor: '#ff5a5f',
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: 80,
+                        max: 100
+                    }
+                }
+            }
+        });
+
         // JavaScript to display current date and time
         const dateTimeElement = document.getElementById('current-date-time');
-
         function updateDateTime() {
             const now = new Date();
             dateTimeElement.textContent = now.toLocaleString();

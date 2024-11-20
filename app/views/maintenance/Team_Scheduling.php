@@ -11,185 +11,369 @@
     <title>Team Scheduling | <?php echo SITENAME; ?></title>
 
     <style>
-        .team-profile,
-        .shift-allocation,
-        .availability,
-        .overtime-tracking,
-        .performance-metrics {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
+      /* General Styles */
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+}
 
-        h2,
-        h3 {
-            color: #2c3e50;
-        }
+/* Navbar Styling */
+nav {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-        .team-profile-card {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
+nav a {
+    color: #ecf0f1;
+    text-decoration: none;
+    margin-right: 20px;
+    font-size: 1rem;
+}
 
-        .profile-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #e0e0e0;
-            overflow: hidden;
-        }
+nav a:hover {
+    color: #3498db;
+}
 
-        .profile-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+}
 
-        .profile-details {
-            font-size: 0.9em;
-        }
+/* Side Panel Styling */
+.side-panel {
+    width: 250px;
+    background-color: #34495e;
+    color: #fff;
+    padding: 20px;
+    height: 100vh;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
 
-        .button-container {
-            margin-bottom: 20px;
-        }
+.side-panel a {
+    color: #bdc3c7;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+}
 
-        .btn {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+.side-panel a:hover {
+    color: #1abc9c;
+}
 
-        .btn:hover {
-            background-color: #2980b9;
-        }
+/* Main Content Styling */
+main {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 20px;
+}
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 400px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 20px;
-            z-index: 1000;
-        }
+h1, h2 {
+    color: #2c3e50;
+}
 
-        .modal.active {
-            display: block;
-        }
+/* Profile Cards */
+.team-profile {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+.team-profile-card {
+    flex: 1 1 calc(25% - 20px);
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        .modal-header h2 {
-            margin: 0;
-        }
+.team-profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
 
-        .modal-header .close {
-            font-size: 1.5em;
-            cursor: pointer;
-        }
+.profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border: 4px solid transparent;
+    background-clip: padding-box;
+}
 
-        .modal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+.profile-details {
+    text-align: center;
+}
 
-        .modal-form input,
-        .modal-form select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
+.profile-details h3 {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #34495e;
+}
 
-        .modal-form label {
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+.profile-details p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
 
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
 
-        table th {
-            background-color: #f4f4f4;
-            color: #2c3e50;
-        }
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
 
-        .shift-allocation {
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
+.edit-btn {
+    background-color: #1abc9c;
+}
 
-        /* Alerts Section */
-        .alerts {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-        }
+.edit-btn:hover {
+    background-color: #16a085;
+}
 
-        .alert {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-            color: #fff;
-        }
+.delete-btn {
+    background-color: #e74c3c;
+}
 
-        .alert.critical {
-            background-color: #e74c3c;
-        }
+.delete-btn:hover {
+    background-color: #c0392b;
+}
 
-        .alert.warning {
-            background-color: #f1c40f;
-            color: #2c3e50;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
+/* Unique Card Styles */
+.card-hvac {
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+}
 
-        .edit-btn,
-        .delete-btn {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+.card-electrical {
+    background: linear-gradient(135deg, #f1c40f, #e67e22);
+}
 
-        .edit-btn {
-            background-color: #f1c40f;
-            color: white;
-        }
+.card-plumbing {
+    background: linear-gradient(135deg, #9b59b6, #34495e);
+}
 
-        .delete-btn {
-            background-color: #e74c3c;
-            color: white;
-        }
+.card-general {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.card-hvac .profile-img {
+    border-color: #2ecc71;
+}
+
+.card-electrical .profile-img {
+    border-color: #e67e22;
+}
+
+.card-plumbing .profile-img {
+    border-color: #9b59b6;
+}
+
+.card-general .profile-img {
+    border-color: #c0392b;
+}
+
+/* Button Styling */
+.btn {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.edit-btn {
+    background-color: #1abc9c;
+}
+
+.edit-btn:hover {
+    background-color: #16a085;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Profile Card Styles */
+.team-profile-card {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    gap: 20px;
+}
+
+.team-profile-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.profile-img img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #3498db;
+    object-fit: cover;
+}
+
+.profile-details {
+    flex-grow: 1;
+    color: #34495e;
+}
+
+.profile-details p {
+    margin: 5px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.alert.critical {
+    background-color: #e74c3c;
+}
+
+.alert.warning {
+    background-color: #f39c12;
+    color: #2c3e50;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    display: none;
+}
+
+.modal.active {
+    display: block;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header .close {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-form input, .modal-form select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.h1position {
+    padding-left: 300px;
+}
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #2c3e50;
+    color: #fff;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.shift-allocation, .alerts{
+
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    padding-left: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width:80%;
+}
+
+
     </style>
 </head>
 
@@ -209,22 +393,72 @@
                 <button class="btn" id="addMemberBtn">Add New Maintenance Member</button>
             </div>
 
+
+            <h2>Team Profiles</h2>
             <!-- Comprehensive Team Profiles -->
             <section class="team-profile">
-                <h2>Team Profiles</h2>
-                <div class="team-profile-card">
+                
+                <!-- HVAC Specialist -->
+                <div class="team-profile-card card-hvac">
                     <div class="profile-img">
-                        <img src="path/to/profile1.jpg" alt="John Doe">
+                        <img src="path/to/hvac.jpg" alt="HVAC Specialist">
                     </div>
                     <div class="profile-details">
-                        <p><strong>Name:</strong> John Doe</p>
-                        <p><strong>Specialization:</strong> HVAC</p>
-                        <p><strong>Experience:</strong> 8 years</p>
-                        <p><strong>Certifications:</strong> HVAC Pro, Safety</p>
-                        <div class="action-buttons">
-                            <button class="edit-btn" onclick="editMember('John Doe')">Edit</button>
-                            <button class="delete-btn" onclick="deleteMember('John Doe')">Delete</button>
-                        </div>
+                        <h3>John Doe</h3>
+                        <p>Specialization: HVAC</p>
+                        <p>Experience: 8 years</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                </div>
+
+                <!-- Electrical Specialist -->
+                <div class="team-profile-card card-electrical">
+                    <div class="profile-img">
+                        <img src="path/to/electrical.jpg" alt="Electrical Specialist">
+                    </div>
+                    <div class="profile-details">
+                        <h3>Jane Smith</h3>
+                        <p>Specialization: Electrical</p>
+                        <p>Experience: 5 years</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                </div>
+
+                <!-- Plumbing Specialist -->
+                <div class="team-profile-card card-plumbing">
+                    <div class="profile-img">
+                        <img src="path/to/plumbing.jpg" alt="Plumbing Specialist">
+                    </div>
+                    <div class="profile-details">
+                        <h3>Mike Johnson</h3>
+                        <p>Specialization: Plumbing</p>
+                        <p>Experience: 6 years</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                </div>
+
+                <!-- General Maintenance -->
+                <div class="team-profile-card card-general">
+                    <div class="profile-img">
+                        <img src="path/to/general.jpg" alt="General Maintenance">
+                    </div>
+                    <div class="profile-details">
+                        <h3>Sarah Lee</h3>
+                        <p>Specialization: General Maintenance</p>
+                        <p>Experience: 4 years</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
                     </div>
                 </div>
             </section>
@@ -264,7 +498,10 @@
     </div>
      <!-- Main Content -->
      <main>
-            <h1>Team Scheduling</h1>
+        <div class="h1position">
+               <h1>Team Scheduling</h1>
+        </div>
+            
 
             <!-- Shift Allocation Section -->
             <section class="shift-allocation">

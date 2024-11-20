@@ -12,7 +12,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f0f4f7; /* Light background color */
             color: #333;
             margin: 0;
             padding: 0;
@@ -20,64 +20,88 @@
 
         .dashboard-container {
             display: flex;
+            min-height: 100vh;
         }
 
         .main-content {
             flex-grow: 1;
-            padding: 20px;
+            padding: 30px;
+            padding-left: 30px;
             background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1, h2 {
-            color: #2c3e50;
+            color: #2c3e50; /* Dark shade for headings */
+            font-size: 2em;
+            margin-bottom: 20px;
         }
 
         .notification-category, .message-template, .feedback-prompt, .bulk-message, .tracking-table {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             border: 1px solid #ddd;
             border-radius: 8px;
             background-color: #fff;
-            padding: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Soft shadow for sections */
         }
 
         .notification-category h3, .message-template h3, .feedback-prompt h3, .bulk-message h3, .tracking-table h3 {
             margin-top: 0;
-            font-size: 1.2em;
-            color: #3498db;
+            font-size: 1.4em;
+            color: #2980b9; /* Blue color for section titles */
+            font-weight: 600;
         }
 
         /* Category Labels */
         .alert, .update, .reminder, .urgent {
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 5px;
             color: #fff;
             font-weight: bold;
+            font-size: 1em;
         }
 
-        .alert { background-color: #e74c3c; }
-        .update { background-color: #3498db; }
-        .reminder { background-color: #f39c12; }
-        .urgent { background-color: #d9534f; }
+        .alert {
+            background-color: #e74c3c; /* Red alert color */
+        }
+
+        .update {
+            background-color: #3498db; /* Blue update color */
+        }
+
+        .reminder {
+            background-color: #f39c12; /* Yellow reminder color */
+        }
+
+        .urgent {
+            background-color: #d9534f; /* Dark red urgent color */
+        }
 
         /* Notification Templates */
         .template-option {
-            background-color: #f8f9fa;
+            background-color: #f8f9fa; /* Light gray background */
             border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
             border-radius: 5px;
+        }
+
+        .template-option p {
+            color: #34495e;
         }
 
         /* Feedback Prompt */
         .feedback-rating {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 15px;
+            margin-top: 15px;
         }
 
         .feedback-rating label {
             cursor: pointer;
             color: #666;
+            font-size: 1.2em;
         }
 
         .feedback-rating input {
@@ -93,40 +117,71 @@
         .bulk-message-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .bulk-message input[type="checkbox"] {
-            margin-right: 8px;
+            margin-right: 10px;
+        }
+
+        .bulk-message label {
+            font-size: 1.1em;
+            color: #34495e;
         }
 
         /* Notification Tracking */
         .tracking-table table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 15px;
         }
 
         .tracking-table th, .tracking-table td {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             text-align: center;
         }
 
         .tracking-table th {
-            background-color: #f0f0f0;
+            background-color: #f0f0f0; /* Light gray header background */
+            font-size: 1.1em;
+            color: #2980b9;
         }
 
-        .status-read { color: green; font-weight: bold; }
-        .status-unread { color: red; font-weight: bold; }
+        .status-read {
+            color: #27ae60; /* Green for read notifications */
+            font-weight: bold;
+        }
+
+        .status-unread {
+            color: #e74c3c; /* Red for unread notifications */
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .tracking-table table, .tracking-table th, .tracking-table td {
+                font-size: 0.9em;
+            }
+
+            .bulk-message-group {
+                gap: 8px;
+            }
+        }
+
     </style>
 </head>
 
 <body>
 
-<?php require APPROOT . '/views/inc/components/navbar.php'; ?>
-<div class="dashboard-container">
+    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+    <div class="dashboard-container">
         <?php require APPROOT . '/views/inc/components/side_panel_maintenance.php'; ?>
-  
+
         <!-- Main Content -->
         <main class="main-content">
             <h1>Notifications</h1>
@@ -134,20 +189,20 @@
             <!-- Notification Types -->
             <div class="notification-category">
                 <h3>Notification Types</h3>
-                <p><span class="alert">System Alert</span> - Power outage notification</p>
-                <p><span class="update">Resident Update</span> - Updates on repair status</p>
-                <p><span class="reminder">Reminder</span> - Routine maintenance reminders</p>
-                <p><span class="urgent">Urgent Message</span> - Immediate attention required</p>
+                <p><span class="alert">System Alert</span> - Power outage notification, scheduled downtime, etc.</p>
+                <p><span class="update">Resident Update</span> - Updates on maintenance, repair status, and more.</p>
+                <p><span class="reminder">Reminder</span> - Routine maintenance reminders, event reminders, etc.</p>
+                <p><span class="urgent">Urgent Message</span> - Immediate attention required, safety notices, etc.</p>
             </div>
 
             <!-- Message Templates -->
             <div class="message-template">
                 <h3>Message Templates</h3>
                 <div class="template-option">
-                    <p><strong>Water Shut-off Notice:</strong> "Dear residents, water will be temporarily shut off on [DATE] from [TIME] to [TIME] due to maintenance work."</p>
+                    <p><strong>Water Shut-off Notice:</strong> "Dear residents, water will be temporarily shut off on [DATE] from [TIME] to [TIME] due to maintenance work. We apologize for the inconvenience."</p>
                 </div>
                 <div class="template-option">
-                    <p><strong>Emergency Alert:</strong> "Attention: Due to unforeseen circumstances, an evacuation may be necessary. Please follow the emergency exits as indicated."</p>
+                    <p><strong>Emergency Alert:</strong> "Attention: Due to unforeseen circumstances, an evacuation may be necessary. Please follow the emergency exits as indicated by the signs."</p>
                 </div>
                 <div class="template-option">
                     <p><strong>Repair Status Update:</strong> "Your maintenance request [REQUEST ID] is currently being processed. Expected completion: [DATE]."</p>
@@ -157,7 +212,7 @@
             <!-- Resident Feedback Prompt -->
             <div class="feedback-prompt">
                 <h3>Feedback Prompt</h3>
-                <p>Did this notification provide clear information?</p>
+                <p>Did this notification provide clear information? Please rate from 1 (Not helpful) to 5 (Very helpful):</p>
                 <div class="feedback-rating">
                     <input type="radio" id="rating-1" name="feedback-rating" value="1">
                     <label for="rating-1">1</label>
@@ -217,9 +272,8 @@
         </main>
     </div>
 
-    
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-    
+
 </body>
 
 </html>
