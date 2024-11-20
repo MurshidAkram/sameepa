@@ -29,4 +29,10 @@ class Pages extends controller
         // Load the contact us view
         $this->view('v_contact');
     }
+
+    public function unauthorized()
+    {
+        // Load the contact us view
+        $this->view('unauthorized');
+    }
 }

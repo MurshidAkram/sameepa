@@ -8,3 +8,4 @@ CREATE TABLE Users(
 INSERT INTO Users (name, age)VALUES('murshid', 21);
 INSERT INTO Users (name, age)VALUES('amjad', 19);
 INSERT INTO Users (name, age)VALUES('polly', 3);
+ALTER TABLE users ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;

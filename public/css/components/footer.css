@@ -78,6 +78,10 @@
 .site-footer .footer-bottom p {
     font-size: 12px;
 }
+.site-footer, .site-footer h3, .site-footer p, .site-footer .links ul li a, .site-footer .social a {
+    color: #ffffff !important;
+}
+
 
 @media (max-width: 768px) {
     .site-footer .footer-content {

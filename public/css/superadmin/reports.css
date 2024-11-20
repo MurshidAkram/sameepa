@@ -1,0 +1,79 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.dashboard-container {
+    display: flex;
+}
+
+main {
+    padding: 20px;
+    width: 100%;
+    background-color: #fff;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+.reports-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.report-category {
+    margin-bottom: 30px;
+}
+
+.report-category h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #800080;
+}
+
+.report-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.report-list th, .report-list td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.report-list th {
+    background-color: #f1f1f1;
+}
+
+.report-list td {
+    background-color: #fff;
+}
+
+.report-list tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.report-list td.resolved {
+    color: green;
+}
+
+.report-list td.pending {
+    color: orange;
+}
+
+.report-list td.closed {
+    color: gray;
+}
+
+.report-list td.investigating {
+    color: red;
+}
+

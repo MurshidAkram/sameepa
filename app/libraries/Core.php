@@ -4,7 +4,7 @@ class Core
 {
     protected $currentcontroller = 'Pages'; // Default controller
     protected $currentMethod = 'index'; // Default method
-    protected $params = []; // Parameters
+    protected $params = []; // Parameters list
 
     public function __construct()
     {
@@ -15,6 +15,8 @@ class Core
         if (!empty($url[0]) && file_exists('../app/controllers/' . ucwords($url[0]) . '.php')) {
             // If it does, set it as the current controller
             $this->currentcontroller = ucwords($url[0]);
+
+            //unset the controller in the URL
             unset($url[0]);
         } else {
             // Default to 'Pages' controller if the specified controller does not exist
