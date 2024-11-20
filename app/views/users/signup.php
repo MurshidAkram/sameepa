@@ -40,7 +40,6 @@
                             <option value="">Select Role</option>
                             <option value="1">Resident</option>
                             <option value="2">Admin</option>
-                            <option value="3">SuperAdmin</option>
                             <option value="4">Maintenance</option>
                             <option value="5">Security</option>
                             <option value="6">External Service Provider</option>

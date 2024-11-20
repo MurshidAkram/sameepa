@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/form-styles.css">
     <title>Login | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
-    <?php require APPROOT . '/views/inc/components/header.php'; ?>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="form-container">

@@ -304,4 +304,44 @@ class M_Users
         $this->db->bind(':role_id', $roleId);
         return $this->db->resultSet();
     }
+
+    public function deletePendingUser($userId)
+    {
+        try {
+            // Start transaction
+            $this->db->beginTransaction();
+
+            // Delete from child tables first
+            $this->db->query("DELETE FROM security WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            $this->db->query("DELETE FROM residents WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            $this->db->query("DELETE FROM admins WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+            $this->db->query("DELETE FROM maintenance WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+            $this->db->query("DELETE FROM external_service_providers WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+            // Finally, delete from users table
+            $this->db->query("DELETE FROM users WHERE id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            // Commit transaction
+            $this->db->commit();
+
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->rollBack();
+            return false;
+        }
+    }
 }

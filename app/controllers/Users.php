@@ -76,7 +76,7 @@ class Users extends Controller
     {
         switch ($roleId) {
             case 1: // Resident
-                header('Location: ' . URLROOT . '/resident/dashboard');
+                header('Location: ' . URLROOT . '/posts/index');
                 break;
             case 2: // Admin
                 header('Location: ' . URLROOT . '/admin/dashboard');
@@ -379,5 +379,90 @@ class Users extends Controller
             header('Location: ' . URLROOT . '/users/manageUsers?error=deactivation_failed');
         }
         exit();
+    }
+
+    public function getUserDetails($userId)
+    {
+        // Fetch user details from the database
+        $user = $this->userModel->getUserById($userId);
+        if ($user) {
+            echo json_encode($user);
+        } else {
+            echo json_encode(['error' => 'User not found']);
+        }
+    }
+    // In your UsersController (or relevant controller)
+    public function rejectUser()
+    {
+        // Check if the request is POST and the user role is valid (e.g., admin role)
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
+            header('Location: ' . URLROOT); // Redirect to homepage if unauthorized
+            exit();
+        }
+        // Ensure user_id is set in the POST request
+        $userId = isset($_POST['user_id']) ? intval($_POST['user_id']) : null;
+        // Validate that user_id is provided and is a valid number
+        if ($userId && $this->userModel->deletePendingUser($userId)) {
+            // Redirect to manageUsers with success message
+            header('Location: ' . URLROOT . '/users/manageUsers?success=rejected');
+        } else {
+            // Redirect to manageUsers with error message
+            header('Location: ' . URLROOT . '/users/manageUsers?error=rejection_failed');
+        }
+        exit();
+    }
+    public function createUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $data = [
+                'name' => trim($_POST['name']),
+                'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']),
+                'confirm_password' => trim($_POST['confirm_password']),
+                'role_id' => trim($_POST['role']),
+                'address' => trim($_POST['address']),
+                'phonenumber' => trim($_POST['phonenumber']),
+                'errors' => []
+            ];
+            // Validate input fields
+            $this->validateSignupForm($data, $userData);
+            // If validation passes, register the user
+            if (empty($data['errors'])) {
+                $userData = [
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => password_hash($data['password'], PASSWORD_DEFAULT), // Hash the password
+                    'role_id' => $data['role_id'],
+                    'address' => $data['address'],
+                    'phonenumber' => $data['phonenumber']
+                ];
+                // Attempt to register the user
+                if ($this->userModel->registerUser($userData)) {
+                    // Set success flash message and redirect
+                    flash('user_created', 'User created successfully!');
+                    redirect('users/manageUsers');
+                    return; // Exit to prevent further processing
+                } else {
+                    $data['errors'][] = 'Something went wrong. Please try again.';
+                }
+            }
+            // Reload the view with data and any validation errors
+            $this->view('users/createUser', $data);
+        } else {
+            // Initialize form data for GET requests
+            $data = [
+                'name' => '',
+                'email' => '',
+                'password' => '',
+                'confirm_password' => '',
+                'role_id' => '',
+                'address' => '',
+                'phonenumber' => '',
+                'errors' => []
+            ];
+            $this->view('users/createUser', $data);
+        }
     }
 }
