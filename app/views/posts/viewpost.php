@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/posts/posts.css">
     <title>View Post | <?php echo SITENAME; ?></title>
 </head>
