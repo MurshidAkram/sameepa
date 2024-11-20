@@ -52,10 +52,7 @@ class Maintenance extends Controller
         // This will load the view to update or manage duty schedules
         $this->view('maintenance/Resident_Requests');
     }
-    public function Notifications()
-    {
-        $this->view('maintenance/Notifications');
-    }
+  
     public function Reports_Analytics()
     {
         $this->view('maintenance/Reports_Analytics');
