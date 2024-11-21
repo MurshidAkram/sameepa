@@ -41,27 +41,28 @@ class Maintenance extends Controller
         $this->view('maintenance/dashboard', $data);
     }
 
-    public function history()
+    public function Inventory()
     {
         // This will load the view to handle maintenance requests
-        $this->view('maintenance/history');
+        $this->view('maintenance/Inventory');
     }
 
-    public function report()
+    public function Resident_Requests()
     {
         // This will load the view to update or manage duty schedules
-        $this->view('maintenance/report');
+        $this->view('maintenance/Resident_Requests');
     }
-    public function request()
+  
+    public function Reports_Analytics()
     {
-        $this->view('maintenance/request');
+        $this->view('maintenance/Reports_Analytics');
     }
-    public function shedule()
+    public function Scheme_Maintenance()
     {
-        $this->view('maintenance/shedule');
+        $this->view('maintenance/Scheme_Maintenance');
     }
-    public function update()
+    public function Team_Scheduling()
     {
-        $this->view('maintenance/update');
+        $this->view('maintenance/Team_Scheduling');
     }
 }

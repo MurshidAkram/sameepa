@@ -1,0 +1,40 @@
+/* Style for the duty schedule form */
+.duty-schedule-form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.duty-schedule-form .form-group {
+  margin-bottom: 15px;
+}
+
+.duty-schedule-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.duty-schedule-form input[type="text"],
+.duty-schedule-form input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.duty-schedule-form button.btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.duty-schedule-form button.btn:hover {
+  background-color: #0056b3;
+}
