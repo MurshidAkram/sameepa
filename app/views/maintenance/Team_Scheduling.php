@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/main.min.css' rel='stylesheet' />
     <title>Team Scheduling | <?php echo SITENAME; ?></title>
 
@@ -546,19 +546,7 @@ table tr:hover {
                 </table>
             </section>
 
-            <!-- Alerts Section -->
-            <section class="alerts">
-                <h2>Scheduling Alerts</h2>
-                <div class="alert critical">
-                    ⚠️ Critical: Overlapping shift detected between John Doe and Jane Smith on 2024-09-20!
-                </div>
-                <div class="alert warning">
-                    ⚠️ Warning: Unassigned high-priority task scheduled for 2024-09-22.
-                </div>
-                <div class="alert warning">
-                    ⚠️ Warning: Mike Johnson has pending task reviews for this week.
-                </div>
-            </section>
+           
         </main>
     </div>
 

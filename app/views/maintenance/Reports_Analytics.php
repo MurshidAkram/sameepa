@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Reports & Analytics | Maintenance Dashboard</title>
 
     <style>
@@ -127,7 +127,7 @@
         .analytics-card {
             width: 30%;
             background-color: #f4f6f9; /* Light background for analytics cards */
-            padding: 20px;
+            padding: 10px;
             margin: 10px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -137,6 +137,7 @@
 
         .analytics-card:hover {
             transform: translateY(-5px); /* Card hover effect */
+            background-color: yellow;
         }
 
         .analytics-card h3 {
@@ -161,7 +162,7 @@
         /* Responsive Design for Small Screens */
         @media (max-width: 768px) {
             .analytics-card {
-                width: 48%;
+                width: 30%;
             }
 
             .dashboard-container {
@@ -237,6 +238,10 @@
                         <h3>Team Productivity</h3>
                         <div class="analytics-value">75 tasks/month</div>
                     </div>
+                    <div class="analytics-card">
+                        <h3>Maintenance Frequency Analysis</h3>
+                        <div class="analytics-value">completed = 75%</div>
+                    </div>
                 </div>
             </section>
 
@@ -261,41 +266,6 @@
                             <td>2024-09-18</td>
                             <td>Delay in repair but issue was resolved.</td>
                             <td>3/5</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- Budget & Expense Tracking -->
-            <section class="section">
-                <h2>Budget & Expense Tracking</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Category</th>
-                            <th>Monthly Cost</th>
-                            <th>Quarterly Cost</th>
-                            <th>Annual Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Resident Repairs</td>
-                            <td>$1,500</td>
-                            <td>$4,500</td>
-                            <td>$18,000</td>
-                        </tr>
-                        <tr>
-                            <td>Scheme Maintenance</td>
-                            <td>$800</td>
-                            <td>$2,400</td>
-                            <td>$9,600</td>
-                        </tr>
-                        <tr>
-                            <td>Inventory</td>
-                            <td>$600</td>
-                            <td>$1,800</td>
-                            <td>$7,200</td>
                         </tr>
                     </tbody>
                 </table>
@@ -337,6 +307,77 @@
             </section>
         </div>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('visitorPassModal');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('cancelBtn');
+
+        // Open and Close Modal
+        openModalBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside content
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Sample data for tables
+        const todayPassesData = [
+            { id: 1, visitorName: "John Doe", visitorCount: 2, residentName: "Jane Smith", visitTime: "10:00 AM" },
+            { id: 2, visitorName: "Alice Johnson", visitorCount: 1, residentName: "Michael Brown", visitTime: "11:00 AM" },
+            { id: 3, visitorName: "Bob Lee", visitorCount: 3, residentName: "Emily Davis", visitTime: "12:00 PM" },
+            { id: 4, visitorName: "Nancy White", visitorCount: 2, residentName: "David Wilson", visitTime: "01:00 PM" },
+            { id: 5, visitorName: "Chris Green", visitorCount: 4, residentName: "Sophia Taylor", visitTime: "02:00 PM" }
+        ];
+
+        const historyPassesData = [
+            { id: 6, visitorName: "George Black", visitorCount: 2, residentName: "John Doe", visitTime: "09:00 AM", visitDate: "2023-11-20" },
+            { id: 7, visitorName: "Sara Brown", visitorCount: 1, residentName: "Alice Johnson", visitTime: "11:30 AM", visitDate: "2023-11-20" },
+            { id: 8, visitorName: "Mark Blue", visitorCount: 3, residentName: "Nancy White", visitTime: "01:15 PM", visitDate: "2023-11-19" },
+            { id: 9, visitorName: "Liam Gray", visitorCount: 1, residentName: "Chris Green", visitTime: "02:45 PM", visitDate: "2023-11-18" },
+            { id: 10, visitorName: "Olivia Purple", visitorCount: 2, residentName: "Bob Lee", visitTime: "03:30 PM", visitDate: "2023-11-17" }
+        ];
+
+        // Populate Today Passes Table
+        const todayPassesTable = document.getElementById('todayPasses');
+        todayPassesData.forEach(pass => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${pass.id}</td>
+                <td>${pass.visitorName}</td>
+                <td>${pass.visitorCount}</td>
+                <td>${pass.residentName}</td>
+                <td>${pass.visitTime}</td>
+            `;
+            todayPassesTable.appendChild(row);
+        });
+
+        // Populate Pass History Table
+        const historyPassesTable = document.getElementById('historyPasses');
+        historyPassesData.forEach(pass => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${pass.id}</td>
+                <td>${pass.visitorName}</td>
+                <td>${pass.visitorCount}</td>
+                <td>${pass.residentName}</td>
+                <td>${pass.visitTime}</td>
+                <td>${pass.visitDate}</td>
+            `;
+            historyPassesTable.appendChild(row);
+        });
+    });
+</script>
+
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>

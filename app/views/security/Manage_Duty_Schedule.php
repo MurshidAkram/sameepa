@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Security Duty Schedule</title>
     <style>
         body {
@@ -358,8 +358,8 @@ h3 {
                 </thead>
                 <tbody id="dutyTable">
                     <tr>
-                        <td>1001</td>
-                        <td>John Doe</td>
+                        <td>S001</td>
+                        <td>Vishwa Nimsara</td>
                         <td>2024-11-20</td>
                         <td>8 AM - 12 PM</td>
                         <td>
@@ -370,9 +370,9 @@ h3 {
                 </tbody>
                 <tbody id="dutyTable">
                     <tr>
-                        <td>1002</td>
+                        <td>S002</td>
                         <td>Malith Damsara</td>
-                        <td>2024-12-20</td>
+                        <td>2024-11-21</td>
                         <td>8 AM - 12 PM</td>
                         <td>
                             <button class="btn-edit" onclick="editDuty(this)">Edit</button>
@@ -382,10 +382,22 @@ h3 {
                 </tbody>
                 <tbody id="dutyTable">
                     <tr>
-                        <td>1003</td>
+                        <td>S003</td>
                         <td>Sasila Sadamsara</td>
-                        <td>2023-11-20</td>
-                        <td>8 AM - 12 PM</td>
+                        <td>2023-11-21</td>
+                        <td>4 PM - 00 AM</td>
+                        <td>
+                            <button class="btn-edit" onclick="editDuty(this)">Edit</button>
+                            <button class="btn-delete" onclick="deleteDuty(this)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody id="dutyTable">
+                    <tr>
+                        <td>S004</td>
+                        <td>Geeth Pasida</td>
+                        <td>2024-11-22</td>
+                        <td>00 AM - 8 AM</td>
                         <td>
                             <button class="btn-edit" onclick="editDuty(this)">Edit</button>
                             <button class="btn-delete" onclick="deleteDuty(this)">Delete</button>
