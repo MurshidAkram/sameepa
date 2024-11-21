@@ -3,10 +3,10 @@
         <ul>
 
                 <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li>
+                <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
                 <li><a href="<?php echo URLROOT; ?>/posts/index">Feed</a></li>
                 <li><a href="<?php echo URLROOT; ?>/chat/index">Chats</a></li>
                 <li><a href="<?php echo URLROOT; ?>/polls/index">Polls</a></li>
-                <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
                 <li><a href="<?php echo URLROOT; ?>/events/index">Events</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/groups">Groups</a></li>
                 <li><a href="<?php echo URLROOT; ?>/forums/index">Forums</a></li>

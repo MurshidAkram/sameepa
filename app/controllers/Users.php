@@ -130,6 +130,9 @@ class Users extends Controller
                 $userData['password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
                 if ($this->userModel->registerUser($userData)) {
                     // Redirect to the login page
+                    if ($data['role_id'] != 3) { // Exclude SuperAdmin (role_id 3)
+                        flash('signup_message', 'Your account has been created. Please wait for super admin activation.', 'alert alert-info');
+                    }
                     header('Location: ' . URLROOT . '/users/login');
                     exit();
                 } else {

@@ -7,11 +7,15 @@
     <?php require APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/form-styles.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/flash-message.css">
     <title>Login | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+    <?php
+    flash('signup_message');
+    ?>
 
     <div class="form-container">
         <div class="form-content">
