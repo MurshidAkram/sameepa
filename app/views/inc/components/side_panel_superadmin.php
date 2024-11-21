@@ -2,9 +2,14 @@
 <aside>
     <ul>
         <li><a href="<?php echo URLROOT; ?>/superadmin/dashboard">Dashboard</a></li>
-        <li><a href="<?php echo URLROOT; ?>/superadmin/users">Manage Users</a></li>
-        <li><a href="<?php echo URLROOT; ?>/superadmin/settings">Settings</a></li>
-        <li><a href="<?php echo URLROOT; ?>/superadmin/reports">Reports</a></li>
-        <li><a href="<?php echo URLROOT; ?>/superadmin/announcements">Announcements</a></li>
+        <li><a href="<?php echo URLROOT; ?>/posts/index">Feed</a></li>
+        <li><a href="<?php echo URLROOT; ?>/users/manageUsers">Account Activation</a></li>
+        <li> <a href="<?php echo URLROOT; ?>/users/createUser"> Create Users </a></li>
+        <li> <a href="<?php echo URLROOT; ?>/superadmin/reports"> Reports</a> </li>
+        <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
+        <li><a href="<?php echo URLROOT; ?>/events/index">Manage Events</a></li>
+        <li><a href="<?php echo URLROOT; ?>/forums/index">Manage Forums</a></li>
+        <li><a href="<?php echo URLROOT; ?>/chat/index">Chats</a></li>
+        <li><a href="<?php echo URLROOT; ?>/polls/index">Polls</a></li>
     </ul>
 </aside>

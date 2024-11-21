@@ -1,5 +1,7 @@
 <?php
 
+
+
 //database configuration
 
 define('DB_HOST', 'localhost');
@@ -16,5 +18,9 @@ define('APPROOT', dirname(dirname(__FILE__)));
 define('URLROOT', 'http://localhost/sameepa');
 
 
-//WEBSITE
+//WEBSITE name
 define('SITENAME', 'sameepa');
+
+
+require_once APPROOT . '/helpers/url_helper.php';
+require_once APPROOT . '/helpers/session_helper.php';
