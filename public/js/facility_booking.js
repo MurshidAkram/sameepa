@@ -83,37 +83,36 @@ class Calendar {
         this.monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"];
     }
-
-    generateCalendar() {
-        const firstDay = new Date(this.currentYear, this.currentMonth, 1);
-        const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
-        const startingDay = firstDay.getDay();
-        const totalDays = lastDay.getDate();
+      generateCalendar() {
+          const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+          const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+          const startingDay = firstDay.getDay();
+          const totalDays = lastDay.getDate();
     
-        document.getElementById('currentMonth').textContent = 
-            `${this.monthNames[this.currentMonth]} ${this.currentYear}`;
+          document.getElementById('currentMonth').textContent = 
+              `${this.monthNames[this.currentMonth]} ${this.currentYear}`;
     
-        let calendarHTML = '';
+          let calendarHTML = '';
     
-        for (let i = 0; i < startingDay; i++) {
-            calendarHTML += '<div class="empty"></div>';
-        }
+          for (let i = 0; i < startingDay; i++) {
+              calendarHTML += '<div class="empty"></div>';
+          }
     
-        for (let day = 1; day <= totalDays; day++) {
-            const dateString = `${this.currentYear}-${(this.currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            const isToday = this.isToday(day);
-        
-            calendarHTML += `
-                <div class="calendar-date${isToday ? ' today' : ''}" 
-                 data-date="${dateString}">
-                    ${day}
-                </div>`;
-        }
+          for (let day = 1; day <= totalDays; day++) {
+              const dateString = `${this.currentYear}-${(this.currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+              const isToday = this.isToday(day);
+              const isPastDate = new Date(dateString) < new Date().setHours(0,0,0,0);
+            
+              calendarHTML += `
+                  <div class="calendar-date${isToday ? ' today' : ''}${isPastDate ? ' past-date' : ''}" 
+                 data-date="${dateString}" ${isPastDate ? 'disabled' : ''}>
+                      ${day}
+                  </div>`;
+          }
     
-        document.getElementById('calendarDates').innerHTML = calendarHTML;
-        this.addDateListeners();
-    }
-
+          document.getElementById('calendarDates').innerHTML = calendarHTML;
+          this.addDateListeners();
+      }
     isToday(day) {
         const today = new Date();
         return day === today.getDate() && 

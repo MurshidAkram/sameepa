@@ -65,6 +65,7 @@
                     function validateBookingForm() {
                         const bookingDate = new Date(document.getElementById('booking_date').value);
                         const today = new Date();
+                        today.setHours(0,0,0,0);
                         const duration = document.getElementById('duration').value;
                         
                         if (bookingDate < today) {
@@ -80,7 +81,6 @@
                         return true;
                     }
                     </script>
-
                     <form action="<?php echo URLROOT; ?>/facilities/book/<?php echo $data['facility']['id']; ?>" method="POST" onsubmit="return validateBookingForm()">
 
                         <input type="hidden" name="facility_id" value="<?php echo $data['facility']['id']; ?>">
