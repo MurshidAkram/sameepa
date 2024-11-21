@@ -8,8 +8,8 @@
     <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin/forums.css"> <!-- Include the new styles here -->
-    <title>Manage Forums | <?php echo SITENAME; ?></title>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin/groups.css"> <!-- Include the new styles here -->
+    <title>Manage Groups | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
@@ -20,39 +20,39 @@
 
         <main>
             <div class="header-container">
-                <h1>Manage Forums</h1>
+                <h1>Manage Groups</h1>
                 <div class="button-container">
-                    <a href="<?php echo URLROOT; ?>/admin/create_forum" class="btn-create">Create New Forums</a>
+                    <a href="<?php echo URLROOT; ?>/admin/create_group" class="btn-create">Create New Groups</a>
                 </div>
             </div>
-            <p>Welcome to the Forums Management page. Here, you can add, view, or remove forums.</p>
+            <p>Welcome to the Groups Management page. Here, you can add, view, or remove groups.</p>
 
             <section class="events-overview">
                 <!-- <h2>Upcoming Events</h2> -->
                 <table class="events-table">
                     <thead>
                         <tr>
-                            <th>Forum Title</th>
-                            <th>Posted by</th>
-                            <th>Comments</th>
+                            <th>Group Name</th>
+                            <th>Created by</th>
+                            <th>Number of members</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Community BBQ</td>
-                            <td>Jhon</td>
-                            <td>12</td>
+                            <td>Book Club</td>
+                            <td>Steve</td>
+                            <td>15</td>
                             <td>
-                                <a href="<?php echo URLROOT; ?>/admin/view_forum">View</a> |
+                                <a href="<?php echo URLROOT; ?>/admin/view_group">View</a> |
                                 <a href="#">Edit</a> |
                                 <a href="#">Delete</a>
                             </td>
                         </tr>
                         <tr>
-                            <td>Monthly Book Club</td>
-                            <td>Martin</td>
-                            <td>25</td>
+                            <td>Cooking Club</td>
+                            <td>Chris</td>
+                            <td>20</td>
                             <td>
                                 <a href="#">View</a> |
                                 <a href="#">Edit</a> |
@@ -60,9 +60,9 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Yoga Class</td>
-                            <td>Edward</td>
-                            <td>9</td>
+                            <td>Fitness Enthusiasts</td>
+                            <td>Tony</td>
+                            <td>12</td>
                             <td>
                                 <a href="#">View</a> |
                                 <a href="#">Edit</a> |

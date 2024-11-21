@@ -1,5 +1,3 @@
-// app/public/js/facility_bookings.js
-
 document.addEventListener('DOMContentLoaded', function() {
     const calendarGrid = document.getElementById('calendarGrid');
     const currentMonthElement = document.getElementById('currentMonth');
@@ -63,36 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentDate.setMonth(currentDate.getMonth() + 1);
         renderCalendar();
     });
-
-    bookingForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(bookingForm);
-        const newBooking = {
-            facility: formData.get('facility'),
-            date: formData.get('date'),
-            time: formData.get('time'),
-            duration: formData.get('duration'),
-            status: 'Pending'
-        };
-        bookings.push(newBooking);
-        renderBookingHistory();
-        renderCalendar();
-        bookingForm.reset();
-        alert('Booking submitted successfully!');
-    });
-
-    function renderBookingHistory() {
-        bookingHistoryTable.innerHTML = '';
-        bookings.forEach(booking => {
-            const row = bookingHistoryTable.insertRow();
-            row.insertCell().textContent = booking.facility;
-            row.insertCell().textContent = booking.date;
-            row.insertCell().textContent = booking.time;
-            row.insertCell().textContent = `${booking.duration} hour(s)`;
-            row.insertCell().textContent = booking.status;
-        });
-    }
-
+    
     renderCalendar();
-    renderBookingHistory();
+    
 });
