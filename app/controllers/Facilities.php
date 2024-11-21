@@ -237,5 +237,66 @@ class Facilities extends Controller {
         
         return $occupiedSlots;
     }
+    private function validateFacilityData($data) {
+        $errors = [];
+        
+        // Sanitize inputs
+        $name = htmlspecialchars(strip_tags($data['name']));
+        $description = htmlspecialchars(strip_tags($data['description']));
+        $capacity = filter_var($data['capacity'], FILTER_VALIDATE_INT);
+        
+        // Validate name
+        if (strlen($name) < 3 || strlen($name) > 255) {
+            $errors[] = 'Facility name must be between 3 and 255 characters';
+        }
+        
+        // Validate description
+        if (strlen($description) < 10) {
+            $errors[] = 'Description must be at least 10 characters long';
+        }
+        
+        // Validate capacity
+        if ($capacity === false || $capacity < 1 || $capacity > 1000) {
+            $errors[] = 'Invalid capacity value';
+        }
+
+        // Check for duplicate facility name
+        $facilityModel = $this->facilityModel;
+        if($facilityModel->findFacilityByName($data['name'])) {
+            $errors[] = 'A facility with this name already exists';
+        }
+        return $errors;
+    }
+    private function validateEditFacilityData($data, $currentFacilityId) {
+        $errors = [];
+        
+        // Check if new name conflicts with existing facilities (excluding current facility)
+        $facilityModel = $this->facilityModel;
+        $existingFacility = $facilityModel->findFacilityByNameExcept($data['name'], $currentFacilityId);
+        
+        if($existingFacility) {
+            $errors[] = 'A facility with this name already exists';
+        }
+        
+        return $errors;
+    }
+    public function checkOverlap() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = json_decode(file_get_contents("php://input"));
+            
+            $overlappingBookings = $this->facilityModel->checkOverlappingBookings(
+                $data->facilityId,
+                $data->date,
+                $data->startTime,
+                $data->duration
+            );
+            
+            header('Content-Type: application/json');
+            echo json_encode([
+                'hasOverlap' => !empty($overlappingBookings),
+                'overlappingBookings' => $overlappingBookings
+            ]);
+        }
+    }
     
 }

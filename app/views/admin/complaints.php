@@ -43,7 +43,7 @@
                                     <tr>
                                         <td>Noise Complaint</td>
                                         <td>2023-05-15</td>
-                                        <td><a href="#">View</a></td>
+                                        <td><a href="<?php echo URLROOT; ?>/admin/view_complaint/1">View</a></td>
                                     </tr>
                                     <tr>
                                         <td>Maintenance Issue</td>

@@ -40,7 +40,33 @@
                     </div>
                 <?php endif; ?>
 
-                <form action="<?php echo URLROOT; ?>/facilities/create" method="POST">
+                <script>
+                function validateFacilityForm() {
+                    const name = document.getElementById('name').value.trim();
+                    const description = document.getElementById('description').value.trim();
+                    const capacity = document.getElementById('capacity').value;
+
+                    if (name.length < 3 || name.length > 255) {
+                        alert('Facility name must be between 3 and 255 characters');
+                        return false;
+                    }
+
+                    if (description.length < 10) {
+                        alert('Description must be at least 10 characters long');
+                        return false;
+                    }
+
+                    if (capacity < 1 || capacity > 1000) {
+                        alert('Capacity must be between 1 and 1000');
+                        return false;
+                    }
+
+                    return true;
+                }
+                </script>
+
+                <form action="<?php echo URLROOT; ?>/facilities/create" method="POST" onsubmit="return validateFacilityForm()">
+
                     <div class="form-group">
                         <label for="name">Facility Name:</label>
                         <input type="text" name="name" id="name" value="<?php echo $data['name']; ?>" 
@@ -69,5 +95,29 @@
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+    <script>
+        function validateFacilityForm() {
+            const name = document.getElementById('name').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const capacity = document.getElementById('capacity').value;
+
+            if (name.length < 3 || name.length > 255) {
+                alert('Facility name must be between 3 and 255 characters');
+                return false;
+            }
+
+            if (description.length < 10) {
+                alert('Description must be at least 10 characters long');
+                return false;
+            }
+
+            if (capacity < 1 || capacity > 1000) {
+                alert('Capacity must be between 1 and 1000');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
 </html>

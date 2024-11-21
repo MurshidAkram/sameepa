@@ -150,6 +150,41 @@ class M_Facilities {
         $this->db->bind(':id', $id);
         return $this->db->execute();
     }
+    public function findFacilityByName($name) {
+        $this->db->query('SELECT * FROM facilities WHERE name = :name');
+        $this->db->bind(':name', $name);
+        return $this->db->single();
+    }
+    public function findFacilityByNameExcept($name, $currentId) {
+        $this->db->query('SELECT * FROM facilities WHERE name = :name AND id != :current_id');
+        $this->db->bind(':name', $name);
+        $this->db->bind(':current_id', $currentId);
+        return $this->db->single();
+    }
+    public function checkOverlappingBookings($facilityId, $date, $startTime, $duration) {
+        $this->db->query('SELECT * FROM bookings 
+                          WHERE facility_id = :facility_id 
+                          AND booking_date = :date 
+                          AND (
+                              (TIME_TO_SEC(:start_time) BETWEEN 
+                                  TIME_TO_SEC(booking_time) 
+                                  AND TIME_TO_SEC(booking_time) + (duration * 3600))
+                              OR 
+                              (TIME_TO_SEC(:start_time) + (:duration * 3600) BETWEEN 
+                                  TIME_TO_SEC(booking_time) 
+                                  AND TIME_TO_SEC(booking_time) + (duration * 3600))
+                              OR 
+                              (TIME_TO_SEC(:start_time) <= TIME_TO_SEC(booking_time) 
+                               AND TIME_TO_SEC(:start_time) + (:duration * 3600) >= TIME_TO_SEC(booking_time) + (duration * 3600))
+                          )');
+        
+        $this->db->bind(':facility_id', $facilityId);
+        $this->db->bind(':date', $date);
+        $this->db->bind(':start_time', $startTime);
+        $this->db->bind(':duration', $duration);
+        
+        return $this->db->resultSet();
+    }    
     
 }
 

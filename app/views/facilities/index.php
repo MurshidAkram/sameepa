@@ -49,7 +49,11 @@
                         </div>
                         <div class="facility-actions">
                             <button onclick="viewFacility(<?php echo $facility->id; ?>)" class="btn-view">View</button>
-                            <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="btn-book">Booking</a>
+                            <?php if($facility->status == 'available'): ?>
+                                <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="btn-book">Booking</a>
+                            <?php else: ?>
+                                <button onclick="showUnavailableMessage()" class="btn-book disabled">Booking</button>
+                            <?php endif; ?>
                             <?php if($_SESSION['user_role_id'] == 2): ?>
                                 <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">Delete</button>
@@ -103,8 +107,8 @@
                                   <div class="form-group">
                                       <label for="editStatus">Status</label>
                                       <select id="editStatus" name="status">
-                                          <option value="Available">Available</option>
-                                          <option value="Unavailable">Unavailable</option>
+                                          <option value="available">Available</option>
+                                          <option value="unavailable">Unavailable</option>
                                       </select>
                                   </div>
                                 
@@ -124,6 +128,10 @@
       <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
       <script>
+        function showUnavailableMessage() {
+            alert('This facility is currently unavailable for booking.');
+        }
+
           const modal = document.getElementById('facilityModal');
           const closeBtn = document.getElementsByClassName('close')[0];
           const editFormSection = document.getElementById('editFormSection');
@@ -176,12 +184,31 @@
 
           editFacilityForm.onsubmit = async function(e) {
               e.preventDefault();
+              
+              const name = document.getElementById('editName').value.trim();
+              const description = document.getElementById('editDescription').value.trim();
+              const capacity = parseInt(document.getElementById('editCapacity').value);
+
+              if (name.length < 3 || name.length > 255) {
+                  alert('Facility name must be between 3 and 255 characters');
+                  return false;
+              }
+
+              if (description.length < 10) {
+                  alert('Description must be at least 10 characters');
+                  return false;
+              }
+
+              if (isNaN(capacity) || capacity <= 0) {
+                  alert('Capacity must be a positive number');
+                  return false;
+              }
+
               const facilityId = document.getElementById('editFacilityId').value;
-            
               const formData = {
-                  name: document.getElementById('editName').value,
-                  description: document.getElementById('editDescription').value,
-                  capacity: document.getElementById('editCapacity').value,
+                  name: name,
+                  description: description,
+                  capacity: capacity,
                   status: document.getElementById('editStatus').value
               };
 
@@ -194,14 +221,21 @@
                       body: JSON.stringify(formData)
                   });
 
+                  const result = await response.json();
+                  
+                  if (result.error) {
+                      alert(result.error);
+                      return;
+                  }
+
                   if (response.ok) {
                       window.location.reload();
                   }
               } catch (error) {
                   console.error('Error:', error);
               }
-          }
-      </script>
+          }      
+        </script>
   </body>
   </html>
 

@@ -61,7 +61,28 @@
 
                 <div class="booking-right-panel">
                     <h1>Book <?php echo $data['facility']['name']; ?></h1>
-                    <form action="<?php echo URLROOT; ?>/facilities/book/<?php echo $data['facility']['id']; ?>" method="POST">
+                    <script>
+                    function validateBookingForm() {
+                        const bookingDate = new Date(document.getElementById('booking_date').value);
+                        const today = new Date();
+                        const duration = document.getElementById('duration').value;
+                        
+                        if (bookingDate < today) {
+                            alert('Cannot book dates in the past');
+                            return false;
+                        }
+
+                        if (duration < 1 || duration > 8) {
+                            alert('Duration must be between 1 and 8 hours');
+                            return false;
+                        }
+
+                        return true;
+                    }
+                    </script>
+
+                    <form action="<?php echo URLROOT; ?>/facilities/book/<?php echo $data['facility']['id']; ?>" method="POST" onsubmit="return validateBookingForm()">
+
                         <input type="hidden" name="facility_id" value="<?php echo $data['facility']['id']; ?>">
                         <input type="hidden" name="facility_name" value="<?php echo $data['facility']['name']; ?>">
                         

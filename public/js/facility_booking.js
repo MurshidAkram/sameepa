@@ -10,21 +10,61 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedDate = this.value;
         await showTimeSlots(selectedDate);
     });
-
+    
     // Handle form submission
-    bookingForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+    async function checkBookingOverlap(facilityId, date, startTime, duration) {
+        try {
+            const response = await fetch(`${URLROOT}/facilities/checkOverlap`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    facilityId,
+                    date,
+                    startTime,
+                    duration
+                })
+            });
+            
+            const result = await response.json();
+            return result.hasOverlap;
+        } catch (error) {
+            console.error('Error checking booking overlap:', error);
+            return true; // Return true to prevent booking in case of error
+        }
+    }
+    
+    bookingForm.addEventListener('submit', async function(e) {
+    
+        const selectedTime = document.getElementById('booking_time').value;
         
-        // Get the selected date and format it
+        // Add time slot validation
+        if (!selectedTime) {
+            const errorDiv = document.getElementById('booking-error');
+            errorDiv.textContent = 'Please select a time slot before submitting';
+            return;
+        }
+    
         const selectedDate = document.getElementById('booking_date').value;
-        const formattedDate = new Date(selectedDate).toISOString().split('T')[0];
+        const duration = document.getElementById('duration').value;
         
-        // Update the hidden date input before submission
-        document.getElementById('booking_date').value = formattedDate;
+        const hasOverlap = await checkBookingOverlap(
+            facilityId,
+            selectedDate,
+            selectedTime,
+            duration
+        );
         
-        // Submit the form
+        if (hasOverlap) {
+            const errorDiv = document.getElementById('booking-error');
+            errorDiv.textContent = 'This time slot overlaps with an existing booking';
+            return;
+        }
+        
         this.submit();
-    });
+    });    
+    
 });
 
 document.getElementById('duration').addEventListener('change', function() {
@@ -151,11 +191,7 @@ async function showTimeSlots(date) {
     const closingHour = 22;
     let timeSlotHTML = '';
     const selectedDuration = parseInt(document.getElementById('duration').value);
-    const errorMessageDiv = document.createElement('div');
-    errorMessageDiv.id = 'booking-error';
-    errorMessageDiv.style.color = 'red';
-    errorMessageDiv.style.marginTop = '10px';
-
+    
     try {
         const response = await fetch(`${URLROOT}/Facilities/getBookings/${facilityId}/${date}`);
         const bookings = await response.json();
@@ -163,14 +199,18 @@ async function showTimeSlots(date) {
         for (let hour = openingHour; hour < closingHour; hour++) {
             const timeString = `${hour.toString().padStart(2, '0')}:00`;
             
+            // Enhanced overlap checking considering duration
             const isOverlapping = bookings.some(booking => {
-                const bookingHour = parseInt(booking.booking_time.split(':')[0]);
+                const bookingStartHour = parseInt(booking.booking_time.split(':')[0]);
                 const bookingDuration = parseInt(booking.duration);
-                const newBookingEnd = hour + selectedDuration;
-                const existingBookingEnd = bookingHour + bookingDuration;
+                const bookingEndHour = bookingStartHour + bookingDuration;
                 
-                return (hour >= bookingHour && hour < existingBookingEnd) || 
-                       (newBookingEnd > bookingHour && hour < existingBookingEnd);
+                const newBookingEndHour = hour + selectedDuration;
+                
+                // Check if any part of the new booking overlaps with existing booking
+                return (hour >= bookingStartHour && hour < bookingEndHour) || 
+                       (newBookingEndHour > bookingStartHour && hour < bookingEndHour) ||
+                       (hour <= bookingStartHour && newBookingEndHour > bookingStartHour);
             });
 
             timeSlotHTML += `
@@ -184,7 +224,6 @@ async function showTimeSlots(date) {
         }
 
         timeSlotsContainer.innerHTML = timeSlotHTML;
-        timeSlotsContainer.appendChild(errorMessageDiv);
         addTimeSlotListeners();
 
     } catch (error) {
@@ -192,60 +231,53 @@ async function showTimeSlots(date) {
     }
 }
 
-function handleTimeSlotClick(slot, isOverlapping) {
-    const errorDiv = document.getElementById('booking-error');
-    if (isOverlapping) {
-        errorDiv.textContent = 'This time slot overlaps with an existing booking. Please select a different time.';
-        return false;
+    function handleTimeSlotClick(slot) {
+        const errorDiv = document.getElementById('booking-error');
+        errorDiv.textContent = '';
+        const timeSlots = document.querySelectorAll('.time-slot');
+        timeSlots.forEach(s => s.classList.remove('selected'));
+        slot.classList.add('selected');
+        document.getElementById('booking_time').value = slot.dataset.time;
     }
-    errorDiv.textContent = '';
-    // Continue with normal slot selection
-    const timeSlots = document.querySelectorAll('.time-slot');
-    timeSlots.forEach(s => s.classList.remove('selected'));
-    slot.classList.add('selected');
-    document.getElementById('booking_time').value = slot.dataset.time;
-}
- 
 
-function updateTimeSlots(date, facilityId) {    
-    fetch(`${URLROOT}/facilities/getBookedTimeSlots/${facilityId}/${date}`)
-        .then(response => response.json())
-        .then(occupiedSlots => {
-            const timeSlots = document.getElementById('timeSlots');
-            timeSlots.innerHTML = '';
-            
-            // Generate time slots (e.g., 9 AM to 9 PM)
-            for(let hour = 9; hour < 21; hour++) {
-                const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
-                const duration = document.getElementById('duration').value;
+    function updateTimeSlots(date, facilityId) {    
+        fetch(`${URLROOT}/facilities/getBookedTimeSlots/${facilityId}/${date}`)
+            .then(response => response.json())
+            .then(occupiedSlots => {
+                const timeSlots = document.getElementById('timeSlots');
+                timeSlots.innerHTML = '';
                 
-                // Check if any slot within the duration is occupied
-                let isAvailable = true;
-                for(let i = 0; i < duration; i++) {
-                    const checkTime = new Date(date);
-                    checkTime.setHours(hour + i, 0, 0);
-                    const checkTimeString = checkTime.toTimeString().slice(0, 5);
+                // Generate time slots (e.g., 9 AM to 9 PM)
+                for(let hour = 9; hour < 21; hour++) {
+                    const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
+                    const duration = document.getElementById('duration').value;
                     
-                    if(occupiedSlots.includes(checkTimeString)) {
-                        isAvailable = false;
-                        break;
+                    // Check if any slot within the duration is occupied
+                    let isAvailable = true;
+                    for(let i = 0; i < duration; i++) {
+                        const checkTime = new Date(date);
+                        checkTime.setHours(hour + i, 0, 0);
+                        const checkTimeString = checkTime.toTimeString().slice(0, 5);
+                        
+                        if(occupiedSlots.includes(checkTimeString)) {
+                            isAvailable = false;
+                            break;
+                        }
                     }
+                    
+                    const button = document.createElement('button');
+                    button.textContent = timeSlot;
+                    button.className = `time-slot ${isAvailable ? 'available' : 'occupied'}`;
+                    button.disabled = !isAvailable;
+                    
+                    if(isAvailable) {
+                        button.onclick = () => selectTimeSlot(timeSlot);
+                    }
+                    
+                    timeSlots.appendChild(button);
                 }
-                
-                const button = document.createElement('button');
-                button.textContent = timeSlot;
-                button.className = `time-slot ${isAvailable ? 'available' : 'occupied'}`;
-                button.disabled = !isAvailable;
-                
-                if(isAvailable) {
-                    button.onclick = () => selectTimeSlot(timeSlot);
-                }
-                
-                timeSlots.appendChild(button);
-            }
-        });
-}
-
+            });
+    }
 
   function addTimeSlotListeners() {
       const timeSlots = document.querySelectorAll('.time-slot');
@@ -264,27 +296,3 @@ function updateTimeSlots(date, facilityId) {
         });
     });
 }
-
-async function checkAvailability(date) {
-    try {
-        const facilityId = document.querySelector('input[name="facility_id"]').value;
-        const response = await fetch(`${URLROOT}/Facilities/getBookings/${facilityId}/${date}`);
-        const bookings = await response.json();
-
-        const timeSlots = document.querySelectorAll('.time-slot');
-        timeSlots.forEach(slot => {
-            const slotTime = slot.dataset.time;
-            // Make sure the time formats match exactly
-            const isBooked = bookings.some(booking => 
-                booking.booking_time.trim() === slotTime.trim()
-            );
-            
-            slot.classList.remove('booked', 'available');
-            slot.classList.add(isBooked ? 'booked' : 'available');
-            slot.querySelector('.status').textContent = isBooked ? 'Booked' : 'Available';
-        });
-    } catch (error) {
-        console.error('Error checking availability:', error);
-    }
-}
-
