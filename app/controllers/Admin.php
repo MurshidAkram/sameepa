@@ -143,7 +143,9 @@ class Admin extends Controller
     public function create_payment(){
         $this->view('admin/create_payment');
     }
-
+    public function view_complaint(){
+        $this->view('admin/view_complaint');
+    }
 }
 
 
