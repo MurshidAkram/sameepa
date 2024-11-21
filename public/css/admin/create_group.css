@@ -1,0 +1,126 @@
+
+/* Styles for the Create Group page */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    display: flex;
+}
+
+.btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: #e22d2d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: 2px solid #000000;
+}
+
+.btn-back:hover {
+    background-color: #c62828;
+}
+
+.create-group-dashboard {
+    position: relative;
+    padding-top: 60px;
+}
+
+main {
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    color: #4d4d4d;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #800080;
+    margin-bottom: 20px;
+}
+
+.group-form {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f2f2f2;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 2px solid #000000;
+}
+
+.group-form h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group input[readonly] {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: rgb(3, 167, 3);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: rgb(17, 109, 17);
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group input[type="file"] {
+        font-size: 14px;
+    }
+}

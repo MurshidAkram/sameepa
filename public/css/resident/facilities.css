@@ -1,90 +1,132 @@
-/* facility_booking.css */
+/* app/public/css/resident/facility_bookings.css */
 
-/* General styling for body and main container */
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f8f8ff;
-    margin: 0;
-    padding: 0;
-}
-
-.dashboard-container {
-    display: flex;
-}
-
-main {
-    width: 100%;
+.facility-bookings-main {
     padding: 20px;
-    background-color: white;
-    color: #4d4d4d;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Heading styles */
-h1, h2 {
-    color: #6a0dad;
+.facility-booking-container {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.calendar-container {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
 
-p {
-    margin-bottom: 15px;
-    color: #555;
+.calendar-header button {
+    background-color: #800080;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-/* Facility Bookings Table */
-.facility-bookings-table {
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.calendar-day:hover {
+    background-color: #e0e0e0;
+}
+
+.calendar-day.selected {
+    background-color: #800080;
+    color: white;
+}
+
+.calendar-day.has-booking {
+    background-color: #FFA500;
+    color: white;
+}
+
+.booking-form-container {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-book {
+    background-color: #800080;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-book:hover {
+    background-color: #660066;
+}
+
+.booking-history {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#bookingHistoryTable {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 30px;
 }
 
-.facility-bookings-table th, .facility-bookings-table td {
-    padding: 15px;
+#bookingHistoryTable th,
+#bookingHistoryTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
 }
 
-.facility-bookings-table th {
-    background-color: #6a0dad;
-    color: white;
+#bookingHistoryTable th {
+    background-color: #f2f2f2;
 }
 
-.facility-bookings-table td a {
-    color: #6a0dad;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.facility-bookings-table td a:hover {
-    text-decoration: underline;
-}
-
-/* Create Facility Booking Section */
-.create-facility-booking {
-    background-color: #f0eaff;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #e6d7f8;
-    margin-bottom: 30px;
-}
-
-.btn-create {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #6a0dad;
-    color: white;
-    text-align: center;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-.btn-create:hover {
-    background-color: #8a2be2;
-}
-
-/* Table row hover effect */
-.facility-bookings-table tbody tr:hover {
-    background-color: #f5f5f5;
+@media (max-width: 768px) {
+    .facility-booking-container {
+        flex-direction: column;
+    }
 }

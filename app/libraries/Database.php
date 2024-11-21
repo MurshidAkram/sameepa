@@ -75,7 +75,7 @@ class Database
     //get single record as the result
     public function single()
     {
-        $this->execute()();
+        $this->execute();
         return $this->statement->fetch();
     }
 
@@ -84,5 +84,22 @@ class Database
     public function rowCount()
     {
         return $this->statement->rowCount();
+    }
+
+    public function lastInsertId()
+    {
+        return $this->dbh->lastInsertId();
+    }
+
+    public function beginTransaction() {
+        return $this->dbh->beginTransaction();
+    }
+
+    public function commit() {
+        return $this->dbh->commit();
+    }
+
+    public function rollBack() {
+        return $this->dbh->rollBack();
     }
 }

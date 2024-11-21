@@ -2,10 +2,7 @@
 
 class Maintenance extends Controller
 {
-    public function __construct()
-    {
-        // You can load models here if needed in the future.
-    }
+
 
     public function dashboard()
     {
@@ -13,15 +10,27 @@ class Maintenance extends Controller
         $this->view('maintenance/dashboard');
     }
 
-    public function requests()
+    public function history()
     {
         // This will load the view to handle maintenance requests
-        $this->view('maintenance/requests');
+        $this->view('maintenance/history');
     }
 
-    public function schedules()
+    public function report()
     {
         // This will load the view to update or manage duty schedules
-        $this->view('maintenance/schedules');
+        $this->view('maintenance/report');
+    }
+    public function request()
+    {
+        $this->view('maintenance/request');
+    }
+    public function shedule()
+    {
+        $this->view('maintenance/shedule');
+    }
+    public function update()
+    {
+        $this->view('maintenance/update');
     }
 }

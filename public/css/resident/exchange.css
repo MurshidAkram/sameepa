@@ -1,0 +1,144 @@
+/* app/public/css/resident/exchange.css */
+
+.exchange-main {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.exchange-main h1 {
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+.exchange-main p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.exchange-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.btn-create-listing, .btn-my-listings {
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-create-listing {
+    background-color: #11bd2b;
+    color: white;
+}
+
+.btn-create-listing:hover {
+    background-color: #10df1e;
+    transform: translateY(-2px);
+}
+
+.btn-my-listings {
+    background-color: #a7066f;
+    color: white;
+}
+
+.btn-my-listings:hover {
+    background-color: #45b7aa;
+    transform: translateY(-2px);
+}
+
+.exchange-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.listing-card {
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.listing-card.service {
+    border-top: 20px solid #3498db;
+}
+
+.listing-card.sale {
+    border-top: 20px solid #2ecc71;
+}
+
+.listing-card.exchange {
+    border-top: 20px solid #f1c40f;
+}
+
+.listing-card.lost, .listing-card.found {
+    border-top: 20px solid #e74c3c;
+}
+
+.listing-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.listing-title {
+    font-size: 1.2rem;
+    color: #333;
+    margin: 15px 15px 10px;
+}
+
+.listing-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 15px 15px;
+}
+
+.listing-details {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0 15px 15px;
+}
+
+.listing-type {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.btn-view-listing {
+    display: block;
+    background-color: #800080;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-view-listing:hover {
+    background-color: #9a009a;
+}
+
+@media (max-width: 768px) {
+    .exchange-actions {
+        flex-direction: column;
+    }
+
+    .btn-create-listing, .btn-my-listings {
+        width: 100%;
+        text-align: center;
+    }
+
+    .exchange-grid {
+        grid-template-columns: 1fr;
+    }
+}
