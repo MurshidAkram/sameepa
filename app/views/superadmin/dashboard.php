@@ -56,12 +56,6 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>12:00 PM</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
                                 <td>1:00 PM</td>
                                 <td class="booked">Chad Simon</td>
                                 <td></td>
@@ -73,25 +67,6 @@
                                 <td class="booked">Ethan Philiphs</td>
                                 <td class="booked">Josh England</td>
                             </tr>
-                            <tr>
-                                <td>3:00 PM</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>4:00 PM</td>
-                                <td class="booked">Tobi Payne</td>
-                                <td class="booked">JoJo Siwa</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>5:00 PM</td>
-                                <td></td>
-                                <td class="booked">Harry Kane</td>
-                                <td></td>
-                            </tr>
-
                         </table>
                     </div>
 
@@ -109,28 +84,27 @@
                         </ul>
                     </div>
 
-                    <div class="bar-chart-container">
+                    <div class="card bar-chart-container">
                         <h2>Complaints Status</h2>
                         <canvas id="monthlyComplaintsChart"></canvas>
                     </div>
 
                     <div class="card events-card">
-                        <h2>Today's Events</h2>
-                        <ul>
-                            <li>
-                                <span class="event-title">Yoga Class</span>
-                                <span class="event-time">10:00 AM</span>
-                            </li>
-                            <li>
-                                <span class="event-title">Book Club Meeting</span>
-                                <span class="event-time">2:00 PM</span>
-                            </li>
-                            <li>
-                                <span class="event-title">Community Dinner</span>
-                                <span class="event-time">7:00 PM</span>
-                            </li>
-                        </ul>
-                    </div>
+    <h2>Upcoming Events</h2>
+    <ul>
+        <?php if (isset($events) && !empty($events)): ?>
+            <?php foreach ($events as $event): ?>
+                <li>
+                    <span class="event-title"><?php echo htmlspecialchars($event['title']); ?></span>
+                    <span class="event-time"><?php echo date("g:i A", strtotime($event['time'])); ?></span>
+                </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No upcoming events</p>
+        <?php endif; ?>
+    </ul>
+</div>
+
                 </div>
             </section>
         </main>
@@ -140,53 +114,71 @@
 
     <script>
         // Bar Chart
-        const barCtx = document.getElementById('monthlyComplaintsChart').getContext('2d');
-        new Chart(barCtx, {
-            type: 'bar',
+        const barCtx = document.getElementById("monthlyComplaintsChart").getContext("2d");
+        const complaintsChart = new Chart(barCtx, {
+            type: "bar",
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                 datasets: [{
-                    label: 'Number of Complaints',
+                    label: "Number of Complaints",
                     data: [12, 19, 3, 5, 2, 3, 8, 14, 7, 10, 6, 9],
-                    backgroundColor: '#6a006a'
+                    backgroundColor: "#3498db"
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                    y: { beginAtZero: true }
                 }
             }
         });
 
-        // Payment Chart
-        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+        // Update Bar Chart Data
+        function updateComplaintsChart(chart) {
+            setInterval(() => {
+                const randomData = Array.from({ length: 12 }, () => Math.floor(Math.random() * 20));
+                chart.data.datasets[0].data = randomData;
+                chart.update();
+            }, 5000);
+        }
+        updateComplaintsChart(complaintsChart);
+
+        // Pie Chart for Payments
+        const paymentCtx = document.getElementById("paymentChart").getContext("2d");
         new Chart(paymentCtx, {
-            type: 'pie', // Change from 'doughnut' to 'pie'
+            type: "pie",
             data: {
-                labels: ['Paid', 'Unpaid'],
+                labels: ["Paid", "Unpaid"],
                 datasets: [{
                     data: [175, 25],
-                    backgroundColor: ['#800080', '#e0e0e0']
+                    backgroundColor: ["#3498db", "#e0e0e0 "]
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '';
-                            }
-                        }
+                        position: "bottom"
                     }
                 }
             }
+        });
+
+        // Show Notifications
+        function showNotification(message) {
+            const notification = document.createElement("div");
+            notification.classList.add("notification");
+            notification.innerText = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+        showNotification("Welcome to the Dashboard!");
+
+        // Expand/Collapse Announcements
+        document.querySelectorAll(".announcements-card li").forEach(item => {
+            item.addEventListener("click", function () {
+                this.classList.toggle("expanded");
+            });
         });
     </script>
 </body>

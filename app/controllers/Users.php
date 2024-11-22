@@ -355,8 +355,8 @@ class Users extends Controller
             exit();
         }
 
-        $userId = $_POST['user_id'];
-        if ($this->userModel->activateUser($userId)) {
+        $userId = filter_var($_POST['user_id'], FILTER_SANITIZE_NUMBER_INT);
+        if ($this->userModel->activateUser($userId,1)) {
             // Send email notification to user (implement this)
             header('Location: ' . URLROOT . '/users/manageUsers?success=activated');
         } else {
@@ -372,8 +372,8 @@ class Users extends Controller
             exit();
         }
 
-        $userId = $_POST['user_id'];
-        if ($this->userModel->deactivateUser($userId)) {
+        $userId = filter_var($_POST['user_id'], FILTER_SANITIZE_NUMBER_INT);
+        if ($this->userModel->deactivateUser($userId,0)) {
             header('Location: ' . URLROOT . '/users/manageUsers?success=deactivated');
         } else {
             header('Location: ' . URLROOT . '/users/manageUsers?error=deactivation_failed');
@@ -479,5 +479,30 @@ public function createUser()
         $this->view('users/createUser', $data);
     }
 }
+
+public function deleteActivatedUser()
+{
+    // Check if the request is POST and the user role is valid (e.g., admin role)
+    if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
+        header('Location: ' . URLROOT); // Redirect to homepage if unauthorized
+        exit();
+    }
+
+    // Ensure user_id is set in the POST request
+    $userId = $_POST['user_id'];
+
+    // Validate that user_id is provided and is a valid number
+    if ($this->userModel->deleteActivatedUser($userId)) {
+        // Redirect to manageUsers with success message
+        var_dump($this->userModel->deleteActivatedUser($userId));
+        //header('Location: ' . URLROOT . '/users/manageUsers?success=rejected');
+    } else {
+        // Redirect to manageUsers with error message
+        echo $userId;
+        //header('Location: ' . URLROOT . '/users/manageUsers?error=rejection_failed');
+    }
+    exit();
+}
+
 
 }

@@ -65,7 +65,8 @@
                         <label for="confirm_password">Confirm Password:</label>
                         <input type="password" name="confirm_password" id="confirm_password">
                     </div>
-                    <button type="submit" class="form-submit">Register</button>
+                    <button type="submit" class="form-submit" onclick="return confirmation(event);">Create</button>
+
                 </form>
             </div>
         
@@ -82,6 +83,13 @@
                 field.style.display = roleSelect.value === '1' ? 'block' : 'none';
             });
         });
+
+
+        function confirmation(event) {
+    alert("User created successfully!");
+    return true; // Ensure the form is submitted after the popup
+}
+
     </script>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

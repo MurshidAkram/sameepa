@@ -332,4 +332,18 @@ class Events extends Controller
             $this->view('events/update', $data);
         }
     }
+
+    public function dashboard()  // This is where you fetch and display upcoming events
+    {
+        // Fetch upcoming events from the model
+        $upcomingEvents = $this->eventModel->getUpcomingEvents();
+
+        // Pass the events data to the view
+        $data = [
+            'events' => $upcomingEvents
+        ];
+
+        // Load the view with events data
+        $this->view('superadmin/dashboard', $data);
+    }
 }

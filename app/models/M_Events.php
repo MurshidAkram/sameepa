@@ -202,4 +202,11 @@ class M_Events
         // Execute
         return $this->db->execute();
     }
+
+    
+    public function getUpcomingEvents() {
+        $this->db->query("SELECT * FROM events WHERE event_date >= CURDATE() ORDER BY event_date, event_time LIMIT 5");
+        return $this->db->resultSet();
+    }
+    
 }

@@ -281,19 +281,42 @@ class M_Users
         return $this->db->resultSet();
     }
 
-    public function activateUser($userId)
+    public function activateUser($userId, $status)
     {
-        $this->db->query('UPDATE users SET is_active = 1 WHERE id = :user_id');
+        $this->db->beginTransaction();
+        $this->db->query('UPDATE users SET is_active = :status WHERE id = :user_id');
+        $this->db->bind(':status', $status);
         $this->db->bind(':user_id', $userId);
-        return $this->db->execute();
+        $this->db->commit();
+    
+        // Debugging: Check if the query was executed successfully
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            // You can use error_log or var_dump to debug
+            error_log("Error in activateUser method, query execution failed.");
+            return false;
+        }
     }
-
-    public function deactivateUser($userId)
+    
+    public function deactivateUser($userId, $status)
     {
-        $this->db->query('UPDATE users SET is_active = 0 WHERE id = :user_id');
+        $this->db->beginTransaction();
+        $this->db->query('UPDATE users SET is_active = :status WHERE id = :user_id');
+        $this->db->bind(':status', $status);
         $this->db->bind(':user_id', $userId);
-        return $this->db->execute();
+        $this->db->commit();
+    
+        // Debugging: Check if the query was executed successfully
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            // You can use error_log or var_dump to debug
+            error_log("Error in deactivateUser method, query execution failed.");
+            return false;
+        }
     }
+    
 
     public function getUsersByRole($roleId)
     {
@@ -304,7 +327,8 @@ class M_Users
         $this->db->bind(':role_id', $roleId);
         return $this->db->resultSet();
     }
-   
+
+    
     public function deletePendingUser($userId) {
         try {
             // Start transaction
@@ -345,9 +369,146 @@ class M_Users
             return false;
         }
     }
+    public function deleteActivatedUser($userId) {
+        // Ensure that the user ID is numeric and valid
+        if (!is_numeric($userId)) {
+            return false;  // Invalid user ID
+        }
+    
+        // Start a database transaction
+        
+    
+        try {
+
+            $this->db->beginTransaction();
+            // Delete related user data from the `residents` table by user_id
+            // $this->db->query('DELETE FROM residents WHERE user_id = :user_id AND is_active = 1');
+            // $this->db->bind(':user_id', $userId);
+            // $this->db->execute();
+    
+            // Remove user from the `admins` table by user_id
+            // $this->db->query('DELETE FROM admins WHERE user_id = :user_id AND is_active = 1');
+            // $this->db->bind(':user_id', $userId);
+            // $this->db->execute();
+    
+            // Remove user from the `security` table by user_id
+            // $this->db->query('DELETE FROM security WHERE user_id = :user_id AND is_active = 1');
+            // $this->db->bind(':user_id', $userId);
+            // $this->db->execute();
+    
+            // Finally, delete the user from the `users` table by user_id
+            // First, select the user to check if the user exists with is_active = 1
+$this->db->query('SELECT * FROM users ');
+$this->db->bind(':user_id', $userId, PDO::PARAM_INT);
+
+// Execute the SELECT query and fetch the result
+$user = $this->db->single(); // or $this->db->resultSet() if expecting multiple rows
+
+if ($user) {
+    // If user exists, print the select query
+    var_dump($user);
+    echo "Select Query: SELECT * FROM users WHERE id = " . $userId . " AND is_active = 1";
+} else {
+    echo "No matching user found with id = " . $userId . " and is_active = 1";
+}
+
+// Now perform the delete operation
+
+$this->db->query('DELETE FROM users WHERE id = :user_id AND is_active = 1');
+$this->db->bind(':user_id', $userId, PDO::PARAM_INT);
+
+if ($this->db->execute()) {
+    
+    echo "User deleted successfully.";
+    $this->db->commit();
+} else {
+    $this->db->rollBack();
+    echo "Error deleting user.";
+}
+
+            
+    
+            // Commit the transaction to finalize all changes
+            
+    
+            return true; // Successful deletion
+        } catch (Exception $e) {
+            // Rollback the transaction if an error occurs
+            $this->db->rollBack();
+            // Log the error (optional)
+            error_log("Error deleting user: " . $e->getMessage());
+            return false; // Deletion failed
+        }
+    }
     
 
-
+    public function deleteUserById($user_id) {
+        try {
+            // Start a transaction to ensure all related changes are done atomically
+            $this->db->beginTransaction();
     
+            // Check if the user exists and is active (you can also check for related records here if needed)
+            $this->db->query('SELECT * FROM users WHERE id = :user_id ');
+            $this->db->bind(':user_id', $user_id);
+            $user = $this->db->single(); // Retrieve the user data
+    
+            // If no active user found, return false
+            if (!$user) {
+                return false;
+            }
+    
+            // Delete associated records from other tables (roles, logs, etc.)
+            // Example: Delete associated roles, logs, etc.
+            // $this->deleteUserRoles($user_id);
+    
+            // Delete the user from the `users` table
+            $this->db->query('DELETE FROM users WHERE id = :user_id ');
+            $this->db->bind(':user_id', $user_id);
+            $this->db->execute();
+    
+            // If you have more related deletions, add them here
+            // Example: Delete user from other related tables
+            // $this->db->query('DELETE FROM roles WHERE user_id = :user_id');
+            // $this->db->bind(':user_id', $user_id);
+            // $this->db->execute();
+    
+            // Commit the transaction if everything was successful
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            // Rollback if something went wrong and log the error
+            $this->db->rollBack();
+            error_log('Error deleting user: ' . $e->getMessage());  // Log the error for debugging
+            return false;
+        }
+    }
+    // Example: UserController.php
+// public function deleteActivatedUser()
+// {
+//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//         $userId = $_POST['user_id']; // Get the user ID from the POST request
 
+//         // Ensure user ID is provided
+//         if (!$userId) {
+//             header('Content-Type: application/json');
+//             echo json_encode(['status' => 'error', 'message' => 'User ID is required']);
+//             exit;
+//         }
+
+//         // Call the model method to delete the user
+//         $result = $this->model('M_Users')->deleteUser($userId);
+
+//         // Return appropriate JSON response
+//         header('Content-Type: application/json');
+//         if ($result) {
+//             echo json_encode(['status' => 'success', 'message' => 'User deleted successfully']);
+//         } else {
+//             echo json_encode(['status' => 'error', 'message' => 'Failed to delete user']);
+//         }
+//         exit; // Prevent any further output
+//     }
+// }
+    
+    
+    
 }

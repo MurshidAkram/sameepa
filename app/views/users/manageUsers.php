@@ -54,7 +54,7 @@
                                                 <button type="submit" class="btn-accept">Accept</button>
                                             </form>
                                             <button class="btn-view" onclick="openUserModal(<?php echo $user->id; ?>)">View</button>
-                                            <form action="<?php echo URLROOT; ?>/users/rejectUser" method="POST" style="display: inline;">
+                                            <form action="<?php echo URLROOT; ?>/users/rejectUser" method="POST" style="display: inline;"onsubmit="return confirmReject();">
                                               <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
                                               <button type="submit" class="btn-reject">Reject</button>
                                               </form>
@@ -115,6 +115,10 @@ foreach ($userTypes as $key => $type) : ?>
                                         <button type="submit" class="btn-activate">Activate</button>
                                     </form>
                                 <?php endif; ?>
+                                <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;">
+                                              <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
+                                              <button type="submit" class="btn-delete">Delete</button>
+                                              </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -142,8 +146,18 @@ foreach ($userTypes as $key => $type) : ?>
         </div>
     </div>
 
-    <!-- Add JavaScript at the bottom of the page -->
+
     <script>
+function confirmReject() {
+    return confirm("Are you sure you want to reject this user?");
+}
+function confirmDelete() {
+    return confirm("Are you sure you want to delete this user?");
+}
+
+
+
+    <!-- Add JavaScript at the bottom of the page -->
         function openUserModal(userId) {
     // Fetch user details via AJAX (or PHP) based on user ID
     fetch('<?php echo URLROOT; ?>/users/getUserDetails/' + userId)
