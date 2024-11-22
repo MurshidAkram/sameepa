@@ -25,7 +25,7 @@
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-                <form action="<?php echo URLROOT; ?>/users/signup" method="POST">
+                <form action="<?php echo URLROOT; ?>/users/signup" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" name="name" id="name" value="<?php echo isset($data['name']) ? $data['name'] : ''; ?>">
@@ -52,6 +52,10 @@
                     <div class="form-group resident-only">
                         <label for="phonenumber">Phone No.</label>
                         <input type="text" name="phonenumber" id="phonenumber" value="<?php echo isset($data['phonenumber']) ? $data['phonenumber'] : ''; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="verification_document">Verification Document (PDF):</label>
+                        <input type="file" name="verification_document" id="verification_document" accept=".pdf">
                     </div>
                     <div class="form-group">
                         <label for="password">Password:</label>

@@ -13,12 +13,18 @@ class M_Users
     {
         $isActive = ($userData['role_id'] == 3) ? 1 : 0; // SuperAdmins are active by default
 
-        $this->db->query('INSERT INTO users (name, email, password, role_id, is_active) VALUES (:name, :email, :password, :role_id, :is_active)');
+        $verificationDocument = isset($userData['verification_document']) ? $userData['verification_document'] : null;
+        $verificationFilename = isset($userData['verification_filename']) ? $userData['verification_filename'] : null;
+
+        $this->db->query('INSERT INTO users (name, email, password, role_id, is_active, role_verification_document, role_verification_filename) VALUES (:name, :email, :password, :role_id, :is_active, :verification_document, :verification_filename)');
         $this->db->bind(':name', $userData['name']);
         $this->db->bind(':email', $userData['email']);
         $this->db->bind(':password', $userData['password']);
         $this->db->bind(':role_id', $userData['role_id']);
         $this->db->bind(':is_active', $isActive);
+        $this->db->bind(':verification_document', $verificationDocument);
+        $this->db->bind(':verification_filename', $verificationFilename);
+
 
         if ($this->db->execute()) {
             $userId = $this->db->lastInsertId();
@@ -343,5 +349,12 @@ class M_Users
             $this->db->rollBack();
             return false;
         }
+    }
+
+    public function getUserVerificationDocument($userId)
+    {
+        $this->db->query('SELECT role_verification_document, role_verification_filename FROM users WHERE id = :user_id');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->single();
     }
 }

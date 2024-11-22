@@ -103,6 +103,15 @@ class Users extends Controller
     public function signup()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (!isset($_FILES['verification_document']) || $_FILES['verification_document']['error'] !== UPLOAD_ERR_OK) {
+                $data['errors'][] = 'Verification document is required';
+            }
+
+            $file = $_FILES['verification_document'];
+            if ($file['type'] != 'application/pdf') {
+                $data['errors'][] = 'Only PDF files are allowed';
+            }
+
             $data = [
                 'name' => trim($_POST['name']),
                 'email' => trim($_POST['email']),
@@ -127,7 +136,18 @@ class Users extends Controller
             $this->validateSignupForm($data, $userData);
 
             if (empty($data['errors'])) {
-                $userData['password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
+                $fileContent = file_get_contents($file['tmp_name']);
+
+                $userData = [
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+                    'role_id' => $data['role_id'],
+                    'address' => $data['address'],
+                    'phonenumber' => $data['phonenumber'],
+                    'verification_document' => $fileContent,
+                    'verification_filename' => $file['name']
+                ];
                 if ($this->userModel->registerUser($userData)) {
                     // Redirect to the login page
                     if ($data['role_id'] != 3) { // Exclude SuperAdmin (role_id 3)
