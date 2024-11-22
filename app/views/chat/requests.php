@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/chats.css">
-    <title>Chat | <?php echo SITENAME; ?></title>
+    <title>Chat Requests | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
@@ -16,7 +16,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -34,44 +33,39 @@
             <aside class="chat-sidebar">
                 <h2>Chat Options</h2>
                 <nav class="chat-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-chat-active active">Chats</a>
+                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-chat-active">Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="btn-chat-search">Find Users</a>
-                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-chat-requests">Chat Requests</a>
-
+                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-chat-requests active">Chat Requests</a>
                 </nav>
             </aside>
 
             <div class="chat-content">
                 <div class="chat-header">
-                    <h1>My Chats</h1>
-                    <div class="chat-search-container">
-                        <input type="text" placeholder="Search chats..." class="chat-search-input">
-                        <button class="chat-search-btn"><i class="fas fa-search"></i></button>
-                    </div>
+                    <h1>Chat Requests</h1>
                 </div>
 
-                <div class="chats-list">
-                    <div class="chat-list-item">
-                        <div class="chat-user-avatar">
+                <div class="chat-requests-list">
+                    <!-- Chat Request Item Template -->
+                    <div class="chat-request-item">
+                        <div class="request-user-avatar">
                             <img src="<?php echo URLROOT; ?>/img/user-avatar.png" alt="User Avatar">
                         </div>
-                        <div class="chat-user-info">
-                            <h3 class="chat-user-name">Mr. Kamal</h3>
-                            <p class="chat-last-message">Good Morning neighbour!</p>
+                        <div class="request-user-info">
+                            <h3 class="request-user-name">Michael Johnson</h3>
+                            <p class="request-timestamp">Requested 2 hours ago</p>
                         </div>
-                        <div class="chat-metadata">
-                            <span class="chat-timestamp">2:30 PM</span>
-                        </div>
-                        <div class="chat-actions">
-                            <button class="btn-chat-delete"><i class="fas fa-trash"></i></button>
+                        <div class="request-actions">
+                            <button class="btn-accept-request">Accept</button>
+                            <button class="btn-decline-request">Decline</button>
                         </div>
                     </div>
+
+                    <!-- More chat request items would be dynamically populated -->
                 </div>
 
-                <?php if (empty($data['chats'])): ?>
-                    <div class="no-chats">
-                        <p>No active chats.</p>
-                        <a href="<?php echo URLROOT; ?>/chat/search" class="btn-start-chat">Find Users</a>
+                <?php if (empty($data['requests'])): ?>
+                    <div class="no-requests">
+                        <p>No pending chat requests.</p>
                     </div>
                 <?php endif; ?>
             </div>

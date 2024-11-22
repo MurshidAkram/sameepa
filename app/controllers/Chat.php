@@ -11,7 +11,7 @@ class Chat extends Controller
         }
 
         // Check if user has appropriate role
-        if (!in_array($_SESSION['user_role_id'], [1, 2, 3, 4, 5])) {
+        if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
             //flash('error', 'Unauthorized access');
             redirect('users/login');
         }
@@ -23,5 +23,17 @@ class Chat extends Controller
     {
 
         $this->view('chat/index');
+    }
+
+    public function search()
+    {
+
+        $this->view('chat/search');
+    }
+
+    public function requests()
+    {
+
+        $this->view('chat/requests');
     }
 }

@@ -156,7 +156,6 @@
                         let userDetails = `
                     <p><strong>Name:</strong> ${data.name}</p>
                     <p><strong>Email:</strong> ${data.email}</p>
-                    <p><strong>Address:</strong> ${data.address}</p>
                 `;
                         document.getElementById('userDetailsContent').innerHTML = userDetails;
                         // Show the modal (at the bottom)
