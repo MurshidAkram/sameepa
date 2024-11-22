@@ -357,4 +357,51 @@ class M_Users
         $this->db->bind(':user_id', $userId);
         return $this->db->single();
     }
+
+    public function deleteActivatedUser($userId)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            // First, check which role tables to delete from
+            $this->db->query("SELECT role_id FROM users WHERE id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $userRole = $this->db->single();
+
+            // Delete from corresponding role table based on role_id
+            switch ($userRole['role_id']) {
+                case 1: // Resident
+                    $this->db->query("DELETE FROM residents WHERE user_id = :user_id");
+                    break;
+                case 2: // Admin
+                    $this->db->query("DELETE FROM admins WHERE user_id = :user_id");
+                    break;
+                case 4: // Maintenance
+                    $this->db->query("DELETE FROM maintenance WHERE user_id = :user_id");
+                    break;
+                case 5: // Security
+                    $this->db->query("DELETE FROM security WHERE user_id = :user_id");
+                    break;
+                case 6: // External Service Provider
+                    $this->db->query("DELETE FROM external_service_providers WHERE user_id = :user_id");
+                    break;
+            }
+
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            // Then delete from users table
+            $this->db->query("DELETE FROM users WHERE id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            // Log the actual error
+            error_log("User deletion error: " . $e->getMessage());
+            $this->db->rollBack();
+            return false;
+        }
+    }
 }

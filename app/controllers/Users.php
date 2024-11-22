@@ -408,11 +408,26 @@ class Users extends Controller
     {
         // Fetch user details from the database
         $user = $this->userModel->getUserById($userId);
-        if ($user) {
-            echo json_encode($user);
-        } else {
-            echo json_encode(['error' => 'User not found']);
+        $verificationDoc = $this->userModel->getUserVerificationDocument($userId);
+
+        // Initialize response array
+        $response = [
+            'name' => $user['name'] ?? '',
+            'email' => $user['email'] ?? '',
+            'verification_filename' => $verificationDoc['role_verification_filename'] ?? null,
+            'role_verification_document' => null
+        ];
+
+        // Only add document if it exists and is not empty
+        if (!empty($verificationDoc['role_verification_document'])) {
+            // Convert binary to base64
+            $response['role_verification_document'] = base64_encode($verificationDoc['role_verification_document']);
         }
+
+        // Send JSON response
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     }
     // In your UsersController (or relevant controller)
     public function rejectUser()
@@ -487,5 +502,24 @@ class Users extends Controller
             ];
             $this->view('users/createUser', $data);
         }
+    }
+
+    public function deleteActivatedUser()
+    {
+        // Check if user is SuperAdmin and request is POST
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
+            header('Location: ' . URLROOT);
+            exit();
+        }
+
+        $userId = $_POST['user_id'];
+        if ($this->userModel->deleteActivatedUser($userId)) {
+            // Redirect with success message
+            header('Location: ' . URLROOT . '/users/manageUsers?success=user_deleted');
+        } else {
+            // Redirect with error message
+            header('Location: ' . URLROOT . '/users/manageUsers?error=deletion_failed');
+        }
+        exit();
     }
 }

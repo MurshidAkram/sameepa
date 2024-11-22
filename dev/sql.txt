@@ -31,7 +31,9 @@ CREATE TABLE announcements (
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES users(id)
+    FOREIGN KEY (created_by) REFERENCES users(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE announcement_reactions (
@@ -40,12 +42,15 @@ CREATE TABLE announcement_reactions (
     user_id INT NOT NULL,
     reaction_type ENUM('like', 'dislike') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (announcement_id) REFERENCES announcements(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (announcement_id) REFERENCES announcements(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
     UNIQUE KEY unique_reaction (announcement_id, user_id)
 );
 
--- Forums Table
 CREATE TABLE forums (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -53,10 +58,11 @@ CREATE TABLE forums (
   created_by INT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (created_by) REFERENCES users(id)
+  FOREIGN KEY (created_by) REFERENCES users(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE
 );
 
--- Forum Comments Table
 CREATE TABLE forum_comments (
   id INT AUTO_INCREMENT PRIMARY KEY,
   forum_id INT NOT NULL,
@@ -65,20 +71,28 @@ CREATE TABLE forum_comments (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   reported BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY (forum_id) REFERENCES forums(id),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (forum_id) REFERENCES forums(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE
 );
 
--- Forum Reports Table
 CREATE TABLE forum_reports (
   id INT AUTO_INCREMENT PRIMARY KEY,
   forum_comment_id INT NOT NULL,
   reported_by INT NOT NULL,
   reason TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (forum_comment_id) REFERENCES forum_comments(id),
-  FOREIGN KEY (reported_by) REFERENCES users(id)
+  FOREIGN KEY (forum_comment_id) REFERENCES forum_comments(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE,
+  FOREIGN KEY (reported_by) REFERENCES users(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE
 );
+
 
 CREATE TABLE posts (
   id int(11) NOT NULL AUTO_INCEMENT PRIMARY KEY,

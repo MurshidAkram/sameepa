@@ -2,14 +2,12 @@
 <html lang="en">
 
 <head>
-    <!-- Add Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Other head content -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/superadmin/manageUsers.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/superadmin/manageUsers.css">
     <title>User Management | <?php echo SITENAME; ?></title>
 </head>
 
@@ -21,7 +19,6 @@
 
         <main>
             <div class="dashboard-overview">
-                <!-- Pending Users Section -->
                 <section class="settings-section">
                     <div class="section">
                         <h2>Pending Registration Requests</h2>
@@ -109,6 +106,10 @@
                                                         <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
                                                         <button type="submit" class="btn-deactivate">Deactivate</button>
                                                     </form>
+                                                    <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;">
+                                                        <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
+                                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to permanently delete this user?');">Delete</button>
+                                                    </form>
                                                 <?php else : ?>
                                                     <form action="<?php echo URLROOT; ?>/users/activateUser" method="POST" style="display: inline;">
                                                         <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
@@ -130,10 +131,8 @@
             </div>
         </main>
     </div>
-
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <!-- Modal for viewing user details -->
     <div id="userModal" class="user-modal">
         <div class="user-modal-content">
             <span class="close-btn" onclick="closeUserModal()">×</span>
@@ -142,30 +141,49 @@
         </div>
     </div>
 
-    <!-- Add JavaScript at the bottom of the page -->
     <script>
         function openUserModal(userId) {
-            // Fetch user details via AJAX (or PHP) based on user ID
             fetch('<?php echo URLROOT; ?>/users/getUserDetails/' + userId)
                 .then(response => response.json())
                 .then(data => {
-                    // Populate the modal with user details
-                    if (data.error) {
-                        alert('User not found');
-                    } else {
-                        let userDetails = `
-                    <p><strong>Name:</strong> ${data.name}</p>
-                    <p><strong>Email:</strong> ${data.email}</p>
+                    let userDetails = `
+                <p><strong>Name:</strong> ${data.name}</p>
+                <p><strong>Email:</strong> ${data.email}</p>
+            `;
+                    console.log(data);
+
+                    if (data.verification_filename) {
+                        userDetails += `
+                    <p><strong>Verification Document:</strong> ${data.verification_filename}</p>
                 `;
-                        document.getElementById('userDetailsContent').innerHTML = userDetails;
-                        // Show the modal (at the bottom)
-                        document.getElementById('userModal').style.display = "block";
+
+                        if (data.role_verification_document) {
+                            userDetails += `
+                        <div class="document-preview">
+                            <iframe src="data:application/pdf;base64,${data.role_verification_document}" 
+                                    width="100%" 
+                                    height="500px" 
+                                    type="application/pdf">
+                                Your browser does not support PDFs. 
+                                Please download the PDF to view it.
+                            </iframe>
+                            <button onclick="downloadDocument('${data.role_verification_document}', '${data.verification_filename}')">Download Document</button>
+                        </div>
+                    `;
+                        } else {
+                            userDetails += '<p>Document preview unavailable.</p>';
+                        }
                     }
+
+                    document.getElementById('userDetailsContent').innerHTML = userDetails;
+                    document.getElementById('userModal').style.display = "block";
                 })
-                .catch(error => console.log('Error fetching user details:', error));
+                .catch(error => {
+                    console.error('Error fetching user details:', error);
+                    alert('Failed to fetch user details');
+                });
         }
 
-        // Close the modal
         function closeUserModal() {
             document.getElementById('userModal').style.display = "none";
         }

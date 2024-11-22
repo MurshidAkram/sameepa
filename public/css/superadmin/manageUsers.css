@@ -75,7 +75,7 @@ main {
 
 
 /* Button Styles */
-.btn-create, .btn-accept, .btn-activate, .btn-view, .btn-deactivate, .btn-reject {
+.btn-create, .btn-accept, .btn-activate, .btn-view, .btn-deactivate, .btn-reject, .btn-delete {
     background-color: #800080;
     color: white;
     padding: 10px 20px;
@@ -96,6 +96,14 @@ main {
 }
 
 .btn-deactivate:hover, .btn-reject:hover {
+    background-color: #c0392b;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+}
+
+.btn-delete:hover {
     background-color: #c0392b;
 }
 

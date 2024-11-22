@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/superadmin/createUser.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/superadmin/createUser.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
     <title><?php echo SITENAME; ?> Create Users</title>
 </head>
 
