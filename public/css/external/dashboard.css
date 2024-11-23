@@ -1,6 +1,5 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
     background-color: #f8f9fa;
     margin: 0;
     padding: 0;
@@ -76,58 +75,80 @@ main {
     margin-bottom: 8px;
 }
 
-/* Profile Card Full Width */
-.profile-card {
+.dashboard-layout {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    gap: 2rem;
     padding: 20px;
+}
+
+.profile-sidebar {
+    flex: 0 0 300px;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.profile-image {
+    text-align: center;
     margin-bottom: 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Profile Title Styling */
-.profile-title {
-    font-size: 20px;
-    color: #800080;
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #800080;
+}
+
+.profile-info {
+    text-align: center;
+}
+
+.profile-info h2 {
+    color: #333;
     margin-bottom: 15px;
-    text-align: center;
-    width: 100%;
 }
 
-/* Profile Content Styling */
-.profile-content {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    width: 100%;
-    gap: 20px;
-}
-
-/* Profile Details Styling */
 .profile-details {
+    text-align: left;
+    padding: 10px 0;
+}
+
+.info-item {
     display: flex;
-    flex-direction: column;
-    align-items: center; /* Center horizontally within the column */
-    justify-content: center; /* Center vertically within the container */
-    width: 100%; /* Optional: Ensures alignment within the container width */
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: #666;
 }
 
-.profile-details ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-align: center;
+.info-item i {
+    color: #800080;
+    width: 20px;
 }
 
+.edit-profile-btn {
+    display: inline-block;
+    background: #800080;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
 
-.profile-details li {
-    margin-bottom: 8px;
-    font-size: 16px;
+.edit-profile-btn:hover {
+    background: #6a006a;
+}
 
+.dashboard-content {
+    flex: 1;
 }
 
 /* Table Styles */
@@ -214,4 +235,51 @@ main {
         font-size: 13px;
         padding: 8px 12px;
     }
+}
+
+.username {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 15px 0;
+    color: #333;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+    padding: 0 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.stat-item:hover {
+    transform: translateY(-3px);
+}
+
+.stat-item i {
+    font-size: 1.2rem;
+    color: #800080;
+    margin-bottom: 5px;
+}
+
+.stat-item span {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.stat-item p {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 5px 0 0;
 }

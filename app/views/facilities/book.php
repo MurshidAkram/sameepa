@@ -92,7 +92,7 @@
                         </div>
                         <div class="form-group">
                             <label for="booking_time">Selected Time:</label>
-                            <input type="time" name="booking_time" id="booking_time" required readonly>
+                            <input type="time" name="booking_time" id="booking_time" required>
                         </div>
                         <div class="form-group">
                             <label for="duration">Duration (hours):</label>
@@ -107,8 +107,8 @@
                         </div>
 
                         <div class="form-buttons">
-                            <button type="submit" class="fac-btn-primary">Book Facility</button>
-                            <a href="<?php echo URLROOT; ?>/facilities" class="fac-btn-cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Book Facility</button>
+                            <a href="<?php echo URLROOT; ?>/facilities" class="btn btn-cancel">Cancel</a>
                         </div>
                     </form>
                     <div class="my-bookings">
