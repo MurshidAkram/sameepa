@@ -47,7 +47,7 @@
     margin-bottom: 15px;
 }
 
-.btn-edit {
+.fac-btn-edit {
     display: inline-block;
     padding: 12px 25px;
     background-color: #800080;
@@ -59,7 +59,7 @@
     transition: background-color 0.3s ease;
 }
 
-.btn-edit:hover {
+.fac-btn-edit:hover {
     background-color: #6a006a;
 }
 

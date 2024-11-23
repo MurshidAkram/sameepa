@@ -1,6 +1,5 @@
 /* Main Layout */
 .facilities-main {
-    background-color: white;
     padding: 2rem;
     margin: 0 auto;
     border-radius: 8px;
@@ -13,7 +12,7 @@
 }
 
 /* Create Facility Button */
-.btn-create {
+.fac-btn-create {
     display: inline-block;
     background-color: #4CAF50;
     color: white;
@@ -25,7 +24,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-create:hover {
+.fac-btn-create:hover {
     background-color: #45a049;
     transform: translateY(-3px);
 }
@@ -41,7 +40,7 @@
 
 /* Facility Card */
 .facility-card {
-    background: #e3e0e0;
+    background: white;
     border-radius: 8px;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
     padding: 1.5rem;
@@ -79,7 +78,7 @@
 }
 
 /* Action Buttons */
-.btn-view, .btn-book, .btn-delete {
+.fac-btn-view, .fac-btn-book, .fac-btn-delete {
     padding: 8px 16px;
     border-radius: 4px;
     text-decoration: none;
@@ -88,22 +87,22 @@
     transition: opacity 0.3s;
 }
 
-.btn-view {
+.fac-btn-view {
     background-color: #800080;
     color: white;
 }
 
-.btn-book {
+.fac-btn-book {
     background-color: #f39c12;
     color: white;
 }
 
-.btn-delete {
+.fac-btn-delete {
     background-color: #e74c3c;
     color: white;
 }
 
-.btn-view:hover, .btn-book:hover, .btn-delete:hover {
+.fac-btn-view:hover, .fac-btn-book:hover, .fac-btn-delete:hover {
     opacity: 0.9;
 }
 
@@ -145,7 +144,7 @@
     margin-top: 2rem;
 }
 
-.btn-submit {
+.fac-btn-submit {
     background-color: #4CAF50;
     color: white;
     padding: 12px 24px;
@@ -156,7 +155,7 @@
     font-size: 1rem;
 }
 
-.btn-cancel {
+.fac-btn-cancel {
     background-color: #95a5a6;
     color: white;
     padding: 12px 24px;
@@ -165,11 +164,11 @@
     font-size: 1rem;
 }
 
-.btn-submit:hover {
+.fac-btn-submit:hover {
     background-color: #45a049;
 }
 
-.btn-cancel:hover {
+.fac-btn-cancel:hover {
     background-color: #7f8c8d;
 }
 
@@ -206,7 +205,7 @@
     margin-bottom: 20px;
 }
 
-.btn-bookings {
+.fac-btn-bookings {
     background-color: #2196F3;
     color: white;
     padding: 12px 24px;
@@ -218,12 +217,12 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-bookings:hover {
+.fac-btn-bookings:hover {
     background-color: #1976D2;
     transform: translateY(-3px);
 }
 
-.btn-admin-bookings {
+.fac-btn-admin-bookings {
     background-color: #673AB7;
     color: white;
     padding: 12px 24px;
@@ -235,7 +234,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-admin-bookings:hover {
+.fac-btn-admin-bookings:hover {
     background-color: #5E35B1;
     transform: translateY(-3px);
 }

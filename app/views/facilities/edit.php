@@ -47,6 +47,6 @@
             </select>
         </div>
         
-        <button type="submit" class="btn-submit">Update Facility</button>
+        <button type="submit" class="fac-btn-submit">Update Facility</button>
     </form>
 </div>

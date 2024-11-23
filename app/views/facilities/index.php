@@ -32,10 +32,10 @@
             <h1>Facility Management</h1>
             <div class="action-buttons">
                 <?php if($_SESSION['user_role_id'] == 2): ?>
-                    <a href="<?php echo URLROOT; ?>/facilities/create" class="btn-create">Create New Facility</a>
-                    <a href="<?php echo URLROOT; ?>/facilities/allbookings" class="btn-admin-bookings">All Bookings</a>
+                    <a href="<?php echo URLROOT; ?>/facilities/create" class="fac-btn-create">Create New Facility</a>
+                    <a href="<?php echo URLROOT; ?>/facilities/allbookings" class="fac-btn-admin-bookings">All Bookings</a>
                 <?php endif; ?>
-                <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="btn-bookings">My Bookings</a>
+                <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="fac-btn-bookings">My Bookings</a>
             </div>
                                     
             <div class="facilities-grid">
@@ -48,15 +48,15 @@
                             <span><i class="fas fa-info-circle"></i> Status: <?php echo $facility->status; ?></span>
                         </div>
                         <div class="facility-actions">
-                            <button onclick="viewFacility(<?php echo $facility->id; ?>)" class="btn-view">View</button>
+                            <button onclick="viewFacility(<?php echo $facility->id; ?>)" class="fac-btn-view">View</button>
                             <?php if($facility->status == 'available'): ?>
-                                <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="btn-book">Booking</a>
+                                <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="fac-btn-book">Booking</a>
                             <?php else: ?>
-                                <button onclick="showUnavailableMessage()" class="btn-book disabled">Booking</button>
+                                <button onclick="showUnavailableMessage()" class="fac-btn-book disabled">Booking</button>
                             <?php endif; ?>
                             <?php if($_SESSION['user_role_id'] == 2): ?>
                                 <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">Delete</button>
+                                    <button type="submit" class="fac-btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">Delete</button>
                                 </form>
                             <?php endif; ?>
                         </div>
@@ -112,12 +112,12 @@
                                       </select>
                                   </div>
                                 
-                                  <button type="submit" class="btn-submit">Update Facility</button>
+                                  <button type="submit" class="fac-btn-submit">Update Facility</button>
                               </form>
                           </div>
 
                           <?php if($_SESSION['user_role_id'] == 2): ?>
-                              <button id="toggleEditBtn" class="btn-edit">Edit Facility</button>
+                              <button id="toggleEditBtn" class="fac-btn-edit">Edit Facility</button>
                           <?php endif; ?>
                       </div>
                   </div>

@@ -36,7 +36,7 @@
                 </div>
 
                 <?php if($_SESSION['user_role_id'] == 2): ?>
-                    <a href="<?php echo URLROOT; ?>/facilities/edit/<?php echo $data['facility']['id']; ?>" class="btn-edit">Edit Facility</a>
+                    <a href="<?php echo URLROOT; ?>/facilities/edit/<?php echo $data['facility']['id']; ?>" class="fac-btn-edit">Edit Facility</a>
                 <?php endif; ?>
             </div>
         </div>
