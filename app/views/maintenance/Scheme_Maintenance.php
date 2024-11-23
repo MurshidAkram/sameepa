@@ -34,7 +34,6 @@ body {
 /* Headers */
 h1, h2 {
     color: #3f51b5;
-    border-bottom: 2px solid #3f51b5;
     padding-bottom: 5px;
     margin-bottom: 20px;
 }
