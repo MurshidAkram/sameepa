@@ -198,38 +198,3 @@
 </body>
 
 </html>
-
-$groups = [
-    [
-        'id' => 1,
-        'title' => 'Book Club',
-        'category' => 'Literature',
-        'members' => 15,
-        'creator' => 'John Doe',
-        'description' => 'A community of book lovers discussing various literary works.'
-    ],
-    [
-        'id' => 2,
-        'title' => 'Fitness Warriors',
-        'category' => 'Health',
-        'members' => 28,
-        'creator' => 'Sarah Wilson',
-        'description' => 'Get fit together with daily workout challenges and nutrition tips.'
-    ],
-    [
-        'id' => 3,
-        'title' => 'Photography Club',
-        'category' => 'Arts',
-        'members' => 42,
-        'creator' => 'Mike Chen',
-        'description' => 'Share your photography passion and learn new techniques.'
-    ],
-    [
-        'id' => 4,
-        'title' => 'Cooking Masters',
-        'category' => 'Food',
-        'members' => 35,
-        'creator' => 'Emma Davis',
-        'description' => 'Exchange recipes and cooking tips with fellow food enthusiasts.'
-    ]
-];

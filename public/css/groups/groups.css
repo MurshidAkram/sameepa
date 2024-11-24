@@ -127,7 +127,7 @@
 
 .group-title {
     color: #800080;
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     margin-bottom: 10px;
     white-space: nowrap;
     overflow: hidden;
@@ -686,3 +686,32 @@
 .send-message:hover {
     background: #9a009a;
 }
+
+  .top-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+  }
+
+  .adminremovegrp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 12px 24px;
+      background-color: #dc3545;
+      color: #fff;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 100;
+      transition: background-color 0.3s, transform 0.2s;
+      width: 170px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 2rem;
+  }
+
+  .adminremovegrp:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+  }

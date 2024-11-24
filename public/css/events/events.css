@@ -583,3 +583,32 @@
         width: 100%;
     }
 }
+
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.adminremoveeve {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 24px;
+    background-color: #dc3545;
+    color: #fff;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 100;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 170px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.adminremoveeve:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}

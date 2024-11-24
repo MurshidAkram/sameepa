@@ -42,10 +42,16 @@
                 </nav>
             </aside>
             <div class="event-view-container">
-                <a href="<?php echo URLROOT; ?>/events" class="back-button">
-                    <i class="fas fa-arrow-left"></i> Back to Events
-                </a>
-
+                <div class="top-actions">
+                    <a href="<?php echo URLROOT; ?>/events" class="back-button">
+                        <i class="fas fa-arrow-left"></i> Back to Events
+                    </a>
+                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                        <button class="adminremoveeve" onclick="deleteEvent(<?php echo $data['event']['id']; ?>)">
+                            <i class="fas fa-trash"></i> Delete Event
+                        </button>
+                    <?php endif; ?>
+                </div>
                 <div class="event-view-content">
                     <div class="event-image-section">
                         <img src="<?php echo URLROOT; ?>/events/image/<?php echo $data['event']['id']; ?>"
@@ -127,6 +133,22 @@
                 alert('An error occurred. Please try again.');
             }
         });
+
+        function deleteEvent(eventId) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                fetch(`<?php echo URLROOT; ?>/events/delete/${eventId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Failed to delete event');
+                        }
+                    });
+            }
+        }
     </script>
 </body>
 

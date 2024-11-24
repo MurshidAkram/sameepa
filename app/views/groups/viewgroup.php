@@ -40,12 +40,17 @@
                     <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-my-groups">My Groups</a>
                 </nav>
             </aside>
-
-            <div class="group-view-container">
-                <a href="<?php echo URLROOT; ?>/groups" class="back-button">
-                    <i class="fas fa-arrow-left"></i> Back to Groups
-                </a>
-
+              <div class="group-view-container">
+                  <div class="top-actions">
+                      <a href="<?php echo URLROOT; ?>/groups" class="back-button">
+                          <i class="fas fa-arrow-left"></i> Back to Groups
+                      </a>
+                      <?php if ($_SESSION['user_role_id'] == 2): ?>
+                          <button class="adminremovegrp" onclick="deleteGroup()">
+                              <i class="fas fa-trash"></i> Delete Group
+                          </button>
+                      <?php endif; ?>
+                  </div>
                 <div class="group-view-content">
                     <div class="group-image-section">
                         <img src="<?php echo URLROOT; ?>/img/default-group.jpg" alt="Book Club" class="group-main-image">
@@ -70,7 +75,7 @@
                             </div>
                             <div class="meta-item">
                                 <i class="fas fa-calendar"></i>
-                                <span>Created on July 15, 2023</span>
+                                <span>Created - July 15, 2023</span>
                             </div>
                         </div>
 
@@ -104,6 +109,11 @@
                 button.classList.toggle('joined');
             }
         });
+        function deleteGroup(groupId) {
+            if (confirm('Are you sure you want to delete this group?')) {
+                // Delete functionality would go here
+            }
+        }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
