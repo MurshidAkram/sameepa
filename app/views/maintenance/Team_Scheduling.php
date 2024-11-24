@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/main.min.css' rel='stylesheet' />
     <title>Team Scheduling | <?php echo SITENAME; ?></title>
 
@@ -21,24 +21,7 @@ body {
     color: #2c3e50;
 }
 
-/* Navbar Styling */
-nav {
-    background-color: #2c3e50;
-    color: #fff;
-    padding: 15px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-nav a {
-    color: #ecf0f1;
-    text-decoration: none;
-    margin-right: 20px;
-    font-size: 1rem;
-}
-
-nav a:hover {
-    color: #3498db;
-}
 
 /* Dashboard Layout */
 .dashboard-container {
@@ -47,7 +30,7 @@ nav a:hover {
 
 /* Side Panel Styling */
 .side-panel {
-    width: 250px;
+    width: 300px;
     background-color: #34495e;
     color: #fff;
     padding: 20px;
@@ -69,7 +52,7 @@ nav a:hover {
 /* Main Content Styling */
 main {
     flex: 1;
-    padding: 30px;
+    padding: 20px;
     background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;

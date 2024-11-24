@@ -7,7 +7,9 @@ class Maintenance extends Controller
     public function __construct()
     {
         $this->checkMaintenanceAuth();
-        $this->maintenanceModel = $this->model('M_maintenance');
+
+        // Initialize the maintenance model
+        $this->maintenanceModel = $this->model('M_maintenance'); // Make sure this matches your actual model class
     }
 
     private function checkMaintenanceAuth()
@@ -18,8 +20,9 @@ class Maintenance extends Controller
             exit();
         }
 
-        // Check if user is a resident (role_id = 4)
+        // Check if user has the correct role (role_id = 4 for maintenance)
         if ($_SESSION['user_role_id'] != 4) {
+            // Redirect to unauthorized page
             header('Location: ' . URLROOT . '/pages/unauthorized');
             exit();
         }
@@ -28,26 +31,35 @@ class Maintenance extends Controller
     // Dashboard
     public function dashboard()
     {
+        // Pass necessary data for the dashboard
         $data = [
             'user_id' => $_SESSION['user_id'],
             'email' => $_SESSION['user_email'],
             'role' => $_SESSION['user_role']
         ];
+
+        // Load the dashboard view
         $this->view('maintenance/dashboard', $data);
     }
 
+    // Inventory CRUD
     // Display Inventory Usage Logs
     public function inventory()
     {
         // Fetch all inventory usage logs from the model
         $logs = $this->maintenanceModel->getInventoryUsageLogs();
     
+        // Check if the logs were retrieved successfully
+        if ($logs === false) {
+            die('Error fetching inventory logs');
+        }
+    
         // Prepare the data to pass to the view
         $data = [
             'logs' => $logs
         ];
     
-        // Load the inventory view and pass the data
+        // Load the inventory view with the data
         $this->view('maintenance/inventory', $data);
     }
 
@@ -77,8 +89,7 @@ class Maintenance extends Controller
             $this->view('maintenance/add_inventory_usage');
         }
     }
-    
-    // Edit an inventory usage log entry
+
     public function editInventoryUsage($log_id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -90,18 +101,14 @@ class Maintenance extends Controller
                 'usage_time' => $_POST['usage_time'],
                 'quantity' => $_POST['quantity']
             ];
-
-            
-
-            // Update the log data in the database
+    
+            // Update only the quantity in the database
             if ($this->maintenanceModel->updateInventoryUsageLog($data)) {
-                // Redirect to inventory page
                 header('Location: ' . URLROOT . '/maintenance/inventory');
             } else {
                 die('Something went wrong');
             }
         } else {
-            // Fetch log data for pre-population
             $log = $this->maintenanceModel->getInventoryUsageLogById($log_id);
             $data = [
                 'log' => $log
@@ -126,4 +133,25 @@ class Maintenance extends Controller
         $log = $this->maintenanceModel->getInventoryUsageLogById($log_id);
         echo json_encode($log);
     }
+
+    
+    public function Resident_Requests()
+    {
+        // This will load the view to update or manage duty schedules
+        $this->view('maintenance/Resident_Requests');
+    }
+  
+    public function Reports_Analytics()
+    {
+        $this->view('maintenance/Reports_Analytics');
+    }
+    public function Scheme_Maintenance()
+    {
+        $this->view('maintenance/Scheme_Maintenance');
+    }
+    public function Team_Scheduling()
+    {
+        $this->view('maintenance/Team_Scheduling');
+    }
+
 }

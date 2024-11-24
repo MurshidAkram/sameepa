@@ -31,17 +31,17 @@
 
         /* Side Panel */
         .side-panel {
-            width: 20%;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+    width:100%;
+    background-color: #34495e;
+    color: #fff;
+ 
+    height: 100vh;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
 
         /* Main Content */
         .main-content {
-            width: 80%;
+            width: 95%;
             padding: 20px;
         }
 
@@ -292,7 +292,51 @@
 </table>
 
             </section>
+
+             <!-- Available Store Section -->
+    <section class="section">
+        <h2>Available Store</h2>
+        <div class="search-bar">
+            <input type="text" id="search-store" placeholder="Search Available Store..." onkeyup="searchTable('store')">
+            <button onclick="clearSearch('search-store')">Clear Search</button>
         </div>
+        <table id="store">
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Purchase Date</th>
+                    <th>Available Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>INV-001</td>
+                    <td>Air Filter</td>
+                    <td>2024-09-15</td>
+                    <td>40</td>
+                    <td>
+                        <button class="btn btn-edit">Edit</button>
+                        <button class="btn btn-delete">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>INV-002</td>
+                    <td>Light Bulb</td>
+                    <td>2024-08-22</td>
+                    <td>10</td>
+                    <td>
+                        <button class="btn btn-edit">Edit</button>
+                        <button class="btn btn-delete">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+        </div>
+        
     </div>
 
     <!-- Form Overlay -->
@@ -353,7 +397,7 @@
         document.getElementById("form-overlay").style.display = "none";
     }
 
-    function editLog(logId) {
+  function editLog(logId) {
     // Make an AJAX request to fetch the log data by its ID
     fetch("<?php echo URLROOT; ?>/maintenance/getInventoryUsageLogById/" + logId)
         .then(response => response.json())
@@ -363,13 +407,21 @@
             document.getElementById("item_name").value = data.item_name;
             document.getElementById("usage_date").value = data.usage_date;
             document.getElementById("usage_time").value = data.usage_time;
-          
+            document.getElementById("quantity").value = data.quantity;
+
+            // Disable all fields except the quantity field
+            document.getElementById("item_id").disabled = true;
+            document.getElementById("item_name").disabled = true;
+            document.getElementById("usage_date").disabled = true;
+            document.getElementById("usage_time").disabled = true;
+            document.getElementById("quantity").disabled = false;
 
             // Open the form overlay
             document.getElementById("form-overlay").style.display = "flex";
         })
         .catch(error => console.error("Error fetching log data:", error));
 }
+
 
 
     function deleteLog(logId) {

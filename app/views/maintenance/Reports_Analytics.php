@@ -30,12 +30,13 @@
         }
 
         .side-panel {
-            width: 200px;
+            width: 300px;
            
         }
 
         .main-content {
             flex-grow: 1;
+            width:95%;
         }
 
         h1 {
