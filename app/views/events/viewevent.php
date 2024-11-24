@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/events/events.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/event_view.css">
     <title><?php echo $data['event']['title']; ?> | <?php echo SITENAME; ?></title>
 </head>
 

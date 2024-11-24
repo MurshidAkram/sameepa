@@ -83,7 +83,7 @@ class Admin extends Controller
     public function groups()
     {
         // Load admin dashboard view
-        $this->view('admin/groups');
+        $this->view('resident/groups');
     }
 
     public function exchange()
