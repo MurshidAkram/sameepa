@@ -21,24 +21,7 @@ body {
     color: #2c3e50;
 }
 
-/* Navbar Styling */
-nav {
-    background-color: #2c3e50;
-    color: #fff;
-    padding: 15px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-nav a {
-    color: #ecf0f1;
-    text-decoration: none;
-    margin-right: 20px;
-    font-size: 1rem;
-}
-
-nav a:hover {
-    color: #3498db;
-}
 
 /* Dashboard Layout */
 .dashboard-container {
@@ -47,7 +30,7 @@ nav a:hover {
 
 /* Side Panel Styling */
 .side-panel {
-    width: 250px;
+    width: 300px;
     background-color: #34495e;
     color: #fff;
     padding: 20px;
@@ -216,20 +199,45 @@ h1, h2 {
 }
 
 .edit-btn {
-    background-color: #1abc9c;
+    background-color: #3498db; /* Blue color */
+    color: white; /* Text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
+/* Edit Button Hover Effect */
 .edit-btn:hover {
-    background-color: #16a085;
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
 }
 
 .delete-btn {
-    background-color: #e74c3c;
+    background-color: #3498db; /* Blue color */
+    color: white; /* Text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
+/* Edit Button Hover Effect */
 .delete-btn:hover {
-    background-color: #c0392b;
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
 }
+
 
 /* Profile Card Styles */
 .team-profile-card {
@@ -266,6 +274,7 @@ h1, h2 {
     margin: 5px 0;
     font-size: 1rem;
     line-height: 1.5;
+    color: black;
 }
 
 .action-buttons {
@@ -398,69 +407,71 @@ table tr:hover {
             <!-- Comprehensive Team Profiles -->
             <section class="team-profile">
                 
-                <!-- HVAC Specialist -->
-                <div class="team-profile-card card-hvac">
-                    <div class="profile-img">
-                        <img src="path/to/hvac.jpg" alt="HVAC Specialist">
-                    </div>
-                    <div class="profile-details">
-                        <h3>John Doe</h3>
-                        <p>Specialization: HVAC</p>
-                        <p>Experience: 8 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
-                    </div>
-                </div>
+  <!-- HVAC Specialist -->
+<div class="team-profile-card card-hvac">
+    <div class="profile-img">
+        <img src="/img/hvac.jpg" alt="HVAC Specialist">
+    </div>
+    <div class="profile-details">
+        <h3>Malith Damsara</h3>
+        <p>Specialization: HVAC</p>
+        <p>Experience: 8 years</p>
+    </div>
+    <div class="action-buttons">
+        <button class="edit-btn" onclick="editMember('John Doe', 'HVAC', 8)">Edit</button>
+        <button class="delete-btn" onclick="deleteMember('John Doe')">Delete</button>
+    </div>
+</div>
 
-                <!-- Electrical Specialist -->
-                <div class="team-profile-card card-electrical">
-                    <div class="profile-img">
-                        <img src="path/to/electrical.jpg" alt="Electrical Specialist">
-                    </div>
-                    <div class="profile-details">
-                        <h3>Jane Smith</h3>
-                        <p>Specialization: Electrical</p>
-                        <p>Experience: 5 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
-                    </div>
-                </div>
+<!-- Electrical Specialist -->
+<div class="team-profile-card card-electrical">
+    <div class="profile-img">
+        <img src="/img/electrical.jpg" alt="Electrical Specialist">
+    </div>
+    <div class="profile-details">
+        <h3>Sasila Sadamsara</h3>
+        <p>Specialization: Electrical</p>
+        <p>Experience: 5 years</p>
+    </div>
+    <div class="action-buttons">
+        <button class="edit-btn" onclick="editMember('Jane Smith', 'Electrical', 5)">Edit</button>
+        <button class="delete-btn" onclick="deleteMember('Jane Smith')">Delete</button>
+    </div>
+</div>
 
-                <!-- Plumbing Specialist -->
-                <div class="team-profile-card card-plumbing">
-                    <div class="profile-img">
-                        <img src="path/to/plumbing.jpg" alt="Plumbing Specialist">
-                    </div>
-                    <div class="profile-details">
-                        <h3>Mike Johnson</h3>
-                        <p>Specialization: Plumbing</p>
-                        <p>Experience: 6 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
-                    </div>
-                </div>
+<!-- Plumbing Specialist -->
+<div class="team-profile-card card-plumbing">
+    <div class="profile-img">
+        <img src="/img/plumbing.jpg" alt="Plumbing Specialist">
+    </div>
+    <div class="profile-details">
+        <h3>Geeth Pasida</h3>
+        <p>Specialization: Plumbing</p>
+        <p>Experience: 6 years</p>
+    </div>
+    <div class="action-buttons">
+        <button class="edit-btn" onclick="editMember('Mike Johnson', 'Plumbing', 6)">Edit</button>
+        <button class="delete-btn" onclick="deleteMember('Mike Johnson')">Delete</button>
+    </div>
+</div>
 
-                <!-- General Maintenance -->
-                <div class="team-profile-card card-general">
-                    <div class="profile-img">
-                        <img src="path/to/general.jpg" alt="General Maintenance">
-                    </div>
-                    <div class="profile-details">
-                        <h3>Sarah Lee</h3>
-                        <p>Specialization: General Maintenance</p>
-                        <p>Experience: 4 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
-                    </div>
-                </div>
+<!-- General Maintenance -->
+<div class="team-profile-card card-general">
+    <div class="profile-img">
+        <img src="/img/general.jpg" alt="General Maintenance">
+    </div>
+    <div class="profile-details">
+        <h3>Vishwa Nimsara</h3>
+        <p>Specialization: Plumbing</p>
+        <p>Experience: 4 years</p>
+    </div>
+    <div class="action-buttons">
+        <button class="edit-btn" onclick="editMember('Sarah Lee', 'General Maintenance', 4)">Edit</button>
+        <button class="delete-btn" onclick="deleteMember('Sarah Lee')">Delete</button>
+    </div>
+</div>
+
+
             </section>
 
             <!-- Other Sections (Shift Allocation, Availability, etc.) -->
@@ -519,7 +530,7 @@ table tr:hover {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>John Doe</td>
+                            <td>Malith Damsara</td>
                             <td>5</td>
                             <td>15</td>
                             <td>40</td>
@@ -527,7 +538,7 @@ table tr:hover {
                             <td>4.5 / 5</td>
                         </tr>
                         <tr>
-                            <td>Jane Smith</td>
+                            <td>Sasila Sadamsara</td>
                             <td>6</td>
                             <td>20</td>
                             <td>38</td>
@@ -535,7 +546,7 @@ table tr:hover {
                             <td>4.8 / 5</td>
                         </tr>
                         <tr>
-                            <td>Mike Johnson</td>
+                            <td>Geeth Pasida</td>
                             <td>4</td>
                             <td>12</td>
                             <td>32</td>
@@ -546,19 +557,7 @@ table tr:hover {
                 </table>
             </section>
 
-            <!-- Alerts Section -->
-            <section class="alerts">
-                <h2>Scheduling Alerts</h2>
-                <div class="alert critical">
-                    ⚠️ Critical: Overlapping shift detected between John Doe and Jane Smith on 2024-09-20!
-                </div>
-                <div class="alert warning">
-                    ⚠️ Warning: Unassigned high-priority task scheduled for 2024-09-22.
-                </div>
-                <div class="alert warning">
-                    ⚠️ Warning: Mike Johnson has pending task reviews for this week.
-                </div>
-            </section>
+           
         </main>
     </div>
 
@@ -566,37 +565,68 @@ table tr:hover {
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
     <script>
-        const addMemberBtn = document.getElementById('addMemberBtn');
-        const memberModal = document.getElementById('memberModal');
-        const closeModal = document.getElementById('closeModal');
-        const memberForm = document.getElementById('memberForm');
+     
+    const addMemberBtn = document.getElementById('addMemberBtn');
+    const memberModal = document.getElementById('memberModal');
+    const closeModal = document.getElementById('closeModal');
+    const memberForm = document.getElementById('memberForm');
 
-        addMemberBtn.addEventListener('click', () => {
-            memberModal.classList.add('active');
-            document.getElementById('modalTitle').textContent = 'Add New Member';
-            memberForm.reset();
-        });
+    // Open modal for adding a new member
+    addMemberBtn.addEventListener('click', () => {
+        memberModal.classList.add('active');
+        document.getElementById('modalTitle').textContent = 'Add New Member';
+        memberForm.reset(); // Reset the form for new entries
+    });
 
-        closeModal.addEventListener('click', () => {
-            memberModal.classList.remove('active');
-        });
+    // Close modal
+    closeModal.addEventListener('click', () => {
+        memberModal.classList.remove('active');
+    });
 
-        memberForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Member saved successfully!');
-            memberModal.classList.remove('active');
-        });
+    // Handle form submission (for adding or editing members)
+    memberForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Member saved successfully!');
+        memberModal.classList.remove('active');
+    });
 
-        function editMember(name) {
-            memberModal.classList.add('active');
-            document.getElementById('modalTitle').textContent = `Edit Member - ${name}`;
+    // Edit member function
+    function editMember(name, specialization, experience) {
+        memberModal.classList.add('active');
+        document.getElementById('modalTitle').textContent = `Edit Member - ${name}`;
+        document.getElementById('name').value = name;
+        document.getElementById('specialization').value = specialization;
+        document.getElementById('experience').value = experience;
+        // Optionally, fill in other fields like certifications and profile image if needed.
+    }
+
+    // Delete member function with a confirmation prompt
+    function deleteMember(name) {
+        if (confirm(`Are you sure you want to delete ${name}?`)) {
+            // Perform the delete action, e.g., alert for now or perform a server call
+            alert(`${name} deleted successfully!`);
+            // Optionally, you could remove the member's profile card from the page:
+            // const card = document.querySelector(`.team-profile-card:has(h3:contains('${name}'))`);
+            // card.remove();  // Uncomment to remove the card from the DOM
         }
+    }
 
-        function deleteMember(name) {
-            if (confirm(`Are you sure you want to delete ${name}?`)) {
-                alert(`${name} deleted successfully!`);
-            }
-        }
+    // Example of adding event listeners to the action buttons on team profile cards
+    document.querySelectorAll('.team-profile-card').forEach(card => {
+        const name = card.querySelector('h3').textContent;
+        const specialization = card.querySelector('p:nth-child(2)').textContent.split(': ')[1];
+        const experience = card.querySelector('p:nth-child(3)').textContent.split(': ')[1];
+
+        card.querySelector('.edit-btn').addEventListener('click', () => {
+            editMember(name, specialization, experience);
+        });
+
+        card.querySelector('.delete-btn').addEventListener('click', () => {
+            deleteMember(name);
+        });
+    });
+
+
     </script>
 </body>
 

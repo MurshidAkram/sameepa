@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Scheme Maintenance | <?php echo SITENAME; ?></title>
     <style>
        /* General Styles */
@@ -34,7 +34,6 @@ body {
 /* Headers */
 h1, h2 {
     color: #3f51b5;
-    border-bottom: 2px solid #3f51b5;
     padding-bottom: 5px;
     margin-bottom: 20px;
 }
@@ -304,15 +303,6 @@ h2 {
                 <p>Issue: Overload Protection</p>
                 <p>Actions Taken: Installed new breaker</p>
                 <p>Status: Completed</p>
-            </div>
-
-            <!-- Urgent Maintenance Alerts -->
-            <h2>Urgent Maintenance Alerts</h2>
-            <div class="urgent-alert">
-                <p><strong>Overdue Maintenance:</strong> Plumbing check for North Wing was due on 2024-09-01.</p>
-            </div>
-            <div class="urgent-alert">
-                <p><strong>Critical Task:</strong> Generator replacement is overdue. Immediate attention required.</p>
             </div>
         </main>
     </div>

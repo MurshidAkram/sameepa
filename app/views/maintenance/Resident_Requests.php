@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Resident Requests | <?php echo SITENAME; ?></title>
     <style>
 /* General Styles */
@@ -18,14 +18,14 @@ body {
 }
 
 .dashboard-container {
-    display: flex;
+    
     min-height: 100vh;
     padding: 20px;
     gap: 20px;
 }
 
 main {
-    flex: 1;
+   
     padding: 20px;
     background: #ffffff;
     border-radius: 15px;
@@ -114,32 +114,51 @@ main {
     transition: transform 0.2s, background-color 0.3s;
 }
 
+/* Edit Button */
 .btn-edit {
-    background: #4caf50;
+    background: #3498db; /* Blue color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for a larger clickable area */
+    color: white; /* White text color */
+    font-weight: bold; /* Bold text */
+    transition: background 0.3s, transform 0.3s; /* Smooth transition */
 }
 
 .btn-edit:hover {
-    background: #43a047;
-    transform: scale(1.05);
+    background: #2980b9; /* Darker blue on hover */
+    transform: scale(1.1); /* Slightly larger on hover */
 }
 
+/* Delete Button */
 .btn-delete {
-    background: #f44336;
+    background: #e74c3c; /* Red color */
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.3s;
 }
 
 .btn-delete:hover {
-    background: #e53935;
-    transform: scale(1.05);
+    background: #c0392b; /* Darker red on hover */
+    transform: scale(1.1);
 }
 
+/* Urgent Button */
 .btn-urgent {
-    background: #ff9800;
+    background: #f39c12; /* Orange color */
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.3s;
 }
 
 .btn-urgent:hover {
-    background: #fb8c00;
-    transform: scale(1.05);
+    background: #e67e22; /* Darker orange on hover */
+    transform: scale(1.1);
 }
+
 
 /* Attachments & Media Upload */
 .file-input {
@@ -273,28 +292,28 @@ footer {
                     <tbody>
                         <tr>
                             <td>R001</td>
-                            <td>John Doe, Apt 12B</td>
+                            <td>Malith Damsara,12B</td>
                             <td>Repair</td>
                             <td>High</td>
                             <td>Pending</td>
                             <td>Technician A</td>
                             <td>2024-09-18</td>
                             <td class="action-buttons">
-                                <button class="btn-edit">Edit</button>
+                                <!-- <button class="btn-edit">Edit</button> -->
                                 <button class="btn-delete">Delete</button>
                                 <button class="btn-urgent">Mark as Urgent</button>
                             </td>
                         </tr>
                         <tr>
                             <td>R002</td>
-                            <td>Jane Smith, Apt 10A</td>
+                            <td>Sasila Sadamsara,10A</td>
                             <td>Installation</td>
                             <td>Medium</td>
                             <td>In Progress</td>
                             <td>Technician B</td>
                             <td>2024-09-19</td>
                             <td class="action-buttons">
-                                <button class="btn-edit">Edit</button>
+                                <!-- <button class="btn-edit">Edit</button> -->
                                 <button class="btn-delete">Delete</button>
                                 <button class="btn-urgent">Mark as Urgent</button>
                             </td>
@@ -317,16 +336,22 @@ footer {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>John Doe</td>
+                            <td>Malith Damsara</td>
                             <td>5</td>
                             <td>Monthly</td>
                             <td>Plumbing, AC</td>
                         </tr>
                         <tr>
-                            <td>Jane Smith</td>
+                            <td>Sasila Sadamsara</td>
                             <td>3</td>
                             <td>Quarterly</td>
                             <td>Electrical</td>
+                        </tr>
+                        <tr>
+                            <td>Geeth Pasida</td>
+                            <td>5</td>
+                            <td>Monthly</td>
+                            <td>Plumbing, AC</td>
                         </tr>
                     </tbody>
                 </table>

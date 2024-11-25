@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-   
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/form-styles.css">
     <title>Enhanced Security Dashboard | <?php echo SITENAME; ?></title>
 
@@ -247,6 +247,7 @@
                     <table class="data-table" id="accessTable">
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Time</th>
                                 <th>Visitor</th>
                                 <th>Access Point</th>
@@ -256,25 +257,36 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <td>2024-11-20</td>
                                 <td>08:00 AM</td>
-                                <td>John Doe</td>
+                                <td>Malith Damsara</td>
                                 <td>Main Gate</td>
                                 <td>Visitor</td>
                                 <td>Granted</td>
                             </tr>
                             <tr>
+                                <td>2024-11-21</td>
                                 <td>09:00 AM</td>
-                                <td>Jane Smith</td>
+                                <td>Sasila Sadamsara</td>
                                 <td>Visitor Entrance</td>
                                 <td>Visitor</td>
                                 <td>Granted</td>
                             </tr>
                             <tr>
-                                <td>10:30 AM</td>
-                                <td>Mark Lee</td>
+                                <td>2024-11-22</td>
+                                <td>10:00 AM</td>
+                                <td>Wishawa Nimsara</td>
                                 <td>Garage</td>
-                                <td>Resident</td>
+                                <td>Visitor</td>
                                 <td>Denied</td>
+                            </tr>
+                            <tr>
+                                <td>2024-11-23</td>
+                                <td>11:30 AM</td>
+                                <td>Lakmali Gunarathne</td>
+                                <td>Main Gate</td>
+                                <td>Suplier</td>
+                                <td>Granted</td>
                             </tr>
                         </tbody>
                     </table>
