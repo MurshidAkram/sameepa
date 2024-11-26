@@ -92,7 +92,7 @@
                     <div class="card events-card">
     <h2>Upcoming Events</h2>
     <ul>
-        <?php if (isset($events) && !empty($events)): ?>
+    <?php if (isset($events) && !empty($events)): ?>
             <?php foreach ($events as $event): ?>
                 <li>
                     <span class="event-title"><?php echo htmlspecialchars($event['title']); ?></span>

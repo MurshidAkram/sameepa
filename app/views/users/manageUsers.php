@@ -4,7 +4,6 @@
 <head>
     <!-- Add Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Other head content -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
@@ -23,15 +22,17 @@
             <div class="dashboard-overview">
                 <!-- Pending Users Section -->
                 <section class="settings-section">
-                <div class="section">
-                          <h2>Pending Registration Requests</h2>
-                            <div class="button-container">
-                                 <a href="<?php echo URLROOT; ?>/users/createUser" class="btn-create"> + Create</a>
-                            </div>
-                </div>
+                    <div class="section">
+                        <h2>Pending Registration Requests</h2>
+                        <div class="button-container">
+                            <a href="<?php echo URLROOT; ?>/users/createUser" class="btn-create">
+                                <i class="fas fa-user-plus"></i> Create
+                            </a>
+                        </div>
+                    </div>
 
-                   <?php if (!empty($data['pending_users'])) : ?>
-                      <table class="user-list">
+                    <?php if (!empty($data['pending_users'])) : ?>
+                        <table class="user-list">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -51,15 +52,17 @@
                                         <td class="action-buttons">
                                             <form action="<?php echo URLROOT; ?>/users/activateUser" method="POST" style="display: inline;">
                                                 <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                                <button type="submit" class="btn-accept">Accept</button>
+                                                <button type="submit" class="btn-accept"><i class="fas fa-check"></i></button>
                                             </form>
-                                            <button class="btn-view" onclick="openUserModal(<?php echo $user->id; ?>)">View</button>
-                                            <form action="<?php echo URLROOT; ?>/users/rejectUser" method="POST" style="display: inline;"onsubmit="return confirmReject();">
-                                              <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                              <button type="submit" class="btn-reject">Reject</button>
-                                              </form>
 
-                                            <!-- <button type="ignore"class="btn-ignore">Ignore</button> -->
+                                            <button class="btn-view" onclick="openUserModal(<?php echo $user->id; ?>)">
+                                                <i class="fas fa-eye"></i> 
+                                            </button>
+
+                                            <form action="<?php echo URLROOT; ?>/users/rejectUser" method="POST" style="display: inline;" onsubmit="return confirmReject();">
+                                                <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
+                                                <button type="submit" class="btn-reject"><i class="fas fa-times"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -107,18 +110,18 @@ foreach ($userTypes as $key => $type) : ?>
                                 <?php if ($user->is_active) : ?>
                                     <form action="<?php echo URLROOT; ?>/users/deactivateUser" method="POST" style="display: inline;">
                                         <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                        <button type="submit" class="btn-deactivate">Deactivate</button>
+                                        <button type="submit" class="btn-deactivate"><i class="fas fa-power-off"></i></button>
                                     </form>
                                 <?php else : ?>
                                     <form action="<?php echo URLROOT; ?>/users/activateUser" method="POST" style="display: inline;">
-                                        <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                        <button type="submit" class="btn-activate">Activate</button>
+                                        <input type="hidden" name="user_id" value="<?php echo $user->id; ?>"> 
+                                        <button type="submit" class="btn-activate"><i class="fas fa-check-circle"></i></button>
                                     </form>
                                 <?php endif; ?>
-                                <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;">
-                                              <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                              <button type="submit" class="btn-delete">Delete</button>
-                                              </form>
+                                <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;" onsubmit="return confirmDelete();">
+                                    <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
+                                    <button type="submit" class="btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -130,7 +133,6 @@ foreach ($userTypes as $key => $type) : ?>
     </section>
 <?php endforeach; ?>
 
-                
             </div>
         </main>
     </div>
@@ -146,47 +148,43 @@ foreach ($userTypes as $key => $type) : ?>
         </div>
     </div>
 
-
     <script>
-function confirmReject() {
-    return confirm("Are you sure you want to reject this user?");
-}
-function confirmDelete() {
-    return confirm("Are you sure you want to delete this user?");
-}
+        function confirmReject() {
+            return confirm("Are you sure you want to reject this user?");
+        }
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this user?");
+        }
 
-
-
-    <!-- Add JavaScript at the bottom of the page -->
         function openUserModal(userId) {
-    // Fetch user details via AJAX (or PHP) based on user ID
-    fetch('<?php echo URLROOT; ?>/users/getUserDetails/' + userId)
-        .then(response => response.json())
-        .then(data => {
-            // Populate the modal with user details
-            if (data.error) {
-                alert('User not found');
-            } else {
-                let userDetails = `
-                    <p><strong>Name:</strong> ${data.name}</p>
-                    <p><strong>Email:</strong> ${data.email}</p>
-                    <p><strong>Address:</strong> ${data.address}</p>
-                `;
-                document.getElementById('userDetailsContent').innerHTML = userDetails;
-                // Show the modal (at the bottom)
-                document.getElementById('userModal').style.display = "block";
-            }
-        })
-        .catch(error => console.log('Error fetching user details:', error));
-}
+            fetch('<?php echo URLROOT; ?>/users/getUserDetails/' + userId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('User not found');
+                    } else {
+                        let userDetails = `
+                            <p><strong>Name:</strong> ${data.name}</p>
+                            <p><strong>Email:</strong> ${data.email}</p>
+                        `;
+                        if (data.role_id === 1) {
+                            userDetails += `
+                                <p><strong>Address:</strong> ${data.address || 'Not available'}</p>
+                                <p><strong>Phone Number:</strong> ${data.phonenumber || 'Not available'}</p>
+                            `;
+                        }
+                        document.getElementById('userDetailsContent').innerHTML = userDetails;
+                        document.getElementById('userModal').style.display = "block";
+                    }
+                })
+                .catch(error => console.log('Error fetching user details:', error));
+        }
 
-// Close the modal
-function closeUserModal() {
-    document.getElementById('userModal').style.display = "none";
-}
-
+        function closeUserModal() {
+            document.getElementById('userModal').style.display = "none";
+        }
     </script>
-
 </body>
 
 </html>
+

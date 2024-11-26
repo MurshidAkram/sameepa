@@ -46,9 +46,29 @@ class External extends Controller
         // Load the service requests view (you might want to add more logic here later)
         $this->view('external/requests');
     }
-    public function profile()
+    // public function profile()
+    // {
+    //     // Load the service requests view (you might want to add more logic here later)
+    //     $this->view('external/profile');
+    // }
+    public function manageservices()
     {
         // Load the service requests view (you might want to add more logic here later)
-        $this->view('external/profile');
+        $this->view('/external/manageservices');
+    }
+    public function customer_management()
+    {
+        // Load the service requests view (you might want to add more logic here later)
+        $this->view('external/customer_management');
+    }
+    public function payments()
+    {
+        // Load the service requests view (you might want to add more logic here later)
+        $this->view('external/payments');
+    }
+    public function notifications()
+    {
+        // Load the service requests view (you might want to add more logic here later)
+        $this->view('external/notifications');
     }
 }

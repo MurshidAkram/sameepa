@@ -30,15 +30,15 @@ h1 {
 
 .user-count {
     position: absolute;
-    top: 150px; /* Adjust based on navbar height */
-    right: 20px;
+    top: 160px; /* Adjust based on navbar height */
+    right: 30px;
     background-color: #FCC4F0;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     border: 2px solid #800080;
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: bold;
     color: #4d4d4d;
 }

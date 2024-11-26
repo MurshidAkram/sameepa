@@ -1,0 +1,79 @@
+/* General Layout */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+main {
+    padding: 20px;
+    flex: 1;
+    background-color: white;
+}
+
+/* Notification Sections */
+.notification-section {
+    margin-bottom: 40px;
+}
+
+.notification-section h1 {
+    font-size: 24px;
+    color: #343a40;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #343a40;
+    padding-bottom: 5px;
+}
+
+/* Notification Cards */
+.notification-card {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification-card h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.notification-card p {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Alert Styling */
+.notification-card.alert {
+    background-color: #fff4e6;
+    border-left: 5px solid #ff9800;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #800080;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn:hover {
+    background-color: #800080;
+}
+
+.btn.view-details {
+    margin-top: 10px;
+}

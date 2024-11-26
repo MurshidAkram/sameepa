@@ -381,17 +381,19 @@ class Users extends Controller
         exit();
     }
     // In UsersController.php
-public function getUserDetails($userId)
-{
-    // Fetch user details from the database
-    $user = $this->userModel->getUserById($userId);
+    public function getUserDetails($id) {
+        // Get user data from the model
+        $user = $this->userModel->getUserById($id);
 
-    if ($user) {
+        // Check if user exists
+        if (!$user) {
+            echo json_encode(['error' => 'User not found']);
+            return;
+        }
+
+        // Return user details as JSON
         echo json_encode($user);
-    } else {
-        echo json_encode(['error' => 'User not found']);
     }
-}
 // In your UsersController (or relevant controller)
 
 public function rejectUser()
@@ -492,14 +494,11 @@ public function deleteActivatedUser()
     $userId = $_POST['user_id'];
 
     // Validate that user_id is provided and is a valid number
-    if ($this->userModel->deleteActivatedUser($userId)) {
-        // Redirect to manageUsers with success message
-        var_dump($this->userModel->deleteActivatedUser($userId));
-        //header('Location: ' . URLROOT . '/users/manageUsers?success=rejected');
+    if ($this->userModel-> deletePendingUser($userId)) {
+        header('Location: ' . URLROOT . '/users/manageUsers?success=rejected');
     } else {
         // Redirect to manageUsers with error message
-        echo $userId;
-        //header('Location: ' . URLROOT . '/users/manageUsers?error=rejection_failed');
+        header('Location: ' . URLROOT . '/users/manageUsers?error=rejection_failed');
     }
     exit();
 }
