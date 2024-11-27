@@ -246,6 +246,23 @@ class Events extends Controller
         }
     }
 
+    public function admindelete($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Verify that the current user is the event creator
+            if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+                echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+                return;
+            }
+
+            if ($this->eventModel->deleteEvent($id)) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to delete event']);
+            }
+        }
+    }
+
     public function joined()
     {
         $events = $this->eventModel->getJoinedEvents($_SESSION['user_id']);

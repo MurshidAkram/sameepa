@@ -15,7 +15,13 @@ $userModel = new M_Users();
         </a>
 
         <ul class="navbar-menu">
+            <li class="notification-dropdown">
+                <a href="<?php echo URLROOT; ?>/notifications" class="notification-link">
+                    <i class="fas fa-bell"></i>
+                </a>
+            </li>
             <li><a href="<?php echo URLROOT; ?>">Home</a></li>
+
 
             <?php if (isset($_SESSION['user_id'])) : ?>
                 <!-- Show different navigation based on user role -->
@@ -69,6 +75,7 @@ $userModel = new M_Users();
                 <li><a href="<?php echo URLROOT; ?>/pages/contact">Contact Us</a></li>
                 <li><a href="<?php echo URLROOT; ?>/users/signup">Sign Up</a></li>
                 <li><a href="<?php echo URLROOT; ?>/users/login">Login</a></li>
+
             <?php endif; ?>
         </ul>
     </div>

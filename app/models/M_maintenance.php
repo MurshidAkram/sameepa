@@ -9,24 +9,27 @@ class M_maintenance
         $this->db = new Database; // Assuming Database is a custom class for database interaction
     }
 
-//*************************************************************************************************************************************************
+    //*************************************************************************************************************************************************
 
-     //Maintenance Member
+    //Maintenance Member
     // Get all maintenance members
-    public function getAllMembers() {
+    public function getAllMembers()
+    {
         $this->db->query("SELECT * FROM maintenance_members");
         return $this->db->resultSet();
     }
 
     // Get a member by ID
-    public function getMemberById($id) {
+    public function getMemberById($id)
+    {
         $this->db->query("SELECT * FROM maintenance_members WHERE id = :id");
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
 
     // Add a new member
-    public function addMember($data) {
+    public function addMember($data)
+    {
         $this->db->query("INSERT INTO maintenance_members (name, specialization, experience, certifications, profile_image) VALUES (:name, :specialization, :experience, :certifications, :profile_image)");
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':specialization', $data['specialization']);
@@ -37,7 +40,8 @@ class M_maintenance
     }
 
     // Update a member
-    public function updateMember($data) {
+    public function updateMember($data)
+    {
         $this->db->query("UPDATE maintenance_members SET name = :name, specialization = :specialization, experience = :experience, certifications = :certifications, profile_image = :profile_image WHERE id = :id");
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':name', $data['name']);
@@ -49,14 +53,15 @@ class M_maintenance
     }
 
     // Delete a member
-    public function deleteMember($id) {
+    public function deleteMember($id)
+    {
         $this->db->query("DELETE FROM maintenance_members WHERE id = :id");
         $this->db->bind(':id', $id);
         return $this->db->execute();
     }
 
-     
- //*************************************************************************************************************************************************
+
+    //*************************************************************************************************************************************************
 
 
 
@@ -70,26 +75,26 @@ class M_maintenance
 
     // Add a new inventory usage log
     public function addInventoryUsageLog($data)
-{
-    // Prepare the query to insert the new log
-    $this->db->query("INSERT INTO inventory_usage_log (item_id, item_name, usage_date, usage_time, quantity) 
+    {
+        // Prepare the query to insert the new log
+        $this->db->query("INSERT INTO inventory_usage_log (item_id, item_name, usage_date, usage_time, quantity) 
                       VALUES (:item_id, :item_name, :usage_date, :usage_time, :quantity)");
 
-    // Bind data
-    $this->db->bind(':item_id', $data['item_id']);
-    $this->db->bind(':item_name', $data['item_name']);
-    $this->db->bind(':usage_date', $data['usage_date']);
-    $this->db->bind(':usage_time', $data['usage_time']);
-    $this->db->bind(':quantity', $data['quantity']);
+        // Bind data
+        $this->db->bind(':item_id', $data['item_id']);
+        $this->db->bind(':item_name', $data['item_name']);
+        $this->db->bind(':usage_date', $data['usage_date']);
+        $this->db->bind(':usage_time', $data['usage_time']);
+        $this->db->bind(':quantity', $data['quantity']);
 
-    // Execute the query and return the result
-    return $this->db->execute();
-}
+        // Execute the query and return the result
+        return $this->db->execute();
+    }
 
 
-   public function updateInventoryUsageLog($data)
-{
-    $this->db->query("UPDATE inventory_usage_log 
+    public function updateInventoryUsageLog($data)
+    {
+        $this->db->query("UPDATE inventory_usage_log 
                   SET quantity = :quantity, 
                       item_id = :item_id, 
                       item_name = :item_name, 
@@ -97,16 +102,16 @@ class M_maintenance
                       usage_time = :usage_time 
                   WHERE log_id = :log_id AND item_id = :item_id");
 
-    // Bind the data
-    $this->db->bind(':log_id', $data['log_id']);
-    $this->db->bind(':item_id', $data['item_id']);
-    $this->db->bind(':item_name', $data['item_name']);
-    $this->db->bind(':usage_date', $data['usage_date']);
-    $this->db->bind(':usage_time', $data['usage_time']);
-    $this->db->bind(':quantity', $data['quantity']);
+        // Bind the data
+        $this->db->bind(':log_id', $data['log_id']);
+        $this->db->bind(':item_id', $data['item_id']);
+        $this->db->bind(':item_name', $data['item_name']);
+        $this->db->bind(':usage_date', $data['usage_date']);
+        $this->db->bind(':usage_time', $data['usage_time']);
+        $this->db->bind(':quantity', $data['quantity']);
 
-    return $this->db->execute();
-}
+        return $this->db->execute();
+    }
 
 
     // Delete an inventory usage log

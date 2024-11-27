@@ -48,17 +48,17 @@ class Maintenance extends Controller
     {
         // Fetch all inventory usage logs from the model
         $logs = $this->maintenanceModel->getInventoryUsageLogs();
-    
+
         // Check if the logs were retrieved successfully
         if ($logs === false) {
             die('Error fetching inventory logs');
         }
-    
+
         // Prepare the data to pass to the view
         $data = [
             'logs' => $logs
         ];
-    
+
         // Load the inventory view with the data
         $this->view('maintenance/inventory', $data);
     }
@@ -101,7 +101,7 @@ class Maintenance extends Controller
                 'usage_time' => $_POST['usage_time'],
                 'quantity' => $_POST['quantity']
             ];
-    
+
             // Update only the quantity in the database
             if ($this->maintenanceModel->updateInventoryUsageLog($data)) {
                 header('Location: ' . URLROOT . '/maintenance/inventory');
@@ -134,13 +134,13 @@ class Maintenance extends Controller
         echo json_encode($log);
     }
 
-    
+
     public function Resident_Requests()
     {
         // This will load the view to update or manage duty schedules
         $this->view('maintenance/Resident_Requests');
     }
-  
+
     public function Reports_Analytics()
     {
         $this->view('maintenance/Reports_Analytics');
@@ -153,5 +153,4 @@ class Maintenance extends Controller
     {
         $this->view('maintenance/Team_Scheduling');
     }
-
 }
