@@ -4,92 +4,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/resident/dashboard.css">
     <title>Inventory Management</title>
 
     <style>
-        /* Global Styles */
+        /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
+            background: linear-gradient(to bottom, #eef2f3, #ffffff);
             margin: 0;
-            padding: 0;
             color: #333;
-            box-sizing: border-box;
-            position: relative;
         }
 
-        /* Layout Container */
         .container {
             display: flex;
-            flex-direction: row;
-            max-width: 1200px;
-            margin: auto;
+            min-height: 100vh;
             padding: 20px;
+            gap: 20px;
         }
 
-        /* Side Panel */
-        .side-panel {
-            width: 100%;
-            background-color: #34495e;
-            color: #fff;
-
-            height: 100vh;
-            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Main Content */
         .main-content {
-            width: 95%;
+            flex-grow: 1;
             padding: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Header Styles */
+        /* Headers */
         h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .section {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .section h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+            margin: 0 0 10px;
+            font-size: 2rem;
+            color: #3f51b5;
         }
 
         /* Search Bar */
         .search-bar {
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
             margin-bottom: 20px;
         }
 
         .search-bar input {
-            width: 70%;
             padding: 10px;
-            border-radius: 4px;
             border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 1rem;
+            transition: border-color 0.3s;
+            min-width: 200px;
+            flex-grow: 1;
+        }
+
+        .search-bar input:focus {
+            border-color: #3f51b5;
+            outline: none;
         }
 
         .search-bar button {
-            padding: 10px 20px;
-            background-color: #3498db;
+            padding: 10px 15px;
+            background: #3f51b5;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background: #303f9f;
+        }
+
+        /* Section Styles */
+        .section {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #3f51b5;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
         }
 
         /* Table Styles */
@@ -97,55 +97,72 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            font-size: 1rem;
         }
 
-        th,
-        td {
-            padding: 10px 15px;
-            text-align: left;
+        table th {
+            background: linear-gradient(to right, #42a5f5, #1e88e5);
+            color: #fff;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
         }
 
-        th {
-            background-color: #3498db;
-            color: white;
+        table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            color: #555;
         }
 
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+        table tbody tr:nth-child(even) {
+            background: #f9f9f9;
         }
 
-        tbody tr:hover {
-            background-color: #f1f1f1;
+        table tbody tr:hover {
+            background: #f1f7ff;
         }
 
         /* Buttons */
         .btn {
             padding: 8px 12px;
             border: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
+            border-radius: 8px;
             cursor: pointer;
-            margin: 0 5px;
+            font-size: 0.9rem;
+            color: #fff;
+            transition: transform 0.2s, background-color 0.3s;
         }
 
         .btn-create {
-            background-color: #28a745;
-            color: white;
+            background: #28a745;
             margin-bottom: 20px;
         }
 
         .btn-create:hover {
-            background-color: #218838;
+            background: #218838;
         }
 
         .btn-edit {
-            background-color: #17a2b8;
+            background: #3498db;
             color: white;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
+            transform: scale(1.1);
         }
 
         .btn-delete {
-            background-color: #dc3545;
+            background: #e74c3c;
             color: white;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            transform: scale(1.1);
         }
 
         /* Form Overlay */
@@ -165,9 +182,9 @@
         .form-container {
             background: white;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 15px;
             width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
@@ -176,19 +193,30 @@
             flex-direction: column;
         }
 
-        .form-container input {
+        .form-container input,
+        .form-container select {
             margin-bottom: 15px;
             padding: 10px;
-            border-radius: 4px;
             border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-container input:focus,
+        .form-container select:focus {
+            border-color: #3f51b5;
+            outline: none;
         }
 
         .form-container button {
             margin: 5px 0;
             padding: 10px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
         }
 
         .form-container .btn-submit {
@@ -196,75 +224,17 @@
             color: white;
         }
 
+        .form-container .btn-submit:hover {
+            background-color: #218838;
+        }
+
         .form-container .btn-cancel {
             background-color: #dc3545;
             color: white;
         }
 
-        /* Style for the container */
-        .form-container select {
-            width: 100%;
-            /* Full width */
-            padding: 10px;
-            /* Add padding for better usability */
-            margin: 10px 0;
-            /* Add spacing between elements */
-            border: 1px solid #ccc;
-            /* Light border */
-            border-radius: 5px;
-            /* Rounded corners */
-            font-size: 16px;
-            /* Increase font size for readability */
-            background-color: #f9f9f9;
-            /* Light background color */
-            color: #333;
-            /* Text color */
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-            /* Slight inner shadow */
-            transition: border-color 0.3s, box-shadow 0.3s;
-            /* Smooth transition */
-        }
-
-        /* Add focus effect */
-        .form-container select:focus {
-            border-color: #007bff;
-            /* Highlight border */
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-            /* Outer glow */
-            outline: none;
-            /* Remove default outline */
-        }
-
-        /* Style for the dropdown arrow */
-        .form-container select {
-            -webkit-appearance: none;
-            /* Remove default arrow for webkit browsers */
-            -moz-appearance: none;
-            /* Remove default arrow for Firefox */
-            appearance: none;
-            /* Remove default arrow */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><path fill="%23333" d="M0 0l5 6 5-6z"/></svg>');
-            /* Custom arrow */
-            background-repeat: no-repeat;
-            /* Prevent repeat of arrow */
-            background-position: right 10px center;
-            /* Position arrow */
-            background-size: 10px 6px;
-            /* Size of the arrow */
-        }
-
-        /* Style the placeholder option */
-        .form-container select option[value=""] {
-            color: #aaa;
-            /* Light gray for placeholder */
-        }
-
-        /* Ensure the dropdown works well on smaller screens */
-        @media (max-width: 600px) {
-            .form-container select {
-                font-size: 14px;
-                /* Smaller font size on smaller screens */
-            }
+        .form-container .btn-cancel:hover {
+            background-color: #c82333;
         }
     </style>
 </head>

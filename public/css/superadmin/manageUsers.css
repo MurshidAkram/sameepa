@@ -1,247 +1,224 @@
-/* General Styles */
+/* General Typography */
+/* Body and General Styling */
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: #f8f9fa;
+    color: #343a40;
 }
 
-/* Headings */
-h1, h2, h3, h4 {
-    color: #800080;
-}
-
-h2 {
-    margin-bottom: 15px;
-    font-size: 24px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-/* Dashboard Container */
+/* Dashboard Layout */
 .dashboard-container {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    min-height: 100vh;
 }
 
-/* Sidebar */
-.side-panel {
-    width: 20%;
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    min-height: 100vh;
-}
-
-/* Main Content */
 main {
-    flex-grow: 1;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
     padding: 20px;
-    max-width: 100%;
 }
 
-/* Settings Section Container */
-.settings-section {
+/* Header Styling for Section Titles (h2) */
+h2 {
+    color: #800080; /* Purple color for headers */
+    font-size: 22px; /* Increased font size */
+    font-weight: 700; /* Bold font */
+    margin-bottom: 15px;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 30px;
-}
-
-/* Updated Section Styling */
-.section {
-    display: flex;
-    justify-content: space-between; /* Ensure the elements are spaced apart */
     align-items: center;
-    width: 100%; /* Ensure full width for correct alignment */
-   padding-bottom: 30px;
+    letter-spacing: 1px;
+    gap: 8px; 
 }
 
-/* Title Styles */
-.section h2 {
-    margin: 0;
+/* Section Styling */
+.settings-section {
+    margin-bottom: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Button Container */
-.button-container {
-    margin-left: auto; /* Pushes the button container to the right */
-}
-
-
-/* Button Styles */
-.btn-create, .btn-accept, .btn-activate, .btn-view, .btn-deactivate, .btn-reject, .btn-delete {
-    background-color: #800080;
-    color: white;
-    padding: 10px 20px;
-    border: none;
+/* Styling for the "No Pending Requests" message */
+.empty-state {
+    text-align: center;
+    font-size: 18px;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px dashed #dee2e6;
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.btn-create:hover, .btn-accept:hover, .btn-activate:hover, .btn-view:hover {
-    background-color: #5d005d;
-}
-
-.btn-deactivate, .btn-reject {
-    background-color: #e74c3c;
-}
-
-.btn-deactivate:hover, .btn-reject:hover {
-    background-color: #c0392b;
-}
-
-.btn-delete {
-    background-color: #e74c3c;
-}
-
-.btn-delete:hover {
-    background-color: #c0392b;
+    margin-top: 20px;
 }
 
 /* Table Styling */
-.user-list-container {
-    margin-top: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-}
-
 .user-list {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.user-list th, .user-list td {
+    padding: 12px;
     text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 14px;
 }
 
 .user-list th {
-    background-color: #800080;
-    color: white;
-    padding: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 14px;
+    background-color: #f1f1f1;
+    color: #495057;
+    font-weight: bold;
 }
 
-.user-list td {
-    padding: 10px 15px;
-    font-size: 14px;
-    color: #333;
-    border-bottom: 1px solid #eee;
+.user-list tr:nth-child(odd) {
+    background-color: #f9f9f9;
 }
 
-.user-list tr:hover td {
-    background-color: #f9f0ff;
+.user-list tr:hover {
+    background-color: #e9ecef;
 }
 
-.user-list tr:last-child td {
-    border-bottom: none;
+/* Button Styles */
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-size: 20px;
+    color: #555; /* Default icon color */
 }
 
-/* Status Badges */
+/* Button Hover Effect */
+button:hover, .btn-create:hover {
+    color:white;
+}
+
+/* Icons Inside Buttons */
+button i, .btn-create i {
+    font-size: 18px; /* Icon size */
+}
+
+.btn-create {
+    color: #ffffff; /* Green icon */
+    background-color:#800080;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    font-size: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    gap: 8px; 
+}
+.btn-accept,.btn-activate{
+    color: #28a745; /* Green icon for accept */
+}
+
+.btn-reject,.btn-deactivate, .btn-delete {
+    color: #f00336; /* Yellow icon */
+}
+
+.btn-view {
+    color: #007bff; /* Blue icon for view */
+}
+.btn-accept:hover,.btn-activate:hover{
+    color: #28a745; /* Green icon for accept */
+    transform: scale(1.05); 
+}
+
+
+.btn-view:hover {
+    color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05); 
+}
+.btn-reject:hover,.btn-deactivate:hover, .btn-delete:hover {
+    color: #f00336;
+    transform: scale(1.05); 
+}
+
+
+/* Status Badge */
 .status-badge {
-    padding: 5px 10px;
-    border-radius: 12px;
+    padding: 4px 10px;
     font-size: 12px;
-    color: #fff;
-    display: inline-block;
+    border-radius: 15px;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 .status-active {
     background-color: #28a745;
+    color: white;
 }
 
 .status-inactive {
-    background-color: #e74c3c;
+    background-color: #f00336;
+    color: white;
 }
 
-/* Modal */
+/* Modal Styling */
 .user-modal {
-    display: none;
-    position: fixed;
-    top: 0;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+    padding-top: 60px; /* Adjust for the top spacing */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
 }
 
+/* Modal content */
 .user-modal-content {
     background-color: #fff;
-    width: 90%;
-    max-width: 600px;
+    margin: 5% auto;
     padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* You can adjust the width */
+    max-width: 600px; /* Max width */
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    position: relative;
+    animation: fadeIn 0.3s ease-out;
+    text-align: center; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.user-modal h2 {
-    margin-top: 0;
-    font-size: 20px;
-    color: #800080;
-    text-align: center;
-}
-
-.user-modal p {
-    font-size: 16px;
-    margin: 10px 0;
-    color: #555;
-}
-
+/* Close Button Styling */
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 18px;
+    float: right;
+    font-size: 25px;
     cursor: pointer;
-    color: #800080;
-    transition: color 0.3s ease;
+    color: #6c757d;
 }
 
 .close-btn:hover {
-    color: #5d005d;
+    color: #000;
+}
+.user-modal h2 {
+    text-align: center;
+    margin-top: 0;
+    font-size: 24px; /* Optional: adjust the font size */
 }
 
-/* Show Modal */
-.user-modal.show {
-    display: flex;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
     }
-
-    .side-panel {
-        width: 100%;
-    }
-
-    main {
-        width: 100%;
-        padding: 15px;
-    }
-
-    .btn-create {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-
-    .user-list td, .user-list th {
-        font-size: 12px;
-        padding: 8px;
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }

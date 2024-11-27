@@ -414,6 +414,7 @@ class Users extends Controller
         $response = [
             'name' => $user['name'] ?? '',
             'email' => $user['email'] ?? '',
+            'address' => $user['address'] ?? '',
             'verification_filename' => $verificationDoc['role_verification_filename'] ?? null,
             'role_verification_document' => null
         ];

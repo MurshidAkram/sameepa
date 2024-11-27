@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/external/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/external/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>External Provider Dashboard | <?php echo SITENAME; ?></title>
 </head>
@@ -23,22 +23,6 @@
                 <h1>Welcome to External Service Provider Dashboard</h1>
                 <p>Manage your service requests, track payments, and view insights on your performance.</p>
 
-                <!-- Profile Information Card (Full-width Row) -->
-                <div class="profile-card card">
-                    <h2>My Profile</h2>
-                    <div class="profile-content">
-                        
-                        <!-- Profile Details -->
-                        <div class="profile-details">
-                            <ul>
-                                <li><strong>Name:</strong> John Doe</li>
-                                <li><strong>Service Type:</strong> Plumbing</li>
-                                <li><strong>Contact:</strong> johndoe@example.com</li>
-                                <li><a href="<?php echo URLROOT; ?>/external/profile" class="dashboard-link">Update Profile</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Other Dashboard Cards in Grid Layout -->
                 <div class="dashboard-grid">
@@ -141,6 +125,3 @@
 </body>
 
 </html>
-
-
-

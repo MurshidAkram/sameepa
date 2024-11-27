@@ -24,4 +24,14 @@ class Polls extends Controller
 
         $this->view('polls/index');
     }
+
+    public function create()
+    {
+        $this->view('polls/create');
+    }
+
+    public function mypolls()
+    {
+        $this->view('polls/mypolls');
+    }
 }

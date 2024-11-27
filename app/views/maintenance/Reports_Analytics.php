@@ -13,88 +13,108 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-        /* Dashboard Styles */
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f7;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #eef2f3, #ffffff);
             margin: 0;
-            padding: 0;
             color: #333;
         }
 
         .dashboard-container {
             display: flex;
-            max-width: 1200px;
-            margin: auto;
+            min-height: 100vh;
             padding: 20px;
+            gap: 20px;
         }
 
         .side-panel {
-            width: 300px;
-
+            flex-shrink: 0;
         }
 
         .main-content {
             flex-grow: 1;
-            width: 95%;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-            color: #34495e;
-        }
-
-        .section {
-            background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Headers */
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2rem;
+            color: #3f51b5;
+        }
+
+        /* Section Styles */
+        .section {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             margin-bottom: 20px;
         }
 
+        .section h2 {
+            color: #3f51b5;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 1rem;
         }
 
-        th,
-        td {
-            padding: 10px;
-            border: 1px solid #dfe6e9;
-            text-align: left;
-        }
-
-        th {
-            background-color: #3498db;
+        table th {
+            background: linear-gradient(to right, #42a5f5, #1e88e5);
             color: #fff;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
         }
 
-        tr:nth-child(even) td {
-            background-color: #f9f9f9;
+        table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            color: #555;
         }
 
-        canvas {
-            margin-top: 20px;
+        table tbody tr:nth-child(even) {
+            background: #f9f9f9;
         }
 
+        table tbody tr:hover {
+            background: #f1f7ff;
+        }
+
+        /* Export Button Styles */
         .export {
             display: inline-block;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            color: black;
-            background: linear-gradient(90deg, yellow, orange);
+            padding: 10px 15px;
+            background: #3f51b5;
+            color: white;
             border: none;
-            border-radius: 25px;
+            border-radius: 8px;
+            font-size: 1rem;
             cursor: pointer;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.5);
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
 
+        .export:hover {
+            background: #303f9f;
+        }
+
+        /* Canvas Styles */
+        canvas {
+            margin-top: 20px;
+            max-width: 100%;
         }
     </style>
 </head>

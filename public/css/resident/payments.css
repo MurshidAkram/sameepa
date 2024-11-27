@@ -1,0 +1,90 @@
+/* Resident and Admin Payments Styles */
+.payments-dashboard {
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.payment-upload-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background-color: #45a049;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.status.pending {
+    background-color: #FFC107;
+    color: white;
+}
+
+.status.paid {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status.rejected {
+    background-color: #F44336;
+    color: white;
+}
+
+.payment-history table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payment-history th, 
+.payment-history td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Admin Payment Proof Management Styles */
+.payment-proofs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payment-proofs-table th, 
+.payment-proofs-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}

@@ -23,7 +23,9 @@
                     <div class="section">
                         <h2>Pending Registration Requests</h2>
                         <div class="button-container">
-                            <a href="<?php echo URLROOT; ?>/users/createUser" class="btn-create"> + Create</a>
+                            <a href="<?php echo URLROOT; ?>/users/createUser" class="btn-create">
+                                <i class="fas fa-user-plus"></i> Create
+                            </a>
                         </div>
                     </div>
 
@@ -48,12 +50,14 @@
                                         <td class="action-buttons">
                                             <form action="<?php echo URLROOT; ?>/users/activateUser" method="POST" style="display: inline;">
                                                 <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                                <button type="submit" class="btn-accept">Accept</button>
+                                                <button type="submit" class="btn-accept"><i class="fas fa-check"></i></button>
                                             </form>
-                                            <button class="btn-view" onclick="openUserModal(<?php echo $user->id; ?>)">View</button>
+                                            <button class="btn-view" onclick="openUserModal(<?php echo $user->id; ?>)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
                                             <form action="<?php echo URLROOT; ?>/users/rejectUser" method="POST" style="display: inline;">
                                                 <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                                <button type="submit" class="btn-reject">Reject</button>
+                                                <button type="submit" class="btn-reject"><i class="fas fa-times"></i></button>
                                             </form>
 
                                             <!-- <button type="ignore"class="btn-ignore">Ignore</button> -->
@@ -104,16 +108,16 @@
                                                 <?php if ($user->is_active) : ?>
                                                     <form action="<?php echo URLROOT; ?>/users/deactivateUser" method="POST" style="display: inline;">
                                                         <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                                        <button type="submit" class="btn-deactivate">Deactivate</button>
+                                                        <button type="submit" class="btn-deactivate"><i class="fas fa-power-off"></i></button>
                                                     </form>
                                                     <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;">
                                                         <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to permanently delete this user?');">Delete</button>
+                                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to permanently delete this user?');"><i class="fas fa-trash-alt"></i></button>
                                                     </form>
                                                 <?php else : ?>
                                                     <form action="<?php echo URLROOT; ?>/users/activateUser" method="POST" style="display: inline;">
                                                         <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                                        <button type="submit" class="btn-activate">Activate</button>
+                                                        <button type="submit" class="btn-activate"><i class="fas fa-check-circle"></i></button>
                                                     </form>
                                                 <?php endif; ?>
                                             </td>

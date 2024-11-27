@@ -9,227 +9,234 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Resident Requests | <?php echo SITENAME; ?></title>
     <style>
-/* General Styles */
-body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to bottom, #eef2f3, #ffffff);
-    margin: 0;
-    color: #333;
-}
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #eef2f3, #ffffff);
+            margin: 0;
+            color: #333;
+        }
 
-.dashboard-container {
-    
-    min-height: 100vh;
-    padding: 20px;
-    gap: 20px;
-}
+        .dashboard-container {
 
-main {
-   
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
 
-/* Content Header */
-.content-header h1 {
-    margin: 0 0 10px;
-    font-size: 2rem;
-    color: #3f51b5;
-}
+        main {
 
-.content-header p {
-    margin: 0;
-    color: #555;
-}
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
 
-/* Filter Section */
-.filter-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 20px;
-}
+        /* Content Header */
+        .content-header h1 {
+            margin: 0 0 10px;
+            font-size: 2rem;
+            color: #3f51b5;
+        }
 
-.filter-section input,
-.filter-section select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-    min-width: 200px;
-}
+        .content-header p {
+            margin: 0;
+            color: #555;
+        }
 
-.filter-section input:focus,
-.filter-section select:focus {
-    border-color: #3f51b5;
-    outline: none;
-}
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
 
-/* Table Styles */
-.table-container {
-    overflow-x: auto;
-}
+        .filter-section input,
+        .filter-section select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            min-width: 200px;
+        }
 
-.dashboard-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 30px;
-    font-size: 1rem;
-}
+        .filter-section input:focus,
+        .filter-section select:focus {
+            border-color: #3f51b5;
+            outline: none;
+        }
 
-.dashboard-table th {
-    background: linear-gradient(to right, #42a5f5, #1e88e5);
-    color: #fff;
-    padding: 15px;
-    font-weight: bold;
-    text-align: center;
-}
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
 
-.dashboard-table td {
-    padding: 12px;
-    text-align: center;
-    border: 1px solid #ddd;
-    color: #555;
-}
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
 
-.dashboard-table tbody tr:nth-child(even) {
-    background: #f9f9f9;
-}
+        .dashboard-table th {
+            background: linear-gradient(to right, #42a5f5, #1e88e5);
+            color: #fff;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
 
-.dashboard-table tbody tr:hover {
-    background: #f1f7ff;
-}
+        .dashboard-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            color: #555;
+        }
 
-/* Action Buttons */
-.action-buttons button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #fff;
-    transition: transform 0.2s, background-color 0.3s;
-}
+        .dashboard-table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
 
-/* Edit Button */
-.btn-edit {
-    background: #3498db; /* Blue color */
-    border-radius: 8px; /* Rounded corners */
-    padding: 10px 20px; /* Padding for a larger clickable area */
-    color: white; /* White text color */
-    font-weight: bold; /* Bold text */
-    transition: background 0.3s, transform 0.3s; /* Smooth transition */
-}
+        .dashboard-table tbody tr:hover {
+            background: #f1f7ff;
+        }
 
-.btn-edit:hover {
-    background: #2980b9; /* Darker blue on hover */
-    transform: scale(1.1); /* Slightly larger on hover */
-}
+        /* Action Buttons */
+        .action-buttons button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #fff;
+            transition: transform 0.2s, background-color 0.3s;
+        }
 
-/* Delete Button */
-.btn-delete {
-    background: #e74c3c; /* Red color */
-    border-radius: 8px;
-    padding: 10px 20px;
-    color: white;
-    font-weight: bold;
-    transition: background 0.3s, transform 0.3s;
-}
+        /* Edit Button */
+        .btn-edit {
+            background: #3498db;
+            /* Blue color */
+            border-radius: 8px;
+            /* Rounded corners */
+            padding: 10px 20px;
+            /* Padding for a larger clickable area */
+            color: white;
+            /* White text color */
+            font-weight: bold;
+            /* Bold text */
+            transition: background 0.3s, transform 0.3s;
+            /* Smooth transition */
+        }
 
-.btn-delete:hover {
-    background: #c0392b; /* Darker red on hover */
-    transform: scale(1.1);
-}
+        .btn-edit:hover {
+            background: #2980b9;
+            /* Darker blue on hover */
+            transform: scale(1.1);
+            /* Slightly larger on hover */
+        }
 
-/* Urgent Button */
-.btn-urgent {
-    background: #f39c12; /* Orange color */
-    border-radius: 8px;
-    padding: 10px 20px;
-    color: white;
-    font-weight: bold;
-    transition: background 0.3s, transform 0.3s;
-}
+        /* Delete Button */
+        .btn-delete {
+            background: #e74c3c;
+            /* Red color */
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+        }
 
-.btn-urgent:hover {
-    background: #e67e22; /* Darker orange on hover */
-    transform: scale(1.1);
-}
+        .btn-delete:hover {
+            background: #c0392b;
+            /* Darker red on hover */
+            transform: scale(1.1);
+        }
+
+        /* Urgent Button */
+        .btn-urgent {
+            background: #f39c12;
+            /* Orange color */
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .btn-urgent:hover {
+            background: #e67e22;
+            /* Darker orange on hover */
+            transform: scale(1.1);
+        }
 
 
-/* Attachments & Media Upload */
-.file-input {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-}
+        /* Attachments & Media Upload */
+        .file-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
 
-.file-input input[type="file"] {
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-}
+        .file-input input[type="file"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-.file-input button {
-    padding: 8px 15px;
-    background: #1976d2;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        .file-input button {
+            padding: 8px 15px;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.file-input button:hover {
-    background: #1565c0;
-}
+        .file-input button:hover {
+            background: #1565c0;
+        }
 
-/* Completion Rating */
-.completion-rating {
-    margin-top: 20px;
-}
+        /* Completion Rating */
+        .completion-rating {
+            margin-top: 20px;
+        }
 
-.completion-rating select {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-right: 10px;
-}
+        .completion-rating select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
 
-.completion-rating button {
-    padding: 8px 15px;
-    background: #9c27b0;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        .completion-rating button {
+            padding: 8px 15px;
+            background: #9c27b0;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.completion-rating button:hover {
-    background: #8e24aa;
-}
+        .completion-rating button:hover {
+            background: #8e24aa;
+        }
 
-/* Request History Section */
-h2 {
-    color: #3f51b5;
-    font-size: 1.8rem;
-    margin: 20px 0 10px;
-}
+        /* Request History Section */
 
-/* Footer */
-footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 0.9rem;
-    color: #666;
-}
 
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
     </style>
 </head>
 

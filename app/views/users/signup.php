@@ -36,13 +36,17 @@
                     </div>
                     <div class="form-group">
                         <label for="role">Role:</label>
-                        <select class="signupselect" name="role" id="role">
+                        <select name="role" style="
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s;" id="role">
                             <option value="">Select Role</option>
                             <option value="1">Resident</option>
-                            <option value="2">Admin</option>
-                            <option value="4">Maintenance</option>
-                            <option value="5">Security</option>
-                            <option value="6">External Service Provider</option>
                         </select>
                     </div>
                     <div class="form-group resident-only">
