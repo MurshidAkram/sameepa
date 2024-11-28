@@ -264,10 +264,10 @@ footer {
                     <h3>Scheme Maintenance</h3>
                     <p>Upcoming: 8 | Ongoing: 3 | Past: 15</p>
                 </div>
-                <div class="card">
+                <!-- <div class="card">
                     <h3>Inventory Stock</h3>
                     <p>Low: 5 | Critical: 2</p>
-                </div>
+                </div> -->
                 <div class="card">
                     <h3>Team Productivity</h3>
                     <p>Avg Tasks/Day: 7 | Completion Rate: 95%</p>
@@ -280,10 +280,10 @@ footer {
                     <h4>Repair Categories</h4>
                     <canvas id="repair-category-chart"></canvas>
                 </div>
-                <div class="chart-card">
+                <!-- <div class="chart-card">
                     <h4>Response Time Metrics</h4>
                     <canvas id="response-time-chart"></canvas>
-                </div>
+                </div> -->
                 <div class="chart-card">
                     <h4>Resident Satisfaction</h4>
                     <canvas id="satisfaction-chart"></canvas>
@@ -331,26 +331,26 @@ footer {
             }
         });
 
-        // Response Time Metrics Chart
-        const responseTimeCtx = document.getElementById('response-time-chart').getContext('2d');
-        new Chart(responseTimeCtx, {
-            type: 'bar',
-            data: {
-                labels: ['1-2 hrs', '2-4 hrs', '4-8 hrs', '8+ hrs'],
-                datasets: [{
-                    label: 'Tasks',
-                    data: [10, 20, 15, 5],
-                    backgroundColor: '#A93CC7',
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        // // Response Time Metrics Chart
+        // const responseTimeCtx = document.getElementById('response-time-chart').getContext('2d');
+        // new Chart(responseTimeCtx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ['1-2 hrs', '2-4 hrs', '4-8 hrs', '8+ hrs'],
+        //         datasets: [{
+        //             label: 'Tasks',
+        //             data: [10, 20, 15, 5],
+        //             backgroundColor: '#A93CC7',
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
 
         // Resident Satisfaction Chart
         const satisfactionCtx = document.getElementById('satisfaction-chart').getContext('2d');

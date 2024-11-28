@@ -282,10 +282,11 @@ footer {
                             <th>Request ID</th>
                             <th>Resident Details</th>
                             <th>Type of Request</th>
+                            <th>Specialization</th>
                             <th>Urgency</th>
-                            <th>Status</th>
-                            <th>Assigned Technician</th>
-                            <th>Estimated Completion</th>
+                            <th>Resident Contact</th>
+                            <th>Assigned Maintainer</th>
+                            <th>Maintenance Due Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -294,28 +295,30 @@ footer {
                             <td>R001</td>
                             <td>Malith Damsara,12B</td>
                             <td>Repair</td>
+                            <td>Electrical</td>
                             <td>High</td>
-                            <td>Pending</td>
+                            <td>0771178945</td>
                             <td>Technician A</td>
                             <td>2024-09-18</td>
                             <td class="action-buttons">
                                 <!-- <button class="btn-edit">Edit</button> -->
-                                <button class="btn-delete">Delete</button>
-                                <button class="btn-urgent">Mark as Urgent</button>
+                                <button class="btn-delete">Delete & Submit</button>
+                                <button class="btn-urgent">Add Maintainer</button>
                             </td>
                         </tr>
                         <tr>
                             <td>R002</td>
                             <td>Sasila Sadamsara,10A</td>
                             <td>Installation</td>
+                            <td>Plumbing</td>
                             <td>Medium</td>
-                            <td>In Progress</td>
+                            <td>0776270882</td>
                             <td>Technician B</td>
                             <td>2024-09-19</td>
                             <td class="action-buttons">
                                 <!-- <button class="btn-edit">Edit</button> -->
-                                <button class="btn-delete">Delete</button>
-                                <button class="btn-urgent">Mark as Urgent</button>
+                                <button class="btn-delete">Delete & Submit</button>
+                                <button class="btn-urgent">Add Maintainer</button>
                             </td>
                         </tr>
                     </tbody>

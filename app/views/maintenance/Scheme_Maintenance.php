@@ -205,18 +205,18 @@ h2 {
             <tr>
                 <th>Task ID</th>
                 <th>Type</th>
-                <th>Status</th>
+               
                 <th>Priority</th>
                 <th>Frequency</th>
-                <th>Assigned Team</th>
-                <th>Dependencies</th>
+                <th>Assigned Maintainer</th>
+                <th>Specialization</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>MT-001</td>
                 <td>Inspection</td>
-                <td>Scheduled</td>
+                
                 <td>High</td>
                 <td>Monthly</td>
                 <td>Team A</td>
@@ -225,7 +225,7 @@ h2 {
             <tr>
                 <td>MT-002</td>
                 <td>Repair</td>
-                <td>In Progress</td>
+               
                 <td>Medium</td>
                 <td>Quarterly</td>
                 <td>Team B</td>
@@ -234,7 +234,7 @@ h2 {
             <tr>
                 <td>MT-003</td>
                 <td>Replacement</td>
-                <td>Overdue</td>
+           
                 <td>High</td>
                 <td>Annually</td>
                 <td>Team C</td>

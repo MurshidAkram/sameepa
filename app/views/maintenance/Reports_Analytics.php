@@ -166,7 +166,7 @@
                         <tr>
                             <th>Location</th>
                             <th>Equipment</th>
-                            <th>Times Serviced</th>
+                            <th>No.of instances maintained</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -237,7 +237,7 @@
         data: {
             labels: ['Building 1', 'Building 2', 'Building 1', 'Building 4', 'Building 3'],
             datasets: [{
-                label: 'Times Serviced',
+                label: 'No.of instances maintained',
                 data: [12, 8, 5, 7, 10],
                 backgroundColor: '#A629C2',
                 borderColor: 'black',
