@@ -1,3 +1,4 @@
+<!-- app/views/chat/search.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,10 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/chats.css">
-    <title>Find Users | <?php echo SITENAME; ?></title>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
+    <title>Search Chats | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
@@ -29,57 +29,60 @@
         }
         ?>
 
-        <main class="chat-main">
-            <aside class="chat-sidebar">
-                <h2>Chat Options</h2>
-                <nav class="chat-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-chat-active">Chats</a>
-                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-chat-search active">Find Users</a>
-                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-chat-requests">Chat Requests</a>
+        <main class="groups-main">
+            <aside class="groups-sidebar">
+                <h2>Chat Navigation</h2>
+                <nav class="groups-nav">
+                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-createds-group">My Chats</a>
+                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-views-group">Search Users</a>
+                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-joineds-groups">Chat Requests</a>
+                    <a href="<?php echo URLROOT; ?>/chat/report" class="btn-views-members">Report</a>
                 </nav>
             </aside>
 
-            <div class="chat-content">
-                <div class="chat-header">
-                    <h1>Find Users</h1>
-                    <div class="chat-search-container">
-                        <input type="text" placeholder="Search users by name, role..." class="chat-search-input">
-                        <button class="chat-search-btn"><i class="fas fa-search"></i></button>
+            <div class="groups-content">
+                <h1>Search Users</h1>
+                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/search">
+                    <input type="text" name="search" placeholder="Search users by name, role...">
+                    <button type="submit">Search</button>
+                </form>
+                <p>Find and start a conversation with community members!</p>
+
+                <div class="groups-grid">
+                    <!-- User Card Template -->
+                    <div class="group-card">
+                        <div class="group-image">
+                            <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="John Doe">
+                        </div>
+                        <div class="group-details">
+                            <h3 class="group-title">John Doe</h3>
+                            <div class="group-info">
+                                <p class="group-category">
+                                    <i class="fas fa-user-tag"></i>
+                                    Resident
+                                </p>
+                                <p class="group-creator">
+                                    <i class="fas fa-building"></i>
+                                    Building A
+                                </p>
+                            </div>
+                            <div class="group-actions">
+                                <span class="member-count">
+                                    <i class="fas fa-envelope-open"></i>
+                                    Available to Chat
+                                </span>
+                                <a href="<?php echo URLROOT; ?>/chat/viewchat" class="btn-view-group">Start Chat</a>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Repeat similar user card structures -->
                 </div>
 
-                <div class="users-search-filters">
-                    <select class="user-role-filter">
-                        <option value="">All Roles</option>
-                        <option value="1">Residents</option>
-                        <option value="2">Admins</option>
-                        <option value="3">Super Admins</option>
-                    </select>
+                <!-- No Results Placeholder -->
+                <div class="no-groups" style="display: none;">
+                    <p>No users found matching your search.</p>
                 </div>
-
-                <div class="users-list">
-                    <!-- User Search Result Template -->
-                    <div class="user-search-item">
-                        <div class="user-avatar">
-                            <img src="<?php echo URLROOT; ?>/img/user-avatar.png" alt="User Avatar">
-                        </div>
-                        <div class="user-info">
-                            <h3 class="user-name">Murshid</h3>
-                            <p class="user-role">Resident</p>
-                        </div>
-                        <div class="user-actions">
-                            <button class="btn-start-chat">Start Chat</button>
-                        </div>
-                    </div>
-
-                    <!-- More user search results would be dynamically populated -->
-                </div>
-
-                <?php if (empty($data['users'])): ?>
-                    <div class="no-users">
-                        <p>No users found. Try a different search.</p>
-                    </div>
-                <?php endif; ?>
             </div>
         </main>
     </div>

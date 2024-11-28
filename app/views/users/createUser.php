@@ -19,7 +19,7 @@
 
         <main>
             <div class="form-wrapper">
-                <h1>Create Users</h1>
+                <h1>Create Employee Account</h1>
                 <?php if (!empty($data['errors'])): ?>
                     <div class="form-errors">
                         <?php foreach ($data['errors'] as $error): ?>
@@ -40,12 +40,13 @@
                         <label for="role">Role:</label>
                         <select name="role" id="role">
                             <option value="">Select Role</option>
-                            <option value="1">Resident</option>
+                            <!-- <option value="1">Resident</option> -->
                             <option value="2">Admin</option>
                             <option value="3">SuperAdmin</option>
                             <option value="4">Maintenance</option>
                             <option value="5">Security</option>
-                            <option value="6">External Service Provider</option>
+                            <!--                             <option value="6">External Service Provider</option>
+ -->
                         </select>
                     </div>
                     <div class="form-group resident-only">
@@ -64,7 +65,7 @@
                         <label for="confirm_password">Confirm Password:</label>
                         <input type="password" name="confirm_password" id="confirm_password">
                     </div>
-                    <button type="submit" class="form-submit">Create User</button>
+                    <button type="submit" class="form-submit">Create Employee Account</button>
                 </form>
             </div>
 

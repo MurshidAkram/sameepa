@@ -4,7 +4,7 @@
         <li><a href="<?php echo URLROOT; ?>/superadmin/dashboard">Dashboard</a></li>
         <li><a href="<?php echo URLROOT; ?>/posts/index">Feed</a></li>
         <li><a href="<?php echo URLROOT; ?>/users/manageUsers">Account Activation</a></li>
-        <li> <a href="<?php echo URLROOT; ?>/users/createUser"> Create an User </a></li>
+        <li> <a href="<?php echo URLROOT; ?>/users/createUser"> Create Employee Account </a></li>
         <li> <a href="<?php echo URLROOT; ?>/superadmin/reports"> Reports</a> </li>
         <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
         <li><a href="<?php echo URLROOT; ?>/facilities/index">Manage Facilities</a></li>

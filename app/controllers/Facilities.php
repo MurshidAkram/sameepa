@@ -205,8 +205,8 @@ class Facilities extends Controller
 
     public function allbookings()
     {
-        if ($_SESSION['user_role_id'] != 2) {
-            redirect('facilities');
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('facilities/index');
         }
 
         $bookings = $this->facilityModel->getAllBookings();
