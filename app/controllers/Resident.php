@@ -63,16 +63,6 @@ class Resident extends Controller
         $this->view('resident/facilities');
     }
 
-    public function groups()
-    {
-        $this->view('resident/groups');
-    }
-
-    public function exchange()
-    {
-        $this->view('resident/exchange');
-    }
-
     /*public function forums()
     {
         $this->view('resident/forums');
