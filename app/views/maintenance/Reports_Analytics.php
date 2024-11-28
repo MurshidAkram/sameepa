@@ -23,18 +23,35 @@
 
         .dashboard-container {
             display: flex;
-            min-height: 100vh;
-            padding: 20px;
-            gap: 20px;
+            /* Use flexbox layout */
+            gap: 10px;
+            /* Small gap between the side panel and main content */
+            width: 90%;
+            /* Full width of the container */
+            /* padding: 20px; */
         }
 
         .side-panel {
-            flex-shrink: 0;
+            width: 320px;
+            /* Width of the side panel */
+            background-color: #f4f4f4;
+            /* Light background color */
+            /* padding: 15px; */
+            border-radius: 8px;
+            /* Rounded corners (optional) */
         }
 
+        /* Main content styling */
         .main-content {
-            flex-grow: 1;
-            width: 95%;
+            width: 100%;
+            /* 95% width of the container */
+            background-color: #fff;
+            /* White background for main content */
+            padding: 15px;
+            border-radius: 8px;
+            /* Rounded corners (optional) */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Optional shadow */
         }
 
         h1 {
@@ -170,7 +187,7 @@
                         <tr>
                             <th>Location</th>
                             <th>Equipment</th>
-                            <th>Times Serviced</th>
+                            <th>No.of instances maintained</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -241,7 +258,7 @@
                 data: {
                     labels: ['Building 1', 'Building 2', 'Building 1', 'Building 4', 'Building 3'],
                     datasets: [{
-                        label: 'Times Serviced',
+                        label: 'No.of instances maintained',
                         data: [12, 8, 5, 7, 10],
                         backgroundColor: '#A629C2',
                         borderColor: 'black',

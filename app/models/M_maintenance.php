@@ -14,15 +14,16 @@ class M_maintenance
     // Add new maintenance member to the database
     public function addMember($data)
     {
-        $this->db->query("INSERT INTO maintenance_members (name, specialization, experience, certifications, profile_image) 
-                      VALUES (:name, :specialization, :experience, :certifications, :profile_image)");
+        $this->db->query("INSERT INTO maintenance_members (name, specialization, experience,  profile_image,phone_number) 
+                      VALUES (:name, :specialization, :experience,  :profile_image,:phone_number)");
 
         // Bind values
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':specialization', $data['specialization']);
         $this->db->bind(':experience', $data['experience']);
-        $this->db->bind(':certifications', $data['certifications']);
+
         $this->db->bind(':profile_image', $data['profile_image']);
+        $this->db->bind(':phone_number', $data['phone_number']);
 
         // Execute query
         return $this->db->execute();
@@ -38,7 +39,7 @@ class M_maintenance
     public function updateMember($data)
     {
         $sql = "UPDATE maintenance_members 
-            SET name = :name, specialization = :specialization, experience = :experience, certifications = :certifications";
+            SET name = :name, specialization = :specialization, experience = :experience, phone_number = :phone_number";
         if ($data['profile_image']) {
             $sql .= ", profile_image = :profile_image";
         }
@@ -49,13 +50,14 @@ class M_maintenance
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':specialization', $data['specialization']);
         $this->db->bind(':experience', $data['experience']);
-        $this->db->bind(':certifications', $data['certifications']);
+        $this->db->bind(':phone_number', $data['phone_number']);
         if ($data['profile_image']) {
             $this->db->bind(':profile_image', $data['profile_image']);
         }
 
         return $this->db->execute();
     }
+
 
 
     // Delete a maintenance member from the database

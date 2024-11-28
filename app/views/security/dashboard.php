@@ -165,10 +165,10 @@
             <section class="section">
                 <h3 class="too">Key Metrics</h3>
                 <div class="grid">
-                    <div class="card" style="background-color:#9B59B6;">
+                    <!-- <div class="card" style="background-color:#9B59B6;">
                         <h3>Total Alerts</h3>
                         <p>Today: <span id="total-alerts">15</span></p>
-                    </div>
+                    </div> -->
                     <div class="card" style="background-color: #D2B4DE;">
                         <h3>Active Visitor Passes</h3>
                         <p>Currently: <span id="active-passes">5</span></p>
@@ -344,10 +344,10 @@
             <section class="chart">
                 <h3 class="too">Analytics and Reports</h3>
                 <div class="grid">
-                    <div class="chart">
+                    <!-- <div class="chart">
                         <h3>Maintenance Requests</h3>
                         <canvas id="maintenanceRequestsCanvas"></canvas>
-                    </div>
+                    </div> -->
                     <div class="chart">
                         <h3>Incident Response Time</h3>
                         <canvas id="responseTimeCanvas"></canvas>
@@ -452,18 +452,18 @@ function toggleTable(tableId) {
             }
         });
 
-        // Maintenance Requests Chart
-        new Chart(document.getElementById('maintenanceRequestsCanvas').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-                datasets: [{
-                    label: 'Requests',
-                    data: [10, 12, 8, 15, 20],
-                    backgroundColor: '#6A5ACD'
-                }]
-            }
-        });
+        // // Maintenance Requests Chart
+        // new Chart(document.getElementById('maintenanceRequestsCanvas').getContext('2d'), {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        //         datasets: [{
+        //             label: 'Requests',
+        //             data: [10, 12, 8, 15, 20],
+        //             backgroundColor: '#6A5ACD'
+        //         }]
+        //     }
+        // });
 
         // Incident Response Time Chart
         new Chart(document.getElementById('responseTimeCanvas').getContext('2d'), {
