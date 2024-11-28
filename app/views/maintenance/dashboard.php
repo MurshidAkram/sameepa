@@ -99,7 +99,7 @@ main {
 
 .card {
     flex: 1 1 calc(25% - 20px);
-    background: linear-gradient(to bottom right, #6200ea, #a991f2);
+    background: (#A93CC7);
     color: #fff;
     padding: 20px;
     border-radius: 15px;
@@ -118,7 +118,7 @@ main {
 .card h3 {
     margin: 0 0 10px;
     font-size: 1.5rem;
-    color: #ffeb3b;
+    color: #800080;
 }
 
 .card p {
@@ -139,7 +139,7 @@ main {
     flex: 1;
     padding: 20px;
     border-radius: 15px;
-    background: linear-gradient(to bottom right, yellow, #ffa726);
+    background:( #4C3E4F);
     color: #000;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s, box-shadow 0.3s;
@@ -325,7 +325,8 @@ footer {
                 labels: ['Electrical', 'Plumbing', 'HVAC', 'Other'],
                 datasets: [{
                     data: [25, 30, 20, 25],
-                    backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0'],
+                    backgroundColor: ['#8A2BE2', '#7B68EE', '#6A5ACD', '#9370DB'],
+
                 }]
             }
         });
@@ -339,7 +340,7 @@ footer {
                 datasets: [{
                     label: 'Tasks',
                     data: [10, 20, 15, 5],
-                    backgroundColor: '#4caf50',
+                    backgroundColor: '#A93CC7',
                 }]
             },
             options: {
@@ -360,7 +361,7 @@ footer {
                 datasets: [{
                     label: 'Satisfaction Rate (%)',
                     data: [85, 88, 90, 92, 91, 95],
-                    borderColor: '#ff5a5f',
+                    borderColor: '#800080',
                     fill: false,
                     tension: 0.3
                 }]

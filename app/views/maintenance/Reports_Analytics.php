@@ -43,8 +43,9 @@
             text-align: center;
             margin-bottom: 20px;
             font-size: 2.5em;
-            color: #34495e;
+            color: #800080;
         }
+      
 
         .section {
             background-color: #fff;
@@ -67,7 +68,7 @@
         }
 
         th {
-            background-color: #3498db;
+            background-color: #800080;
             color: #fff;
         }
 
@@ -84,7 +85,7 @@
         font-size: 16px;
         font-weight: bold;
         color: black;
-        background: linear-gradient(90deg, yellow, orange);
+        background: linear-gradient(90deg, violet,#641975);
         border: none;
         border-radius: 25px;
         cursor: pointer;
@@ -208,8 +209,8 @@
             datasets: [{
                 label: 'Ratings',
                 data: [5, 3, 4, 2, 5],
-                backgroundColor: '#3498db',
-                borderColor: '#2980b9',
+                backgroundColor: '#9B26B6',
+                borderColor: 'black',
                 borderWidth: 1
             }]
         },
@@ -232,8 +233,8 @@
             datasets: [{
                 label: 'Times Serviced',
                 data: [12, 8, 5, 7, 10],
-                backgroundColor: '#e74c3c',
-                borderColor: '#c0392b',
+                backgroundColor: '#A629C2',
+                borderColor: 'black',
                 borderWidth: 1
             }]
         },

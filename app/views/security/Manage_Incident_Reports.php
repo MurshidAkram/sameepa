@@ -27,7 +27,7 @@ h2 {
 }
 
 h3 {
-    color: #444;
+    color: #800080;
     font-size: 1.6rem;
     margin-bottom: 15px;
 }
@@ -47,7 +47,7 @@ h3 {
 .btn1 {
     width: 48%;
     padding: 15px;
-    background-color: #4CAF50;
+    background-color: #336699;
     color: white;
     font-size: 18px;
     border: none;
@@ -158,7 +158,7 @@ h3 {
 }
 
 .incident-log-table th {
-    background-color: #3498db; /* Blue */
+    background-color: #800080; /* Blue */
     color: white;
     font-weight: bold;
 }
@@ -205,7 +205,7 @@ h3 {
 
 .modal-content h3 {
     margin-bottom: 15px;
-    color: #333;
+    color:#800080;
 }
 
 .close {

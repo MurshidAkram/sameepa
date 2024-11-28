@@ -294,47 +294,27 @@
             </section>
 
              <!-- Available Store Section -->
-    <section class="section">
-        <h2>Available Store</h2>
-        <div class="search-bar">
-            <input type="text" id="search-store" placeholder="Search Available Store..." onkeyup="searchTable('store')">
-            <button onclick="clearSearch('search-store')">Clear Search</button>
-        </div>
-        <table id="store">
-            <thead>
-                <tr>
-                    <th>Item ID</th>
-                    <th>Item Name</th>
-                    <th>Purchase Date</th>
-                    <th>Available Quantity</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>INV-001</td>
-                    <td>Air Filter</td>
-                    <td>2024-09-15</td>
-                    <td>40</td>
-                    <td>
-                        <button class="btn btn-edit">Edit</button>
-                        <button class="btn btn-delete">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>INV-002</td>
-                    <td>Light Bulb</td>
-                    <td>2024-08-22</td>
-                    <td>10</td>
-                    <td>
-                        <button class="btn btn-edit">Edit</button>
-                        <button class="btn btn-delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-
+             <section class="section">
+    <h2>Available Store</h2>
+    <div class="search-bar">
+        <input type="text" id="search-store" placeholder="Search Available Store..." onkeyup="searchTable('store')">
+        <button onclick="clearSearch('search-store')">Clear Search</button>
+    </div>
+    <table id="store">
+        <thead>
+            <tr>
+                <th>Item ID</th>
+                <th>Item Name</th>
+                <th>Purchase Date</th>
+                <th>Available Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+         
+        </tbody>
+    </table>
+</section>
         </div>
         
     </div>
@@ -374,10 +354,10 @@
          
             <input type="text" name="item_id" id="item_id" placeholder="Item ID" readonly required>
             
-            <input type="date" name="usage_date" id="usage_date" required>
-            
-            <input type="time" name="usage_time" id="usage_time" required>
-            
+            <input type="date" name="usage_date" id="usage_date" readonly required>
+            <input type="time" name="usage_time" id="usage_time" required >
+
+
             <input type="number" name="quantity" id="quantity" placeholder="Quantity" required>
             
             <button type="submit" class="btn-submit">Submit</button>
@@ -386,9 +366,72 @@
     </div>
 </div>
 
+<script>
+    // Automatically populate current date in the 'usage_date' field
+    document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("usage_date").value = today;
+        document.getElementById("usage_date").min = today; // Prevent selecting dates in the past
+    });
 
+    // Validate that 'usage_time' is the current time or later
+    function validateForm() {
+        const item_id = document.getElementById("item_id").value;
+        const quantity = document.getElementById("quantity").value;
+        const usage_date = document.getElementById("usage_date").value;
+        const usage_time = document.getElementById("usage_time").value;
 
-      <script>
+        if (!item_id || quantity <= 0) {
+            alert("Please fill out all fields with valid data.");
+            return false;
+        }
+
+        const currentDateTime = new Date();
+        const selectedDateTime = new Date(`${usage_date}T${usage_time}`);
+
+        if (selectedDateTime < currentDateTime) {
+            alert("Please select the current time or a future time.");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Automatically set item ID based on item name
+    function setItemId() {
+        const itemName = document.getElementById("item_name").value;
+        const itemId = getItemIdByName(itemName);
+        document.getElementById("item_id").value = itemId; // Populate the Item ID field
+    }
+
+    // Map item names to item IDs
+    function getItemIdByName(itemName) {
+        const items = {
+            "Air Filter": "INV-001",
+            "Light Bulb": "INV-002",
+            "Electrical Cable": "INV-003",
+            "Paint (White)": "INV-004",
+            "Paint (Black)": "INV-005",
+            "Hammer": "INV-006",
+            "Screwdriver Set": "INV-007",
+            "Nails (Various Sizes)": "INV-008",
+            "Pipe Wrench": "INV-009",
+            "Teflon Tape": "INV-010",
+            "Water Pump": "INV-011",
+            "Battery (12V)": "INV-012",
+            "Fire Extinguisher": "INV-013",
+            "Extension Cord": "INV-014",
+            "Cleaning Cloth": "INV-015",
+            "Duct Tape": "INV-016",
+            "Pipe Insulation": "INV-017",
+            "Power Drill": "INV-018",
+            "Welding Machine": "INV-019",
+            "Safety Gloves": "INV-020"
+        };
+        return items[itemName] || ""; // Return the corresponding Item ID or an empty string if not found
+    }
+
+    // Open and close form functions
     function showForm() {
         document.getElementById("form-overlay").style.display = "flex";
     }
@@ -397,38 +440,46 @@
         document.getElementById("form-overlay").style.display = "none";
     }
 
-  function editLog(logId) {
-    // Make an AJAX request to fetch the log data by its ID
-    fetch("<?php echo URLROOT; ?>/maintenance/getInventoryUsageLogById/" + logId)
-        .then(response => response.json())
+    // Edit log function remains unchanged
+    function editLog(logId) {
+    fetch(`<?php echo URLROOT; ?>/maintenance/getInventoryUsageLogById/${logId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            // Populate the form fields with the existing log data
-            document.getElementById("item_id").value = data.item_id;
-            document.getElementById("item_name").value = data.item_name;
-            document.getElementById("usage_date").value = data.usage_date;
-            document.getElementById("usage_time").value = data.usage_time;
-            document.getElementById("quantity").value = data.quantity;
+            // Populate all form fields
+            document.getElementById("item_id").value = data.item_id || '';
+            document.getElementById("item_name").value = data.item_name || '';
+            document.getElementById("usage_date").value = data.usage_date || '';
+            document.getElementById("usage_time").value = data.usage_time || '';
+            document.getElementById("quantity").value = data.quantity || '';
 
-            // Disable all fields except the quantity field
-            document.getElementById("item_id").disabled = true;
-            document.getElementById("item_name").disabled = true;
-            document.getElementById("usage_date").disabled = true;
-            document.getElementById("usage_time").disabled = true;
-            document.getElementById("quantity").disabled = false;
+            // Make only quantity editable
+            document.getElementById("item_id").readOnly = true;
+            document.getElementById("item_name").readOnly = true;
+            document.getElementById("usage_date").readOnly = true;
+            document.getElementById("usage_time").readOnly = false;
+            document.getElementById("quantity").readOnly = false;
+            document.getElementById("quantity").focus(); // Optional: set focus on quantity
 
             // Open the form overlay
             document.getElementById("form-overlay").style.display = "flex";
         })
-        .catch(error => console.error("Error fetching log data:", error));
+        .catch(error => {
+            console.error("Error fetching log data:", error);
+            alert('Failed to load log details. Please try again.');
+        });
 }
 
-
-
-    function deleteLog(logId) {
+function deleteLog(logId) {
         if (confirm("Are you sure you want to delete this log?")) {
             window.location.href = "<?php echo URLROOT; ?>/maintenance/deleteInventoryUsage/" + logId;
-        }
-    }
+        }  }
+
+    // Search and clear search functions remain unchanged
     function searchTable(tableId) {
         let input = document.getElementById("search-usage");
         let filter = input.value.toUpperCase();
@@ -453,51 +504,35 @@
         searchTable('usage-log');
     }
 
-    function validateForm() {
-        let item_id = document.getElementById("item_id").value;
-        let quantity = document.getElementById("quantity").value;
 
-        if (item_id == "" || quantity <= 0) {
-            alert("Please fill out all fields with valid data.");
-            return false;
-        }
+    //search available store
+    // function searchTable(tableId) {
+    //     let input = document.getElementById("search-store");
+    //     let filter = input.value.toUpperCase();
+    //     let table = document.getElementById(tableId);
+    //     let trs = table.getElementsByTagName("tr");
 
-        return true;
-    }
+    //     for (let i = 1; i < trs.length; i++) {
+    //         let td = trs[i].getElementsByTagName("td");
+    //         let found = false;
+    //         for (let j = 0; j < td.length; j++) {
+    //             if (td[j].textContent.toUpperCase().indexOf(filter) > -1) {
+    //                 found = true;
+    //                 break;
+    //             }
+    //         }
+    //         trs[i].style.display = found ? "" : "none";
+    //     }
+    // }
 
-    function setItemId() {
-    const itemName = document.getElementById("item_name").value;
-    const itemId = getItemIdByName(itemName);
-    document.getElementById("item_id").value = itemId; // Populate the Item ID field
-}
-
-function getItemIdByName(itemName) {
-    const items = {
-        "Air Filter": "INV-001",
-        "Light Bulb": "INV-002",
-        "Electrical Cable": "INV-003",
-        "Paint (White)": "INV-004",
-        "Paint (Black)": "INV-005",
-        "Hammer": "INV-006",
-        "Screwdriver Set": "INV-007",
-        "Nails (Various Sizes)": "INV-008",
-        "Pipe Wrench": "INV-009",
-        "Teflon Tape": "INV-010",
-        "Water Pump": "INV-011",
-        "Battery (12V)": "INV-012",
-        "Fire Extinguisher": "INV-013",
-        "Extension Cord": "INV-014",
-        "Cleaning Cloth": "INV-015",
-        "Duct Tape": "INV-016",
-        "Pipe Insulation": "INV-017",
-        "Power Drill": "INV-018",
-        "Welding Machine": "INV-019",
-        "Safety Gloves": "INV-020"
-    };
-    return items[itemName] || ""; // Return the corresponding Item ID or an empty string if not found
-}
+    // //available store clear
+    // function clearSearch(inputId) {
+    //     document.getElementById(inputId).value = "";
+    //     searchTable('store');
+    // }
 
 </script>
+
 
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

@@ -8,7 +8,7 @@
         <li><a href="<?php echo URLROOT; ?>/security/Manage_Incident_Reports">Manage Incident Reports</a></li>
         <li><a href="<?php echo URLROOT; ?>/security/Emergency_Contacts">Emergency Contacts</a></li>
         <li><a href="<?php echo URLROOT; ?>/security/Manage_Duty_Schedule">Manage Duty Schedule</a></li>
-        <li><a href="<?php echo URLROOT; ?>/security/Manage_Alerts">Manage Alerts</a></li>
+        <!-- <li><a href="<?php echo URLROOT; ?>/security/Manage_Alerts">Manage Alerts</a></li> -->
 
     </ul>
 </aside>

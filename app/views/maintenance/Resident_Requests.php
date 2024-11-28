@@ -36,7 +36,7 @@ main {
 .content-header h1 {
     margin: 0 0 10px;
     font-size: 2rem;
-    color: #3f51b5;
+    color: #800080;
 }
 
 .content-header p {
@@ -81,7 +81,7 @@ main {
 }
 
 .dashboard-table th {
-    background: linear-gradient(to right, #42a5f5, #1e88e5);
+    background: #800080;
     color: #fff;
     padding: 15px;
     font-weight: bold;
@@ -217,7 +217,7 @@ main {
 
 /* Request History Section */
 h2 {
-    color: #3f51b5;
+    color: #800080;
     font-size: 1.8rem;
     margin: 20px 0 10px;
 }

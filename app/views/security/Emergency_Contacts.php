@@ -228,20 +228,21 @@
 
 /* Specific Styles for Each Card */
 #contact-1 {
-    background: linear-gradient(135deg, #3498db, #2ecc71);
+    background: linear-gradient(135deg, #8e44ad, #9b59b6); /* Dark Violet to Light Violet */
 }
 
 #contact-2 {
-    background: linear-gradient(135deg, #e74c3c, #e67e22);
+    background: linear-gradient(135deg, #bb8fce, #8e44ad); /* Light Violet to Dark Violet */
 }
 
 #contact-3 {
-    background: linear-gradient(135deg, #8e44ad, #3498db);
+    background: linear-gradient(135deg, #8e44ad, #3498db); /* Violet to Blue */
 }
 
 #contact-4 {
-    background: linear-gradient(135deg, #f1c40f, #e67e22);
+    background: linear-gradient(135deg, #f1c40f, #e67e22); /* Yellow to Orange */
 }
+
 
 /* Button Styles */
 .contact-item .btn {
@@ -346,7 +347,7 @@
 }
 
 .modal-content {
-    background: linear-gradient(135deg, red, yellow); /* Gradient background */
+    background: linear-gradient(135deg, #8e44ad, #bb8fce);/* Gradient background */
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Elevated shadow */
