@@ -48,12 +48,44 @@
             </div>
             <div class="box">
                 <img src="<?php echo URLROOT; ?>/public/img/services.jpg" alt="External Services" class="box-image">
-                <h3>External Services</h3>
-                <p>Discover our trusted external services to complement your business needs and enhance productivity.</p>
+                <h3>Chatting</h3>
+                <p>Engage in real-time conversations with peers and experts to share ideas and foster collaboration.</p>
                 <!-- <a href="<?php echo URLROOT; ?>/pages/services" class="btn-secondary">Explore Services</a> -->
+            </div>
+            <div class="box">
+                <img src="<?php echo URLROOT; ?>/public/img/support.jpg" alt="Customer Support" class="box-image">
+                <h3>Customer Support</h3>
+                <p>Get in touch with our support team to resolve any issues or get help with our platform's features.</p>
+                <!-- <a href="<?php echo URLROOT; ?>/pages/support" class="btn-secondary">Contact Support</a> -->
             </div>
         </div>
     </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-us">
+        <h2 class="section-title">Why Choose Sameepa?</h2>
+        <div class="choose-content">
+            <div class="choose-box">
+                <img src="<?php echo URLROOT; ?>/public/img/security.jpg" alt="Security" class="choose-image">
+                <h3>Top-notch Security</h3>
+                <p>We prioritize your security by providing robust protection for all your data and transactions within the community.</p>
+            </div>
+            <div class="choose-box">
+                <img src="<?php echo URLROOT; ?>/public/img/efficiency.jpg" alt="Efficiency" class="choose-image">
+                <h3>Efficient Management</h3>
+                <p>Our platform is designed to streamline processes, allowing you to manage community-related tasks quickly and efficiently.</p>
+            </div>
+            <div class="choose-box">
+                <img src="<?php echo URLROOT; ?>/public/img/community.jpg" alt="Community" class="choose-image">
+                <h3>Strong Community Focus</h3>
+                <p>Sameepa is built to foster a sense of community, encouraging collaboration and communication among members.</p>
+            </div>
+        </div>
+    </section>
+
+
+
+
 
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

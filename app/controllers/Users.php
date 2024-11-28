@@ -409,12 +409,14 @@ class Users extends Controller
         // Fetch user details from the database
         $user = $this->userModel->getUserById($userId);
         $verificationDoc = $this->userModel->getUserVerificationDocument($userId);
+        $users = $this->userModel->getResidentAddressAndPhone($userId);
 
         // Initialize response array
         $response = [
             'name' => $user['name'] ?? '',
             'email' => $user['email'] ?? '',
-            'address' => $user['address'] ?? '',
+            'address' => $users['address'] ?? '',
+            'phonenumber' => $users['phonenumber'] ?? '',
             'verification_filename' => $verificationDoc['role_verification_filename'] ?? null,
             'role_verification_document' => null
         ];
@@ -522,5 +524,23 @@ class Users extends Controller
             header('Location: ' . URLROOT . '/users/manageUsers?error=deletion_failed');
         }
         exit();
+    }
+    public function updateAddress()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $userId = $data['user_id'];
+        $newAddress = $data['address'];
+
+        if (empty($newAddress)) {
+            echo json_encode(['success' => false, 'message' => 'Address cannot be empty']);
+            return;
+        }
+
+        // Update the address in the database
+        if ($this->userModel->updateAddress($userId, $newAddress)) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update address']);
+        }
     }
 }

@@ -197,6 +197,7 @@ class M_Users
         return $this->db->single();
     }
 
+
     public function updateUser($data)
     {
         $this->db->beginTransaction();
@@ -403,5 +404,13 @@ class M_Users
             $this->db->rollBack();
             return false;
         }
+    }
+
+
+    public function getResidentAddressAndPhone($userId)
+    {
+        $this->db->query('SELECT address, phonenumber FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->single();
     }
 }
