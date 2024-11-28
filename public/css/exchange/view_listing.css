@@ -25,7 +25,7 @@
 }
 
 
-.btn-back {
+.back-button {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -38,10 +38,9 @@
     font-weight: 100;
     transition: background-color 0.3s, transform 0.2s;
     margin-bottom: 2rem;
-    width: 200px;
 }
 
-.btn-back:hover {
+.back-button:hover {
     background-color: #616161;
     transform: translateY(-2px);
 }

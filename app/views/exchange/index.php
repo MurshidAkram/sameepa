@@ -36,8 +36,8 @@
             <p>Connect with your community! Offer services, sell or exchange products, or report lost and found items.</p>
 
             <div class="exchange-actions">
-            <a href="<?php echo URLROOT; ?>/exchange/create" class="btn-create-listing">Create Listing</a>
-            <a href="<?php echo URLROOT; ?>/exchange/my_listings" class="btn-my-listings">My Listings</a>
+                <a href="<?php echo URLROOT; ?>/exchange/create" class="btn-create-listing">Create Listing</a>
+                <a href="<?php echo URLROOT; ?>/exchange/my_listings" class="btn-my-listings">My Listings</a>
             </div>
 
             <div class="exchange-grid">

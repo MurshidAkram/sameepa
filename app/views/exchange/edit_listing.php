@@ -29,10 +29,10 @@
 
         <main class="exchange-main">
             <div class="edit-listing-container">
-                <a href="<?php echo URLROOT; ?>/exchange/my_listings" class="back-button">
-                    <i class="fas fa-arrow-left"></i> Back to My Listings
+                <a href="<?php echo ($_SESSION['user_role_id'] == 2) ? URLROOT . '/exchange/admin_dashboard' : URLROOT . '/exchange/my_listings'; ?>" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to <?php echo ($_SESSION['user_role_id'] == 2) ? 'Admin Dashboard' : 'My Listings'; ?>
                 </a>
-                
+              
                 <h1>Edit Listing</h1>
                 
                 <form action="<?php echo URLROOT; ?>/exchange/edit" method="POST" enctype="multipart/form-data">
@@ -74,7 +74,7 @@
 
                     <div class="form-buttons">
                         <button type="submit" class="btn-submit">Save Changes</button>
-                        <a href="<?php echo URLROOT; ?>/exchange/my_listings" class="btn-cancel">Cancel</a>
+                            <a href="<?php echo ($_SESSION['user_role_id'] == 2) ? URLROOT . '/exchange/admin_dashboard' : URLROOT . '/exchange/index'; ?>" class="btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>

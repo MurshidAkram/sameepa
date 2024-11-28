@@ -25,15 +25,14 @@
             case 3:
                 require APPROOT . '/views/inc/components/side_panel_superadmin.php';
                 break;
-        }
-        ?>
+            }
+            ?>
 
-        <main class="exchange-main">
-            <div class="create-listing-container">
-                <a href="<?php echo URLROOT; ?>/exchange/index" class="back-button">
-                    <i class="fas fa-arrow-left"></i> Back to Listings
-                </a>
-                
+            <main class="exchange-main">
+                <div class="create-listing-container">
+                    <a href="<?php echo ($_SESSION['user_role_id'] == 2) ? URLROOT . '/exchange/admin_dashboard' : URLROOT . '/exchange/index'; ?>" class="back-button">
+                        <i class="fas fa-arrow-left"></i> Back to <?php echo ($_SESSION['user_role_id'] == 2) ? 'Admin Dashboard' : 'Listings'; ?>
+                    </a>
                 <h1>Create New Listing</h1>
                 
                 <form action="<?php echo URLROOT; ?>/exchange/create" method="POST" enctype="multipart/form-data">
@@ -70,7 +69,7 @@
 
                     <div class="form-buttons">
                         <button type="submit" class="btn-submit">Create Listing</button>
-                        <a href="<?php echo URLROOT; ?>/exchange/index" class="btn-cancel">Cancel</a>
+                        <a href="<?php echo ($_SESSION['user_role_id'] == 2) ? URLROOT . '/exchange/admin_dashboard' : URLROOT . '/exchange/index'; ?>" class="btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>

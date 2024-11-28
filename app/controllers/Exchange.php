@@ -49,9 +49,9 @@ class Exchange extends Controller
         $this->view('exchange/delete_listing');
     }
 
-    public function search()
+    public function admin_dashboard()
     {
-        $this->view('exchange/search');
+        $this->view('exchange/admin_dashboard');
     }
 
     public function contact_seller()

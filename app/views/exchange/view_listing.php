@@ -30,8 +30,10 @@
 
         <main class="exchange-main">
             <div class="listing-details-container">
-                <a href="<?php echo URLROOT; ?>/exchange/index" class="btn-back">← Back to Listings</a>
-                
+                <a href="<?php echo ($_SESSION['user_role_id'] == 2) ? URLROOT . '/exchange/admin_dashboard' : URLROOT . '/exchange/index'; ?>" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to <?php echo ($_SESSION['user_role_id'] == 2) ? 'Admin Dashboard' : 'My Listings'; ?>
+                </a>
+             
                 <div class="listing-full-view">
                     <div class="listing-header">
                         <h1>Lawn Mowing Service</h1>
