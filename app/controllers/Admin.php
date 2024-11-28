@@ -146,6 +146,9 @@ class Admin extends Controller
     public function view_complaint(){
         $this->view('admin/view_complaint');
     }
+    public function update_complaint(){
+        $this->view('admin/update_complaint');
+    }
 }
 
 

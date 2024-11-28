@@ -1,4 +1,4 @@
-/* Styles for the View Complaint page */
+/* Styles for the Update Complaint page */
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -30,7 +30,7 @@ body {
     transform: translateY(-2px);
 }
 
-.complaint-view-dashboard {
+.complaint-update-dashboard {
     position: relative;
     padding-top: 60px;
 }
@@ -57,27 +57,59 @@ h1 {
 .complaint-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
 }
 
 .complaint-table th, .complaint-table td {
     border: 1px solid #ddd;
-    padding: 15px;
+    padding: 12px;
     text-align: left;
 }
 
 .complaint-table th {
     background-color: #800080;
     color: white;
-    width: 200px;
 }
 
 .complaint-table tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-.complaint-table tr:hover {
-    background-color: #f5f5f5;
+.update-field {
+    width: 98%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+textarea.update-field {
+    min-height: 80px;
+    resize: vertical;
+}
+
+select.update-field {
+    background-color: white;
+}
+
+.btn-submit {
+    display: block;
+    margin: 20px auto;
+    padding: 20px 20px;
+    background-color: #11bd2b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    width: 200px;
+    font-size: large;
+    border: 2px solid #000000;
+}
+
+.btn-submit:hover {
+    background-color: #10df1e;
+    transform: translateY(-2px);
 }
 
 /* Responsive design */
@@ -88,9 +120,5 @@ h1 {
 
     .complaint-table th, .complaint-table td {
         padding: 10px;
-    }
-    
-    .complaint-table th {
-        width: 120px;
     }
 }

@@ -30,29 +30,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Sample data, replace with actual data from your database -->
                         <tr>
                             <td>Noise Complaint</td>
                             <td>2023-05-15</td>
                             <td>Issued warning to resident</td>
                             <td>Resolved</td>
+                            <td>
+                                <a href="<?php echo URLROOT; ?>/admin/update_complaint/" class="btn-update">Update</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Maintenance Issue</td>
                             <td>2023-05-14</td>
                             <td>Scheduled repair</td>
                             <td>In Progress</td>
+                            <td>
+                                <a href="<?php echo URLROOT; ?>/admin/updateComplaint/" class="btn-update">Update</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Parking Violation</td>
                             <td>2023-05-13</td>
                             <td>Issued fine</td>
                             <td>Closed</td>
+                            <td>
+                                <a href="<?php echo URLROOT; ?>/admin/updateComplaint/" class="btn-update">Update</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-            </section>
-        </main>
+            </section>       
+         </main>
     </div>
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
