@@ -71,6 +71,7 @@
                         <label for="name">Facility Name:</label>
                         <input type="text" name="name" id="name" value="<?php echo $data['name']; ?>" 
                                required maxlength="255" class="form-control">
+                               <?php flash('facility_message'); ?>
                     </div>
 
                     <div class="form-group">

@@ -7,13 +7,14 @@ class M_Facilities {
     }
 
     public function getAllFacilities() {
-        $this->db->query('SELECT f.*, u.name as creator_name 
+        $this->db->query('SELECT f.*, a.user_id, u.name as creator_name 
                          FROM facilities f 
-                         JOIN users u ON f.created_by = u.id 
+                         JOIN admins a ON f.created_by = a.id
+                         JOIN users u ON a.user_id = u.id 
                          ORDER BY f.created_at DESC');
         return $this->db->resultSet();
     }
-
+    
     public function createFacility($data) {
         $this->db->query('INSERT INTO facilities (name, description, capacity, status, created_by) 
                          VALUES (:name, :description, :capacity, :status, :created_by)');
@@ -28,20 +29,26 @@ class M_Facilities {
     }
 
     public function getAdminIdByUserId($userId) {
-        $this->db->query('SELECT id FROM admins WHERE user_id = :user_id');
+        $this->db->query('SELECT id FROM admins WHERE user_id = :user_id 
+                          UNION 
+                          SELECT id FROM superadmins WHERE user_id = :user_id');
         $this->db->bind(':user_id', $userId);
         $result = $this->db->single();
         return $result['id'] ?? null;
     }
+    
 
     public function getFacilityById($id) {
-        $this->db->query('SELECT f.*, u.name as creator_name 
+        $this->db->query('SELECT f.*, a.user_id, u.name as creator_name 
                          FROM facilities f 
-                         JOIN users u ON f.created_by = u.id 
+                         JOIN admins a ON f.created_by = a.id
+                         JOIN users u ON a.user_id = u.id 
                          WHERE f.id = :id');
         $this->db->bind(':id', $id);
-        return $this->db->single();
+        $result = $this->db->single();
+        return $result ? $result : null;
     }
+    
     
     public function deleteFacility($id) {
         $this->db->query('DELETE FROM facilities WHERE id = :id');

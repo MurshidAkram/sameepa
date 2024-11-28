@@ -31,7 +31,7 @@
         <main class="facilities-main">
             <h1>Facility Management</h1>
             <div class="action-buttons">
-                <?php if($_SESSION['user_role_id'] == 2): ?>
+                <?php if($_SESSION['user_role_id'] == 2 || $_SESSION['user_role_id'] == 3): ?>
                     <a href="<?php echo URLROOT; ?>/facilities/create" class="fac-btn-create">Create New Facility</a>
                     <a href="<?php echo URLROOT; ?>/facilities/allbookings" class="fac-btn-admin-bookings">All Bookings</a>
                 <?php endif; ?>
@@ -54,7 +54,7 @@
                             <?php else: ?>
                                 <button onclick="showUnavailableMessage()" class="fac-btn-book disabled">Booking</button>
                             <?php endif; ?>
-                            <?php if($_SESSION['user_role_id'] == 2): ?>
+                            <?php if($_SESSION['user_role_id'] == 2 || $_SESSION['user_role_id'] == 3): ?>
                                 <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
                                     <button type="submit" class="fac-btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">Delete</button>
                                 </form>
@@ -116,7 +116,7 @@
                               </form>
                           </div>
 
-                          <?php if($_SESSION['user_role_id'] == 2): ?>
+                          <?php if($_SESSION['user_role_id'] == 2 || $_SESSION['user_role_id'] == 3): ?>
                               <button id="toggleEditBtn" class="fac-btn-edit">Edit Facility</button>
                           <?php endif; ?>
                       </div>
