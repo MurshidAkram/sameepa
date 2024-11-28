@@ -369,7 +369,7 @@ h1, h2 {
     color: #fff;
     border: none;
     padding: 12px;
-    width: 100%;
+    width: 95%;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -398,6 +398,54 @@ h1, h2 {
     width:80%;
 }
 
+/* Container for the search bar */
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+/* Input field for the search bar */
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 30px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+/* Focus effect on the input field */
+.search-input:focus {
+    border-color: #4caf50;
+}
+
+/* Button to trigger search */
+.search-btn {
+    position: absolute;
+    right: 5px;
+    padding: 10px;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for the search button */
+.search-btn:hover {
+    background-color: #45a049;
+}
+
+/* FontAwesome icon style */
+.search-btn i {
+    font-size: 18px;
+}
 
 
 
@@ -414,6 +462,12 @@ h1, h2 {
         <!-- Main Content -->
         <main>
             <h1>Team Scheduling</h1>
+            <div class="search-container">
+    <input type="text" id="searchBar" class="search-input" placeholder="Search for members specialization ....">
+    <button class="search-btn" id="searchBtn">
+        <i class="fas fa-search"></i> <!-- FontAwesome search icon -->
+    </button>
+</div>
 
             <!-- Add New Maintenance Member -->
             <div class="button-container">
@@ -432,6 +486,7 @@ h1, h2 {
                 <h3 class="member-name"><?php echo $member->name; ?></h3>
                 <p class="member-specialization">Specialization: <?php echo $member->specialization; ?></p>
                 <p class="member-experience">Experience: <?php echo $member->experience; ?> years</p>
+                <p class="member-phone_number">Phone Number: <?php echo $member->phone_number; ?></p>
             </div>
             <div class="action-buttons">
                 <button class="edit-btn">Edit</button>
@@ -474,11 +529,12 @@ h1, h2 {
         </select>
 
         <label for="experience">Experience (Years):</label>
-<input type="number" id="experience" name="experience" required min="1" max="50" step="1">
+<input type="number" id="experience" name="experience" required min="1" max="35" step="1">
 
 
-        <label for="certifications">Certifications:</label>
-        <input type="text" id="certifications" name="certifications">
+<label for="phone_number">Phone Number:</label>
+<input type="text" id="phone_number" name="phone_number" required 
+       pattern="^\d{10}$" title="Phone number must be exactly 10 digits" maxlength="10">
 
         <label for="profileImage">Profile Image:</label>
         <input type="file" id="profileImage" name="profileImage" accept="image/*">
@@ -501,12 +557,14 @@ h1, h2 {
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
     const addMemberBtn = document.getElementById('addMemberBtn');
     const memberModal = document.getElementById('memberModal');
     const closeModal = document.getElementById('closeModal');
     const memberForm = document.getElementById('memberForm');
     const teamProfileSection = document.querySelector('.team-profile');
+    const phoneInput = document.getElementById('phone_number');
+    const phoneRegex = /^\d{10}$/; // Regex for exactly 10 digits
     let editingMemberId = null;
 
     // Open modal for adding a new member
@@ -527,10 +585,12 @@ h1, h2 {
             const name = card.querySelector('.member-name').textContent;
             const specialization = card.querySelector('.member-specialization').textContent.split(': ')[1];
             const experience = card.querySelector('.member-experience').textContent.split(': ')[1].replace(' years', '');
+            const phone_number = card.querySelector('.member-phone_number').textContent.split(': ')[1];
 
             document.getElementById('name').value = name;
             document.getElementById('specialization').value = specialization;
             document.getElementById('experience').value = experience;
+            document.getElementById('phone_number').value = phone_number;
             document.getElementById('modalTitle').textContent = 'Edit Member';
 
             memberModal.classList.add('active');
@@ -542,11 +602,28 @@ h1, h2 {
         memberModal.classList.remove('active');
     });
 
+    // Real-time phone number validation
+    phoneInput.addEventListener('input', function () {
+        if (!phoneRegex.test(this.value.trim())) {
+            this.setCustomValidity('Phone number must be exactly 10 digits.');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
     // Handle form submission for adding/editing a member
     memberForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const formData = new FormData(this);
+        const phoneNumber = phoneInput.value.trim();
+
+        // Final validation before submitting
+        if (!phoneRegex.test(phoneNumber)) {
+            alert('Phone number must be exactly 10 digits.');
+            return; // Stop form submission
+        }
+
+        const formData = new FormData(this); // Collect form data, including files
         const url = editingMemberId
             ? `<?php echo URLROOT; ?>/maintenance/editMember/${editingMemberId}`
             : `<?php echo URLROOT; ?>/maintenance/addMember`;
@@ -564,6 +641,9 @@ h1, h2 {
                         card.querySelector('.member-name').textContent = data.name;
                         card.querySelector('.member-specialization').textContent = `Specialization: ${data.specialization}`;
                         card.querySelector('.member-experience').textContent = `Experience: ${data.experience} years`;
+                        card.querySelector('.member-phone_number').textContent = `Phone Number: ${data.phone_number}`;
+
+                        // Update profile image if provided
                         if (data.profile_image) {
                             card.querySelector('.profile-img img').src = data.profile_image;
                         }
@@ -578,6 +658,7 @@ h1, h2 {
                                     <h3 class="member-name">${data.name}</h3>
                                     <p class="member-specialization">Specialization: ${data.specialization}</p>
                                     <p class="member-experience">Experience: ${data.experience} years</p>
+                                    <p class="member-phone_number">Phone Number: ${data.phone_number}</p>
                                 </div>
                                 <div class="action-buttons">
                                     <button class="edit-btn">Edit</button>
@@ -586,9 +667,10 @@ h1, h2 {
                             </div>`;
                         teamProfileSection.innerHTML += newCard;
                     }
+                    // Close the modal after success
                     memberModal.classList.remove('active');
                 } else {
-                    alert('Error saving member');
+                    alert(data.message || 'Error saving member');
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -601,7 +683,7 @@ h1, h2 {
             const memberId = card.getAttribute('data-id');
 
             if (confirm('Are you sure you want to delete this member?')) {
-                fetch('<?php echo URLROOT; ?>/maintenance/deleteMember/' + memberId, {
+                fetch(`<?php echo URLROOT; ?>/maintenance/deleteMember/${memberId}`, {
                     method: 'DELETE'
                 })
                     .then(response => response.json())
@@ -618,7 +700,20 @@ h1, h2 {
     });
 });
 
-    </script>
+document.getElementById('searchBtn').addEventListener('click', function() {
+    const query = document.getElementById('searchBar').value.trim().toLowerCase();
+
+    if (query) {
+        // Add your search functionality here (e.g., filtering members)
+        console.log(`Searching for: ${query}`);
+        // For example, you could filter a list of team members based on this search term
+    } else {
+        alert('Please enter a search term');
+    }
+});
+
+
+</script>
 </body>
 
 </html>

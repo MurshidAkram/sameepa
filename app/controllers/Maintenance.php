@@ -60,7 +60,8 @@ public function addMember() {
             'name' => trim($_POST['name']),
             'specialization' => trim($_POST['specialization']),
             'experience' => trim($_POST['experience']),
-            'certifications' => trim($_POST['certifications']),
+          
+            'phone_number' => trim($_POST['phone_number']),
             'profile_image' => $_FILES['profileImage']['name'] // Save image name
         ];
 
@@ -84,6 +85,7 @@ public function addMember() {
                 'success' => true,
                 'name' => $data['name'],
                 'specialization' => $data['specialization'],
+                'phone_number' => $data['phone_number'],
                 'experience' => $data['experience'],
                 'profile_image' => URLROOT . '/img/' . $data['profile_image']
             ]);
@@ -102,7 +104,7 @@ public function editMember($id) {
             'name' => trim($_POST['name']),
             'specialization' => trim($_POST['specialization']),
             'experience' => trim($_POST['experience']),
-            'certifications' => trim($_POST['certifications']),
+            'phone_number' => trim($_POST['phone_number']),
             'profile_image' => !empty($_FILES['profileImage']['name']) ? $_FILES['profileImage']['name'] : null
         ];
 
@@ -118,6 +120,7 @@ public function editMember($id) {
                 'name' => $data['name'],
                 'specialization' => $data['specialization'],
                 'experience' => $data['experience'],
+                'phone_number' => $data['phone_number'],
                 'profile_image' => $data['profile_image'] ? URLROOT . '/img/' . $data['profile_image'] : null
             ]);
         } else {
@@ -125,6 +128,7 @@ public function editMember($id) {
         }
     }
 }
+
 // Delete a member
 public function deleteMember($id) {
     if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {

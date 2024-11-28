@@ -247,7 +247,7 @@ footer {
 
             <!-- Enhanced Search & Filters -->
             <section class="filter-section">
-                <input type="text" placeholder="Search by Request ID..." />
+                <input type="text" placeholder="Searching ...." />
                 <select>
                     <option value="" disabled selected>Filter by Request Type</option>
                     <option value="repair">Repair</option>

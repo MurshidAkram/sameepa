@@ -18,8 +18,13 @@
         <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
         <main>
+
         
+       
             <div class="contacts-list-container">
+
+            
+
               <!-- Emergency Contact Cards -->
                   <div>
                   <div class="contact-item" id="contact-1">
@@ -206,6 +211,8 @@
 </script>
 
     <style>
+
+
         /* Styles for modals */
 .contact-item {
     padding: 20px;
@@ -449,6 +456,7 @@
         opacity: 1;
     }
 }
+
 
 
     </style>

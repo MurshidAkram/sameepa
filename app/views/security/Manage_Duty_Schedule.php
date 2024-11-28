@@ -29,14 +29,7 @@
             letter-spacing: 1px;
         }
 
-        footer {
-            background-color: #2d3436;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto;
-            font-size: 14px;
-        }
+      
 
         .content {
             display: flex;
@@ -327,9 +320,9 @@ h3 {
 </head>
 <body>
     <!-- Navbar -->
-    <header>
+    
         <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
-    </header>
+   
 
     <!-- Content Section -->
     <div class="content">
@@ -455,10 +448,8 @@ h3 {
                 </div>
             </div>
 
-    <!-- Footer -->
-    <footer>
-        <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-    </footer>
+            <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+ 
 
     <script>
         const modal = document.getElementById('scheduleModal');

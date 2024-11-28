@@ -23,21 +23,27 @@
         }
 
         .dashboard-container {
-            display: flex;
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-        }
+    display: flex; /* Use flexbox layout */
+    gap: 10px; /* Small gap between the side panel and main content */
+    width: 90%; /* Full width of the container */
+    /* padding: 20px; */
+}
 
         .side-panel {
-            width: 300px;
-           
-        }
+    width: 320px; /* Width of the side panel */
+    background-color: #f4f4f4; /* Light background color */
+    /* padding: 15px; */
+    border-radius: 8px; /* Rounded corners (optional) */
+}
 
-        .main-content {
-            flex-grow: 1;
-            width:95%;
-        }
+/* Main content styling */
+.main-content {
+    width: 100%; /* 95% width of the container */
+    background-color: #fff; /* White background for main content */
+    padding: 15px;
+    border-radius: 8px; /* Rounded corners (optional) */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
 
         h1 {
             text-align: center;
