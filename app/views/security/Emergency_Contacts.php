@@ -31,7 +31,7 @@
                         <h4>Police Emergency Hotline</h4>
                         <p>Phone: 119</p>
                         <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
+                       
                         <button class="btn edit-btn" onclick="openEditModal('Police Emergency Hotline', '119', 'National Emergency Center', 'contact-1')">Edit</button>
                         <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
                     </div>
@@ -39,7 +39,7 @@
                         <h4>Ambulance Service</h4>
                         <p>Phone: 1990</p>
                         <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
+                     
                         <button class="btn edit-btn" onclick="openEditModal('Ambulance Service', '1990', 'National Emergency Center', 'contact-1')">Edit</button>
                         <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
                     </div>
@@ -48,7 +48,7 @@
                         <h4>Fire Brigade</h4>
                         <p>Phone: 110</p>
                         <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
+                      
                         <button class="btn edit-btn" onclick="openEditModal('Fire Brigade', '110', 'National Emergency Center', 'contact-1')">Edit</button>
                         <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
                     </div>
@@ -60,7 +60,7 @@
                         <h4>Child Protection Authority</h4>
                         <p>Phone: 1929</p>
                         <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
+                    
                         <button class="btn edit-btn" onclick="openEditModal('Child Protection Authority', '1929', 'National Emergency Center', 'contact-1')">Edit</button>
                         <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
                     </div>
@@ -69,7 +69,7 @@
                         <h4>Tourist Police</h4>
                         <p>Phone: 1912</p>
                         <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
+                       
                         <button class="btn edit-btn" onclick="openEditModal('Tourist Police', '1912', 'National Emergency Center', 'contact-1')">Edit</button>
                         <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
                     </div>
@@ -77,7 +77,7 @@
                         <h4>Electricity Breakdown Service</h4>
                         <p>Phone: 1987</p>
                         <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
+                       
                         <button class="btn edit-btn" onclick="openEditModal('Electricity Breakdown Service', '1987', 'National Emergency Center', 'contact-1')">Edit</button>
                         <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
                     </div>
