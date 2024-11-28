@@ -1,0 +1,206 @@
+/* Main Container Styles */
+.exchange-main {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.listing-details-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 20px;
+}
+
+.service-box {
+    display: inline-block;
+    background-color: #800080;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.listing-type {
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 24px;
+    background-color: #757575;
+    color: #fff;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 100;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 2rem;
+    width: 200px;
+}
+
+.btn-back:hover {
+    background-color: #616161;
+    transform: translateY(-2px);
+}
+
+/* Listing View Container */
+.listing-full-view {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Header Section */
+.listing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.listing-header h1 {
+    font-size: 2rem;
+    color: #4a4a4a;
+}
+
+.listing-type {
+    padding: 6px 12px;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.listing-type.service {
+    background-color: #3498db;
+    color: white;
+}
+
+.listing-type.sale {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.listing-type.exchange {
+    background-color: #f1c40f;
+    color: white;
+}
+
+/* Image Container */
+.listing-image-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.listing-full-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Listing Information */
+.listing-info {
+    padding: 20px 0;
+}
+
+.listing-description {
+    margin-bottom: 30px;
+}
+
+.listing-description h3 {
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+.listing-description p {
+    color: #666;
+}
+
+/* Metadata Section */
+.listing-metadata {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.listing-metadata p {
+    margin: 8px 0;
+    color: #666;
+}
+
+/* Contact Section */
+.listing-contact {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.contact-seller {
+    background-color: #800080;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.contact-seller:hover {
+    background-color: #9a009a;
+    transform: translateY(-2px);
+}
+
+/* Action Buttons */
+.listing-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-edit, .btn-delete {
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background-color: #11bd2b;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #a7066f;
+    color: white;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .listing-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .listing-actions {
+        flex-direction: column;
+    }
+
+    .btn-edit, .btn-delete {
+        width: 100%;
+    }
+}

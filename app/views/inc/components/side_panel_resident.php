@@ -10,7 +10,7 @@
                 <li><a href="<?php echo URLROOT; ?>/events/index">Events</a></li>
                 <li><a href="<?php echo URLROOT; ?>/groups/index">Groups</a></li>
                 <li><a href="<?php echo URLROOT; ?>/forums/index">Forums</a></li>
-                <li><a href="<?php echo URLROOT; ?>/resident/exchange">Product/Resource Exchange</a></li>
+                <li><a href="<?php echo URLROOT; ?>/exchange/index">Product/Resource Exchange</a></li>
                 <li><a href="<?php echo URLROOT; ?>/facilities/index">Facility Booking</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/maintenance">Maintenance Requests</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/visitor_passes">Visitor Passes</a></li>
