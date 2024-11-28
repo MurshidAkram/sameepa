@@ -3,7 +3,6 @@
 session_start();
 
 
-function flash($name = '', $message = '', $class = 'alert alert-info', $ignore = false)
 function flash($name = '', $message = '', $class = 'alert alert-info', $dismissible = false)
 {
     if (!empty($name)) {
