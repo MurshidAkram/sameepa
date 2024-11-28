@@ -34,20 +34,17 @@
 
         .main-content {
             flex-grow: 1;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 95%;
         }
 
-        /* Headers */
         h1 {
-            margin: 0 0 10px;
-            font-size: 2rem;
-            color: #3f51b5;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #800080;
         }
 
-        /* Section Styles */
+
         .section {
             background: #ffffff;
             border-radius: 15px;
@@ -78,11 +75,9 @@
             text-align: center;
         }
 
-        table td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-            color: #555;
+        th {
+            background-color: #800080;
+            color: #fff;
         }
 
         table tbody tr:nth-child(even) {
@@ -96,25 +91,19 @@
         /* Export Button Styles */
         .export {
             display: inline-block;
-            padding: 10px 15px;
-            background: #3f51b5;
-            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            background: linear-gradient(90deg, violet, #641975);
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 25px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-        }
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.5);
 
-        .export:hover {
-            background: #303f9f;
-        }
-
-        /* Canvas Styles */
-        canvas {
-            margin-top: 20px;
-            max-width: 100%;
         }
     </style>
 </head>
@@ -230,8 +219,8 @@
                     datasets: [{
                         label: 'Ratings',
                         data: [5, 3, 4, 2, 5],
-                        backgroundColor: '#3498db',
-                        borderColor: '#2980b9',
+                        backgroundColor: '#9B26B6',
+                        borderColor: 'black',
                         borderWidth: 1
                     }]
                 },
@@ -254,8 +243,8 @@
                     datasets: [{
                         label: 'Times Serviced',
                         data: [12, 8, 5, 7, 10],
-                        backgroundColor: '#e74c3c',
-                        borderColor: '#c0392b',
+                        backgroundColor: '#A629C2',
+                        borderColor: 'black',
                         borderWidth: 1
                     }]
                 },

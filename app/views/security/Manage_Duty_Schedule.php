@@ -71,7 +71,7 @@
 
         h1 {
             text-align: center;
-            color: #6c5ce7;
+            color: #800080;
             margin: 0;
             font-weight: 700;
         }
@@ -89,7 +89,7 @@
         }
 
         th {
-            background-color: #6c5ce7;
+            background-color: #800080;
             color: white;
         }
 
@@ -109,7 +109,7 @@
         .btn{
             width: 25%;
     padding: 15px;
-    background-color: #6c5ce7;
+    background-color: #336699;
     color: white;
     font-size: 18px;
     border: none;
@@ -197,7 +197,7 @@
 
 h3 {
     font-size: 1.8em;
-    color: #4A90E2;
+    color: #800080;
     margin-bottom: 15px;
     text-align: center;
 }
@@ -319,7 +319,7 @@ h3 {
 }
 .today{
     padding-top: 30px;
-    color: #4A90E2;
+    color: #800080;
     font-size: 30px;
 }
 

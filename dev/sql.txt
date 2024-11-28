@@ -167,7 +167,18 @@ CREATE TABLE inventory_usage_log (
     FOREIGN KEY (item_id) REFERENCES available_store(item_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+// Maintenance member
 
+CREATE TABLE maintenance_members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    specialization VARCHAR(100) NOT NULL,
+    experience INT NOT NULL,
+    certifications VARCHAR(255),
+    profile_image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 
 

@@ -32,8 +32,9 @@
         }
 
         /* Headers */
-        h1 {
-            color: #3f51b5;
+        h1,
+        h2 {
+            color: #800080;
             padding-bottom: 5px;
             margin-bottom: 20px;
         }
@@ -43,6 +44,7 @@
         }
 
         h2 {
+            padding-top: 20px;
             font-size: 1.5rem;
         }
 
@@ -57,7 +59,7 @@
 
         .task-table th,
         .tracker-table th {
-            background-color: #3f51b5;
+            background-color: #800080;
             color: #fff;
             padding: 12px;
             text-align: center;
@@ -127,7 +129,7 @@
 
         .task-card h3 {
             margin-top: 0;
-            color: #3f51b5;
+            color: #800080;
         }
 
         /* Urgent Alerts */
@@ -161,6 +163,27 @@
                 padding: 10px;
             }
         }
+
+        .search-container {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .search-container input {
+            width: 50%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .search-container input:focus {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-color: #800080;
+        }
     </style>
 </head>
 
@@ -172,12 +195,19 @@
         <?php require APPROOT . '/views/inc/components/side_panel_maintenance.php'; ?>
 
         <!-- Main Content -->
+        <!-- Main Content -->
         <main class="main-content">
             <h1>Scheme Maintenance</h1>
 
             <!-- Maintenance Task List -->
             <h2>Maintenance Task List</h2>
-            <table class="task-table">
+
+            <!-- Search Bar for Maintenance Task List -->
+            <div class="search-container">
+                <input type="text" id="task-search" placeholder="Search tasks..." onkeyup="filterTasks()">
+            </div>
+
+            <table class="task-table" id="task-table">
                 <thead>
                     <tr>
                         <th>Task ID</th>
@@ -193,8 +223,8 @@
                     <tr>
                         <td>MT-001</td>
                         <td>Inspection</td>
-                        <td class="status-normal">Scheduled</td>
-                        <td class="priority-high">High</td>
+                        <td>Scheduled</td>
+                        <td>High</td>
                         <td>Monthly</td>
                         <td>Team A</td>
                         <td>-</td>
@@ -202,8 +232,8 @@
                     <tr>
                         <td>MT-002</td>
                         <td>Repair</td>
-                        <td class="status-critical">In Progress</td>
-                        <td class="priority-medium">Medium</td>
+                        <td>In Progress</td>
+                        <td>Medium</td>
                         <td>Quarterly</td>
                         <td>Team B</td>
                         <td>HVAC Inspection</td>
@@ -211,8 +241,8 @@
                     <tr>
                         <td>MT-003</td>
                         <td>Replacement</td>
-                        <td class="status-overdue">Overdue</td>
-                        <td class="priority-high">High</td>
+                        <td>Overdue</td>
+                        <td>High</td>
                         <td>Annually</td>
                         <td>Team C</td>
                         <td>Plumbing Inspection</td>
@@ -220,101 +250,57 @@
                 </tbody>
             </table>
 
-            <!-- Routine Maintenance Tracker -->
-            <h2>Routine Maintenance Tracker</h2>
-            <table class="tracker-table">
-                <thead>
-                    <tr>
-                        <th>System</th>
-                        <th>Last Checked</th>
-                        <th>Frequency</th>
-                        <th>Next Scheduled Check</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>HVAC</td>
-                        <td>2024-09-01</td>
-                        <td>Monthly</td>
-                        <td>2024-10-01</td>
-                        <td class="status-normal">Scheduled</td>
-                    </tr>
-                    <tr>
-                        <td>Plumbing</td>
-                        <td>2024-06-01</td>
-                        <td>Quarterly</td>
-                        <td class="status-overdue">2024-09-01</td>
-                        <td class="status-overdue">Overdue</td>
-                    </tr>
-                    <tr>
-                        <td>Electrical</td>
-                        <td>2024-07-15</td>
-                        <td>Annually</td>
-                        <td>2025-07-15</td>
-                        <td class="status-normal">Scheduled</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Service Life Tracking -->
-            <h2>Service Life Tracking</h2>
-            <table class="tracker-table">
-                <thead>
-                    <tr>
-                        <th>Equipment</th>
-                        <th>Install Date</th>
-                        <th>Service Life (Years)</th>
-                        <th>Current Age (Years)</th>
-                        <th>Expected Replacement</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Boiler</td>
-                        <td>2015-01-15</td>
-                        <td>10</td>
-                        <td>9</td>
-                        <td>2025</td>
-                    </tr>
-                    <tr>
-                        <td>Elevator</td>
-                        <td>2018-06-01</td>
-                        <td>15</td>
-                        <td>6</td>
-                        <td>2033</td>
-                    </tr>
-                    <tr>
-                        <td>Generator</td>
-                        <td>2010-09-10</td>
-                        <td>12</td>
-                        <td>14</td>
-                        <td class="status-overdue">Due for Replacement</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Detailed Maintenance History -->
+            <!-- Maintenance History -->
             <h2>Maintenance History</h2>
-            <div class="task-card">
-                <h3>Common Area - HVAC System</h3>
-                <p>Last Maintenance Date: 2024-08-15</p>
-                <p>Issue: Filter Replacement</p>
-                <p>Actions Taken: Replaced filters and adjusted settings</p>
-                <p>Status: Completed</p>
+
+            <!-- Search Bar for Maintenance History -->
+            <div class="search-container">
+                <input type="text" id="history-search" placeholder="Search history..." onkeyup="filterHistory()">
             </div>
-            <div class="task-card">
-                <h3>Electrical Room - Main Circuit</h3>
-                <p>Last Maintenance Date: 2024-07-10</p>
-                <p>Issue: Overload Protection</p>
-                <p>Actions Taken: Installed new breaker</p>
-                <p>Status: Completed</p>
+
+            <div class="task-card-container" id="history-container">
+                <div class="task-card">
+                    <h3>Common Area - HVAC System</h3>
+                    <p>Last Maintenance Date: 2024-08-15</p>
+                    <p>Issue: Filter Replacement</p>
+                    <p>Actions Taken: Replaced filters and adjusted settings</p>
+                    <p>Status: Completed</p>
+                </div>
+                <div class="task-card">
+                    <h3>Electrical Room - Main Circuit</h3>
+                    <p>Last Maintenance Date: 2024-07-10</p>
+                    <p>Issue: Overload Protection</p>
+                    <p>Actions Taken: Installed new breaker</p>
+                    <p>Status: Completed</p>
+                </div>
             </div>
         </main>
+
     </div>
 
     <!-- Footer -->
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
+
+<script>
+    function filterTasks() {
+        const query = document.getElementById("task-search").value.toLowerCase();
+        const rows = document.querySelectorAll("#task-table tbody tr");
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(query) ? "" : "none";
+        });
+    }
+
+    function filterHistory() {
+        const query = document.getElementById("history-search").value.toLowerCase();
+        const cards = document.querySelectorAll("#history-container .task-card");
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(query) ? "" : "none";
+        });
+    }
+</script>
+
 
 </html>

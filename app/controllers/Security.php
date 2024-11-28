@@ -103,17 +103,7 @@ class Security extends Controller
         $this->view('security/Emergency_Contacts');
     }
 
-    // Manage Alerts (e.g., view and manage security alerts)
-    public function Manage_Alerts()
-    {
-        // Fetch alert data
-      
-        
-        // Load the view with alert data
-        $this->view('security/Manage_Alerts', [
-           
-        ]);
-    }
+   
 
     // Manage Incident Reports
     public function Manage_Incident_Reports()
@@ -163,6 +153,21 @@ class Security extends Controller
         // Load the view for managing resident contacts
         $this->view('security/Resident_Contacts');
     }
+
+    //****************************************************************************************************************** */
+    //    // Manage Alerts (e.g., view and manage security alerts)
+    // public function Manage_Alerts()
+    // {
+    //     // Fetch alert data
+      
+        
+    //     // Load the view with alert data
+    //     $this->view('security/Manage_Alerts', [
+           
+    //     ]);
+    // }
+
+
 }
 
 ?>
