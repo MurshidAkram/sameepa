@@ -82,9 +82,9 @@
                             <span class="poll-end-date">Ends: <?php echo date('M d, Y', strtotime($poll->end_date)); ?></span>
                         </div>
                         <div class="poll-actions">
-                            <a href="<?php echo URLROOT; ?>/polls/view_poll/<?php echo $poll->id; ?>" class="btn-view-poll">View Poll</a>
+                            <a href="<?php echo URLROOT; ?>/polls/viewpoll" class="btn-view-poll">View Poll</a>
                             <?php if ($poll->created_by == $_SESSION['user_id'] || $_SESSION['user_role_id'] >= 2) : ?>
-                                <a href="<?php echo URLROOT; ?>/polls/edit/<?php echo $poll->id; ?>" class="btn-edit-poll">Edit</a>
+                                <a href="<?php echo URLROOT; ?>/polls/edit" class="btn-edit-poll">Edit</a>
                                 <a href="<?php echo URLROOT; ?>/polls/delete/<?php echo $poll->id; ?>" class="btn-delete-poll">Delete</a>
                             <?php endif; ?>
                         </div>

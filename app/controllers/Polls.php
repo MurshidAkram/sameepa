@@ -34,4 +34,14 @@ class Polls extends Controller
     {
         $this->view('polls/mypolls');
     }
+
+    public function viewpoll()
+    {
+        $this->view('polls/viewpoll');
+    }
+
+    public function edit()
+    {
+        $this->view('polls/edit');
+    }
 }

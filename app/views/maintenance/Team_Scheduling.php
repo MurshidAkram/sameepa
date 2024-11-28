@@ -22,13 +22,33 @@
             color: #2c3e50;
         }
 
+
+
         /* Dashboard Layout */
         .dashboard-container {
             display: flex;
         }
 
         /* Side Panel Styling */
+        .side-panel {
+            width: 300px;
+            background-color: #34495e;
+            color: #fff;
+            padding: 20px;
+            height: 100vh;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+        }
 
+        .side-panel a {
+            color: #bdc3c7;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .side-panel a:hover {
+            color: #1abc9c;
+        }
 
         /* Main Content Styling */
         main {

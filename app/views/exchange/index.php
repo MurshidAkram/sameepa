@@ -16,9 +16,9 @@
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
-        <?php 
+        <?php
         // Load appropriate side panel based on user role
-        switch($_SESSION['user_role_id']) {
+        switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
                 break;
@@ -85,7 +85,7 @@
                 foreach ($listings as $listing) :
                 ?>
                     <div class="listing-card <?php echo $listing['type']; ?>">
-                        <img src="<?php echo URLROOT; ?>/img/cat.jpeg" alt="<?php echo $listing['title']; ?>" class="listing-image">
+                        <img src="<?php echo URLROOT; ?>/img/lawnmower.jpeg" alt="<?php echo $listing['title']; ?>" class="listing-image">
                         <h2 class="listing-title"><?php echo $listing['title']; ?></h2>
                         <p class="listing-description"><?php echo $listing['description']; ?></p>
                         <div class="listing-details">

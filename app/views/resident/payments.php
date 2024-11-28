@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/resident/payments.css">
     <title>Make Payment | <?php echo SITENAME; ?></title>
 </head>

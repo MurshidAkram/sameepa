@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/polls.css">
-    <title>Create Poll | <?php echo SITENAME; ?></title>
+    <title>Edit Poll | Community Garden Location</title>
 
     <style>
-        /* Create Poll Form Enhancements */
-        .create-poll-container {
+        .edit-poll-container {
             background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
             border: 1px solid #d1d9e6;
             padding: 2.5rem;
@@ -20,6 +19,11 @@
                 0 10px 25px rgba(0, 0, 0, 0.05),
                 0 5px 10px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
+        }
+
+        .form-group.disabled input {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
         }
 
         .create-poll-container:hover {
@@ -149,86 +153,68 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
-        switch ($_SESSION['user_role_id']) {
-            case 1:
-                require APPROOT . '/views/inc/components/side_panel_resident.php';
-                break;
-            case 2:
-                require APPROOT . '/views/inc/components/side_panel_admin.php';
-                break;
-            case 3:
-                require APPROOT . '/views/inc/components/side_panel_superadmin.php';
-                break;
-        }
+        // Simulated side panel for a resident user
+        require APPROOT . '/views/inc/components/side_panel_resident.php';
         ?>
 
         <main class="polls-main">
-            <div class="create-poll-container">
-                <h1>Create New Poll</h1>
-                <form action="<?php echo URLROOT; ?>/polls/create" method="POST" class="poll-form">
+            <div class="create-poll-container edit-poll-container">
+                <h1>Edit Poll</h1>
+                <form action="#" method="POST" class="poll-form">
                     <div class="form-group">
                         <label for="title">Poll Title <span class="required">*</span></label>
                         <input type="text" name="title" id="title"
-                            class="form-control <?php echo (!empty($data['title_err'])) ? 'is-invalid' : ''; ?>"
-                            value="<?php echo $data['title'] ?? ''; ?>"
+                            value="Community Garden Location"
                             maxlength="100"
                             required>
-                        <?php if (!empty($data['title_err'])): ?>
-                            <div class="invalid-feedback"><?php echo $data['title_err']; ?></div>
-                        <?php endif; ?>
                     </div>
 
                     <div class="form-group">
                         <label for="description">Poll Description</label>
                         <textarea name="description" id="description"
-                            class="form-control <?php echo (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>"
                             maxlength="500"
-                            rows="4"><?php echo $data['description'] ?? ''; ?></textarea>
-                        <?php if (!empty($data['description_err'])): ?>
-                            <div class="invalid-feedback"><?php echo $data['description_err']; ?></div>
-                        <?php endif; ?>
+                            rows="4"
+                            required>Help us decide the best location for our new community garden. Your input matters!</textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="end_date">Poll End Date <span class="required">*</span></label>
+                        <label>Poll End Date <span class="required">*</span></label>
                         <input type="date" name="end_date" id="end_date"
-                            class="form-control <?php echo (!empty($data['end_date_err'])) ? 'is-invalid' : ''; ?>"
-                            value="<?php echo $data['end_date'] ?? ''; ?>"
+                            value="<?php echo date('Y-m-d', strtotime('+2 weeks')); ?>"
                             min="<?php echo date('Y-m-d'); ?>"
                             required>
-                        <?php if (!empty($data['end_date_err'])): ?>
-                            <div class="invalid-feedback"><?php echo $data['end_date_err']; ?></div>
-                        <?php endif; ?>
                     </div>
 
                     <div class="form-group">
-                        <label>Poll Choices <span class="required">*</span></label>
+                        <label>Poll Choices</label>
                         <div class="poll-choices-container" id="poll-choices-container">
-                            <div class="poll-choice-input">
-                                <input type="text" name="choices[]"
-                                    placeholder="Enter poll choice"
-                                    class="form-control"
-                                    maxlength="100"
-                                    required>
-                                <button type="button" class="btn-remove-choice" onclick="removeChoice(this)">Remove</button>
-                            </div>
-                            <div class="poll-choice-input">
-                                <input type="text" name="choices[]"
-                                    placeholder="Enter poll choice"
-                                    class="form-control"
-                                    maxlength="100"
-                                    required>
-                                <button type="button" class="btn-remove-choice" onclick="removeChoice(this)">Remove</button>
-                            </div>
+                            <?php
+                            $choices = [
+                                'North Side Park',
+                                'Community Center Grounds',
+                                'Vacant Lot on Main Street',
+                                'Behind the Library'
+                            ];
+
+                            foreach ($choices as $choice): ?>
+                                <div class="poll-choice-input">
+                                    <input type="text" name="choices[]"
+                                        value="<?php echo $choice; ?>"
+                                        placeholder="Enter poll choice"
+                                        class="form-control"
+                                        maxlength="100"
+                                        required>
+                                    <button type="button" class="btn-remove-choice" onclick="removeChoice(this)">Remove</button>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                         <button type="button" class="btn-add-choice" onclick="addChoice()">Add Choice</button>
                         <small class="form-text text-muted">You must have 2-5 poll choices.</small>
                     </div>
 
                     <div class="form-actions">
-                        <a href="<?php echo URLROOT; ?>/polls" class="btn btn-cancel">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Create Poll</button>
+                        <a href="<?php echo URLROOT; ?>/polls/index" class="btn btn-cancel">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Update Poll</button>
                     </div>
                 </form>
             </div>
