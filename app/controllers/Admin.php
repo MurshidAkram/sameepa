@@ -83,7 +83,7 @@ class Admin extends Controller
     public function groups()
     {
         // Load admin dashboard view
-        $this->view('admin/groups');
+        $this->view('resident/groups');
     }
 
     public function exchange()
@@ -143,7 +143,9 @@ class Admin extends Controller
     public function create_payment(){
         $this->view('admin/create_payment');
     }
-
+    public function view_complaint(){
+        $this->view('admin/view_complaint');
+    }
 }
 
 

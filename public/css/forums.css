@@ -94,7 +94,7 @@
 
 .forum-actions {
     display: flex;
-    gap: 15px; 
+    gap: 30px; 
     justify-content: flex-start;
     margin-top: 15px;
     flex-wrap: wrap; 
@@ -104,11 +104,12 @@
 .btn-delete-forum,
 .btn-reported-comments {
     margin: 5px 0; 
+    font-size: 0.9rem;
+    align-items: center;
 }
 
 .btn-view-forum {
-    display: inline-block;
-    width:10rem;
+    display: inline-flex;
     padding: 8px 15px;
     background-color: #800080;
     color: white;
@@ -116,15 +117,29 @@
     border-radius: 5px;
     text-align: center;
     transition: background-color 0.3s ease;
+    width: 35px;
 }
 
-.btn-view-forum:hover {
+.btn-view-forum2 {
+    display: inline-block;
+    width:10rem;
+    padding: 8px 15px;
+    background-color: #800080;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-view-forum:hover,
+.btn-view-forum2:hover {
     background-color: #9a009a;
+    transform: translateY(-2px);
 }
 
 .btn-delete-forum {
-    display: inline-block;
-    width:10rem;
+    display: inline-flex;
     padding: 8px 15px;
     background-color: #e01616;
     color: white;
@@ -132,15 +147,16 @@
     border-radius: 5px;
     text-align: center;
     transition: background-color 0.3s ease;
+    width: 45px;
 }
 
 .btn-delete-forum:hover {
     background-color: #cc0000;
+    transform: translateY(-2px);
 }
 
 .btn-reported-comments{
-    width: 10rem;
-    display: inline-block;
+    display: inline-flex;
     padding: 8px 15px;
     background-color: #f5dd07;
     color: white;
@@ -148,10 +164,12 @@
     border-radius: 5px;
     text-align: center;
     transition: background-color 0.3s ease;
+    width: 55px;
 }
 
 .btn-reported-comments:hover {
     background-color: #cddf07;
+    transform: translateY(-2px);
 }
 
 

@@ -19,7 +19,7 @@
             <div class="header-actions">
                 <h1>All Facility Bookings</h1>
                 <div class="action-buttons">
-                    <a href="<?php echo URLROOT; ?>/facilities" class="btn-back">Back</a>
+                    <a href="<?php echo URLROOT; ?>/facilities" class="fac-btn-back">Back</a>
                 </div>
             </div>
             
@@ -43,8 +43,8 @@
                             <td><?php echo date('H:i', strtotime($booking->booking_time)); ?></td>
                             <td><?php echo $booking->duration; ?></td>
                             <td>
-                                <button class="btn-edit" onclick="editBooking(<?php echo $booking->id; ?>)">Edit</button>
-                                <button class="btn-cancel" onclick="removeBooking(<?php echo $booking->id; ?>)">Remove</button>
+                                <button class="fac-btn-edit" onclick="editBooking(<?php echo $booking->id; ?>)">Edit</button>
+                                <button class="fac-btn-cancel" onclick="removeBooking(<?php echo $booking->id; ?>)">Remove</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -69,7 +69,7 @@
                             <label for="editDuration">Duration (hours):</label>
                             <input type="number" id="editDuration" name="duration" min="1" max="24" required>
                         </div>
-                        <button type="submit" class="btn-submit">Update Booking</button>
+                        <button type="submit" class="fac-btn-submit">Update Booking</button>
                     </form>
                 </div>
             </div>

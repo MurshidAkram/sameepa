@@ -37,6 +37,11 @@ class Facilities extends Controller
                 'errors' => []
             ];
 
+            if ($this->facilityModel->findFacilityByName($data['name'])) {
+                flash('facility_message', 'A facility with this name already exists', 'alert alert-danger');
+                redirect('facilities/create');
+            }
+
             if (empty($data['name'])) {
                 $data['errors'][] = 'Please enter facility name';
             }
@@ -102,8 +107,13 @@ class Facilities extends Controller
     public function edit($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Get raw posted data
             $data = json_decode(file_get_contents("php://input"));
+
+            // Check for duplicate name
+            if ($this->facilityModel->findFacilityByNameExcept($data->name, $id)) {
+                echo json_encode(['success' => false, 'message' => 'A facility with this name already exists']);
+                return;
+            }
 
             $facilityData = [
                 'id' => $id,
@@ -114,9 +124,11 @@ class Facilities extends Controller
             ];
 
             if ($this->facilityModel->updateFacility($facilityData)) {
+                flash('facility_message', 'Facility updated successfully', 'alert alert-success');
                 echo json_encode(['success' => true]);
             } else {
-                echo json_encode(['success' => false]);
+                flash('facility_message', 'Failed to update facility', 'alert alert-danger');
+                echo json_encode(['success' => false, 'message' => 'Failed to update facility']);
             }
         }
     }

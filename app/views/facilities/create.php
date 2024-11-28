@@ -71,6 +71,7 @@
                         <label for="name">Facility Name:</label>
                         <input type="text" name="name" id="name" value="<?php echo $data['name']; ?>" 
                                required maxlength="255" class="form-control">
+                               <?php flash('facility_message'); ?>
                     </div>
 
                     <div class="form-group">
@@ -86,8 +87,8 @@
                     </div>
 
                     <div class="form-buttons">
-                        <button type="submit" class="btn-submit">Create Facility</button>
-                        <a href="<?php echo URLROOT; ?>/facilities" class="btn-cancel">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Facility</button>
+                        <a href="<?php echo URLROOT; ?>/facilities" class="btn btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>

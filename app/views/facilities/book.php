@@ -65,6 +65,7 @@
                     function validateBookingForm() {
                         const bookingDate = new Date(document.getElementById('booking_date').value);
                         const today = new Date();
+                        today.setHours(0,0,0,0);
                         const duration = document.getElementById('duration').value;
                         
                         if (bookingDate < today) {
@@ -80,7 +81,6 @@
                         return true;
                     }
                     </script>
-
                     <form action="<?php echo URLROOT; ?>/facilities/book/<?php echo $data['facility']['id']; ?>" method="POST" onsubmit="return validateBookingForm()">
 
                         <input type="hidden" name="facility_id" value="<?php echo $data['facility']['id']; ?>">
@@ -92,7 +92,7 @@
                         </div>
                         <div class="form-group">
                             <label for="booking_time">Selected Time:</label>
-                            <input type="time" name="booking_time" id="booking_time" required readonly>
+                            <input type="time" name="booking_time" id="booking_time" required>
                         </div>
                         <div class="form-group">
                             <label for="duration">Duration (hours):</label>
@@ -107,8 +107,8 @@
                         </div>
 
                         <div class="form-buttons">
-                            <button type="submit" class="btn-submit">Book Facility</button>
-                            <a href="<?php echo URLROOT; ?>/facilities" class="btn-cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Book Facility</button>
+                            <a href="<?php echo URLROOT; ?>/facilities" class="btn btn-cancel">Cancel</a>
                         </div>
                     </form>
                     <div class="my-bookings">

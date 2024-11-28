@@ -17,7 +17,6 @@
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    border: 2px solid #000000;
 }
 
 .facility-title {
@@ -48,7 +47,7 @@
     margin-bottom: 15px;
 }
 
-.btn-edit {
+.fac-btn-edit {
     display: inline-block;
     padding: 12px 25px;
     background-color: #800080;
@@ -60,7 +59,7 @@
     transition: background-color 0.3s ease;
 }
 
-.btn-edit:hover {
+.fac-btn-edit:hover {
     background-color: #6a006a;
 }
 
