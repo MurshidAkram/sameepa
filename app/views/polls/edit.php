@@ -153,8 +153,18 @@
 
     <div class="dashboard-container">
         <?php
-        // Simulated side panel for a resident user
-        require APPROOT . '/views/inc/components/side_panel_resident.php';
+        // Load appropriate side panel based on user role
+        switch ($_SESSION['user_role_id']) {
+            case 1:
+                require APPROOT . '/views/inc/components/side_panel_resident.php';
+                break;
+            case 2:
+                require APPROOT . '/views/inc/components/side_panel_admin.php';
+                break;
+            case 3:
+                require APPROOT . '/views/inc/components/side_panel_superadmin.php';
+                break;
+        }
         ?>
 
         <main class="polls-main">

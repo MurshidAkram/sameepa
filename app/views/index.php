@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <?php require APPROOT . '/views/inc/components/header.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/pages/index.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Welcome | <?php echo SITENAME; ?></title>
 </head>
@@ -22,7 +22,7 @@
         </div>
         <div class="hero-content">
             <h1>Welcome to Sameepa</h1>
-            <p>Your community management system. SAMEEPA is designed to streamline and enhance your community living experience.</p>
+            <p>Your community connectivity platform, SAMEEPA is designed to streamline and enhance your community living experience.</p>
             <div class="cta-buttons">
                 <a href="<?php echo URLROOT; ?>/pages/about" class="btn-primary">About us</a>
                 <a href="<?php echo URLROOT; ?>/pages/contact" class="btn-secondary">Contact us</a>

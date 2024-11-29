@@ -674,6 +674,7 @@
                                 if (data.profile_image) {
                                     card.querySelector('.profile-img img').src = data.profile_image;
                                 }
+
                             } else {
                                 // Add a new card
                                 const newCard = `

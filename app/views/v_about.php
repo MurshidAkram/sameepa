@@ -119,7 +119,7 @@
             <h1>About Us</h1>
             <div class="mission-section">
                 <p>
-                    Welcome to our community management system. Our goal is to enhance the living experience within housing schemes and apartment complexes. Our system provides event management, facility booking, maintenance requests, and more, making it easier to manage your living community.
+                    Welcome to our community connectivity platform. Our goal is to enhance the living experience within your closed community. Our system provides event management, facility booking, maintenance requests, and more, making it easier to manage your living community.
                 </p>
             </div>
         </section>

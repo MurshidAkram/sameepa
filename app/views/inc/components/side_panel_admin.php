@@ -9,7 +9,8 @@
                 <li><a href="<?php echo URLROOT; ?>/polls/index">Manage Polls</a></li>
                 <li><a href="<?php echo URLROOT; ?>/chat/index">Manage Chats</a></li>
                 <li><a href="<?php echo URLROOT; ?>/facilities/index">Manage Facilities</a></li>
-                <li><a href="<?php echo URLROOT; ?>/admin/payments">Manage Payments</a></li>
+                <!--                 <li><a href="<?php echo URLROOT; ?>/admin/payments">Manage Payments</a></li>
+ -->
                 <li><a href="<?php echo URLROOT; ?>/admin/complaints">Manage Complaints</a></li>
                 <li><a href="<?php echo URLROOT; ?>/groups/index">Manage Groups</a></li>
                 <li><a href="<?php echo URLROOT; ?>/exchange/admin_dashboard">Manage Exchange Center</a></li>

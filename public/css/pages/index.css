@@ -33,7 +33,6 @@ body {
     display: flex;
     animation: slide 15s infinite ease-in-out;
     z-index: 0;
-   
 }
 
 /* Individual Slide */
@@ -64,7 +63,6 @@ body {
     padding: 20px;
     box-sizing: border-box;
 }
-
 
 .hero-content h1 {
     font-size: 3rem;
@@ -114,6 +112,48 @@ body {
     transform: scale(1.1);
 }
 
+/* Why Choose Us Section */
+.why-choose-us {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.choose-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px; /* Added space between items */
+}
+
+.choose-box {
+    width: 25%; /* Reduced width for more compact layout */
+    padding: 20px;
+    background-color: #fff;
+    margin: 15px 0; /* Adjusted margin */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+    text-align: center;
+    border-radius: 8px; /* Rounded corners */
+}
+
+.choose-box img {
+    width: 80px; /* Reduced image size */
+    height: 80px;
+    object-fit: cover;
+    margin-bottom: 12px; /* Reduced margin below the image */
+}
+
+.choose-box h3 {
+    font-size: 1.2em; /* Slightly smaller title */
+    margin-bottom: 8px; /* Reduced spacing */
+    font-weight: 600; /* Bold for emphasis */
+}
+
+.choose-box p {
+    font-size: 0.95em; /* Slightly smaller text */
+    color: #555; /* Darker color for better readability */
+}
+
 /* Animation for Slider */
 @keyframes slide {
     0% { transform: translateX(0); }
@@ -121,7 +161,6 @@ body {
     66.66% { transform: translateX(-200%); }
     100% { transform: translateX(0); }
 }
-
 
 /* About Section */
 .about-section {
@@ -134,7 +173,7 @@ body {
     font-size: 2.5rem;
     font-weight: 600;
     margin-bottom: 40px;
-    color:#800080;
+    color: #800080;
 }
 
 .about-content {
@@ -207,7 +246,6 @@ body {
     .box {
         width: 90%;
     }
-/* Responsive Design */
 
     .hero-content h1 {
         font-size: 2rem;
@@ -222,4 +260,89 @@ body {
         font-size: 1rem;
         padding: 10px 20px;
     }
+
+    /* Adjustments for "Why Choose Us" section on small screens */
+    .choose-box {
+        width: 45%; /* More compact on smaller screens */
+    }
 }
+/* Why Choose Us Section */
+.why-choose-us {
+    padding: 80px 20px;
+    background-image: url('<?php echo URLROOT; ?>/public/img/hero-background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    position: relative;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.why-choose-us h2 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    color:#800080;
+}
+
+.choose-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.choose-box {
+    width: 30%; /* Adjust box width for better layout */
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white background */
+    margin: 10px 0;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.choose-box:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 1); /* Full opacity on hover */
+}
+
+.choose-box img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%; /* Circular images */
+    margin-bottom: 20px;
+    border: 2px solid #fff; /* White border around images */
+}
+
+.choose-box h3 {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: bold;
+}
+
+.choose-box p {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .choose-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .choose-box {
+        width: 80%;
+        margin: 10px 0;
+    }
+}
+

@@ -73,6 +73,17 @@ class SuperAdmin extends Controller
 
 
 
+    public function payments()
+    {
+        // Load the Settings view
+        $this->view('superadmin/payments');
+    }
+
+    public function create_payment()
+    {
+        $this->view('superadmin/create_payment');
+    }
+
     public function reports()
     {
         // Load the Settings view

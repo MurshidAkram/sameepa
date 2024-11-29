@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +10,21 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/exchange/admin_dashboard.css">
     <title>Admin Dashboard - Exchange Center | <?php echo SITENAME; ?></title>
 </head>
+
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
-        <?php require APPROOT . '/views/inc/components/side_panel_admin.php'; ?>
-
+        <?php
+        switch ($_SESSION['user_role_id']) {
+            case 2:
+                require APPROOT . '/views/inc/components/side_panel_admin.php';
+                break;
+            case 3:
+                require APPROOT . '/views/inc/components/side_panel_superadmin.php';
+                break;
+        }
+        ?>
         <main class="admin-exchange-main">
             <div class="admin-header">
                 <h1>Exchange Center Management</h1>
@@ -30,7 +40,7 @@
                     <i class="fas fa-plus"></i> Create New Listing
                 </a>
             </div>
- 
+
             <div class="listings-stats">
                 <div class="stat-card">
                     <i class="fas fa-list"></i>
@@ -133,4 +143,5 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
+
 </html>

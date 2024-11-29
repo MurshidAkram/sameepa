@@ -8,6 +8,180 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/form-styles.css">
     <title><?php echo SITENAME; ?> - Sign Up</title>
 </head>
+<style>
+    /* General body styling */
+    /* General body styling */
+    /* General body styling */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-image: url('<?php echo URLROOT; ?>/img/signup.jpg');
+        /* Path to your background image */
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        /* Prevent horizontal scrolling */
+    }
+
+    /* Form container styling */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.9);
+        /* Semi-transparent white */
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        max-width: 600px;
+        /* Reduced width */
+        width: 90%;
+        /* Responsive width */
+        margin: 20px auto;
+        padding: 15px;
+        /* Reduced padding */
+        flex-shrink: 0;
+    }
+
+    /* Form content styling */
+    .form-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Form title and description */
+    .form-content h1 {
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+        /* Reduced font size */
+        color: #333;
+        text-align: center;
+    }
+
+    .form-content p {
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        /* Reduced font size */
+        color: #555;
+        text-align: center;
+    }
+
+    /* Form styling */
+    .form-content form {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+        /* Reduced spacing */
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        /* Reduced font size */
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        /* Reduced padding */
+        font-size: 0.9rem;
+        /* Reduced font size */
+        border: 1.5px solid #e0e0e0;
+        /* Slightly thinner border */
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    /* Error message styling */
+    .form-errors p {
+        color: #d9534f;
+        font-size: 0.8rem;
+        /* Reduced font size */
+        margin: 5px 0;
+    }
+
+    /* Submit button */
+    .form-submit {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        /* Reduced padding */
+        font-size: 0.9rem;
+        /* Reduced font size */
+        color: #fff;
+        background-color: #800080;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-submit:hover {
+        background-color: #800080;
+    }
+
+    /* Footer styling
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+} */
+
+    /* Ensure page scrolls */
+    html,
+    body {
+        height: 100%;
+        /* Ensure the height includes content overflow */
+        overflow-x: hidden;
+        /* Prevent horizontal scrolling */
+    }
+
+    main {
+        flex: 1;
+        /* Allow the main content to grow and push the footer down */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Responsive Design */
+    @media (min-width: 768px) {
+        .form-container {
+            flex-direction: row;
+        }
+
+        .form-image {
+            flex: 1;
+            display: block;
+            background-size: cover;
+            background-position: center;
+            height: auto;
+        }
+    }
+</style>
 
 <body>
     <?php require APPROOT . '/views/inc/components/header.php'; ?>
@@ -73,7 +247,7 @@
                 </form>
             </div>
         </div>
-        <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/public/img/signup.jpg');"></div>
+        <!-- <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/public/img/signup.jpg');"></div> -->
     </div>
 
     <script>

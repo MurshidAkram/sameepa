@@ -14,21 +14,20 @@
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
     <div class="dashboard-container side-panel-open">
-        <?php require APPROOT . '/views/inc/components/side_panel_admin.php'; ?>
+        <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
         <main class="payments-dashboard">
             <div class="payments-content">
                 <div class="header-container">
                     <h1>Payment Dashboard</h1>
                     <div class="button-container">
-                        <a href="<?php echo URLROOT; ?>/admin/create_payment" class="btn-create">New Payment</a>
+                        <a href="<?php echo URLROOT; ?>/superadmin/create_payment" class="btn-create">New Payment</a>
                     </div>
                 </div>
                 <div class="payments-container">
                     <div class="month-selector">
                         <button id="prevMonth">
-                            << /button>
-                                <span id="currentMonth">June 2024</span>
-                                <button id="nextMonth">></button>
+                            <span id="currentMonth">June 2024</span>
+                            <button id="nextMonth">></button>
                     </div>
 
                     <div class="payment-cards-container">
