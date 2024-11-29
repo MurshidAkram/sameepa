@@ -39,11 +39,12 @@
                         <input type="password" id="password" name="password" required>
                     </div>
                     <button type="submit" class="form-submit">Login</button>
-                    <a href=" <?php echo URLROOT; ?>/users/forgotpassword">Forgot password?</a>
+                    <a style="" href=" <?php echo URLROOT; ?>/users/forgotpassword">Forgot password?</a>
                 </form>
             </div>
         </div>
-        <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/img/login.jpg');"></div>
+        <!--         <div class="form-image" style="background-i */mage: url('<?php echo URLROOT; ?>/img/login.jpg');"></div>
+ -->
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

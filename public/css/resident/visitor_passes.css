@@ -2,7 +2,6 @@
 
 .visitor-passes-main {
     padding: 20px;
-    background-color: #f5f5f5;
 }
 
 .visitor-pass-container {
@@ -17,7 +16,7 @@
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 40px;
+    padding: 20px;
 }
 
 .form-group {
@@ -28,34 +27,26 @@
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #333;
 }
 
 .form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 8px;
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    border-color: #800080;
-    outline: none;
 }
 
 .btn-submit {
     background-color: #800080;
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
 }
 
 .btn-submit:hover {
@@ -72,11 +63,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 15px;
-    transition: box-shadow 0.3s ease;
-}
-
-.pass-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
 }
 
 .pass-card h3 {
@@ -84,23 +71,18 @@
     color: #800080;
 }
 
-.pass-details {
-    margin-bottom: 10px;
-}
-
 .pass-actions {
-    display: flex;
-    gap: 10px;
+    margin-top: 10px;
 }
 
 .btn-edit,
 .btn-delete {
-    padding: 8px 12px;
+    padding: 5px 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    margin-right: 10px;
 }
 
 .btn-edit {
@@ -108,17 +90,9 @@
     color: white;
 }
 
-.btn-edit:hover {
-    background-color: #45a049;
-}
-
 .btn-delete {
     background-color: #f44336;
     color: white;
-}
-
-.btn-delete:hover {
-    background-color: #d32f2f;
 }
 
 .modal {
@@ -136,12 +110,11 @@
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
-    padding: 40px;
+    padding: 35px;
     border: 1px solid #888;
     width: 80%;
     max-width: 500px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .close {
@@ -150,13 +123,13 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    transition: color 0.3s ease;
 }
 
 .close:hover,
 .close:focus {
     color: #000;
     text-decoration: none;
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {

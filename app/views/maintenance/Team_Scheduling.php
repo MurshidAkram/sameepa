@@ -12,8 +12,6 @@
 
 
     <style>
-        /* General Styles */
-        /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;

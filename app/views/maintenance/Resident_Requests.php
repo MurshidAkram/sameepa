@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Resident Requests | <?php echo SITENAME; ?></title>
     <style>
-        /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(to bottom, #eef2f3, #ffffff);

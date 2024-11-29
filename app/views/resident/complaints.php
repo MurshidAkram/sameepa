@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/complaints.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/resident/complaints.css">
     <title>Complaints | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="dashboard-container side-panel-open">
+    <div class="dashboard-container">
         <?php require APPROOT . '/views/inc/components/side_panel_resident.php'; ?>
 
         <main>

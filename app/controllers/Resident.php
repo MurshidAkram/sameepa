@@ -95,4 +95,9 @@ class Resident extends Controller
     {
         $this->view('resident/complaints');
     }
+
+    public function incident()
+    {
+        $this->view('resident/incident');
+    }
 }

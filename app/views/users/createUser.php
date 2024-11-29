@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/superadmin/createUser.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
-    <title><?php echo SITENAME; ?> Create Users</title>
+    <title><?php echo SITENAME; ?> Create Employee Account</title>
 </head>
 
 <body>
@@ -38,7 +38,15 @@
                     </div>
                     <div class="form-group">
                         <label for="role">Role:</label>
-                        <select name="role" id="role">
+                        <select name="role" id="role" style="
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s;">
                             <option value="">Select Role</option>
                             <!-- <option value="1">Resident</option> -->
                             <option value="2">Admin</option>
@@ -49,14 +57,14 @@
  -->
                         </select>
                     </div>
-                    <div class="form-group resident-only">
+                    <!-- <div class="form-group resident-only">
                         <label for="address">Address:</label>
                         <input type="text" name="address" id="address" value="<?php echo isset($data['address']) ? $data['address'] : ''; ?>">
                     </div>
                     <div class="form-group resident-only">
                         <label for="phonenumber">Phone No.</label>
                         <input type="text" name="phonenumber" id="phonenumber" value="<?php echo isset($data['phonenumber']) ? $data['phonenumber'] : ''; ?>">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="password">Password:</label>
                         <input type="password" name="password" id="password">
