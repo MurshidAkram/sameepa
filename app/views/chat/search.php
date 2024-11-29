@@ -57,7 +57,7 @@
                             <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="John Doe">
                         </div>
                         <div class="group-details">
-                            <h3 class="group-title">John Doe</h3>
+                            <h3 class="group-title">JMr. Kamal</h3>
                             <div class="group-info">
                                 <p class="group-category">
                                     <i class="fas fa-user-tag"></i>

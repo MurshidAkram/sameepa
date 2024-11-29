@@ -103,14 +103,7 @@ class Users extends Controller
     public function signup()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (!isset($_FILES['verification_document']) || $_FILES['verification_document']['error'] !== UPLOAD_ERR_OK) {
-                $data['errors'][] = 'Verification document is required';
-            }
 
-            $file = $_FILES['verification_document'];
-            if ($file['type'] != 'application/pdf') {
-                $data['errors'][] = 'Only PDF files are allowed';
-            }
 
             $data = [
                 'name' => trim($_POST['name']),
@@ -122,6 +115,14 @@ class Users extends Controller
                 'phonenumber' => trim($_POST['phonenumber']),
                 'errors' => []
             ];
+            if (!isset($_FILES['verification_document']) || $_FILES['verification_document']['error'] !== UPLOAD_ERR_OK) {
+                $data['errors'][] = 'Verification document is required';
+            }
+
+            $file = $_FILES['verification_document'];
+            if ($file['type'] != 'application/pdf') {
+                $data['errors'][] = 'Only PDF files are allowed';
+            }
 
             $userData = [
                 'name' => $data['name'],
@@ -200,6 +201,9 @@ class Users extends Controller
             if ($this->userModel->findUserByEmail($data['email'])) {
                 $data['errors'][] = 'Email already exists';
             }
+        }
+        if (empty($data['role_id'])) {
+            $data['errors'][] = 'Please select a user role';
         }
         if (!empty($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $data['errors'][] = 'Please enter a valid email address';
