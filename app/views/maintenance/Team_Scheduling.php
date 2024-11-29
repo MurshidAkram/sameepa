@@ -548,16 +548,14 @@ h1, h2 {
 </div>
 
 <!-- Placeholder for success message -->
-<div id="successMessage" class="success-message" style="display: none;">
-    Member has been saved successfully!
-</div>
+
 
 
     <!-- Footer -->
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <script>
-  document.addEventListener('DOMContentLoaded', () => {
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
     const addMemberBtn = document.getElementById('addMemberBtn');
     const memberModal = document.getElementById('memberModal');
     const closeModal = document.getElementById('closeModal');
@@ -600,6 +598,7 @@ h1, h2 {
     // Close modal
     closeModal.addEventListener('click', () => {
         memberModal.classList.remove('active');
+        memberForm.reset(); // Reset form on close
     });
 
     // Real-time phone number validation
@@ -636,23 +635,22 @@ h1, h2 {
             .then(data => {
                 if (data.success) {
                     if (editingMemberId) {
-                        // Update the existing card
+                        // Update the existing card dynamically
                         const card = document.querySelector(`.team-profile-card[data-id="${editingMemberId}"]`);
                         card.querySelector('.member-name').textContent = data.name;
                         card.querySelector('.member-specialization').textContent = `Specialization: ${data.specialization}`;
                         card.querySelector('.member-experience').textContent = `Experience: ${data.experience} years`;
                         card.querySelector('.member-phone_number').textContent = `Phone Number: ${data.phone_number}`;
-
-                        // Update profile image if provided
+                        
                         if (data.profile_image) {
                             card.querySelector('.profile-img img').src = data.profile_image;
                         }
                     } else {
-                        // Add a new card
+                        // Add a new card dynamically
                         const newCard = `
                             <div class="team-profile-card" data-id="${data.id}">
                                 <div class="profile-img">
-                                    <img src="${data.profile_image}" alt="${data.specialization}">
+                                    <img src="${data.profile_image || 'default.jpg'}" alt="${data.specialization}">
                                 </div>
                                 <div class="profile-details">
                                     <h3 class="member-name">${data.name}</h3>
@@ -665,10 +663,12 @@ h1, h2 {
                                     <button class="delete-btn">Delete</button>
                                 </div>
                             </div>`;
-                        teamProfileSection.innerHTML += newCard;
+                        teamProfileSection.insertAdjacentHTML('beforeend', newCard);
                     }
-                    // Close the modal after success
+
+                    // Close the modal and reset the form
                     memberModal.classList.remove('active');
+                    memberForm.reset();
                 } else {
                     alert(data.message || 'Error saving member');
                 }
@@ -698,22 +698,30 @@ h1, h2 {
             }
         }
     });
+
+    // Search functionality
+    document.getElementById('searchBtn').addEventListener('click', function () {
+        const query = document.getElementById('searchBar').value.trim().toLowerCase();
+
+        if (query) {
+            const cards = document.querySelectorAll('.team-profile-card');
+            cards.forEach(card => {
+                const name = card.querySelector('.member-name').textContent.toLowerCase();
+                const specialization = card.querySelector('.member-specialization').textContent.toLowerCase();
+
+                if (name.includes(query) || specialization.includes(query)) {
+                    card.style.display = ''; // Show matching cards
+                } else {
+                    card.style.display = 'none'; // Hide non-matching cards
+                }
+            });
+        } else {
+            alert('Please enter a search term');
+        }
+    });
 });
 
-document.getElementById('searchBtn').addEventListener('click', function() {
-    const query = document.getElementById('searchBar').value.trim().toLowerCase();
-
-    if (query) {
-        // Add your search functionality here (e.g., filtering members)
-        console.log(`Searching for: ${query}`);
-        // For example, you could filter a list of team members based on this search term
-    } else {
-        alert('Please enter a search term');
-    }
-});
-
-
-</script>
+ </script>
 </body>
 
 </html>
