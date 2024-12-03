@@ -231,7 +231,13 @@ class Users extends Controller
     {
         // Unset all session variables
         session_unset();
+    public function logout()
+    {
+        // Unset all session variables
+        session_unset();
 
+        // Destroy the session
+        session_destroy();
         // Destroy the session
         session_destroy();
 
@@ -239,7 +245,17 @@ class Users extends Controller
         header('Location: ' . URLROOT . '/users/login');
         exit();
     }
+        // Redirect to the login page
+        header('Location: ' . URLROOT . '/users/login');
+        exit();
+    }
 
+    public function profile()
+    {
+        // Check if user is logged in
+        if (!isset($_SESSION['user_id'])) {
+            redirect('users/login');
+        }
     public function profile()
     {
         // Check if user is logged in
@@ -254,11 +270,23 @@ class Users extends Controller
         if ($_SESSION['user_role_id'] == 1) { // Resident
             $additionalData = $this->userModel->getResidentByUserId($_SESSION['user_id']);
         }
+        $userData = $this->userModel->getUserById($_SESSION['user_id']);
+
+        // Get additional data based on role
+        $additionalData = [];
+        if ($_SESSION['user_role_id'] == 1) { // Resident
+            $additionalData = $this->userModel->getResidentByUserId($_SESSION['user_id']);
+        }
 
         $data = array_merge((array)$userData, (array)$additionalData);
         //$data['message'] = flash('profile_message');
         //$data['message_type'] = flash('message_type');
+        $data = array_merge((array)$userData, (array)$additionalData);
+        //$data['message'] = flash('profile_message');
+        //$data['message_type'] = flash('message_type');
 
+        $this->view('users/profile', $data);
+    }
         $this->view('users/profile', $data);
     }
 
@@ -267,7 +295,22 @@ class Users extends Controller
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             redirect('users/profile');
         }
+    public function updateProfile()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            redirect('users/profile');
+        }
 
+        $data = [
+            'user_id' => $_SESSION['user_id'],
+            'name' => trim($_POST['name']),
+            'email' => trim($_POST['email']),
+            'new_password' => trim($_POST['new_password']),
+            'confirm_password' => trim($_POST['confirm_password']),
+            'address' => isset($_POST['address']) ? trim($_POST['address']) : null,
+            'phonenumber' => isset($_POST['phonenumber']) ? trim($_POST['phonenumber']) : null,
+            'errors' => []
+        ];
         $data = [
             'user_id' => $_SESSION['user_id'],
             'name' => trim($_POST['name']),
@@ -292,7 +335,30 @@ class Users extends Controller
         if (!empty($data['new_password']) && $data['new_password'] !== $data['confirm_password']) {
             $data['errors'][] = 'Passwords do not match';
         }
+        // Validation
+        if (empty($data['name'])) {
+            $data['errors'][] = 'Name is required';
+        }
+        if (empty($data['email'])) {
+            $data['errors'][] = 'Email is required';
+        }
+        if (!empty($data['new_password']) && strlen($data['new_password']) < 6) {
+            $data['errors'][] = 'Password must be at least 6 characters';
+        }
+        if (!empty($data['new_password']) && $data['new_password'] !== $data['confirm_password']) {
+            $data['errors'][] = 'Passwords do not match';
+        }
 
+        if (empty($data['errors'])) {
+            // Update user data
+            if ($this->userModel->updateUser($data)) {
+                //flash('profile_message', 'Profile updated successfully', 'success');
+            } else {
+                //flash('profile_message', 'Something went wrong', 'error');
+            }
+        } else {
+            //flash('profile_message', $data['errors'][0], 'error');
+        }
         if (empty($data['errors'])) {
             // Update user data
             if ($this->userModel->updateUser($data)) {
@@ -306,7 +372,14 @@ class Users extends Controller
 
         redirect('users/profile');
     }
+        redirect('users/profile');
+    }
 
+    public function updateProfilePicture()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            redirect('users/profile');
+        }
     public function updateProfilePicture()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -317,7 +390,18 @@ class Users extends Controller
             //flash('profile_message', 'Please select a valid image file', 'error');
             redirect('users/profile');
         }
+        if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK) {
+            //flash('profile_message', 'Please select a valid image file', 'error');
+            redirect('users/profile');
+        }
 
+        $file = $_FILES['profile_picture'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (!in_array($file['type'], $allowedTypes)) {
+            //flash('profile_message', 'Only JPG, PNG, and GIF files are allowed', 'error');
+            redirect('users/profile');
+        }
         $file = $_FILES['profile_picture'];
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
@@ -334,7 +418,17 @@ class Users extends Controller
         } else {
             //flash('profile_message', 'Failed to update profile picture', 'error');
         }
+        // Read file content
+        $imageData = file_get_contents($file['tmp_name']);
 
+        if ($this->userModel->updateProfilePicture($_SESSION['user_id'], $imageData)) {
+            //flash('profile_message', 'Profile picture updated successfully', 'success');
+        } else {
+            //flash('profile_message', 'Failed to update profile picture', 'error');
+        }
+
+        redirect('users/profile');
+    }
         redirect('users/profile');
     }
 

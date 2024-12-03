@@ -1,8 +1,12 @@
 <?php
 class Events extends Controller
 {
+class Events extends Controller
+{
     private $eventModel;
 
+    public function __construct()
+    {
     public function __construct()
     {
         // Check if user is logged in
@@ -39,7 +43,28 @@ class Events extends Controller
 
         $this->view('events/index', $data);
     }
+    public function index()
+    {
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
+        // Get events with search parameter
+        $events = $this->eventModel->getAllEvents($search);
+
+        foreach ($events as $event) {
+            $event->participant_count = $this->eventModel->getParticipantCount($event->id);
+        }
+
+        $data = [
+            'events' => $events,
+            'search' => $search
+        ];
+
+        $this->view('events/index', $data);
+    }
+
+    public function create()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -61,7 +86,10 @@ class Events extends Controller
 
             // Handle image upload if present
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                 $allowed = ['image/jpeg', 'image/png', 'image/gif'];
+
+                if (in_array($_FILES['image']['type'], $allowed)) {
 
                 if (in_array($_FILES['image']['type'], $allowed)) {
                     // Read image data
@@ -76,6 +104,8 @@ class Events extends Controller
             $this->validateEventData($data);
 
             // If no errors, create event
+            if (empty($data['errors'])) {
+                if ($this->eventModel->createEvent($data)) {
             if (empty($data['errors'])) {
                 if ($this->eventModel->createEvent($data)) {
                     //flash('event_message', 'Event Created Successfully');
@@ -104,33 +134,43 @@ class Events extends Controller
 
     private function validateEventData(&$data)
     {
+    private function validateEventData(&$data)
+    {
         // Validate Title
         if (empty($data['title'])) {
+        if (empty($data['title'])) {
             $data['errors'][] = 'Please enter event title';
+        } elseif (strlen($data['title']) > 255) {
         } elseif (strlen($data['title']) > 255) {
             $data['errors'][] = 'Title cannot exceed 255 characters';
         }
 
         // Validate Description
         if (empty($data['description'])) {
+        if (empty($data['description'])) {
             $data['errors'][] = 'Please enter event description';
         }
 
         // Validate Date
         if (empty($data['date'])) {
+        if (empty($data['date'])) {
             $data['errors'][] = 'Please enter event date';
+        } elseif (strtotime($data['date']) < strtotime(date('Y-m-d'))) {
         } elseif (strtotime($data['date']) < strtotime(date('Y-m-d'))) {
             $data['errors'][] = 'Event date cannot be in the past';
         }
 
         // Validate Time
         if (empty($data['time'])) {
+        if (empty($data['time'])) {
             $data['errors'][] = 'Please enter event time';
         }
 
         // Validate Location
         if (empty($data['location'])) {
+        if (empty($data['location'])) {
             $data['errors'][] = 'Please enter event location';
+        } elseif (strlen($data['location']) > 255) {
         } elseif (strlen($data['location']) > 255) {
             $data['errors'][] = 'Location cannot exceed 255 characters';
         }
@@ -139,13 +179,18 @@ class Events extends Controller
     // Method to display event images
     public function image($id)
     {
+    public function image($id)
+    {
         $image = $this->eventModel->getEventImage($id);
+
+        if ($image && $image['image_data']) {
 
         if ($image && $image['image_data']) {
             header("Content-Type: " . $image['image_type']);
             echo $image['image_data'];
             exit;
         }
+
 
         // Return default image if no image found
         header("Content-Type: image/png");
@@ -175,12 +220,36 @@ class Events extends Controller
 
     public function join($id)
     {
+    public function viewevent($id)
+    {
+        $event = $this->eventModel->getEventById($id);
+
+        if (!$event) {
+            redirect('events/index');
+        }
+
+        $isJoined = $this->eventModel->isUserJoined($id, $_SESSION['user_id']);
+        $participantCount = $this->eventModel->getParticipantCount($id);
+
+        $data = [
+            'event' => $event,
+            'isJoined' => $isJoined,
+            'participantCount' => $participantCount
+        ];
+
+        $this->view('events/viewevent', $data);  // This calls the parent Controller::view() method
+    }
+
+    public function join($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $event = $this->eventModel->getEventById($id);
+
 
             if (!$event) {
                 die('Event not found');
             }
+
 
             if ($this->eventModel->joinEvent($id, $_SESSION['user_id'])) {
                 echo json_encode(['success' => true]);
@@ -191,6 +260,9 @@ class Events extends Controller
         }
         redirect('events/viewevent/' . $id);
     }
+
+    public function leave($id)
+    {
 
     public function leave($id)
     {
@@ -207,7 +279,10 @@ class Events extends Controller
 
     public function my_events()
     {
+    public function my_events()
+    {
         $events = $this->eventModel->getEventsByUser($_SESSION['user_id']);
+        foreach ($events as $event) {
         foreach ($events as $event) {
             $event->participant_count = $this->eventModel->getParticipantCount($event->id);
         }
@@ -219,15 +294,22 @@ class Events extends Controller
 
     public function getParticipants($eventId)
     {
+
+    public function getParticipants($eventId)
+    {
         // Verify that the current user is the event creator
         if (!$this->eventModel->isEventCreator($eventId, $_SESSION['user_id'])) {
             echo json_encode(['error' => 'Unauthorized']);
             return;
         }
 
+
         $participants = $this->eventModel->getEventParticipants($eventId);
         echo json_encode($participants);
     }
+
+    public function delete($id)
+    {
 
     public function delete($id)
     {
@@ -237,6 +319,7 @@ class Events extends Controller
                 echo json_encode(['success' => false, 'message' => 'Unauthorized']);
                 return;
             }
+
 
             if ($this->eventModel->deleteEvent($id)) {
                 echo json_encode(['success' => true]);
@@ -267,6 +350,7 @@ class Events extends Controller
     {
         $events = $this->eventModel->getJoinedEvents($_SESSION['user_id']);
         foreach ($events as $event) {
+        foreach ($events as $event) {
             $event->participant_count = $this->eventModel->getParticipantCount($event->id);
         }
         $data = [
@@ -277,6 +361,8 @@ class Events extends Controller
 
     public function update($id)
     {
+    public function update($id)
+    {
         // Check if user is the event creator
         if (!$this->eventModel->isEventCreator($id, $_SESSION['user_id'])) {
             //flash('error', 'Unauthorized access');
@@ -284,8 +370,11 @@ class Events extends Controller
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
 
             // Initialize data array
             $data = [
@@ -300,9 +389,13 @@ class Events extends Controller
                 'errors' => []
             ];
 
+
             // Handle image upload if present
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                 $allowed = ['image/jpeg', 'image/png', 'image/gif'];
+
+                if (in_array($_FILES['image']['type'], $allowed)) {
 
                 if (in_array($_FILES['image']['type'], $allowed)) {
                     $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
@@ -312,10 +405,14 @@ class Events extends Controller
                 }
             }
 
+
             // Validate data
             $this->validateEventData($data);
 
+
             // If no errors, update event
+            if (empty($data['errors'])) {
+                if ($this->eventModel->updateEvent($data)) {
             if (empty($data['errors'])) {
                 if ($this->eventModel->updateEvent($data)) {
                     //flash('event_message', 'Event Updated Successfully');
@@ -332,8 +429,11 @@ class Events extends Controller
             $event = $this->eventModel->getEventById($id);
 
             if (!$event) {
+
+            if (!$event) {
                 redirect('events/index');
             }
+
 
             // Init data
             $data = [
@@ -346,7 +446,9 @@ class Events extends Controller
                 'errors' => []
             ];
 
+
             $this->view('events/update', $data);
         }
     }
 }
+

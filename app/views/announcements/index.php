@@ -114,13 +114,10 @@
                                     <?php endif; ?>
                                 </div>
                             </div>
+                            <a href="<?php echo URLROOT; ?><?php echo $announcement['id']; ?>" class="btn-view-full">View</a>
                         </div>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <div class="no-announcements">
-                        <p>No announcements available at this time.</p>
                     </div>
-                <?php endif; ?>
+                <?php endforeach; ?>
             </div>
         </main>
     </div>
@@ -162,5 +159,6 @@
         }
     </script>
 </body>
+
 
 </html>

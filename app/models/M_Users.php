@@ -201,7 +201,17 @@ class M_Users
     public function updateUser($data)
     {
         $this->db->beginTransaction();
+    public function updateUser($data)
+    {
+        $this->db->beginTransaction();
 
+        try {
+            // Update basic user information
+            $sql = 'UPDATE users SET name = :name, email = :email';
+            if (!empty($data['new_password'])) {
+                $sql .= ', password = :password';
+            }
+            $sql .= ' WHERE id = :id';
         try {
             // Update basic user information
             $sql = 'UPDATE users SET name = :name, email = :email';
@@ -218,9 +228,26 @@ class M_Users
             if (!empty($data['new_password'])) {
                 $this->db->bind(':password', password_hash($data['new_password'], PASSWORD_DEFAULT));
             }
+            $this->db->query($sql);
+            $this->db->bind(':name', $data['name']);
+            $this->db->bind(':email', $data['email']);
+            $this->db->bind(':id', $data['user_id']);
+
+            if (!empty($data['new_password'])) {
+                $this->db->bind(':password', password_hash($data['new_password'], PASSWORD_DEFAULT));
+            }
 
             $this->db->execute();
+            $this->db->execute();
 
+            // Update role-specific information if user is a resident
+            if ($_SESSION['user_role_id'] == 1 && isset($data['address']) && isset($data['phonenumber'])) {
+                $this->db->query('UPDATE residents SET address = :address, phonenumber = :phonenumber WHERE user_id = :user_id');
+                $this->db->bind(':address', $data['address']);
+                $this->db->bind(':phonenumber', $data['phonenumber']);
+                $this->db->bind(':user_id', $data['user_id']);
+                $this->db->execute();
+            }
             // Update role-specific information if user is a resident
             if ($_SESSION['user_role_id'] == 1 && isset($data['address']) && isset($data['phonenumber'])) {
                 $this->db->query('UPDATE residents SET address = :address, phonenumber = :phonenumber WHERE user_id = :user_id');
@@ -237,6 +264,13 @@ class M_Users
             return false;
         }
     }
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
 
     public function updateProfilePicture($userId, $imageData)
     {
@@ -245,7 +279,17 @@ class M_Users
         $this->db->bind(':id', $userId);
         return $this->db->execute();
     }
+    public function updateProfilePicture($userId, $imageData)
+    {
+        $this->db->query('UPDATE users SET profile_picture = :profile_picture WHERE id = :id');
+        $this->db->bind(':profile_picture', $imageData);
+        $this->db->bind(':id', $userId);
+        return $this->db->execute();
+    }
 
+    public function deleteUser($userId)
+    {
+        $this->db->beginTransaction();
     public function deleteUser($userId)
     {
         $this->db->beginTransaction();
@@ -264,7 +308,25 @@ class M_Users
             }
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
+        try {
+            // Delete role-specific data first
+            $roleId = $_SESSION['user_role_id'];
+            switch ($roleId) {
+                case 1:
+                    $this->db->query('DELETE FROM residents WHERE user_id = :user_id');
+                    break;
+                case 2:
+                    $this->db->query('DELETE FROM admins WHERE user_id = :user_id');
+                    break;
+                    // Add other roles as needed
+            }
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
 
+            // Delete user record
+            $this->db->query('DELETE FROM users WHERE id = :id');
+            $this->db->bind(':id', $userId);
+            $this->db->execute();
             // Delete user record
             $this->db->query('DELETE FROM users WHERE id = :id');
             $this->db->bind(':id', $userId);
