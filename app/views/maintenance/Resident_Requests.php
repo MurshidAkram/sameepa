@@ -371,7 +371,7 @@
             </div>
 
             <!-- Attachments & Media Upload -->
-            <h2>Attachments & Media</h2>
+            <!-- <h2>Attachments & Media</h2>
             <form action="<?php echo URLROOT; ?>/maintenance/upload_media" method="POST" enctype="multipart/form-data">
                 <div class="file-input">
                     <label for="media-upload">Upload Image/Video:</label>
@@ -380,7 +380,7 @@
                 </div>
             </form>
 
-            <!-- Completion Rating -->
+             Completion Rating 
             <h2>Completion Rating</h2>
             <div class="completion-rating">
                 <label for="rating">Rate the completion:</label>
@@ -393,7 +393,7 @@
                     <option value="1">Very Poor</option>
                 </select>
                 <button>Submit Rating</button>
-            </div>
+            </div> -->
         </main>
     </div>
 

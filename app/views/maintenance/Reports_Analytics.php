@@ -13,11 +13,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-        /* General Styles */
+        /* Dashboard Styles */
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #eef2f3, #ffffff);
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7;
             margin: 0;
+            padding: 0;
             color: #333;
         }
 
@@ -63,33 +64,24 @@
 
 
         .section {
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
             padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
 
-        .section h2 {
-            color: #3f51b5;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 1rem;
+            margin-top: 20px;
         }
 
-        table th {
-            background: linear-gradient(to right, #42a5f5, #1e88e5);
-            color: #fff;
-            padding: 15px;
-            font-weight: bold;
-            text-align: center;
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #dfe6e9;
+            text-align: left;
         }
 
         th {
@@ -97,15 +89,14 @@
             color: #fff;
         }
 
-        table tbody tr:nth-child(even) {
-            background: #f9f9f9;
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
         }
 
-        table tbody tr:hover {
-            background: #f1f7ff;
+        canvas {
+            margin-top: 20px;
         }
 
-        /* Export Button Styles */
         .export {
             display: inline-block;
             padding: 12px 30px;
@@ -305,7 +296,9 @@
                 doc.text(title, 10, 10);
 
                 // Save the PDF
-                doc.save(`${title.replace(/\s+/g, '_')}.pdf`);
+                /*  doc.save($ {
+                     title.replace(/\s+/g, '_')
+                 }.pdf); */
             };
         });
     </script>
