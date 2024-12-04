@@ -27,6 +27,7 @@ body {
 
 .btn-back:hover {
     background-color: #c62828;
+    transform: translateY(-2px);
 }
 
 .complaint-history-dashboard {
@@ -80,4 +81,21 @@ h1 {
     .complaint-table th, .complaint-table td {
         padding: 10px;
     }
+}
+
+/* Add these styles for the update button */
+.btn-update {
+    padding: 8px 16px;
+    background-color: #11bd2b;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.btn-update:hover {
+    background-color: #10df1e;
+    transform: translateY(-2px);
 }
