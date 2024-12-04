@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/form-styles.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/facilities/create.css">
     <title>Create Facility | <?php echo SITENAME; ?></title>
 </head>
 <body>
