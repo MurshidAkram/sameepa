@@ -1,0 +1,125 @@
+
+.seller-chat-main {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.seller-chat-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.seller-chat-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.seller-chat-info h2 {
+    margin: 0;
+    color: #333;
+}
+
+.seller-chat-info span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.back-to-listing {
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.seller-chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 300px;
+}
+
+.chat-message {
+    display: flex;
+    gap: 10px;
+    max-width: 70%;
+}
+
+.chat-message.received {
+    align-self: flex-start;
+}
+
+.chat-message.sent {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.message-content {
+    background: #f0f2f5;
+    padding: 10px 15px;
+    border-radius: 15px;
+}
+
+.message-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.message-sender {
+    font-weight: 500;
+    color: #333;
+}
+
+.message-time {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.seller-chat-input {
+    padding: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+}
+
+.seller-chat-input input {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+}
+
+.send-message {
+    background: #800080;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.send-message:hover {
+    background: #9a009a;
+}

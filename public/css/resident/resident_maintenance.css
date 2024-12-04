@@ -1,0 +1,238 @@
+/* app/public/css/resident/resident_maintenance.css */
+
+.resident-maintenance-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f8ff;
+}
+
+.resident-maintenance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.resident-maintenance-header h1 {
+    color: #800080;
+    margin: 0;
+}
+
+.maintenance-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.maintenance-stat-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.maintenance-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.maintenance-stat-card h3 {
+    color: #800080;
+    margin-bottom: 10px;
+}
+
+.maintenance-stat-card p {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4a4a4a;
+}
+
+.maintenance-request-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.new-request-form {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.new-request-form h2 {
+    color: #800080;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4a4a4a;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #800080;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.1);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #9a009a;
+    transform: translateY(-2px);
+}
+
+.request-history {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.request-history h2 {
+    color: #800080;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.request-card {
+    background-color: #f0f2f5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.request-card:hover {
+    background-color: #e6e8eb;
+}
+
+.request-details {
+    flex-grow: 1;
+}
+
+.request-details h3 {
+    margin: 0 0 10px;
+    color: #4a4a4a;
+}
+
+.request-status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: white;
+}
+
+.status-in-progress {
+    background-color: #2196F3;
+    color: white;
+}
+
+.status-completed {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.maintenance-team-section {
+    margin-top: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.maintenance-team-section h2 {
+    color: #800080;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.team-member-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.team-member-card {
+    background-color: #f0f2f5;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.team-member-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.team-member-name {
+    color: #800080;
+    margin-bottom: 10px;
+}
+
+.team-member-specialization {
+    color: #4a4a4a;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .maintenance-request-section {
+        grid-template-columns: 1fr;
+    }
+
+    .maintenance-stats {
+        flex-direction: column;
+    }
+}

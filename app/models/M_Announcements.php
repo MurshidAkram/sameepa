@@ -1,14 +1,17 @@
 <?php
-class M_Announcements {
+class M_Announcements
+{
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = new Database;
     }
 
-    public function createAnnouncement($data) {
+    public function createAnnouncement($data)
+    {
         $this->db->query('INSERT INTO announcements (title, content, created_by) VALUES (:title, :content, :created_by)');
-        
+
         // Bind values
         $this->db->bind(':title', $data['title']);
         $this->db->bind(':content', $data['content']);
@@ -18,9 +21,10 @@ class M_Announcements {
         return $this->db->execute();
     }
 
-    public function updateAnnouncement($data) {
+    public function updateAnnouncement($data)
+    {
         $this->db->query('UPDATE announcements SET title = :title, content = :content WHERE id = :id');
-        
+
         // Bind values
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':title', $data['title']);
@@ -30,7 +34,8 @@ class M_Announcements {
         return $this->db->execute();
     }
 
-    public function deleteAnnouncement($id) {
+    public function deleteAnnouncement($id)
+    {
         try {
             $this->db->beginTransaction();
 
@@ -52,8 +57,9 @@ class M_Announcements {
         }
     }
 
-    public function getAnnouncementById($id) {
-    $this->db->query('SELECT a.*, u.name as creator_name,
+    public function getAnnouncementById($id)
+    {
+        $this->db->query('SELECT a.*, u.name as creator_name,
                      (SELECT COUNT(*) FROM announcement_reactions 
                       WHERE announcement_id = a.id AND reaction_type = "like") as likes,
                      (SELECT COUNT(*) FROM announcement_reactions 
@@ -61,21 +67,35 @@ class M_Announcements {
                      FROM announcements a 
                      JOIN users u ON a.created_by = u.id 
                      WHERE a.id = :id');
-    $this->db->bind(':id', $id);
-    return $this->db->single();
-}
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
 
-    public function getAllAnnouncements() {
-        $this->db->query('SELECT a.*, u.name as creator_name,
-                         (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "like") as likes,
-                         (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "dislike") as dislikes
-                         FROM announcements a 
-                         JOIN users u ON a.created_by = u.id 
-                         ORDER BY a.created_at DESC');
+    public function getAllAnnouncements($searchTerm = '')
+    {
+        $query = 'SELECT a.*, u.name as creator_name,
+                  (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "like") as likes,
+                  (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "dislike") as dislikes
+                  FROM announcements a
+                  JOIN users u ON a.created_by = u.id';
+
+        if (!empty($searchTerm)) {
+            $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+        }
+
+        $query .= ' ORDER BY a.created_at DESC';
+
+        $this->db->query($query);
+
+        if (!empty($searchTerm)) {
+            $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
+        }
+
         return $this->db->resultSet();
     }
 
-    public function addReaction($data) {
+    public function addReaction($data)
+    {
         // First remove any existing reaction from this user
         $this->db->query('DELETE FROM announcement_reactions WHERE announcement_id = :announcement_id AND user_id = :user_id');
         $this->db->bind(':announcement_id', $data['announcement_id']);
@@ -91,7 +111,8 @@ class M_Announcements {
         return $this->db->execute();
     }
 
-    public function getUserReaction($announcementId, $userId) {
+    public function getUserReaction($announcementId, $userId)
+    {
         $this->db->query('SELECT reaction_type FROM announcement_reactions 
                          WHERE announcement_id = :announcement_id AND user_id = :user_id');
         $this->db->bind(':announcement_id', $announcementId);

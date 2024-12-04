@@ -4,14 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/form-styles.css">
+    <?php require APPROOT . '/views/inc/components/header.php'; ?>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/form-styles.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/flash-message.css">
     <title>Login | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
-    <?php require APPROOT . '/views/inc/components/header.php'; ?>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+    <?php
+    flash('signup_message');
+    ?>
 
     <div class="form-container">
         <div class="form-content">
@@ -35,10 +39,12 @@
                         <input type="password" id="password" name="password" required>
                     </div>
                     <button type="submit" class="form-submit">Login</button>
+                    <a style="" href=" <?php echo URLROOT; ?>/users/forgotpassword">Forgot password?</a>
                 </form>
             </div>
         </div>
-        <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/img/login.jpg');"></div>
+        <!--         <div class="form-image" style="background-i */mage: url('<?php echo URLROOT; ?>/img/login.jpg');"></div>
+ -->
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

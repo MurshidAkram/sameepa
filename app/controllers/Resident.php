@@ -41,11 +41,11 @@ class Resident extends Controller
         $this->view('resident/dashboard', $data);
     }
 
-    public function announcements()
+    /*public function announcements()
     {
         // Load resident dashboard view
         $this->view('resident/announcements');
-    }
+    }*/
 
     /*public function events()
     {
@@ -63,20 +63,11 @@ class Resident extends Controller
         $this->view('resident/facilities');
     }
 
-    public function groups()
-    {
-        $this->view('resident/groups');
-    }
-
-    public function exchange()
-    {
-        $this->view('resident/exchange');
-    }
-
-    public function forums()
+    /*public function forums()
     {
         $this->view('resident/forums');
     }
+        */
 
     public function maintenance()
     {
@@ -103,5 +94,10 @@ class Resident extends Controller
     public function complaints()
     {
         $this->view('resident/complaints');
+    }
+
+    public function incident()
+    {
+        $this->view('resident/incident');
     }
 }
