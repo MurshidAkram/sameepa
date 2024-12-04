@@ -18,9 +18,6 @@
 
     <div class="dashboard-container">
         <?php
-        <?php
-        // Load appropriate side panel based on user role
-        switch ($_SESSION['user_role_id']) {
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -39,7 +36,6 @@
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
                     <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
-                    <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
                     <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
                     <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
                     <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
@@ -50,14 +46,11 @@
                 <h1>Community Events</h1>
                 <!-- In index.php view, add this after the <h1> tag -->
                 <form class="events-search" method="GET" action="<?php echo URLROOT; ?>/events">
-                    <input
-                        type="text"
-                        name="search"
+
                     <input
                         type="text"
                         name="search"
                         placeholder="Search events..."
-                        value="<?php echo isset($data['search']) ? htmlspecialchars($data['search']) : ''; ?>">
                         value="<?php echo isset($data['search']) ? htmlspecialchars($data['search']) : ''; ?>">
                     <button type="submit">Search</button>
                 </form>
@@ -65,11 +58,8 @@
 
                 <div class="events-grid">
                     <?php foreach ($data['events'] as $event): ?>
-                    <?php foreach ($data['events'] as $event): ?>
                         <div class="event-card">
                             <div class="event-image">
-                                <img src="<?php echo URLROOT; ?>/events/image/<?php echo $event->id; ?>"
-                                    alt="<?php echo $event->title; ?>">
                                 <img src="<?php echo URLROOT; ?>/events/image/<?php echo $event->id; ?>"
                                     alt="<?php echo $event->title; ?>">
                             </div>
@@ -110,7 +100,6 @@
                     <?php endforeach; ?>
                 </div>
 
-                <?php if (empty($data['events'])): ?>
                 <?php if (empty($data['events'])): ?>
                     <div class="no-events">
                         <p>No events found. Be the first to create one!</p>

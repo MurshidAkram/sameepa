@@ -29,26 +29,12 @@ $userModel = new M_Users();
                 <?php switch ($_SESSION['user_role_id']):
                     case 1: // Resident 
                 ?>
-                <?php switch ($_SESSION['user_role_id']):
-                    case 1: // Resident 
-                ?>
-                        <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li>
-                    <?php break;
-                    case 2: // Admin 
-                    ?>
                     <?php break;
                     case 2: // Admin 
                     ?>
                         <li><a href="<?php echo URLROOT; ?>/admin/dashboard">Dashboard</a></li>
                     <?php break;
                     case 3: // SuperAdmin 
-                    ?>
-                    <?php break;
-                    case 3: // SuperAdmin 
-                    ?>
-                        <li><a href="<?php echo URLROOT; ?>/superadmin/dashboard">Dashboard</a></li>
-                    <?php break;
-                    case 4: // Maintenance 
                     ?>
                     <?php break;
                     case 4: // Maintenance 
@@ -58,17 +44,9 @@ $userModel = new M_Users();
                     case 5: // Security 
                     ?>
                     <?php break;
-                    case 5: // Security 
-                    ?>
-                        <li><a href="<?php echo URLROOT; ?>/security/dashboard">Dashboard</a></li>
-                    <?php break;
-                    case 6: // External Service Provider 
-                    ?>
-                    <?php break;
                     case 6: // External Service Provider 
                     ?>
                         <li><a href="<?php echo URLROOT; ?>/external/dashboard">Dashboard</a></li>
-                <?php break;
                 <?php break;
                 endswitch; ?>
 
@@ -76,19 +54,12 @@ $userModel = new M_Users();
                 <li class="profile-dropdown">
                     <a href="<?php echo URLROOT; ?>/users/profile" class="profile-link">
                         <?php
-                        <?php
                         $user = $userModel->getUserById($_SESSION['user_id']);
                         if (!empty($user['profile_picture'])): ?>
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>"
                                 alt="<?php echo htmlspecialchars($_SESSION['name']); ?>"
                                 class="profile-pic">
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>"
-                                alt="<?php echo htmlspecialchars($_SESSION['name']); ?>"
-                                class="profile-pic">
                         <?php else: ?>
-                            <img src="<?php echo URLROOT; ?>/public/img/default-profile.png"
-                                alt="Default Profile"
-                                class="profile-pic">
                             <img src="<?php echo URLROOT; ?>/public/img/default-profile.png"
                                 alt="Default Profile"
                                 class="profile-pic">
@@ -116,20 +87,6 @@ $userModel = new M_Users();
         padding-left: 15px;
         font-family: 'Poppins', sans-serif;
     }
-    /* Add these styles to your navbar.css or include them here */
-    .navbar {
-        background: rgb(239, 245, 245);
-        padding-right: 15px;
-        padding-left: 15px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .navdiv {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-family: 'Poppins', sans-serif;
-    }
 
     .navbar-logo img {
         height: 80px;
@@ -153,21 +110,7 @@ $userModel = new M_Users();
         margin: 0;
         padding: 0;
     }
-    .navbar-menu {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
 
-    .navbar-menu a {
-        text-decoration: none;
-        color: #333;
-        font-weight: 500;
-        transition: color 0.3s ease;
-    }
     .navbar-menu a {
         text-decoration: none;
         color: #333;
@@ -178,13 +121,7 @@ $userModel = new M_Users();
     .navbar-menu a:hover {
         color: #007bff;
     }
-    .navbar-menu a:hover {
-        color: #007bff;
-    }
 
-    .profile-dropdown {
-        position: relative;
-    }
     .profile-dropdown {
         position: relative;
     }
@@ -197,30 +134,11 @@ $userModel = new M_Users();
         border-radius: 25px;
         transition: background-color 0.3s ease;
     }
-    .profile-link {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem;
-        border-radius: 25px;
-        transition: background-color 0.3s ease;
-    }
 
     .profile-link:hover {
         background-color: #f0f0f0;
     }
-    .profile-link:hover {
-        background-color: #f0f0f0;
-    }
 
-    .profile-pic {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
     .profile-pic {
         width: 40px;
         height: 40px;
@@ -234,17 +152,7 @@ $userModel = new M_Users();
         font-size: 0.9rem;
         font-weight: 500;
     }
-    .profile-name {
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
 
-    .logout-link {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        background-color: #f8f9fa;
-        transition: background-color 0.3s ease;
-    }
     .logout-link {
         padding: 0.5rem 1rem;
         border-radius: 20px;
@@ -255,15 +163,7 @@ $userModel = new M_Users();
     .logout-link:hover {
         background-color: #e9ecef;
     }
-    .logout-link:hover {
-        background-color: #e9ecef;
-    }
 
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .navbar {
-            padding: 1rem;
-        }
     /* Responsive design */
     @media (max-width: 768px) {
         .navbar {
@@ -274,16 +174,7 @@ $userModel = new M_Users();
             flex-direction: column;
             gap: 1rem;
         }
-        .navdiv {
-            flex-direction: column;
-            gap: 1rem;
-        }
 
-        .navbar-menu {
-            flex-direction: column;
-            gap: 1rem;
-            width: 100%;
-        }
         .navbar-menu {
             flex-direction: column;
             gap: 1rem;
@@ -293,13 +184,7 @@ $userModel = new M_Users();
         .profile-name {
             display: none;
         }
-        .profile-name {
-            display: none;
-        }
 
-        .profile-link {
-            justify-content: center;
-        }
     }
         .profile-link {
             justify-content: center;
