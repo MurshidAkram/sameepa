@@ -212,4 +212,40 @@ class M_Facilities
 
         return $this->db->resultSet();
     }
+    public function getActiveBookingsCount()
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM bookings WHERE booking_date >= CURDATE()');
+        $result = $this->db->single();
+        return $result['count'];
+    }
+    
+    public function hasActiveBookings($facilityId)
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM bookings 
+                        WHERE facility_id = :facility_id 
+                        AND booking_date >= CURDATE()');
+        $this->db->bind(':facility_id', $facilityId);
+        $result = $this->db->single();
+        return $result['count'] > 0;
+    }
+
+    public function searchFacilities($searchTerm)
+    {
+        $this->db->query('SELECT * FROM facilities 
+                        WHERE name LIKE :search 
+                        OR description LIKE :search');
+        $this->db->bind(':search', '%' . $searchTerm . '%');
+        return $this->db->resultSet();
+    }
+
+    public function filterFacilitiesByStatus($status)
+    {
+        if ($status === 'all') {
+            return $this->getAllFacilities();
+        }
+        
+        $this->db->query('SELECT * FROM facilities WHERE status = :status');
+        $this->db->bind(':status', $status);
+        return $this->db->resultSet();
+    }
 }

@@ -72,7 +72,7 @@ class Facilities extends Controller
         $facility = $this->facilityModel->getFacilityById($id);
 
         if (!$facility) {
-            redirect('facilities');
+            redirect('facilities/admin_dashboard');
         }
 
         $data = [
@@ -90,24 +90,50 @@ class Facilities extends Controller
         exit();
     }
 
-    public function delete($id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Delete facility from database
-            if ($this->facilityModel->deleteFacility($id)) {
-                redirect('facilities');
-            } else {
-                die('Something went wrong');
-            }
-        } else {
-            redirect('facilities');
-        }
-    }
+      public function delete($id)
+      {
+          if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+              // Check if facility exists
+              $facility = $this->facilityModel->getFacilityById($id);
+              if (!$facility) {
+                  echo json_encode(['success' => false, 'message' => 'Facility not found']);
+                  return;
+              }
 
+              // Check for existing bookings
+              if ($this->facilityModel->hasActiveBookings($id)) {
+                  echo json_encode([
+                      'success' => false, 
+                      'message' => 'Cannot delete facility with active bookings'
+                  ]);
+                  return;
+              }
+
+              if ($this->facilityModel->deleteFacility($id)) {
+                  echo json_encode([
+                      'success' => true,
+                      'message' => 'Facility deleted successfully'
+                  ]);
+              } else {
+                  echo json_encode([
+                      'success' => false,
+                      'message' => 'Failed to delete facility'
+                  ]);
+              }
+          } else {
+              redirect('facilities/admin_dashboard');
+          }
+      }
     public function edit($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = json_decode(file_get_contents("php://input"));
+
+            // Validate input
+            if (empty($data->name) || empty($data->capacity)) {
+                echo json_encode(['success' => false, 'message' => 'Please fill in all required fields']);
+                return;
+            }
 
             // Check for duplicate name
             if ($this->facilityModel->findFacilityByNameExcept($data->name, $id)) {
@@ -124,13 +150,30 @@ class Facilities extends Controller
             ];
 
             if ($this->facilityModel->updateFacility($facilityData)) {
-                flash('facility_message', 'Facility updated successfully', 'alert alert-success');
-                echo json_encode(['success' => true]);
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Facility updated successfully'
+                ]);
             } else {
-                flash('facility_message', 'Failed to update facility', 'alert alert-danger');
-                echo json_encode(['success' => false, 'message' => 'Failed to update facility']);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to update facility'
+                ]);
             }
+            return;
         }
+
+        // GET request - load edit form
+        $facility = $this->facilityModel->getFacilityById($id);
+        if (!$facility) {
+            redirect('facilities/admin_dashboard');
+        }
+
+        $data = [
+            'facility' => $facility
+        ];
+
+        $this->view('facilities/edit', $data);
     }
     public function book($id)
     {
@@ -265,6 +308,12 @@ class Facilities extends Controller
 
         return $occupiedSlots;
     }
+
+    private function isAdmin()
+    {
+        return isset($_SESSION['user_role_id']) && 
+            in_array($_SESSION['user_role_id'], [2, 3]);
+    }
     private function validateFacilityData($data)
     {
         $errors = [];
@@ -327,6 +376,57 @@ class Facilities extends Controller
                 'hasOverlap' => !empty($overlappingBookings),
                 'overlappingBookings' => $overlappingBookings
             ]);
+        }
+    }
+    public function admin_dashboard()
+    {
+        // Check for admin access
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('pages/error');
+        }
+
+        // Get statistics
+        $facilities = $this->facilityModel->getAllFacilities();
+        $activeBookings = $this->facilityModel->getActiveBookingsCount();
+        $totalCapacity = 0;
+        $availableFacilities = 0;
+
+        foreach($facilities as $facility) {
+            $totalCapacity += $facility->capacity;
+            if($facility->status === 'available') {
+                $availableFacilities++;
+            }
+        }
+
+        $data = [
+            'facilities' => $facilities,
+            'active_bookings' => $activeBookings,
+            'total_capacity' => $totalCapacity,
+            'available_facilities' => $availableFacilities
+        ];
+
+        $this->view('facilities/admin_dashboard', $data);
+    }
+
+    public function searchFacilities()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $searchTerm = trim($_POST['search']);
+            $facilities = $this->facilityModel->searchFacilities($searchTerm);
+            
+            header('Content-Type: application/json');
+            echo json_encode($facilities);
+        }
+    }
+
+    public function filterFacilities()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $status = $_POST['status'];
+            $facilities = $this->facilityModel->filterFacilitiesByStatus($status);
+            
+            header('Content-Type: application/json');
+            echo json_encode($facilities);
         }
     }
 }

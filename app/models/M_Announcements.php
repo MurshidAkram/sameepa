@@ -71,28 +71,57 @@ class M_Announcements
         return $this->db->single();
     }
 
-    public function getAllAnnouncements($searchTerm = '')
+    public function getAnnouncementStats()
     {
-        $query = 'SELECT a.*, u.name as creator_name,
-                  (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "like") as likes,
-                  (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "dislike") as dislikes
-                  FROM announcements a
-                  JOIN users u ON a.created_by = u.id';
+        // Get total announcements
+        $this->db->query('SELECT COUNT(*) as total FROM announcements');
+        $total = $this->db->single()['total'];
 
-        if (!empty($searchTerm)) {
-            $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
-        }
+        // Get active announcements (created within last 30 days)
+        $this->db->query('SELECT COUNT(*) as active FROM announcements WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)');
+        $active = $this->db->single()['active'];
 
-        $query .= ' ORDER BY a.created_at DESC';
+        // Get this month's announcements
+        $this->db->query('SELECT COUNT(*) as monthly FROM announcements WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())');
+        $monthly = $this->db->single()['monthly'];
 
-        $this->db->query($query);
+        // Get total reactions
+        $this->db->query('SELECT COUNT(*) as total_reactions FROM announcement_reactions');
+        $reactions = $this->db->single()['total_reactions'];
 
-        if (!empty($searchTerm)) {
-            $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
-        }
-
-        return $this->db->resultSet();
+        return [
+            'total' => $total,
+            'active' => $active,
+            'monthly' => $monthly,
+            'reactions' => $reactions
+        ];
     }
+
+// Update getAllAnnouncements to include type and status
+public function getAllAnnouncements($searchTerm = '')
+{
+    $query = 'SELECT a.*, u.name as creator_name,
+              CASE 
+                WHEN DATEDIFF(NOW(), a.created_at) <= 30 THEN "active"
+                ELSE "archived"
+              END as status
+              FROM announcements a
+              JOIN users u ON a.created_by = u.id';
+
+    if (!empty($searchTerm)) {
+        $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+    }
+
+    $query .= ' ORDER BY a.created_at DESC';
+
+    $this->db->query($query);
+
+    if (!empty($searchTerm)) {
+        $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
+    }
+
+    return $this->db->resultSet();
+}
 
     public function addReaction($data)
     {

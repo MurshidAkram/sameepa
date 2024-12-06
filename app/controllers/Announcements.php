@@ -203,4 +203,22 @@ class Announcements extends Controller
 
         $this->view('announcements/viewannouncement', $data);
     }
+    public function admin_dashboard()
+    {
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('announcements');
+        }
+    
+        $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+        $announcements = $this->announcementModel->getAllAnnouncements($searchTerm);
+        $stats = $this->announcementModel->getAnnouncementStats();
+    
+        $data = [
+            'announcements' => $announcements,
+            'stats' => $stats
+        ];
+    
+        $this->view('announcements/admin_dashboard', $data);
+    }
+    
 }

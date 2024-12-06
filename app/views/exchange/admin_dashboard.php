@@ -105,13 +105,13 @@
                             <td>2023-07-10</td>
                             <td><span class="status-badge active">Active</span></td>
                             <td class="action-buttons">
-                                <a href="<?php echo URLROOT; ?>/exchange/view_listing" class="btn-view">
+                                <a href="<?php echo URLROOT; ?>/exchange/view_listing" class="ebtnview">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="<?php echo URLROOT; ?>/exchange/edit_listing" class="btn-edit">
+                                <a href="<?php echo URLROOT; ?>/exchange/edit_listing" class="ebtnedit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button class="btn-delete">
+                                <button class="ebtndelete">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -123,13 +123,13 @@
                             <td>2023-07-12</td>
                             <td><span class="status-badge active">Active</span></td>
                             <td class="action-buttons">
-                                <a href="<?php echo URLROOT; ?>/exchange/view_listing" class="btn-view">
+                                <a href="<?php echo URLROOT; ?>/exchange/view_listing" class="ebtnview">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="<?php echo URLROOT; ?>/exchange/edit_listing" class="btn-edit">
+                                <a href="<?php echo URLROOT; ?>/exchange/edit_listing" class="ebtnedit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button class="btn-delete">
+                                <button class="ebtndelete">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>

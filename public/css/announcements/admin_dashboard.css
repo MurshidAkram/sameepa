@@ -1,4 +1,4 @@
-.admin-exchange-main {
+.admin-announcements-main {
     flex: 1;
     padding: 2rem;
 }
@@ -32,11 +32,7 @@
     transition: all 0.3s ease;
 }
 
-.search-btn:hover {
-    background: #9a009a;
-}
-
-.listings-stats {
+.announcements-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
@@ -58,84 +54,29 @@
     color: #800080;
 }
 
-.stat-info h3 {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 0.5rem;
-}
-
-.stat-info p {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-}
-
-.listings-table-container {
+.announcement-card {
     background: white;
     padding: 1.5rem;
     border-radius: 8px;
+    margin-bottom: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.table-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
 }
 
-.filter-select {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    min-width: 150px;
-}
-
-.listings-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.listings-table th,
-.listings-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
-
-.listings-table th {
-    background: #f8f9fa;
-    font-weight: 600;
-    color: #444;
-}
-
-.type-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.type-badge.service {
-    background: #e3f2fd;
-    color: #1976d2;
-}
-
-.type-badge.sale {
-    background: #e8f5e9;
-    color: #2e7d32;
-}
-
-.type-badge.exchange {
-    background: #fff3e0;
-    color: #f57c00;
+.announcement-meta {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
 }
 
 .status-badge {
     padding: 0.25rem 0.75rem;
     border-radius: 15px;
     font-size: 0.875rem;
-    font-weight: 500;
 }
 
 .status-badge.active {
@@ -143,44 +84,32 @@
     color: #2e7d32;
 }
 
-.action-buttons {
+.status-badge.archived {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.announcement-actions {
     display: flex;
     gap: 0.5rem;
 }
 
-.ebtnview,
-.ebtnedit,
-.ebtndelete {
+.abtnview, .abtnedit, .abtndelete {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 40px; 
     width: 40px;
+    /* padding: 0.5rem; */
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.3s ease;
     color: white;
 }
 
-.ebtnview {
-    background: #28a745;
-}
-
-.ebtnedit {
-    background: #800080;
-}
-
-.ebtndelete {
-    background: #dc3545;
-}
-
-.btn-view:hover,
-.btn-edit:hover,
-.btn-delete:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
+.abtnview { background: #28a745; }
+.abtnedit { background: #800080; }
+.abtndelete { background: #dc3545; }
 
 .admin-actions {
     margin-bottom: 2rem;
@@ -198,17 +127,11 @@
     border-radius: 4px;
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.btn-create:hover {
-    background: #9a009a;
-    transform: translateY(-2px);
 }
 
 
 @media (max-width: 1200px) {
-    .listings-stats {
+    .announcements-stats {
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -218,21 +141,68 @@
         flex-direction: column;
         gap: 1rem;
     }
-
-    .search-container {
-        width: 100%;
-    }
-
-    .search-input {
-        width: 100%;
-    }
-
-    .listings-stats {
+    
+    .announcements-stats {
         grid-template-columns: 1fr;
     }
-
-    .listings-table {
-        display: block;
-        overflow-x: auto;
+    
+    .announcement-card {
+        flex-direction: column;
+        gap: 1rem;
     }
+}
+
+/* Add these styles to your existing CSS */
+
+.filter-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 0.95rem;
+    min-width: 180px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.filter-select:hover {
+    border-color: #800080;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #800080;
+    box-shadow: 0 0 0 3px rgba(128, 0, 128, 0.1);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.filter-label {
+    font-weight: 500;
+    color: #444;
+    margin-right: 0.5rem;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
