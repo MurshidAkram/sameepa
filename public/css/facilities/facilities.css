@@ -95,7 +95,9 @@
 }
 
 .fac-btn-book.unavailable {
-    background-color: #e74c3c;
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
 }
 
 .fac-btn-view:hover, .fac-btn-book:hover{

@@ -47,6 +47,12 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 .stat-card i {
@@ -63,6 +69,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.3s ease;
+}
+
+.announcement-card:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 .announcement-meta {
@@ -105,11 +117,19 @@
     border-radius: 4px;
     cursor: pointer;
     color: white;
+    transition: all 0.3s ease;
 }
 
 .abtnview { background: #28a745; }
 .abtnedit { background: #800080; }
 .abtndelete { background: #dc3545; }
+
+.abtnview:hover,
+.abtnedit:hover,
+.abtndelete:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
 
 .admin-actions {
     margin-bottom: 2rem;
@@ -127,8 +147,12 @@
     border-radius: 4px;
     text-decoration: none;
     font-weight: 500;
+    transition: all 0.3s ease;
 }
 
+.btn-create:hover {
+    transform: translateY(-2px);
+}
 
 @media (max-width: 1200px) {
     .announcements-stats {

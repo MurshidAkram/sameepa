@@ -55,6 +55,11 @@
     background: #800080;
 }
 
+.btn-create:hover,
+.btn-view-bookings:hover{
+    transform: translateY(-2px);
+}
+
 .btn-view-bookings {
     background: #28a745;
 }
@@ -74,11 +79,17 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    transition: all 0.3s ease;
 }
 
 .stat-card i {
     font-size: 2rem;
     color: #800080;
+}
+
+.stat-card:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 .facilities-table-container {
@@ -130,7 +141,8 @@
 
 .fbtnview,
 .fbtnedit,
-.fbtndelete {
+.fbtndelete,
+.fbtnbook {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,12 +156,24 @@
     text-decoration: none; /* Add this for anchor tags */
 }
 
-.fbtnview:hover,
-.fbtnedit:hover,
-.fbtndelete:hover {
-    opacity: 0.9;
+.fbtnbook.unavailable {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
 }
 
+
+.fbtnview:hover,
+.fbtnedit:hover,
+.fbtndelete:hover,
+.fbtnbook:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.fbtnbook {
+    background-color: #ffc107;
+}
 
 .fbtnview {
     background: #28a745;

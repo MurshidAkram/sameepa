@@ -1,6 +1,14 @@
 .time-slots {
     margin: 20px 0;
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
+.time-slots h3 {
+    color: #800080;
+    margin-bottom: 15px;
 }
 
 .time-slot {
@@ -155,7 +163,7 @@
   }
 
   .bookings-table thead {
-      background-color: #4CAF50;
+      background-color: #6c757d;
       color: white;
   }
 
@@ -178,16 +186,15 @@
       border-bottom: none;
   }
 
-  .my-bookings {
-      margin-top: 30px;
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  .my-bookings{
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .my-bookings h2 {
-      color: #333;
+      color: #800080;
       margin-bottom: 15px;
   }
 .no-bookings-message {
@@ -201,4 +208,101 @@
     opacity: 0.5;
     cursor: not-allowed;
     background-color: #f0f0f0;
+}
+
+/* Booking Form Styles */
+.booking-form-container {
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.booking-right-panel h1 {
+    color: #800080;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-primary {
+    padding: 0.75rem 1.5rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    padding: 0.75rem 1.5rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .booking-container {
+        flex-direction: column;
+    }
+
+    .booking-right-panel {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .btn-primary, .btn-cancel {
+        width: 100%;
+        text-align: center;
+    }
 }

@@ -120,6 +120,15 @@
                                 <a href="<?php echo URLROOT; ?>/facilities/edit/<?php echo $facility->id; ?>" class="fbtnedit">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                <?php if($facility->status == 'available'): ?>
+                                    <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>" class="fbtnbook">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <button class="fbtnbook unavailable" disabled>
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </button>
+                                <?php endif; ?>
                                 <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
                                     <button type="submit" class="fbtndelete" onclick="return confirm('Are you sure you want to delete this facility?')">
                                         <i class="fas fa-trash"></i>

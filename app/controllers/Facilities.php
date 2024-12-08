@@ -51,7 +51,7 @@ class Facilities extends Controller
 
             if (empty($data['errors'])) {
                 if ($this->facilityModel->createFacility($data)) {
-                    redirect('facilities');
+                    redirect('facilities/admin_dashboard');
                 }
             } else {
                 $this->view('facilities/create', $data);
@@ -114,6 +114,7 @@ class Facilities extends Controller
                       'success' => true,
                       'message' => 'Facility deleted successfully'
                   ]);
+                  redirect('facilities/admin_dashboard');
               } else {
                   echo json_encode([
                       'success' => false,

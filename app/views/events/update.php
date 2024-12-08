@@ -32,6 +32,7 @@
         ?>
 
         <main class="events-main">
+        <?php if ($_SESSION['user_role_id'] == 1): ?>
             <aside class="events-sidebar">
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
@@ -41,6 +42,7 @@
                     <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
                 </nav>
             </aside>
+        <?php endif; ?>
 
             <div class="events-content">
                 <div class="create-event-container">

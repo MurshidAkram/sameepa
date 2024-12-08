@@ -6,8 +6,8 @@
         <li><a href="<?php echo URLROOT; ?>/users/manageUsers">Account Activation</a></li>
         <li> <a href="<?php echo URLROOT; ?>/users/createUser"> Create Employee Account </a></li>
         <li> <a href="<?php echo URLROOT; ?>/superadmin/reports"> Reports</a> </li>
-        <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
-        <li><a href="<?php echo URLROOT; ?>/facilities/index">Manage Facilities</a></li>
+        <li><a href="<?php echo URLROOT; ?>/announcements/admin_dashboard">Community Announcements</a></li>
+        <li><a href="<?php echo URLROOT; ?>/facilities/admin_dashboard">Manage Facilities</a></li>
         <li><a href="<?php echo URLROOT; ?>/events/index">Manage Events</a></li>
         <li><a href="<?php echo URLROOT; ?>/groups/index">Manage Groups</a></li>
 

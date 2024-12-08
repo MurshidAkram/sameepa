@@ -33,6 +33,7 @@
         ?>
 
         <main class="events-main">
+        <?php if ($_SESSION['user_role_id'] == 1): ?>
             <aside class="events-sidebar">
                 <h2>Event Navigation</h2>
                 <nav class="events-nav">
@@ -42,6 +43,7 @@
                     <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
                 </nav>
             </aside>
+        <?php endif; ?>
 
             <main class="content">
                 <div class="create-event-container">
@@ -98,7 +100,11 @@
 
                         <div class="form-buttons">
                             <button type="submit" class="btn-submit">Create Event</button>
-                            <a href="<?php echo URLROOT; ?>/events/index" class="btn-cancel">Cancel</a>
+                            <?php if ($_SESSION['user_role_id'] == 2): ?>
+                                <a href="<?php echo URLROOT; ?>/events/admin_dashboard" class="btn-cancel">Cancel</a>
+                            <?php else: ?>
+                                <a href="<?php echo URLROOT; ?>/events/index" class="btn-cancel">Cancel</a>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>

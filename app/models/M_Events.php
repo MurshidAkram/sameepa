@@ -202,4 +202,93 @@ class M_Events
         // Execute
         return $this->db->execute();
     }
+    public function getTotalEvents()
+    {
+        $this->db->query('SELECT COUNT(*) as total FROM events');
+        $result = $this->db->single();
+        return $result['total'];
+    }
+
+    public function getEventsByStatus($status)
+    {
+        $today = date('Y-m-d');
+        
+        switch($status) {
+            case 'upcoming':
+                $sql = "SELECT * FROM events WHERE date > :today";
+                break;
+            case 'ongoing':
+                $sql = "SELECT * FROM events WHERE date = :today";
+                break;
+            case 'completed':
+                $sql = "SELECT * FROM events WHERE date < :today";
+                break;
+        }
+
+        $this->db->query($sql);
+        $this->db->bind(':today', $today);
+        return $this->db->resultSet();
+    }
+
+    public function getAllEventsForAdmin($search = '')
+    {
+        $sql = 'SELECT e.*, u.name as creator_name,
+                CASE 
+                    WHEN e.date > CURDATE() THEN "upcoming"
+                    WHEN e.date = CURDATE() THEN "ongoing"
+                    ELSE "completed"
+                END as status
+                FROM events e 
+                JOIN users u ON e.created_by = u.id 
+                WHERE 1=1 ';
+
+        if (!empty($search)) {
+            $sql .= 'AND (e.title LIKE :search 
+                    OR e.description LIKE :search 
+                    OR e.location LIKE :search) ';
+        }
+
+        $sql .= 'ORDER BY e.date ASC';
+
+        $this->db->query($sql);
+
+        if (!empty($search)) {
+            $this->db->bind(':search', '%' . $search . '%');
+        }
+
+        return $this->db->resultSet();
+    }
+    public function searchFacilities($searchTerm)
+    {
+        $this->db->query('SELECT * FROM events 
+                        WHERE name LIKE :search 
+                        OR description LIKE :search');
+        $this->db->bind(':search', '%' . $searchTerm . '%');
+        return $this->db->resultSet();
+    }
+
+    public function filterEventsByStatus($status)
+    {
+        if ($status === 'all') {
+            return $this->getAllEventsForAdmin();
+        }
+        
+        $this->db->query('SELECT e.*, u.name as creator_name,
+                        CASE 
+                            WHEN e.date > CURDATE() THEN "upcoming"
+                            WHEN e.date = CURDATE() THEN "ongoing"
+                            ELSE "completed"
+                        END as status
+                        FROM events e 
+                        JOIN users u ON e.created_by = u.id 
+                        WHERE 
+                            CASE 
+                                WHEN e.date > CURDATE() THEN "upcoming"
+                                WHEN e.date = CURDATE() THEN "ongoing"
+                                ELSE "completed"
+                            END = :status');
+        $this->db->bind(':status', $status);
+        return $this->db->resultSet();
+    }
+
 }

@@ -77,13 +77,15 @@ class Events extends Controller
             // If no errors, create event
             if (empty($data['errors'])) {
                 if ($this->eventModel->createEvent($data)) {
-                    //flash('event_message', 'Event Created Successfully');
-                    redirect('events');
+                    if ($_SESSION['user_role_id'] == 2) {
+                        redirect('events/admin_dashboard');
+                    } else {
+                        redirect('events/index');
+                    }
                 } else {
                     die('Something went wrong');
                 }
             } else {
-                // Load view with errors
                 $this->view('events/create', $data);
             }
         } else {
@@ -260,8 +262,10 @@ class Events extends Controller
 
             if ($this->eventModel->deleteEvent($id)) {
                 echo json_encode(['success' => true]);
+                redirect('events/admin_dashboard');
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to delete event']);
+                redirect('events/admin_dashboard');
             }
         }
     }
@@ -280,9 +284,9 @@ class Events extends Controller
 
     public function update($id)
     {
-        // Check if user is the event creator
-        if (!$this->eventModel->isEventCreator($id, $_SESSION['user_id'])) {
-            //flash('error', 'Unauthorized access');
+        // Modified check: Allow admin/superadmin to edit any event
+        if (!$this->eventModel->isEventCreator($id, $_SESSION['user_id']) && 
+            !in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('events/index');
         }
 
@@ -342,7 +346,6 @@ class Events extends Controller
                 redirect('events/index');
             }
 
-
             // Init data
             $data = [
                 'id' => $id,
@@ -354,8 +357,47 @@ class Events extends Controller
                 'errors' => []
             ];
 
-
             $this->view('events/update', $data);
+        }
+    }
+    public function admin_dashboard()
+    {
+        // Check if user is admin or superadmin
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('pages/error');
+        }
+
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        
+        // Get all events with search parameter
+        $events = $this->eventModel->getAllEventsForAdmin($search);
+
+        $data = [
+            'events' => $events,
+            'search' => $search
+        ];
+
+        $this->view('events/admin_dashboard', $data);
+    }
+    public function searchEvents()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $searchTerm = trim($_POST['search']);
+            $events = $this->eventModel->searchEvents($searchTerm);
+            
+            header('Content-Type: application/json');
+            echo json_encode($events);
+        }
+    }
+
+    public function filterEvents()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $status = $_POST['status'];
+            $events = $this->eventModel->filterEventsByStatus($status);
+            
+            header('Content-Type: application/json');
+            echo json_encode($events);
         }
     }
 }
