@@ -75,14 +75,17 @@
             <div class="listings-table-container">
                 <div class="table-header">
                     <h2>All Listings</h2>
-                    <div class="filter-container">
-                        <select class="filter-select">
-                            <option value="all">All Types</option>
-                            <option value="service">Services</option>
-                            <option value="sale">For Sale</option>
-                            <option value="exchange">Exchange</option>
-                            <option value="lost">Lost & Found</option>
-                        </select>
+                    <div class="all-types-container">
+                        <span class="filter-label">Type:</span>
+                        <div class="filter-container">
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">All Types</option>
+                                <option value="service">Services</option>
+                                <option value="sale">For Sale</option>
+                                <option value="exchange">Exchange</option>
+                                <option value="lost">Lost & Found</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 

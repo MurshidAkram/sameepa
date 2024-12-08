@@ -79,7 +79,7 @@ class Facilities extends Controller
             'facility' => $facility
         ];
 
-        $this->view('facilities/viewfacility', $data);
+        $this->view('facilities/view', $data);
     }
 
     public function getFacilityData($id)
@@ -124,57 +124,92 @@ class Facilities extends Controller
               redirect('facilities/admin_dashboard');
           }
       }
+
+      public function viewFacilityDetails($id) {
+        // Check if facility exists
+        $facility = $this->facilityModel->getFacilityById($id);
+        
+        if(!$facility) {
+            redirect('facilities');
+        }
+    
+        // Get additional facility data if needed
+        $data = [
+            'facility' => $facility,
+            'bookings' => $this->facilityModel->getActiveBookingsForFacility($id),
+            'total_bookings' => $this->facilityModel->getTotalBookingsCount($id)
+        ];
+    
+        $this->view('facilities/view', $data);
+    }
+    
+
     public function edit($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $data = json_decode(file_get_contents("php://input"));
+        // Check admin permission
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('facilities');
+        }
 
-            // Validate input
-            if (empty($data->name) || empty($data->capacity)) {
-                echo json_encode(['success' => false, 'message' => 'Please fill in all required fields']);
-                return;
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
+            $data = [
+                'id' => $id,
+                'name' => trim($_POST['name']),
+                'description' => trim($_POST['description']),
+                'capacity' => trim($_POST['capacity']),
+                'status' => trim($_POST['status']),
+                'errors' => []
+            ];
+
+            // Validate name
+            if (empty($data['name'])) {
+                $data['errors'][] = 'Please enter facility name';
+            } elseif (strlen($data['name']) < 3) {
+                $data['errors'][] = 'Name must be at least 3 characters';
+            }
+
+            // Validate capacity
+            if (empty($data['capacity'])) {
+                $data['errors'][] = 'Please enter capacity';
+            } elseif (!is_numeric($data['capacity']) || $data['capacity'] < 1) {
+                $data['errors'][] = 'Capacity must be a positive number';
             }
 
             // Check for duplicate name
-            if ($this->facilityModel->findFacilityByNameExcept($data->name, $id)) {
-                echo json_encode(['success' => false, 'message' => 'A facility with this name already exists']);
-                return;
+            if ($this->facilityModel->findFacilityByNameExcept($data['name'], $id)) {
+                $data['errors'][] = 'A facility with this name already exists';
             }
 
-            $facilityData = [
-                'id' => $id,
-                'name' => $data->name,
-                'description' => $data->description,
-                'capacity' => $data->capacity,
-                'status' => $data->status
+            if (empty($data['errors'])) {
+                if ($this->facilityModel->updateFacility($data)) {
+                    flash('facility_message', 'Facility updated successfully');
+                    redirect('facilities/admin_dashboard');
+                } else {
+                    flash('facility_message', 'Something went wrong', 'alert alert-danger');
+                    $this->view('facilities/edit_facility', $data);
+                }
+            } else {
+                // Load view with errors
+                $this->view('facilities/edit_facility', $data);
+            }
+        } else {
+            // GET request - show edit form
+            $facility = $this->facilityModel->getFacilityById($id);
+            
+            if (!$facility) {
+                redirect('facilities/admin_dashboard');
+            }
+
+            $data = [
+                'facility' => $facility,
+                'errors' => []
             ];
 
-            if ($this->facilityModel->updateFacility($facilityData)) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Facility updated successfully'
-                ]);
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Failed to update facility'
-                ]);
-            }
-            return;
+            $this->view('facilities/edit_facility', $data);
         }
-
-        // GET request - load edit form
-        $facility = $this->facilityModel->getFacilityById($id);
-        if (!$facility) {
-            redirect('facilities/admin_dashboard');
-        }
-
-        $data = [
-            'facility' => $facility
-        ];
-
-        $this->view('facilities/edit', $data);
     }
+
     public function book($id)
     {
         if (!isset($_SESSION['user_id'])) {

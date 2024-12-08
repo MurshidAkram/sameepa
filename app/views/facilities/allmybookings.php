@@ -31,7 +31,11 @@
                 <div class="header-actions">
                     <h1>My Facility Bookings</h1>
                     <div class="action-buttons">
-                        <a href="<?php echo URLROOT; ?>/facilities" class="fac-btn-back">Back</a>
+                        <?php if ($_SESSION['user_role_id'] == 1): ?>
+                            <a href="<?php echo URLROOT; ?>/facilities" class="fac-btn-back">Back</a>
+                        <?php else: ?>
+                            <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="fac-btn-back">Back</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             

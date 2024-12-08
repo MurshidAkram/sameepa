@@ -64,16 +64,22 @@ class M_Facilities
         return $this->db->execute();
     }
 
-    public function updateFacility($data)
-    {
-        $this->db->query('UPDATE facilities SET name = :name, description = :description, capacity = :capacity, status = :status WHERE id = :id');
+    public function updateFacility($data) {
+        $this->db->query('UPDATE facilities 
+                          SET name = :name, 
+                              description = :description, 
+                              capacity = :capacity, 
+                              status = :status 
+                          WHERE id = :id');
 
+        // Bind values
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':capacity', $data['capacity']);
         $this->db->bind(':status', $data['status']);
 
+        // Execute
         return $this->db->execute();
     }
 
@@ -180,11 +186,11 @@ class M_Facilities
         $this->db->bind(':name', $name);
         return $this->db->single();
     }
-    public function findFacilityByNameExcept($name, $currentId)
+    public function findFacilityByNameExcept($name, $id)
     {
-        $this->db->query('SELECT * FROM facilities WHERE name = :name AND id != :current_id');
+        $this->db->query('SELECT * FROM facilities WHERE name = :name AND id != :id');
         $this->db->bind(':name', $name);
-        $this->db->bind(':current_id', $currentId);
+        $this->db->bind(':id', $id);
         return $this->db->single();
     }
     public function checkOverlappingBookings($facilityId, $date, $startTime, $duration)

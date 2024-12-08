@@ -87,7 +87,6 @@
                             <select class="filter-select" id="sort-filter">
                                 <option value="newest">Newest First</option>
                                 <option value="oldest">Oldest First</option>
-                                <option value="most-reactions">Most Reactions</option>
                             </select>
                         </div>
                     </div>
@@ -157,8 +156,6 @@
                           return new Date(b.dataset.date) - new Date(a.dataset.date);
                       } else if (sortBy === 'oldest') {
                           return new Date(a.dataset.date) - new Date(b.dataset.date);
-                      } else if (sortBy === 'most-reactions') {
-                          return parseInt(b.dataset.reactions) - parseInt(a.dataset.reactions);
                       }
                   });
             

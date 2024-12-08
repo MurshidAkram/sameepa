@@ -88,7 +88,7 @@
 
                     <div class="form-buttons">
                         <button type="submit" class="btn btn-primary">Create Facility</button>
-                        <a href="<?php echo URLROOT; ?>/facilities" class="btn btn-cancel">Cancel</a>
+                        <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="btn btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>

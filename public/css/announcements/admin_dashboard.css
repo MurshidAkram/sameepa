@@ -55,7 +55,7 @@
 }
 
 .announcement-card {
-    background: white;
+    background: #f8f9fa;
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -168,11 +168,7 @@
     font-size: 0.95rem;
     min-width: 180px;
     cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
+    
 }
 
 .filter-select:hover {
@@ -191,7 +187,6 @@
     align-items: center;
     margin-bottom: 2rem;
     padding: 1rem;
-    background-color: #f8f9fa;
     border-radius: 8px;
 }
 
@@ -205,4 +200,11 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.announcements-table-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

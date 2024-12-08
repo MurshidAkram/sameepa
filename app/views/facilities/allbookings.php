@@ -19,7 +19,7 @@
             <div class="header-actions">
                 <h1>All Facility Bookings</h1>
                 <div class="action-buttons">
-                    <a href="<?php echo URLROOT; ?>/facilities" class="fac-btn-back">Back</a>
+                    <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="fac-btn-back">Back</a>
                 </div>
             </div>
             

@@ -27,7 +27,7 @@
             <div class="admin-header">
                 <h1>Facility Management Dashboard</h1>
                 <div class="search-container">
-                    <input type="text" id="searchFacility" placeholder="Search facilities..." class="search-input">
+                    <input type="search" id="searchFacility" placeholder="Search facilities..." class="search-input">
                     <button class="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
@@ -35,14 +35,14 @@
             </div>
 
             <div class="admin-actions">
-                <a href="<?php echo URLROOT; ?>/facilities/create" class="btn-create">
-                    <i class="fas fa-plus"></i> Create New Facility
-                </a>
                 <a href="<?php echo URLROOT; ?>/facilities/allbookings" class="btn-view-bookings">
                     <i class="fas fa-calendar-check"></i> View All Bookings
                 </a>
                 <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="btn-my-bookings">
                     <i class="fas fa-calendar-alt"></i> My Bookings
+                </a>
+                <a href="<?php echo URLROOT; ?>/facilities/create" class="btn-create">
+                    <i class="fas fa-plus"></i> Create New Facility
                 </a>
             </div>
 
@@ -80,12 +80,15 @@
             <div class="facilities-table-container">
                 <div class="table-header">
                     <h2>All Facilities</h2>
-                    <div class="filter-container">
-                        <select class="filter-select" id="statusFilter">
-                            <option value="all">All Status</option>
-                            <option value="available">Available</option>
-                            <option value="unavailable">Unavailable</option>
-                        </select>
+                    <div class="all-status-container">
+                        <span class="filter-label">Status:</span>
+                        <div class="filter-container">
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">All Status</option>
+                                <option value="available">Available</option>
+                                <option value="unavailable">Unavailable</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -111,12 +114,12 @@
                             </td>
                             <td><?php echo $facility->creator_name; ?></td>
                             <td class="action-buttons">
-                                <button onclick="viewFacility(<?php echo $facility->id; ?>)" class="fbtnview">
+                                <a href="<?php echo URLROOT; ?>/facilities/viewFacility/<?php echo $facility->id; ?>" class="fbtnview">
                                     <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="editFacility(<?php echo $facility->id; ?>)" class="fbtnedit">
+                                </a>
+                                <a href="<?php echo URLROOT; ?>/facilities/edit/<?php echo $facility->id; ?>" class="fbtnedit">
                                     <i class="fas fa-edit"></i>
-                                </button>
+                                </a>
                                 <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
                                     <button type="submit" class="fbtndelete" onclick="return confirm('Are you sure you want to delete this facility?')">
                                         <i class="fas fa-trash"></i>
@@ -127,52 +130,6 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
-            
-            <!-- View Facility Modal -->
-            <div id="viewFacilityModal" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>Facility Details</h2>
-                    <div class="facility-details">
-                        <p><strong>Name:</strong> <span id="viewName"></span></p>
-                        <p><strong>Description:</strong> <span id="viewDescription"></span></p>
-                        <p><strong>Capacity:</strong> <span id="viewCapacity"></span></p>
-                        <p><strong>Status:</strong> <span id="viewStatus"></span></p>
-                        <p><strong>Created By:</strong> <span id="viewCreator"></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Edit Facility Modal -->
-            <div id="editFacilityModal" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>Edit Facility</h2>
-                    <form id="editFacilityForm">
-                        <input type="hidden" id="editId">
-                        <div class="form-group">
-                            <label for="editName">Facility Name:</label>
-                            <input type="text" id="editName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editDescription">Description:</label>
-                            <textarea id="editDescription" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="editCapacity">Capacity:</label>
-                            <input type="number" id="editCapacity" required min="1">
-                        </div>
-                        <div class="form-group">
-                            <label for="editStatus">Status:</label>
-                            <select id="editStatus" required>
-                                <option value="available">Available</option>
-                                <option value="unavailable">Unavailable</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-submit">Update Facility</button>
-                    </form>
-                </div>
             </div>
         </main>
     </div>

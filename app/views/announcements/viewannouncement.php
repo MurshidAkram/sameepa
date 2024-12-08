@@ -34,9 +34,15 @@
             <div class="view-announcement-container">
                 <div class="page-header">
                     <h1><?php echo $data['announcement']['title']; ?></h1>
-                    <a href="<?php echo URLROOT; ?>/announcements/index" class="btn btn-back">
-                        <i class="fas fa-arrow-left"></i> Back to Announcements
-                    </a>
+                    <?php if ($_SESSION['user_role_id'] == 1): ?>
+                            <a href="<?php echo URLROOT; ?>/announcements" class="btn btn-back">
+                                <i class="fas fa-arrow-left"></i> Back to Announcements
+                            </a>
+                        <?php else: ?>
+                            <a href="<?php echo URLROOT; ?>/announcements/admin_dashboard" class="btn btn-back">
+                                <i class="fas fa-arrow-left"></i> Back to Announcements
+                            </a>
+                        <?php endif; ?>
                 </div>
 
                 <div class="announcement-details">

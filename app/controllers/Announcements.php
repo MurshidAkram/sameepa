@@ -65,7 +65,7 @@ class Announcements extends Controller
                 // Validated
                 if ($this->announcementModel->createAnnouncement($data)) {
                     //flash('announcement_message', 'Announcement Added');
-                    redirect('announcements/index');
+                    redirect('announcements/admin_dashboard');
                 } else {
                     die('Something went wrong');
                 }
@@ -152,12 +152,12 @@ class Announcements extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($this->announcementModel->deleteAnnouncement($id)) {
                 //flash('announcement_message', 'Announcement Removed');
-                redirect('announcements/index');
+                redirect('announcements/admin_dashboard');
             } else {
                 die('Something went wrong');
             }
         } else {
-            redirect('announcements/index');
+            redirect('announcements/admin_dashboard');
         }
     }
 
@@ -210,7 +210,7 @@ class Announcements extends Controller
         }
     
         $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-        $announcements = $this->announcementModel->getAllAnnouncements($searchTerm);
+        $announcements = $this->announcementModel->getAllAnnouncements2($searchTerm);
         $stats = $this->announcementModel->getAnnouncementStats();
     
         $data = [
