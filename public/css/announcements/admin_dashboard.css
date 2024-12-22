@@ -34,20 +34,28 @@
 
 .announcements-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
 .stat-card {
     background: white;
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
+    text-align: center;
     transition: all 0.3s ease;
+}
+
+.stat-card i {
+    font-size: 3rem;
+    color: #800080;
+    margin-bottom: 1rem;
 }
 
 .stat-card:hover {
@@ -55,8 +63,15 @@
     transform: translateY(-2px);
 }
 
-.stat-card i {
+.stat-info h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+.stat-info p {
     font-size: 2rem;
+    font-weight: bold;
     color: #800080;
 }
 

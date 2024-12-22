@@ -40,65 +40,69 @@
                     <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-my-groups">My Groups</a>
                 </nav>
             </aside>
+              <div class="groups-content">
+                  <h1>My Joined Groups</h1>
+                  <p>Here are all the groups you've joined!</p>
 
-            <div class="groups-content">
-                <h1>My Joined Groups</h1>
-                <p>Here are all the groups you've joined!</p>
-
-                <div class="groups-grid">
-                    <div class="group-card">
-                        <div class="group-image">
-                            <img src="<?php echo URLROOT; ?>/img/default-group.jpg" alt="Book Club">
-                        </div>
-                        <div class="group-details">
-                            <h3 class="group-title">Book Club</h3>
-                            <div class="group-info">
-                                <p class="group-category">
-                                    <i class="fas fa-tag"></i>
-                                    Literature
-                                </p>
-                                <p class="group-creator">
-                                      <i class="fas fa-user"></i>
-                                      By John Doe
-                                </p>
-                            </div>
-                            <div class="group-actions">
-                                <span class="member-count">
-                                    <i class="fas fa-users"></i>
-                                    15 Members
-                                </span>
-                                <a href="<?php echo URLROOT; ?>/groups/viewgroup/1" class="btn-view-group">View Group</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="group-card">
-                          <div class="group-image">
-                              <img src="<?php echo URLROOT; ?>/img/default-group2.jpg" alt="Fitness Warriors">
-                          </div>
-                          <div class="group-details">
-                              <h3 class="group-title">Fitness Warriors</h3>
-                              <div class="group-info">
-                                  <p class="group-category">
-                                      <i class="fas fa-tag"></i>
-                                      Health
-                                  </p>
-                                  <p class="group-creator">
-                                      <i class="fas fa-user"></i>
-                                      By Sarah Wilson
-                                  </p>
+                  <div class="groups-grid">
+                      <?php foreach ($data['groups'] as $group): ?>
+                          <div class="group-card">
+                              <div class="group-image">
+                                <img src="data:<?php echo $group->image_type; ?>;base64,<?php echo base64_encode($group->image_data); ?>"
+                                alt="<?php echo $group->group_name; ?>">
                               </div>
-                              <div class="group-actions">
-                                  <span class="member-count">
-                                      <i class="fas fa-users"></i>
-                                      28 Members
-                                  </span>
-                                  <a href="#" class="btn-view-group">View Group</a>
+                              <div class="group-details">
+                                  <h3 class="group-title"><?php echo $group->group_name; ?></h3>
+                                  <div class="group-info">
+                                      <p class="group-category">
+                                          <i class="fas fa-tag"></i>
+                                          <?php echo $group->group_category; ?>
+                                      </p>
+                                      <p class="group-creator">
+                                          <i class="fas fa-user"></i>
+                                          By <?php echo $group->creator_name; ?>
+                                      </p>
+                                  </div>
+                                  <div class="group-actions">
+                                    <span class="member-count">
+                                        <i class="fas fa-users"></i>
+                                        <?php echo $this->groupsModel->getMemberCount($group->group_id); ?> Members
+                                    </span>
+                                      <a href="<?php echo URLROOT; ?>/groups/viewgroup/<?php echo $group->group_id; ?>" 
+                                       class="btn-view-group">View Group</a>
+                                  </div>
                               </div>
                           </div>
+                      <?php endforeach; ?>
+                  </div>
+
+                  <?php if (empty($data['groups'])): ?>
+                      <div class="no-groups">
+                          <p>You haven't joined any groups yet.</p>
+                          <a href="<?php echo URLROOT; ?>/groups/index" class="btn-browse-groups">Browse Groups</a>
                       </div>
-                </div>
-            </div>
-        </main>
+                  <?php endif; ?>
+              </div>
+
+              <script>
+              function leaveGroup(groupId) {
+                  if (confirm('Are you sure you want to leave this group?')) {
+                      fetch(`<?php echo URLROOT; ?>/groups/leave/${groupId}`, {
+                          method: 'POST'
+                      })
+                      .then(response => {
+                          if (response.ok) {
+                              window.location.reload();
+                          }
+                      })
+                      .catch(error => {
+                          console.error('Error:', error);
+                          alert('Failed to leave group');
+                      });
+                  }
+              }
+              </script>
+          </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

@@ -33,7 +33,7 @@
             <div class="create-announcement-container">
                 <div class="page-header">
                     <h1>Report Comment</h1>
-                    <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-back">
+                    <a href="<?php echo URLROOT; ?>/forums/getForumIdByCommentId/<?php echo $data['comment_id']; ?>" class="btn btn-back">
                         <i class="fas fa-arrow-left"></i> Back to Forums
                     </a>
                 </div>
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-cancel">Cancel</a>
+                        <a href="<?php echo URLROOT; ?>/forums/getForumIdByCommentId/<?php echo $data['comment_id']; ?>" class="btn btn-cancel">Cancel</a>
                         <button type="submit" class="btn btn-primary">Submit Report</button>
                     </div>
                 </form>

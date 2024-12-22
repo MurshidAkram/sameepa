@@ -47,31 +47,27 @@
             </div>
 
             <div class="facilities-stats">
-                <div class="stat-card">
-                    <i class="fas fa-building"></i>
+                <div class="stat-card">                  
                     <div class="stat-info">
-                        <h3>Total Facilities</h3>
+                        <h3><i class="fas fa-building"></i> Total Facilities</h3>
                         <p><?php echo count($data['facilities']); ?></p>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-check-circle"></i>
+                <div class="stat-card">                   
                     <div class="stat-info">
-                        <h3>Available Facilities</h3>
+                        <h3><i class="fas fa-check-circle"></i> Available Facilities</h3>
                         <p><?php echo count(array_filter($data['facilities'], function($f) { return $f->status === 'available'; })); ?></p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-calendar"></i>
                     <div class="stat-info">
-                        <h3>Active Bookings</h3>
+                        <h3><i class="fas fa-calendar"></i> Active Bookings</h3>
                         <p><?php echo isset($data['active_bookings']) ? $data['active_bookings'] : 0; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-users"></i>
                     <div class="stat-info">
-                        <h3>Total Capacity</h3>
+                        <h3><i class="fas fa-users"></i> Total Capacity</h3>
                         <p><?php echo array_sum(array_column((array)$data['facilities'], 'capacity')); ?></p>
                     </div>
                 </div>

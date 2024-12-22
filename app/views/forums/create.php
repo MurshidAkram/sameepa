@@ -33,9 +33,15 @@
             <div class="create-announcement-container">
                 <div class="page-header">
                     <h1>Create New Forum</h1>
-                    <a href="<?php echo URLROOT; ?>/forums" class="btn btn-back">
-                        <i class="fas fa-arrow-left"></i> Back to Forums
-                    </a>
+                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                        <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="btn btn-back">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo URLROOT; ?>/forums" class="btn btn-back">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    <?php endif; ?>
                 </div>
 
                 <?php if (!empty($data['errors'])): ?>
@@ -65,7 +71,11 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="<?php echo URLROOT; ?>/forums" class="btn btn-cancel">Cancel</a>
+                        <?php if ($_SESSION['user_role_id'] == 2): ?>
+                            <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="btn btn-cancel">Cancel</a>
+                        <?php else: ?>
+                            <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-cancel">Cancel</a>
+                        <?php endif; ?>
                         <button type="submit" class="btn btn-primary">Create Forum</button>
                     </div>
                 </form>

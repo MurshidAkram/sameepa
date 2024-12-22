@@ -40,43 +40,50 @@
                     <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-my-groups active">My Groups</a>
                 </nav>
             </aside>
+              <div class="groups-content">
+                  <h1>My Groups</h1>
+                  <p>Manage the groups you have created</p>
 
-            <div class="groups-content">
-                <h1>My Groups</h1>
-                <p>Manage the groups you have created</p>
+                  <div class="groups-grid">
+                      <?php foreach ($data['groups'] as $group): ?>
+                          <div class="group-card">
+                              <div class="group-image">
+                                <img src="data:<?php echo $group->image_type; ?>;base64,<?php echo base64_encode($group->image_data); ?>"
+                                alt="<?php echo $group->group_name; ?>">
+                              </div>
+                              <div class="group-details">
+                                  <h3 class="group-title"><?php echo $group->group_name; ?></h3>
+                                  <div class="group-info">
+                                      <p class="group-category">
+                                          <i class="fas fa-tag"></i>
+                                          <?php echo $group->group_category; ?>
+                                      </p>
+                                  </div>
+                                  <div class="group-actions">
+                                      <button onclick="viewMembers(<?php echo $group->group_id; ?>)" class="btn-view-members">
+                                          <i class="fas fa-users"></i>
+                                          <?php echo $this->groupsModel->getMemberCount($group->group_id); ?> Members
+                                        </button>
+                                      <div class="group-management-buttons">
+                                          <a href="<?php echo URLROOT; ?>/groups/update/<?php echo $group->group_id; ?>" 
+                                           class="btupmy">Update</a>
+                                          <button onclick="deleteGroup(<?php echo $group->group_id; ?>)" 
+                                                  class="bdelmy">Delete</button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      <?php endforeach; ?>
+                  </div>
 
-                <div class="groups-grid">
-                    <div class="group-card">
-                        <div class="group-image">
-                            <img src="<?php echo URLROOT; ?>/img/default-group.jpg" alt="Book Club">
-                        </div>
-                        <div class="group-details">
-                            <h3 class="group-title">Book Club</h3>
-                            <div class="group-info">
-                                <p class="group-category">
-                                    <i class="fas fa-tag"></i>
-                                    Literature
-                                </p>
-                                <p class="group-members">
-                                    <i class="fas fa-users"></i>
-                                    15 Members
-                                </p>
-                            </div>
-                            <div class="group-actions">
-                                <button onclick="viewMembers(1)" class="btn-view-members">
-                                    <i class="fas fa-users"></i>
-                                    15 Members
-                                </button>
-                                <div class="group-management-buttons">
-                                    <a href="<?php echo URLROOT; ?>/groups/update/1" class="btn-update-group">Update</a>
-                                    <button onclick="deleteGroup(1)" class="btn-delete-group">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+                  <?php if (empty($data['groups'])): ?>
+                      <div class="no-groups">
+                          <p>You haven't created any groups yet.</p>
+                          <a href="<?php echo URLROOT; ?>/groups/create" class="btn-create-group">Create Group</a>
+                      </div>
+                  <?php endif; ?>
+              </div>
+          </main>
     </div>
 
     <!-- Members Modal -->
@@ -95,32 +102,42 @@
         function viewMembers(groupId) {
             const modal = document.getElementById('membersModal');
             const membersList = document.getElementById('membersList');
-            
-            // Dummy members data
-            const members = [
-                { name: "Sarah Johnson", joined_at: "2023-07-15", role: "Member" },
-                { name: "Michael Chen", joined_at: "2023-07-16", role: "Moderator" },
-                { name: "Emily Davis", joined_at: "2023-07-18", role: "Member" },
-                { name: "David Wilson", joined_at: "2023-07-20", role: "Member" },
-                { name: "Lisa Anderson", joined_at: "2023-07-22", role: "Member" }
-            ];
 
-            membersList.innerHTML = '';
-            const ul = document.createElement('ul');
-            
-            members.forEach(member => {
-                const li = document.createElement('li');
-                li.textContent = `${member.name} (${member.role}) - Joined: ${member.joined_at}`;
-                ul.appendChild(li);
-            });
-            
-            membersList.appendChild(ul);
-            modal.style.display = 'block';
+            fetch(`<?php echo URLROOT; ?>/groups/getMembers/${groupId}`)
+                .then(response => response.json())
+                .then(data => {
+                    membersList.innerHTML = '';
+                    if (data.length > 0) {
+                        const ul = document.createElement('ul');
+                        data.forEach(member => {
+                            const li = document.createElement('li');
+                            li.textContent = `${member.name} (Joined: ${member.joined_at})`;
+                            ul.appendChild(li);
+                        });
+                        membersList.appendChild(ul);
+                    } else {
+                        membersList.innerHTML = '<p>No members yet</p>';
+                    }
+                    modal.style.display = 'block';
+                });
         }
 
         function deleteGroup(groupId) {
             if (confirm('Are you sure you want to delete this group?')) {
-                // Delete functionality would go here
+                fetch(`<?php echo URLROOT; ?>/groups/delete/${groupId}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        throw new Error('Failed to delete group');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the group');
+                });
             }
         }
 

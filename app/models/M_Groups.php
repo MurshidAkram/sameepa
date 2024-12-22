@@ -8,4 +8,161 @@ class M_Groups
     {
         $this->db = new Database;
     }
+
+    public function getAllGroups()
+    {
+        $this->db->query('SELECT g.*, u.name as creator_name 
+                         FROM groups g 
+                         LEFT JOIN users u ON g.created_by = u.id 
+                         ORDER BY g.created_date DESC');
+        return $this->db->resultSet();
+    }
+    public function createGroup($data) {
+        $this->db->query('INSERT INTO groups (group_name, group_category, group_description, created_by, image_data, image_type) 
+                          VALUES (:group_name, :group_category, :group_description, :created_by, :image_data, :image_type)');
+        
+        $this->db->bind(':group_name', $data['title']);
+        $this->db->bind(':group_category', $data['category']);
+        $this->db->bind(':group_description', $data['description']);
+        $this->db->bind(':created_by', $data['created_by']);
+        $this->db->bind(':image_data', $data['image_data']);
+        $this->db->bind(':image_type', $data['image_type']);
+    
+        return $this->db->execute();
+    }
+    public function getGroupById($id) {
+        $this->db->query('SELECT g.*, u.name as creator_name,
+                         (SELECT COUNT(*) FROM group_members 
+                          WHERE group_id = g.group_id AND user_id = :user_id) as is_member
+                         FROM groups g 
+                         JOIN users u ON g.created_by = u.id 
+                         WHERE g.group_id = :id');
+        $this->db->bind(':id', $id);
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        return $this->db->single();
+    }
+       
+    
+          public function getGroupImage($id) {
+              $this->db->query('SELECT image_data, image_type FROM groups WHERE group_id = :id');
+              $this->db->bind(':id', $id);
+              return $this->db->single();
+          }
+    
+              public function updateGroup($data) {
+                  $sql = 'UPDATE groups SET 
+                          group_name = :group_name, 
+                          group_category = :group_category, 
+                          group_description = :group_description';
+                
+                  if (!empty($data['image_data'])) {
+                      $sql .= ', image_data = :image_data, image_type = :image_type';
+                  }
+        
+                  $sql .= ' WHERE group_id = :group_id';
+
+                  $this->db->query($sql);
+        
+                  $this->db->bind(':group_name', $data['title']);
+                  $this->db->bind(':group_category', $data['category']);
+                  $this->db->bind(':group_description', $data['description']);
+                  $this->db->bind(':group_id', $data['id']);
+
+                  if (!empty($data['image_data'])) {
+                      $this->db->bind(':image_data', $data['image_data']);
+                      $this->db->bind(':image_type', $data['image_type']);
+                  }
+
+                  return $this->db->execute();
+              }
+          public function getMemberCount($groupId) {
+              $this->db->query('SELECT COUNT(*) as count FROM group_members WHERE group_id = :group_id');
+              $this->db->bind(':group_id', $groupId);
+              $row = $this->db->single();
+              return $row['count'];
+          }
+    
+          public function isUserMember($groupId, $userId) {
+              $this->db->query('SELECT 1 FROM group_members WHERE group_id = :group_id AND user_id = :user_id');
+              $this->db->bind(':group_id', $groupId);
+              $this->db->bind(':user_id', $userId); 
+              
+              return $this->db->rowCount() > 0;
+          }
+          public function joinGroup($groupId, $userId) {
+              $this->db->query('INSERT INTO group_members (group_id, user_id, joined_at) VALUES (:group_id, :user_id, NOW())');
+              $this->db->bind(':group_id', $groupId);
+              $this->db->bind(':user_id', $userId);
+              return $this->db->execute();
+          }
+        
+          public function leaveGroup($groupId, $userId) {
+              $this->db->query('DELETE FROM group_members WHERE group_id = :group_id AND user_id = :user_id');
+              $this->db->bind(':group_id', $groupId);
+              $this->db->bind(':user_id', $userId);
+              return $this->db->execute();
+          }
+        
+     
+    public function getTotalMembersCount()
+    {
+        $this->db->query('SELECT COUNT(*) as member_count FROM group_members');
+        $result = $this->db->single();
+        return $result->member_count;
+    }
+    
+
+    public function getTotalDiscussionsCount() 
+    {
+        $this->db->query('SELECT COUNT(*) as discussion_count FROM group_discussions');
+        $result = $this->db->single();
+        return $result->discussion_count;
+    }
+    public function deleteGroup($id) {
+        $this->db->query('DELETE FROM groups WHERE group_id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
+    
+    public function getGroupsByUser($userId) {
+        $this->db->query('SELECT g.*, u.name as creator_name 
+                         FROM groups g 
+                         JOIN users u ON g.created_by = u.id 
+                         WHERE g.created_by = :user_id 
+                         ORDER BY g.created_date DESC');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->resultSet();
+    }
+    
+    public function getGroupMembers($groupId) {
+        $this->db->query('SELECT u.name, gm.joined_at 
+                         FROM group_members gm 
+                         JOIN users u ON gm.user_id = u.id 
+                         WHERE gm.group_id = :group_id 
+                         ORDER BY gm.joined_at ASC');
+        $this->db->bind(':group_id', $groupId);
+        return $this->db->resultSet();
+    }
+    
+    public function getJoinedGroups($userId) {
+        $this->db->query('SELECT g.*, u.name as creator_name 
+                         FROM groups g 
+                         JOIN users u ON g.created_by = u.id 
+                         JOIN group_members gm ON g.group_id = gm.group_id 
+                         WHERE gm.user_id = :user_id 
+                         ORDER BY g.created_date DESC');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->resultSet();
+    }
+    public function searchGroups($searchTerm)
+    {
+        $this->db->query("SELECT g.*, u.name as creator_name 
+                        FROM groups g 
+                        JOIN users u ON g.created_by = u.id 
+                        WHERE g.group_name LIKE :searchTerm 
+                        OR g.group_category LIKE :searchTerm");
+        $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
+        return $this->db->resultSet();
+    }
+
 }

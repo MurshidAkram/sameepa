@@ -49,8 +49,11 @@ class Forums extends Controller
             // If no errors, create the forum
             if (empty($data['errors'])) {
                 if ($this->forumsModel->createForum($data)) {
-                    //flash('forum_message', 'Forum created successfully.');
-                    redirect('forums/index');
+                    if ($_SESSION['user_role_id'] == 2) {
+                        redirect('forums/admin_dashboard');
+                    } else {
+                        redirect('forums/index');
+                    }
                 } else {
                     die('Something went wrong.');
                 }
@@ -78,13 +81,13 @@ class Forums extends Controller
         if ($_SESSION['user_role_id'] >= 2) {
             if ($this->forumsModel->deleteForum($id)) {
                 //flash('forum_message', 'Forum deleted successfully.');
-                redirect('forums/index');
+                redirect('forums/admin_dashboard');
             } else {
                 die('Something went wrong.');
             }
         } else {
             //flash('error', 'Unauthorized access');
-            redirect('forums/index');
+            redirect('forums/admin_dashboard');
         }
     }
 
@@ -122,7 +125,7 @@ class Forums extends Controller
         if ($_SESSION['user_role_id'] >= 2) {
             $reported_comments = $this->forumsModel->getReportedCommentsByForumId($forum_id);
             $data = [
-                'forum_id' => $forum_id,
+                'h' => $forum_id,
                 'reported_comments' => $reported_comments
             ];
             $this->view('forums/reported_comments', $data);
@@ -181,7 +184,11 @@ class Forums extends Controller
         if ($_SESSION['user_role_id'] >= 2) {
             if ($this->forumsModel->ignoreReport($id)) {
                 //flash('comment_message', 'Report ignored successfully.');
-                redirect('forums/index');
+                if ($_SESSION['user_role_id'] == 2) {
+                    redirect('forums/admin_dashboard');
+                } else {
+                    redirect('forums/index');
+                }
             } else {
                 die('Something went wrong.');
             }
@@ -247,4 +254,37 @@ class Forums extends Controller
             redirect('forums/myforums');
         }
     }
+
+    public function admin_dashboard()
+    {
+        // Check if user has admin privileges
+        if ($_SESSION['user_role_id'] < 2) {
+            redirect('forums/index');
+        }
+
+        $forums = $this->forumsModel->getForumsWithStats();
+        $data = [
+            'forums' => $forums
+        ];
+        
+        $this->view('forums/admin_dashboard', $data);
+    }
+    public function getForumIdByCommentId($commentId) {
+        $comment = $this->forumsModel->getCommentById($commentId);
+        if ($comment) {
+            redirect('forums/view_forum/' . $comment['forum_id']);
+        }
+        redirect('forums');
+    }
+    public function searchForums()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $searchTerm = trim($_POST['search']);
+        $forums = $this->forumsModel->searchForums($searchTerm);
+        
+        header('Content-Type: application/json');
+        echo json_encode($forums);
+    }
+}
+
 }

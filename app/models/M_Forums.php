@@ -228,4 +228,34 @@ class M_Forums
         $this->db->bind(':user_id', $userId);
         return $this->db->resultSet();
     }
+
+    public function getForumsWithStats()
+    {
+        $this->db->query("SELECT f.*, 
+                        COUNT(DISTINCT fc.id) as comment_count,
+                        COUNT(DISTINCT fr.id) as report_count
+                        FROM forums f
+                        LEFT JOIN forum_comments fc ON f.id = fc.forum_id
+                        LEFT JOIN forum_reports fr ON fc.id = fr.forum_comment_id
+                        GROUP BY f.id
+                        ORDER BY f.created_at DESC");
+        return $this->db->resultSet();
+    }
+    public function searchForums($searchTerm)
+{
+    $this->db->query("SELECT f.*, u.name as creator_name,
+                      COUNT(DISTINCT fc.id) as comment_count,
+                      COUNT(DISTINCT fr.id) as report_count
+                      FROM forums f
+                      LEFT JOIN users u ON f.created_by = u.id
+                      LEFT JOIN forum_comments fc ON f.id = fc.forum_id
+                      LEFT JOIN forum_reports fr ON fc.id = fr.forum_comment_id
+                      WHERE f.title LIKE :search 
+                      OR f.description LIKE :search
+                      GROUP BY f.id
+                      ORDER BY f.created_at DESC");
+    $this->db->bind(':search', '%' . $searchTerm . '%');
+    return $this->db->resultSet();
+}
+
 }

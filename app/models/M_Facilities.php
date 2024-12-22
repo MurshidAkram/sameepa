@@ -218,12 +218,15 @@ class M_Facilities
 
         return $this->db->resultSet();
     }
-    public function getActiveBookingsCount()
-    {
-        $this->db->query('SELECT COUNT(*) as count FROM bookings WHERE booking_date >= CURDATE()');
+    public function getActiveBookingsCount() {
+        $this->db->query("SELECT COUNT(*) as count FROM bookings 
+                          WHERE booking_date >= CURDATE() 
+                          OR (booking_date = CURDATE() AND booking_time >= CURTIME())");
+        
         $result = $this->db->single();
         return $result['count'];
     }
+    
     
     public function hasActiveBookings($facilityId)
     {

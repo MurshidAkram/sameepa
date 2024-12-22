@@ -1,4 +1,3 @@
-<!-- app/views/resident/groups.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,122 +41,100 @@
             </aside>
 
             <div class="groups-content">
-                <h1>Community Groups</h1>
-                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/groups">
-                    <input type="text" name="search" placeholder="Search groups...">
-                    <button type="submit">Search</button>
-                </form>
-                <p>Connect with like-minded community members in various interest groups!</p>
-                  <div class="groups-grid">
-                      <div class="group-card">
-                          <div class="group-image">
-                              <img src="<?php echo URLROOT; ?>/img/default-group.jpg" alt="Book Club">
-                          </div>
-                          <div class="group-details">
-                              <h3 class="group-title">Book Club</h3>
-                              <div class="group-info">
-                                  <p class="group-category">
-                                      <i class="fas fa-tag"></i>
-                                      Literature
-                                  </p>
-                                  <p class="group-creator">
-                                      <i class="fas fa-user"></i>
-                                      By John Doe
-                                  </p>
-                              </div>
-                              <div class="group-actions">
-                                  <span class="member-count">
-                                      <i class="fas fa-users"></i>
-                                      15 Members
-                                  </span>
-                                  <a href="<?php echo URLROOT; ?>/groups/viewgroup/1" class="btn-view-group">View Group</a>
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="group-card">
-                          <div class="group-image">
-                              <img src="<?php echo URLROOT; ?>/img/default-group2.jpg" alt="Fitness Warriors">
-                          </div>
-                          <div class="group-details">
-                              <h3 class="group-title">Fitness Warriors</h3>
-                              <div class="group-info">
-                                  <p class="group-category">
-                                      <i class="fas fa-tag"></i>
-                                      Health
-                                  </p>
-                                  <p class="group-creator">
-                                      <i class="fas fa-user"></i>
-                                      By Sarah Wilson
-                                  </p>
-                              </div>
-                              <div class="group-actions">
-                                  <span class="member-count">
-                                      <i class="fas fa-users"></i>
-                                      28 Members
-                                  </span>
-                                  <a href="#" class="btn-view-group">View Group</a>
-                              </div>
-                          </div>
-                      </div>
-                    <div class="group-card">
-                      <div class="group-image">
-                          <img src="<?php echo URLROOT; ?>/img/default-group3.jpg" alt="Cooking Masters">
-                      </div>
-                      <div class="group-details">
-                          <h3 class="group-title">Cooking Masters</h3>
-                          <div class="group-info">
-                              <p class="group-category">
-                                  <i class="fas fa-tag"></i>
-                                  Food
-                              </p>
-                              <p class="group-creator">
-                                  <i class="fas fa-user"></i>
-                                  By Emma Davis
-                              </p>
-                          </div>
-                          <div class="group-actions">
-                              <span class="member-count">
-                                  <i class="fas fa-users"></i>
-                                  35 Members
-                              </span>
-                              <a href="#" class="btn-view-group">View Group</a>
-                          </div>
-                      </div>
+                <div class="groups-header">
+                    <h1>Community Groups</h1>
+                    <div class="search-container">
+                        <input type="search" id="searchGroups" placeholder="Search groups..." class="search-input">
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
-
-                    <div class="group-card">
-                      <div class="group-image">
-                          <img src="<?php echo URLROOT; ?>/img/default-group4.jpg" alt="Tech Innovators">
-                      </div>
-                      <div class="group-details">
-                          <h3 class="group-title">Tech Innovators</h3>
-                          <div class="group-info">
-                              <p class="group-category">
-                                  <i class="fas fa-tag"></i>
-                                  Technology
-                              </p>
-                              <p class="group-creator">
-                                  <i class="fas fa-user"></i>
-                                  By Alex Kim
-                              </p>
-                          </div>
-                          <div class="group-actions">
-                              <span class="member-count">
-                                  <i class="fas fa-users"></i>
-                                  50 Members
-                              </span>
-                              <a href="#" class="btn-view-group">View Group</a>
-                          </div>
-                      </div>
-                    </div>                  
                 </div>
-              </div>
+
+                <p>Connect with like-minded community members in various interest groups!</p>
+
+                <div class="groups-grid">
+                    <?php foreach ($data['groups'] as $group): ?>
+                        <div class="group-card">
+                            <div class="group-image">
+                                <img src="data:<?php echo $group->image_type; ?>;base64,<?php echo base64_encode($group->image_data); ?>"
+                                alt="<?php echo $group->group_name; ?>">
+                            </div>
+                            <div class="group-details">
+                                <h3 class="group-title"><?php echo $group->group_name; ?></h3>
+                                <div class="group-info">
+                                    <p class="group-category">
+                                        <i class="fas fa-tag"></i>
+                                        <?php echo $group->group_category; ?>
+                                    </p>
+                                    <p class="group-creator">
+                                        <i class="fas fa-user"></i>
+                                        By <?php echo $group->creator_name; ?>
+                                    </p>
+                                </div>
+                                <div class="group-actions">
+                                    <span class="member-count">
+                                        <i class="fas fa-users"></i>
+                                        <?php echo $this->groupsModel->getMemberCount($group->group_id); ?> Members
+                                    </span>
+                                    <a href="<?php echo URLROOT; ?>/groups/viewgroup/<?php echo $group->group_id; ?>" 
+                                        class="btn-view-group">View Group</a>
+                                    <?php if (in_array($_SESSION['user_role_id'], [2, 3])): ?>
+                                        <button class="btn-delete-group" 
+                                                onclick="deleteGroup(<?php echo $group->id; ?>)">
+                                            Delete Group
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <?php if (empty($data['groups'])): ?>
+                    <div class="no-groups">
+                        <p>No groups found. Be the first to create one!</p>
+                        <a href="<?php echo URLROOT; ?>/groups/create" class="btn-create-group">Create Group</a>
+                    </div>
+                <?php endif; ?>
+            </div>
         </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        function deleteGroup(groupId) {
+            if (confirm('Are you sure you want to delete this group?')) {
+                fetch(`<?php echo URLROOT; ?>/groups/delete/${groupId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Failed to delete group');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the group');
+                });
+            }
+        }
+        document.getElementById('searchGroups').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            const groupCards = document.querySelectorAll('.group-card');
+            
+            groupCards.forEach(card => {
+                const groupName = card.querySelector('.group-title').textContent.toLowerCase();
+                const groupCategory = card.querySelector('.group-category').textContent.toLowerCase();
+                card.style.display = (groupName.includes(searchText) || groupCategory.includes(searchText)) ? '' : 'none';
+            });
+        });
+
+    </script>
 </body>
 
 </html>

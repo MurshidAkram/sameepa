@@ -233,7 +233,11 @@ class Facilities extends Controller
 
             if ($this->facilityModel->createBooking($bookingData)) {
                 $_SESSION['success_message'] = 'Facility booked successfully';
-                redirect('facilities');
+                if ($_SESSION['user_role_id'] == 2) {
+                    redirect('facilities/admin_dashboard');
+                } else {
+                    redirect('facilities');
+                }
             } else {
                 die('Something went wrong');
             }

@@ -41,32 +41,22 @@
             </div>
 
             <div class="announcements-stats">
-                <div class="stat-card">
-                    <i class="fas fa-bullhorn"></i>
+                <div class="stat-card">                   
                     <div class="stat-info">
-                        <h3>Total Announcements</h3>
+                        <h3><i class="fas fa-bullhorn"></i> Total Announcements</h3>
                         <p><?php echo $data['stats']['total']; ?></p>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-clock"></i>
+                <div class="stat-card">                   
                     <div class="stat-info">
-                        <h3>Active Announcements</h3>
+                        <h3><i class="fas fa-clock"></i> Active Announcements</h3>
                         <p><?php echo $data['stats']['active']; ?></p>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-calendar"></i>
+                <div class="stat-card">                    
                     <div class="stat-info">
-                        <h3>This Month</h3>
+                        <h3><i class="fas fa-calendar"></i> This Month</h3>
                         <p><?php echo $data['stats']['monthly']; ?></p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-thumbs-up"></i>
-                    <div class="stat-info">
-                        <h3>Total Reactions</h3>
-                        <p><?php echo $data['stats']['reactions']; ?></p>
                     </div>
                 </div>
             </div>

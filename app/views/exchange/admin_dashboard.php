@@ -43,30 +43,26 @@
 
             <div class="listings-stats">
                 <div class="stat-card">
-                    <i class="fas fa-list"></i>
                     <div class="stat-info">
-                        <h3>Total Listings</h3>
+                        <h3><i class="fas fa-list"></i> Total Listings</h3>
                         <p>24</p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-exchange-alt"></i>
                     <div class="stat-info">
-                        <h3>Active Exchanges</h3>
+                        <h3><i class="fas fa-exchange-alt"></i> Active Exchanges</h3>
                         <p>12</p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-tools"></i>
                     <div class="stat-info">
-                        <h3>Services</h3>
+                        <h3><i class="fas fa-tools"></i> Services</h3>
                         <p>8</p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-shopping-cart"></i>
                     <div class="stat-info">
-                        <h3>Items for Sale</h3>
+                        <h3><i class="fas fa-shopping-cart"></i> Items for Sale</h3>
                         <p>4</p>
                     </div>
                 </div>
