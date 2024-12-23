@@ -85,7 +85,7 @@ class M_Groups
           public function isUserMember($groupId, $userId) {
               $this->db->query('SELECT 1 FROM group_members WHERE group_id = :group_id AND user_id = :user_id');
               $this->db->bind(':group_id', $groupId);
-              $this->db->bind(':user_id', $userId); 
+              $this->db->bind(':user_id', $userId);
               
               return $this->db->rowCount() > 0;
           }
@@ -103,12 +103,11 @@ class M_Groups
               return $this->db->execute();
           }
         
-     
     public function getTotalMembersCount()
     {
         $this->db->query('SELECT COUNT(*) as member_count FROM group_members');
         $result = $this->db->single();
-        return $result->member_count;
+        return (int)$result['member_count']; // Convert array access to integer return
     }
     
 
@@ -116,7 +115,7 @@ class M_Groups
     {
         $this->db->query('SELECT COUNT(*) as discussion_count FROM group_discussions');
         $result = $this->db->single();
-        return $result->discussion_count;
+        return (int)$result['discussion_count']; // Convert array access to integer return
     }
     public function deleteGroup($id) {
         $this->db->query('DELETE FROM groups WHERE group_id = :id');
@@ -154,15 +153,5 @@ class M_Groups
         $this->db->bind(':user_id', $userId);
         return $this->db->resultSet();
     }
-    public function searchGroups($searchTerm)
-    {
-        $this->db->query("SELECT g.*, u.name as creator_name 
-                        FROM groups g 
-                        JOIN users u ON g.created_by = u.id 
-                        WHERE g.group_name LIKE :searchTerm 
-                        OR g.group_category LIKE :searchTerm");
-        $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
-        return $this->db->resultSet();
-    }
-
+    
 }

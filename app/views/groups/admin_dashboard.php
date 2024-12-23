@@ -61,38 +61,39 @@
                     </div>
                 </div>
             </div>
-
-            <div class="groups-grid">
-                <?php foreach($data['groups'] as $group): ?>
-                    <div class="group-card">
-                        <div class="group-image">
-                            <img src="<?php echo URLROOT; ?>/img/groups/<?php echo $group->image; ?>" alt="<?php echo $group->name; ?>">
-                        </div>
-                        <div class="group-details">
-                            <h2 class="group-title"><?php echo $group->name; ?></h2>
-                            <div class="group-info">
-                                <p><i class="fas fa-users"></i> <?php echo $group->member_count; ?> members</p>
-                                <p><i class="fas fa-calendar"></i> Created: <?php echo date('M d, Y', strtotime($group->created_at)); ?></p>
-                            </div>
-                            <div class="group-actions">
-                                <a href="<?php echo URLROOT; ?>/groups/view/<?php echo $group->id; ?>" class="btn-view-group">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                                <a href="<?php echo URLROOT; ?>/groups/edit/<?php echo $group->id; ?>" class="btn-update-group">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="<?php echo URLROOT; ?>/groups/delete/<?php echo $group->id; ?>" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn-delete-group" onclick="return confirm('Are you sure you want to delete this group?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+              <div class="groups-grid">
+                  <?php foreach($data['groups'] as $group): ?>
+                      <div class="group-card">
+                          <div class="group-image">
+                              <img src="data:<?php echo $group->image_type; ?>;base64,<?php echo base64_encode($group->image_data); ?>" alt="<?php echo $group->group_name; ?>">
+                          </div>
+                          <div class="group-details">
+                              <div class="group-info-section">
+                                  <h2 class="group-title"><?php echo $group->group_name; ?></h2>
+                                  <div class="group-info">
+                                      <p><i class="fas fa-users"></i> <?php echo $this->groupsModel->getMemberCount($group->group_id); ?> members</p>
+                                      <p><i class="fas fa-calendar"></i> Created: <?php echo date('M d, Y', strtotime($group->created_date)); ?></p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="group-actions">
+                              <a href="<?php echo URLROOT; ?>/groups/viewgroup/<?php echo $group->group_id; ?>" class="btnviewgroup">
+                                  <i class="fas fa-eye"></i>
+                              </a>
+                              <a href="<?php echo URLROOT; ?>/groups/update/<?php echo $group->group_id; ?>" class="btn-update-group">
+                                  <i class="fas fa-edit"></i>
+                              </a>
+                              <form action="<?php echo URLROOT; ?>/groups/delete/<?php echo $group->group_id; ?>" method="POST" style="display: inline;">
+                                  <button type="submit" class="btndeletegroup" onclick="return confirm('Are you sure you want to delete this group?')">
+                                      <i class="fas fa-trash"></i>
+                                  </button>
+                              </form>
+                          </div>
+                      </div>
+                  <?php endforeach; ?>
+              </div>        
         </main>
-    </div>
+      </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

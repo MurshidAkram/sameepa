@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,15 +45,15 @@
             <?php endif; ?>
             <div class="event-view-container">
                 <div class="top-actions">
-                <?php if ($_SESSION['user_role_id'] == 1): ?>
-                    <a href="<?php echo URLROOT; ?>/events" class="back-button">
-                        <i class="fas fa-arrow-left"></i> Back to Dashboard
-                    </a>
-                <?php else: ?>
+                    <?php if ($_SESSION['user_role_id'] == 2): ?>
                     <a href="<?php echo URLROOT; ?>/events/admin_dashboard" class="back-button">
-                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        <i class="fas fa-arrow-left"></i> Back to Events
                     </a>
-                <?php endif; ?>
+                    <?php else: ?>
+                        <a href="<?php echo URLROOT; ?>/events" class="back-button">
+                            <i class="fas fa-arrow-left"></i> Back to Events
+                        </a>
+                    <?php endif; ?>
                     <?php if ($_SESSION['user_role_id'] == 2): ?>
                         <form action="<?php echo URLROOT; ?>/events/admindelete/<?php echo $data['event']['id']; ?>" method="post">
                             <button type="submit" class="adminremoveeve" onclick="return confirm('Are you sure you want to delete this facility?')">

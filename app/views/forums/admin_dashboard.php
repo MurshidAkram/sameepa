@@ -41,22 +41,23 @@
                 <div class="stat-card">                    
                     <div class="stat-info">
                         <h3><i class="fas fa-comments"></i> Total Forums</h3>
-                        <p><?php echo count($data['forums']); ?></p>
+                        <p><?php echo isset($data['forums']) ? count($data['forums']) : 0; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">                    
                     <div class="stat-info">
                         <h3><i class="fas fa-flag"></i> Reported Comments</h3>
-                        <p>5</p>
+                        <p><?php echo isset($forum->total_reports) ? $forum->total_reports : 0; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">                    
                     <div class="stat-info">
                         <h3><i class="fas fa-users"></i> Active Users</h3>
-                        <p>120</p>
+                        <p><?php echo isset($forum->active_users) ? $forum->active_users : 0; ?></p>
                     </div>
                 </div>
             </div>
+
               <div class="forums-container">
                   <div class="table-header">
                       <h2>All Facilities</h2>

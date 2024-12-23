@@ -257,14 +257,14 @@ class Forums extends Controller
 
     public function admin_dashboard()
     {
-        // Check if user has admin privileges
         if ($_SESSION['user_role_id'] < 2) {
             redirect('forums/index');
         }
 
         $forums = $this->forumsModel->getForumsWithStats();
         $data = [
-            'forums' => $forums
+            'forums' => $forums,
+            'title' => 'Forums Management'
         ];
         
         $this->view('forums/admin_dashboard', $data);

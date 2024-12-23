@@ -24,30 +24,33 @@ class Groups extends Controller
         $data = ['groups' => $groups];
         $this->view('groups/index', $data);
     }
-      public function create()
-      {
-          if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-              $data = [
-                  'title' => trim($_POST['title']),
-                  'category' => trim($_POST['category']),
-                  'description' => trim($_POST['description']),
-                  'created_by' => $_SESSION['user_id'],
-                  'image_data' => null,
-                  'image_type' => null
-              ];
-
-              // Handle image upload
-              if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                  $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
-                  $data['image_type'] = $_FILES['image']['type'];
-              }
-
-              if ($this->groupsModel->createGroup($data)) {
-                  redirect('groups/index');
-              }
-          }
-          $this->view('groups/create');
-      }
+    public function create()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'title' => trim($_POST['title']),
+                'category' => trim($_POST['category']),
+                'description' => trim($_POST['description']),
+                'created_by' => $_SESSION['user_id'],
+                'image_data' => null,
+                'image_type' => null
+            ];
+    
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
+                $data['image_type'] = $_FILES['image']['type'];
+            }
+    
+            if ($this->groupsModel->createGroup($data)) {
+                if ($_SESSION['user_role_id'] == 2) {
+                    redirect('groups/admin_dashboard');
+                } else {
+                    redirect('groups/index');
+                }
+            }
+        }
+        $this->view('groups/create');
+    }
 
       // Add this method to serve images
       public function getImage($id) {
@@ -67,7 +70,7 @@ class Groups extends Controller
         $data = [
             'group' => $group,
             'member_count' => $memberCount,
-            'isJoined' => $isJoined
+            'isJoined' => $isJoined,
         ];
 
         $this->view('groups/viewgroup', $data);
@@ -137,7 +140,11 @@ class Groups extends Controller
             }
 
             if ($this->groupsModel->updateGroup($data)) {
-                redirect('groups/my_groups');
+                if ($_SESSION['user_role_id'] == 2) {
+                    redirect('groups/admin_dashboard');
+                } else {
+                    redirect('groups/my_groups');
+                }
             }
         } else {
             $group = $this->groupsModel->getGroupById($id);
@@ -163,13 +170,13 @@ class Groups extends Controller
     public function admin_dashboard()
     {
         $groups = $this->groupsModel->getAllGroups();
-        $totalMembers = $this->groupsModel->getTotalMembersCount();
-        $totalDiscussions = $this->groupsModel->getTotalDiscussionsCount();
+        $active_members = $this->groupsModel->getTotalMembersCount();
+        $total_discussions = $this->groupsModel->getTotalDiscussionsCount();
     
         $data = [
             'groups' => $groups,
-            'total_members' => $totalMembers,
-            'total_discussions' => $totalDiscussions
+            'active_members' => $active_members,
+            'total_discussions' => $total_discussions
         ];
     
         $this->view('groups/admin_dashboard', $data);
@@ -179,7 +186,11 @@ class Groups extends Controller
           if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               if ($this->groupsModel->deleteGroup($id)) {
                   flash('group_message', 'Group Removed');
-                  redirect('groups/my_groups');
+                  if ($_SESSION['user_role_id'] == 2) {
+                      redirect('groups/admin_dashboard');
+                  } else {
+                      redirect('groups/my_groups');
+                  }
               }
           }
       }
@@ -193,5 +204,8 @@ class Groups extends Controller
                 echo json_encode($groups);
             }
         }
-
+        
+    public function getMemberCount($groupId) {
+        return $this->groupsModel->getMemberCount($groupId);
+    }
 }

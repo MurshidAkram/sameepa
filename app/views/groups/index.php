@@ -79,12 +79,6 @@
                                     </span>
                                     <a href="<?php echo URLROOT; ?>/groups/viewgroup/<?php echo $group->group_id; ?>" 
                                         class="btn-view-group">View Group</a>
-                                    <?php if (in_array($_SESSION['user_role_id'], [2, 3])): ?>
-                                        <button class="btn-delete-group" 
-                                                onclick="deleteGroup(<?php echo $group->id; ?>)">
-                                            Delete Group
-                                        </button>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

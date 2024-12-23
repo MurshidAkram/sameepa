@@ -29,20 +29,28 @@
         }
         ?>
           <main class="groups-main">
-              <aside class="groups-sidebar">
-                  <h2>Group Navigation</h2>
-                  <nav class="groups-nav">
-                      <a href="<?php echo URLROOT; ?>/groups/index" class="btn-created-group">Groups</a>
-                      <a href="<?php echo URLROOT; ?>/groups/create" class="btn-created-group">Create Group</a>
-                      <a href="<?php echo URLROOT; ?>/groups/joined" class="btn-joined-groups">Joined Groups</a>
-                      <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-my-groups">My Groups</a>
-                  </nav>
-              </aside>
+              <?php if ($_SESSION['user_role_id'] == 1): ?>
+                  <aside class="groups-sidebar">
+                      <h2>Group Navigation</h2>
+                      <nav class="groups-nav">
+                          <a href="<?php echo URLROOT; ?>/groups/index" class="btn-created-group">Groups</a>
+                          <a href="<?php echo URLROOT; ?>/groups/create" class="btn-created-group">Create Group</a>
+                          <a href="<?php echo URLROOT; ?>/groups/joined" class="btn-joined-groups">Joined Groups</a>
+                          <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-my-groups">My Groups</a>
+                      </nav>
+                  </aside>
+              <?php endif; ?>
               <div class="group-view-container">
                   <div class="top-actions">
-                      <a href="<?php echo URLROOT; ?>/groups" class="back-button">
-                          <i class="fas fa-arrow-left"></i> Back to Groups
-                      </a>
+                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                        <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="back-button">
+                            <i class="fas fa-arrow-left"></i> Back to Groups
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo URLROOT; ?>/groups" class="back-button">
+                            <i class="fas fa-arrow-left"></i> Back to Groups
+                        </a>
+                    <?php endif; ?> 
                       <?php if ($_SESSION['user_role_id'] == 2 || $_SESSION['user_id'] == $data['group']['created_by']): ?>
                           <button class="bdelview" onclick="deleteGroup(<?php echo $data['group']['group_id']; ?>)">
                               <i class="fas fa-trash"></i> Delete Group
@@ -140,7 +148,11 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            window.location.href = '<?php echo URLROOT; ?>/groups';
+                            <?php if ($_SESSION['user_role_id'] == 2): ?>
+                                window.location.href = '<?php echo URLROOT; ?>/groups/admin_dashboard';
+                            <?php else: ?>
+                                window.location.href = '<?php echo URLROOT; ?>/groups';
+                            <?php endif; ?>
                         }
                     })
                     .catch(error => {

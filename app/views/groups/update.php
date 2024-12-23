@@ -29,15 +29,17 @@
           ?>
 
           <main class="groups-main">
-              <aside class="groups-sidebar">
-                  <h2>Group Navigation</h2>
-                  <nav class="groups-nav">
-                      <a href="<?php echo URLROOT; ?>/groups/index" class="btn-created-group">Groups</a>
-                      <a href="<?php echo URLROOT; ?>/groups/create" class="btn-created-group">Create Group</a>
-                      <a href="<?php echo URLROOT; ?>/groups/joined" class="btn-joined-groups">Joined Groups</a>
-                      <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-my-groups">My Groups</a>
-                  </nav>
-              </aside>
+              <?php if ($_SESSION['user_role_id'] == 1): ?>
+                  <aside class="groups-sidebar">
+                      <h2>Group Navigation</h2>
+                      <nav class="groups-nav">
+                          <a href="<?php echo URLROOT; ?>/groups/index" class="btn-created-group">Groups</a>
+                          <a href="<?php echo URLROOT; ?>/groups/create" class="btn-created-group">Create Group</a>
+                          <a href="<?php echo URLROOT; ?>/groups/joined" class="btn-joined-groups">Joined Groups</a>
+                          <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-my-groups">My Groups</a>
+                      </nav>
+                  </aside>
+              <?php endif; ?>
 
               <div class="groups-content">
                   <div class="create-group-container">
@@ -73,7 +75,11 @@
 
                           <div class="form-buttons">
                               <button type="submit" class="btn-submit">Update Group</button>
-                              <a href="<?php echo URLROOT; ?>/groups/my_groups" class="btn-cancel">Cancel</a>
+                              <?php if ($_SESSION['user_role_id'] == 2): ?>
+                                <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="btn-cancel">Cancel</a>
+                            <?php else: ?>
+                                <a href="<?php echo URLROOT; ?>/groups/index" class="btn-cancel">Cancel</a>
+                            <?php endif; ?>
                           </div>
                       </form>
                   </div>

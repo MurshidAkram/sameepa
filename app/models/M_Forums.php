@@ -232,12 +232,15 @@ class M_Forums
     public function getForumsWithStats()
     {
         $this->db->query("SELECT f.*, 
-                        COUNT(DISTINCT fc.id) as comment_count,
-                        COUNT(DISTINCT fr.id) as report_count
+                        u.name as creator_name,
+                        COUNT(DISTINCT fc.id) as total_comments,
+                        COUNT(DISTINCT fr.id) as total_reports,
+                        (SELECT COUNT(DISTINCT user_id) FROM forum_comments) as active_users
                         FROM forums f
+                        LEFT JOIN users u ON f.created_by = u.id
                         LEFT JOIN forum_comments fc ON f.id = fc.forum_id
                         LEFT JOIN forum_reports fr ON fc.id = fr.forum_comment_id
-                        GROUP BY f.id
+                        GROUP BY f.id, u.name
                         ORDER BY f.created_at DESC");
         return $this->db->resultSet();
     }
