@@ -1,0 +1,174 @@
+-- Events table to store event information
+CREATE TABLE events (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    image_path VARCHAR(255),
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Event participants table to track who joined which event
+CREATE TABLE event_participants (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    event_id INT NOT NULL,
+    user_id INT NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_participant (event_id, user_id)
+);
+
+CREATE TABLE announcements (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE announcement_reactions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    announcement_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reaction_type ENUM('like', 'dislike') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (announcement_id) REFERENCES announcements(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+    UNIQUE KEY unique_reaction (announcement_id, user_id)
+);
+
+CREATE TABLE forums (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  created_by INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE
+);
+
+CREATE TABLE forum_comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  forum_id INT NOT NULL,
+  user_id INT NOT NULL,
+  comment TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  reported BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (forum_id) REFERENCES forums(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE
+);
+
+CREATE TABLE forum_reports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  forum_comment_id INT NOT NULL,
+  reported_by INT NOT NULL,
+  reason TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (forum_comment_id) REFERENCES forum_comments(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE,
+  FOREIGN KEY (reported_by) REFERENCES users(id) 
+      ON DELETE CASCADE 
+      ON UPDATE CASCADE
+);
+
+
+CREATE TABLE posts (
+  id int(11) NOT NULL AUTO_INCEMENT PRIMARY KEY,
+  description text NOT NULL,
+  date date NOT NULL,
+  time time NOT NULL,
+  image_data longblob DEFAULT NULL,
+  image_type varchar(50) DEFAULT NULL,
+  created_by int(11) NOT NULL,
+  created_at timestamp NOT NULL DEFAULT current_timestamp(),
+ updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE post_reactions (
+  id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  post_id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  reaction_type enum('like','dislike') NOT NULL,
+  created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_reaction (post_id, user_id)
+);
+
+-- First fix the post_comments table
+CREATE TABLE post_comments (
+  id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  post_id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  comment text NOT NULL,
+  created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  reported tinyint(1) DEFAULT 0,
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE post_reports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  post_comment_id INT NOT NULL,
+  reported_by INT NOT NULL,
+  reason TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_comment_id) REFERENCES post_comments(id) ON DELETE CASCADE,
+  FOREIGN KEY (reported_by) REFERENCES users(id) ON DELETE CASCADE
+);
+INSERT INTO Users (name, age)VALUES('murshid', 21);
+INSERT INTO Users (name, age)VALUES('amjad', 19);
+INSERT INTO Users (name, age)VALUES('polly', 3);
+
+
+
+//inventory 
+
+-- Create the 'available_store' table
+CREATE TABLE available_store (
+    item_id VARCHAR(20) PRIMARY KEY, -- Primary Key
+    item_name VARCHAR(100) NOT NULL,
+    purchase_date DATE NOT NULL,
+    available_quantity INT NOT NULL
+);
+
+-- Create the 'inventory_usage_log' table
+CREATE TABLE inventory_usage_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each log entry
+    item_id VARCHAR(20), -- Foreign Key referencing available_store(item_id)
+    item_name VARCHAR(100), -- Item name for logging purposes
+    usage_date DATE NOT NULL,
+    usage_time TIME NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (item_id) REFERENCES available_store(item_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+
+
+
+

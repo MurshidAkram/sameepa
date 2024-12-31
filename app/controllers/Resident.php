@@ -1,0 +1,239 @@
+<?php
+class Resident extends Controller
+{
+    private $listingModel;
+
+    public function __construct()
+    {
+        // Check authentication
+        $this->checkResidentAuth();
+        
+        // Initialize listing model
+        $this->listingModel = $this->model('M_Listing');
+    }
+
+    private function checkResidentAuth()
+    {
+        // Check if user is logged in
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . URLROOT . '/users/login');
+            exit();
+        }
+    }
+
+    public function index()
+{
+    try {
+        // Get all listings
+        $data = [
+            'listings' => $this->listingModel->getAllListings() ?: [], // Default to an empty arra
+            'search' => '' // Keep search if needed later
+        ];
+
+        // Load view with data
+        $this->view('resident/exchange', $data);
+
+    } catch (Exception $e) {
+        die('Something went wrong: ' . $e->getMessage());
+    }
+}
+
+   
+
+    public function create_listing()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            // Initialize data array
+            $data = [
+                'title' => trim($_POST['title']),
+                'type' => trim($_POST['type']),
+                'description' => trim($_POST['description']),
+                'image_data' => null,
+                'image_type' => null,
+                'posted_by' => $_SESSION['user_id'],
+                'errors' => []
+            ];
+
+            // Handle image upload if present
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+                $allowed = ['image/jpeg', 'image/png', 'image/gif','image/webp'];
+
+                if (in_array($_FILES['image']['type'], $allowed)) {
+                    // Read image data
+                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
+                    $data['image_type'] = $_FILES['image']['type'];
+                } else {
+                    $data['errors'][] = 'Invalid file type. Only JPG, PNG and GIF are allowed.';
+                }
+            }
+
+            // Validate data
+            $this->validateData($data);
+
+            // If no errors, create event
+            if (empty($data['errors'])) {
+                if ($this->listingModel->createListing($data)) {
+                    //flash('event_message', 'Event Created Successfully');
+                    redirect('resident/exchange');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                // Load view with errors
+                $this->view('resident/exchange', $data);
+            }
+        } else {
+            // Init data
+            $data = [
+                'title' => '',
+                'type'=>'',
+                'description' => '',
+                'location' => '',
+                'errors' => []
+            ];
+
+            $this->view('resident/create_listing', $data);
+        }
+    }
+
+    private function validateData(&$data)
+    {
+        // Validate Title
+        if (empty($data['title'])) {
+            $data['errors'][] = 'Please enter event title';
+        } elseif (strlen($data['title']) > 255) {
+            $data['errors'][] = 'Title cannot exceed 255 characters';
+        }
+
+        // Validate Description
+        if (empty($data['description'])) {
+            $data['errors'][] = 'Please enter event description';
+        }
+
+
+
+    }
+
+    // Method to display event images
+    public function image($id)
+    {
+        $image = $this->listingModel->getListingImage($id);
+
+        if ($image && $image['image_data']) {
+            header("Content-Type: " . $image['image_type']);
+            echo $image['image_data'];
+            exit;
+        }
+
+        // Return default image if no image found
+        header("Content-Type: image/png");
+        readfile(APPROOT . '/public/img/default.png');
+    }
+
+    public function my_listing() {
+        $data = [
+            'listings' => $this->listingModel->getUserListings($_SESSION['user_id'])
+        ];
+        $this->view('resident/my_listing', $data);
+    }
+
+
+    // public function my_listing() {
+    //     $data = [
+    //         'listings' => $this->listingModel->getUserListings($_SESSION['user_id'])
+    //     ];
+    //     $this->view('resident/my_listing', $data);
+    // }
+
+    public function update_listing()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $listingId = isset($_GET['listing_id']) ? $_GET['listing_id'] : null;
+
+        if (!$listingId) {
+            $_SESSION['error'] = 'Invalid listing ID';
+            redirect('resident/my_listing');
+            return;
+        }
+
+        // Fetch the listing
+        $listing = $this->listingModel->getListingById($listingId);
+
+        // Debugging information
+        error_log('Listing ID: ' . $listingId);
+        error_log('User ID: ' . (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'User not logged in'));
+
+        if (!$listing) {
+            $_SESSION['error'] = 'Listing not found';
+            redirect('resident/my_listing');
+            return;
+        }
+
+        $data = [
+            'id' => $listing['id'], // Access as array
+            'title' => $listing['title'], // Access as array
+            'description' => $listing['description'], // Access as array
+            'type' => $listing['type'], // Access as array
+            'errors' => []
+        ];
+
+        $this->view('resident/create_listing', $data);
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Handle the form submission for updating the listing
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $data = [
+            'id' => trim($_POST['listing_id']),
+            'title' => trim($_POST['title']),
+            'description' => trim($_POST['description']),
+            'type' => trim($_POST['type']),
+            'errors' => []
+        ];
+
+        // Validate inputs
+        if (empty($data['title'])) {
+            $data['errors']['title'] = 'Title is required';
+        }
+        if (empty($data['description'])) {
+            $data['errors']['description'] = 'Description is required';
+        }
+        if (empty($data['type'])) {
+            $data['errors']['type'] = 'Type is required';
+        }
+
+        if (empty($data['errors'])) {
+            // No validation errors
+            if ($this->listingModel->updateListing($data)) {
+                $_SESSION['message'] = 'Listing updated successfully!';
+                redirect('resident/my_listing');
+            } else {
+                $_SESSION['error'] = 'Failed to update listing. Please try again.';
+                redirect('resident/my_listing');
+            }
+        } else {
+            // Reload the view with validation errors
+            $this->view('resident/create_listing', $data);
+        }
+    } else {
+        // Invalid request method
+        redirect('resident/my_listing');
+    }
+}
+
+    public function delete() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['listing_id'])) {
+            $listingId = $_POST['listing_id'];
+            
+
+            if ($this->listingModel->deleteListing($listingId)) {
+                $_SESSION['message'] = 'Listing deleted successfully';
+            } else {
+                $_SESSION['error'] = 'Failed to delete listing';
+            }
+        }
+        redirect('resident/my_listing');
+    }
+}

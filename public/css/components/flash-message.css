@@ -1,0 +1,57 @@
+.flash-message {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease;
+}
+
+.flash-message.alert-info {
+    background-color: #e6f3ff;
+    color: #0068b7;
+    border: 1px solid #6eb3f7;
+}
+
+.flash-message.alert-success {
+    background-color: #e6f7e6;
+    color: #2c8236;
+    border: 1px solid #78c778;
+}
+
+.flash-message.alert-warning {
+    background-color: #fff4e6;
+    color: #b75c00;
+    border: 1px solid #ffc078;
+}
+
+.flash-message.alert-error {
+    background-color: #ffebeb;
+    color: #b71c1c;
+    border: 1px solid #f78989;
+}
+
+.flash-message.dismissible {
+    position: relative;
+    padding-right: 40px;
+}
+
+.flash-message .dismiss-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 20px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.flash-message .dismiss-btn:hover {
+    opacity: 1;
+}
