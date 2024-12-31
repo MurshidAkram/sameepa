@@ -10,27 +10,8 @@ INSERT INTO Users (name, age)VALUES('amjad', 19);
 INSERT INTO Users (name, age)VALUES('polly', 3);
 
 
+//**************************************Maintanance Part *******************************************
 
-//inventory 
-
--- Create the 'available_store' table
-CREATE TABLE available_store (
-    item_id VARCHAR(20) PRIMARY KEY, -- Primary Key
-    item_name VARCHAR(100) NOT NULL,
-    purchase_date DATE NOT NULL,
-    available_quantity INT NOT NULL
-);
-
--- Create the 'inventory_usage_log' table
-CREATE TABLE inventory_usage_log (
-    log_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each log entry
-    item_id VARCHAR(20), -- Foreign Key referencing available_store(item_id)
-    item_name VARCHAR(100), -- Item name for logging purposes
-    usage_date DATE NOT NULL,
-    usage_time TIME NOT NULL,
-    quantity INT NOT NULL,
-    FOREIGN KEY (item_id) REFERENCES available_store(item_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 // Maintenance member
 
@@ -47,4 +28,26 @@ CREATE TABLE maintenance_members (
 
 
 
+//**********************************************Security Part*******************************************
 
+
+//Resident Contacts
+
+CREATE TABLE residents_contact (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    resident_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phonenumber VARCHAR(15) NOT NULL,
+    fixed_line VARCHAR(15)
+);
+
+//emergency Contacts
+
+CREATE TABLE emergency_contacts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

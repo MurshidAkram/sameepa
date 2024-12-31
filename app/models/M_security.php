@@ -9,72 +9,49 @@ class M_security
         $this->db = new Database();
     }
 
-    // Method to create a new visitor pass
-    public function createVisitorPass($data)
-    {
-        $this->db->query("INSERT INTO visitor_passes (visitor_name, visitor_count, visit_date, visit_time, duration, purpose, resident_name) 
-                          VALUES (:visitor_name, :visitor_count, :visit_date, :visit_time, :duration, :purpose, :resident_name)");
+//************************************************************************************************************************* */
 
-        // Bind parameters
-        $this->db->bind(':visitor_name', $data['visitor_name']);
-        $this->db->bind(':visitor_count', $data['visitor_count']);
-        $this->db->bind(':visit_date', $data['visit_date']);
-        $this->db->bind(':visit_time', $data['visit_time']);
-        $this->db->bind(':duration', $data['duration']);
-        $this->db->bind(':purpose', $data['purpose']);
-        $this->db->bind(':resident_name', $data['resident_name']);
+   // Fetch all contacts
+public function getAllContacts() {
+    $this->db->query("SELECT * FROM emergency_contacts");
+    return $this->db->resultSet();
+}
 
-        // Execute and return success status
-        return $this->db->execute();
-    }
+// Add new contact to the database
+public function addContact($data) {
+    $this->db->query("INSERT INTO emergency_contacts (name,phone) 
+                      VALUES (:name,:phone)");
 
-    // Retrieve active visitor passes (today's passes)
-    public function getTodayPasses()
-    {
-        $this->db->query("SELECT * FROM visitor_passes WHERE visit_date = CURDATE()");
-        return $this->db->resultSet();
-    }
+    // Bind values
+    $this->db->bind(':name', $data['name']);
+    $this->db->bind(':phone', $data['phone']);
 
-    // Retrieve all visitor passes
-    public function getAllPasses()
-    {
-        $this->db->query("SELECT * FROM visitor_passes");
-        return $this->db->resultSet();
-    }
+    // Execute query
+    return $this->db->execute();
+}
 
-    // Method to add a new resident contact
-    public function addResidentContact($data)
-    {
-        $this->db->query("INSERT INTO security_resident_details (resident_name, phone_number, fixed_line, email, address) 
-                          VALUES (:resident_name, :resident_phone, :fixed_line, :resident_email, :resident_address)");
 
-        // Bind parameters
-        $this->db->bind(':resident_name', $data['resident_name']);
-        $this->db->bind(':resident_phone', $data['resident_phone']);
-        $this->db->bind(':fixed_line', $data['fixed_line']);
-        $this->db->bind(':resident_email', $data['resident_email']);
-        $this->db->bind(':resident_address', $data['resident_address']);
+public function updateContact($data) {
+    $sql = "UPDATE emergency_contacts 
+            SET name = :name, phone = :phone";
+    $sql .= " WHERE id = :id";
 
-        // Execute and return success status
-        return $this->db->execute();
-    }
+    $this->db->query($sql);
+    $this->db->bind(':id', $data['id']);
+    $this->db->bind(':name', $data['name']);
+    $this->db->bind(':phone', $data['phone']);
 
-    // Combined method to retrieve resident details based on name or address
-    public function getResidentDetailsByName($name)
-    {
-        // Perform the query to search for residents by name or address
-        $this->db->query("SELECT * FROM security_resident_details WHERE resident_name LIKE :name OR address LIKE :name");
-        $this->db->bind(':name', "%$name%");
+    return $this->db->execute();
+}
+// Delete a maintenance member from the database
+public function deleteContact($id) {
+    $this->db->query("DELETE FROM emergency_contacts WHERE id = :id");
+    $this->db->bind(':id', $id);
 
-        // Return the result set
-        return $this->db->resultSet();
-    }
+    return $this->db->execute();
+}
 
-    // Optionally, you can add other methods to retrieve, update, or delete resident contacts
-    public function getAllResidents()
-    {
-        $this->db->query("SELECT * FROM security_resident_details");
-        return $this->db->resultSet();
-    }
+
+   
 }
 ?>

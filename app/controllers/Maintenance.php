@@ -47,7 +47,7 @@ class Maintenance extends Controller
 public function Team_Scheduling() {
     $members = $this->maintenanceModel->getAllMembers();
     $data = ['members' => $members];
-    $this->view('maintenance/team_scheduling', $data);
+    $this->view('maintenance/Team_Scheduling', $data);
 }
 
 // Add a new member
@@ -74,7 +74,7 @@ public function addMember() {
 
         // Add to database
         if ($this->maintenanceModel->addMember($data)) {
-            header('Location: ' . URLROOT . '/maintenance/team_scheduling');
+            header('Location: ' . URLROOT . 'maintenance/Team_Scheduling');
             exit();
         } else {
             die('Error adding member');
