@@ -141,87 +141,94 @@ class Resident extends Controller
     }
 
 
-    // public function my_listing() {
-    //     $data = [
-    //         'listings' => $this->listingModel->getUserListings($_SESSION['user_id'])
-    //     ];
-    //     $this->view('resident/my_listing', $data);
-    // }
-
-    public function update_listing()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $listingId = isset($_GET['listing_id']) ? $_GET['listing_id'] : null;
-
-        if (!$listingId) {
-            $_SESSION['error'] = 'Invalid listing ID';
-            redirect('resident/my_listing');
-            return;
-        }
-
-        // Fetch the listing
-        $listing = $this->listingModel->getListingById($listingId);
-
-        // Debugging information
-        error_log('Listing ID: ' . $listingId);
-        error_log('User ID: ' . (isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'User not logged in'));
-
-        if (!$listing) {
-            $_SESSION['error'] = 'Listing not found';
-            redirect('resident/my_listing');
-            return;
-        }
-
-        $data = [
-            'id' => $listing['id'], // Access as array
-            'title' => $listing['title'], // Access as array
-            'description' => $listing['description'], // Access as array
-            'type' => $listing['type'], // Access as array
-            'errors' => []
-        ];
-
-        $this->view('resident/create_listing', $data);
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Handle the form submission for updating the listing
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-        $data = [
-            'id' => trim($_POST['listing_id']),
-            'title' => trim($_POST['title']),
-            'description' => trim($_POST['description']),
-            'type' => trim($_POST['type']),
-            'errors' => []
-        ];
-
-        // Validate inputs
-        if (empty($data['title'])) {
-            $data['errors']['title'] = 'Title is required';
-        }
-        if (empty($data['description'])) {
-            $data['errors']['description'] = 'Description is required';
-        }
-        if (empty($data['type'])) {
-            $data['errors']['type'] = 'Type is required';
-        }
-
-        if (empty($data['errors'])) {
-            // No validation errors
-            if ($this->listingModel->updateListing($data)) {
-                $_SESSION['message'] = 'Listing updated successfully!';
+    public function update_listing() {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $listingId = isset($_GET['listing_id']) ? filter_var($_GET['listing_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+            
+            if (!$listingId || !$this->listingModel->isListingOwner($listingId, $_SESSION['user_id'])) {
+                $_SESSION['error'] = 'Invalid listing or unauthorized access';
                 redirect('resident/my_listing');
+                return;
+            }
+    
+            $listing = $this->listingModel->getListingById($listingId);
+            
+            if (!$listing) {
+                $_SESSION['error'] = 'Listing not found';
+                redirect('resident/my_listing');
+                return;
+            }
+    
+            $data = [
+                'id' => $listing['id'],
+                'title' => $listing['title'],
+                'description' => $listing['description'],
+                'type' => $listing['type'],
+                'errors' => []
+            ];
+    
+            $this->view('resident/create_listing', $data);
+    
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Initialize data array
+            $data = [
+                'id' => filter_var($_POST['listing_id'], FILTER_SANITIZE_NUMBER_INT),
+                'title' => trim(filter_var($_POST['title'], FILTER_SANITIZE_STRING)),
+                'description' => trim(filter_var($_POST['description'], FILTER_SANITIZE_STRING)),
+                'type' => trim(filter_var($_POST['type'], FILTER_SANITIZE_STRING)),
+                'user_id' => $_SESSION['user_id'],
+                'image_data' => null,
+                'image_type' => null,
+                'errors' => []
+            ];
+    
+            // Validate owner
+            if (!$this->listingModel->isListingOwner($data['id'], $data['user_id'])) {
+                $_SESSION['error'] = 'Unauthorized access';
+                redirect('resident/my_listing');
+                return;
+            }
+    
+            // Validate required fields
+            if (empty($data['title'])) {
+                $data['errors'][] = 'Title is required';
+            }
+            if (empty($data['description'])) {
+                $data['errors'][] = 'Description is required';
+            }
+            if (empty($data['type'])) {
+                $data['errors'][] = 'Type is required';
+            }
+    
+            // Handle optional image upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                
+                if (in_array($_FILES['image']['type'], $allowed)) {
+                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
+                    $data['image_type'] = $_FILES['image']['type'];
+                } else {
+                    $data['errors'][] = 'Invalid file type. Only JPG, PNG, GIF and WebP are allowed.';
+                }
+            }
+    
+            // Process update if no errors
+            if (empty($data['errors'])) {
+                if ($this->listingModel->updateListing($data)) {
+                    $_SESSION['message'] = 'Listing updated successfully!';
+                    redirect('resident/my_listing');
+                } else {
+                    $_SESSION['error'] = 'Failed to update listing';
+                    $this->view('resident/create_listing', $data);
+                }
             } else {
-                $_SESSION['error'] = 'Failed to update listing. Please try again.';
-                redirect('resident/my_listing');
+                // Reload form with errors
+                $this->view('resident/create_listing', $data);
             }
         } else {
-            // Reload the view with validation errors
-            $this->view('resident/create_listing', $data);
+            redirect('resident/my_listing');
         }
-    } else {
-        // Invalid request method
-        redirect('resident/my_listing');
     }
-}
 
     public function delete() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['listing_id'])) {

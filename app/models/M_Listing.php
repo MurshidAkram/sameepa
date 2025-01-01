@@ -68,18 +68,31 @@ class M_Listing {
 
     public function updateListing($data) {
         try {
-            $this->db->query('UPDATE listings 
-                             SET title = :title, 
-                                 description = :description, 
-                                 type = :type 
-                             WHERE id = :id AND posted_by = :user_id');
+            $sql = 'UPDATE listings SET 
+                    title = :title, 
+                    description = :description, 
+                    type = :type';
+            
+            // Add image update if new image provided
+            if ($data['image_data'] !== null) {
+                $sql .= ', image_data = :image_data, image_type = :image_type';
+            }
+            
+            $sql .= ' WHERE id = :id AND posted_by = :user_id';
+            
+            $this->db->query($sql);
             
             $this->db->bind(':id', $data['id']);
             $this->db->bind(':title', $data['title']);
             $this->db->bind(':description', $data['description']);
             $this->db->bind(':type', $data['type']);
             $this->db->bind(':user_id', $data['user_id']);
-
+            
+            if ($data['image_data'] !== null) {
+                $this->db->bind(':image_data', $data['image_data']);
+                $this->db->bind(':image_type', $data['image_type']);
+            }
+    
             return $this->db->execute();
         } catch (Exception $e) {
             error_log('Error in updateListing: ' . $e->getMessage());
