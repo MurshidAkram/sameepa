@@ -147,11 +147,11 @@
 }
 
 .btnviewgroup {
-    background-color: #800080;
+    background-color: #28a745;
 }
 
 .btnviewgroup:hover {
-    background-color: #9a009a;
+    opacity: 0.9;
     transform: translateY(-2px);
 }
 

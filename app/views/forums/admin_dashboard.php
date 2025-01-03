@@ -60,7 +60,7 @@
 
               <div class="forums-container">
                   <div class="table-header">
-                      <h2>All Facilities</h2>
+                      <h2>All Forums</h2>
                       <div class="filters">
                           <select class="filter-select" id="sort-filter">
                               <option value="newest">Newest First</option>
