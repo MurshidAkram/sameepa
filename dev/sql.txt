@@ -51,3 +51,18 @@ CREATE TABLE emergency_contacts (
     phone VARCHAR(15) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+//visitor passes
+
+CREATE TABLE Visitor_Passes (
+    pass_id INT AUTO_INCREMENT PRIMARY KEY,
+    visitor_name VARCHAR(100) NOT NULL,
+    visitor_count INT NOT NULL CHECK (visitor_count > 0),
+    resident_name VARCHAR(100) NOT NULL,
+    visit_date DATE NOT NULL,
+    visit_time TIME NOT NULL,
+    duration INT NOT NULL CHECK (duration BETWEEN 1 AND 24),
+    purpose TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+

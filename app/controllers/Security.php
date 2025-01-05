@@ -46,11 +46,71 @@ class Security extends Controller
     }
 
 //********************************************************************************************************************************************** */
-    public function Manage_Visitor_Passes()
-    {
-        // Load the view with the schedule data
-        $this->view('security/Manage_Visitor_Passes');
+
+public function Manage_Visitor_Passes() {
+    // Retrieve today's and historical visitor passes from the model
+    $pass = $this->securityModel->getVisitorPasses();
+
+    // Prepare the data to be passed to the view
+    $data = [
+        'todayPasses' => $pass['todayPasses'],  // Data for today's passes
+        'historyPasses' => $pass['historyPasses'] // Data for historical passes
+    ];
+
+    // Load the view and pass the data to it
+    $this->view('security/Manage_Visitor_Passes', $data);
+}
+
+
+
+public function Add_Visitor_Pass() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize POST data
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        // Collect form data
+        $data = [
+            'visitor_name' => trim($_POST['visitor_name']),
+            'visitor_count' => trim($_POST['visitor_count']),
+            'resident_name' => trim($_POST['resident_name']),
+            'visit_date' => trim($_POST['visit_date']),
+            'visit_time' => trim($_POST['visit_time']),
+            'duration' => trim($_POST['duration']),
+            'purpose' => trim($_POST['purpose'])
+        ];
+
+        // Add visitor pass to the database
+        $newPassId = $this->securityModel->addVisitorPass($data);
+
+        if ($newPassId) {
+            // Success JSON Response
+            echo json_encode([
+                'success' => true,
+                'id' => $newPassId, // The unique ID from the database
+                'visitor_name' => $data['visitor_name'],
+                'visitor_count' => $data['visitor_count'],
+                'resident_name' => $data['resident_name'],
+                'visit_date' => $data['visit_date'],
+                'visit_time' => $data['visit_time'],
+                'duration' => $data['duration'],
+                'purpose' => $data['purpose']
+            ]);
+            exit();
+        } else {
+            // Failure JSON Response
+            echo json_encode([
+                'success' => false,
+                'message' => 'Database error: Failed to insert visitor pass.'
+            ]);
+            exit();
+        }
     }
+
+    // If not a POST request, load the form view
+    $this->view('security/Add_Visitor_Pass');
+}
+
+
 
 
 //********************************************************************************************************************************************** */

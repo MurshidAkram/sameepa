@@ -9,7 +9,7 @@ class M_security
         $this->db = new Database();
     }
 
-//************************************************************************************************************************* */
+//****************************************************** Emergency contact******************************************************************* */
 
    // Fetch all contacts
 public function getAllContacts() {
@@ -51,7 +51,49 @@ public function deleteContact($id) {
     return $this->db->execute();
 }
 
+//**************************************************** Visitor passes************************************************************************************
 
-   
+public function getVisitorPasses() {
+    // Query today's visitor passes from the database
+    $queryToday = "SELECT * FROM Visitor_Passes WHERE visit_date = CURDATE()";
+    $this->db->query($queryToday);
+    $todayResult = $this->db->resultSet();  // Get today's passes
+
+    // Query historical visitor passes
+    $queryHistory = "SELECT * FROM Visitor_Passes WHERE visit_date < CURDATE()";
+    $this->db->query($queryHistory);
+    $historyResult = $this->db->resultSet();  // Get historical passes
+
+    // Combine both results and return them as an associative array
+    return [
+        'todayPasses' => $todayResult,
+        'historyPasses' => $historyResult
+    ];
+}
+
+
+
+public function addVisitorPass($data) {
+    $this->db->query("INSERT INTO Visitor_Passes (visitor_name, visitor_count, resident_name, visit_date, visit_time, duration, purpose) 
+                      VALUES (:visitor_name, :visitor_count, :resident_name, :visit_date, :visit_time, :duration, :purpose)");
+
+    // Bind parameters
+    $this->db->bind(':visitor_name', $data['visitor_name']);
+    $this->db->bind(':visitor_count', $data['visitor_count']);
+    $this->db->bind(':resident_name', $data['resident_name']);
+    $this->db->bind(':visit_date', $data['visit_date']);
+    $this->db->bind(':visit_time', $data['visit_time']);
+    $this->db->bind(':duration', $data['duration']);
+    $this->db->bind(':purpose', $data['purpose']);
+
+    // Execute the query
+    if ($this->db->execute()) {
+        return $this->db->lastInsertId(); // Return the unique ID
+    } else {
+        return false;
+    }
+}
+
+
 }
 ?>

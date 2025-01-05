@@ -35,7 +35,7 @@
                                 '<?php echo htmlspecialchars($contacts->phone); ?>', 
                                 '<?php echo $contacts->id; ?>'
                             )">Edit</button>
-                            <button class="btn delete-btn" onclick="deleteContact('<?php echo $contacts->id; ?>')">Delete</button>
+                            <!-- <button class="btn delete-btn" onclick="deleteContact('<?php echo $contacts->id; ?>')">Delete</button> -->
                         </div>
                     </div>
                 <?php endforeach; ?>
