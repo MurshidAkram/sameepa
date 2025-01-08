@@ -28,6 +28,9 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; 
 }
 
 .facility-card:hover {
@@ -44,6 +47,16 @@
     color: #555555;
     margin-bottom: 1rem;
     line-height: 1.5;
+    height: 3em;
+    overflow: hidden;
+    position: relative;
+}
+
+.facility-card p:after {
+    content: '...';
+    position: absolute;
+    display: inline;
+    padding-left: 3px;
 }
 
 .facility-details {
@@ -84,7 +97,7 @@
     width: 100%;
     background-color: #800080;
     color: white;
-    padding: 8px 16px;
+    padding: 18px 16px;
     border-radius: 100px;
     text-decoration: none;
     text-align: center;
@@ -98,6 +111,7 @@
     background-color: #6c757d;
     cursor: not-allowed;
     opacity: 0.65;
+    padding: 20px 18px;
 }
 
 .fac-btn-view:hover, .fac-btn-book:hover{

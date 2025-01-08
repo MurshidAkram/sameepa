@@ -218,28 +218,33 @@ class Facilities extends Controller
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Get facility details
             $facility = $this->facilityModel->getFacilityById($id);
-
+            
             $bookingData = [
                 'facility_id' => $id,
                 'facility_name' => $facility['name'],
-                'user_id' => $_SESSION['user_id'],
                 'booking_date' => $_POST['booking_date'],
                 'booking_time' => $_POST['booking_time'],
-                'duration' => $_POST['duration'],
-                'booked_by' => $_SESSION['name'] // Get from session
+                'duration' => $_POST['duration']
             ];
+
+            // Check for overlaps before creating booking
+            $overlap = $this->facilityModel->checkBookingOverlap(
+                $id,
+                $bookingData['booking_date'],
+                $bookingData['booking_time'],
+                $bookingData['duration']
+            );
+
+            if ($overlap) {
+                $_SESSION['error_message'] = 'This time slot is already booked';
+                redirect('facilities/book/' . $id);
+                return;
+            }
 
             if ($this->facilityModel->createBooking($bookingData)) {
                 $_SESSION['success_message'] = 'Facility booked successfully';
-                if ($_SESSION['user_role_id'] == 2) {
-                    redirect('facilities/admin_dashboard');
-                } else {
-                    redirect('facilities');
-                }
-            } else {
-                die('Something went wrong');
+                redirect('facilities');
             }
         }
 
@@ -399,22 +404,27 @@ class Facilities extends Controller
 
         return $errors;
     }
-    public function checkOverlap()
-    {
+    public function getBookedTimes($facilityId, $date) {
+        $bookings = $this->facilityModel->getBookedTimesByDate($facilityId, $date);
+        header('Content-Type: application/json');
+        echo json_encode($bookings);
+    }
+
+    public function checkOverlap() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = json_decode(file_get_contents("php://input"));
-
-            $overlappingBookings = $this->facilityModel->checkOverlappingBookings(
+            
+            $conflictingBooking = $this->facilityModel->checkBookingOverlap(
                 $data->facilityId,
                 $data->date,
-                $data->startTime,
+                $data->time,
                 $data->duration
             );
-
+            
             header('Content-Type: application/json');
             echo json_encode([
-                'hasOverlap' => !empty($overlappingBookings),
-                'overlappingBookings' => $overlappingBookings
+                'hasOverlap' => !empty($conflictingBooking),
+                'conflictingBooking' => $conflictingBooking
             ]);
         }
     }

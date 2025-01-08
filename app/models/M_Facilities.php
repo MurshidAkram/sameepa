@@ -193,8 +193,20 @@ class M_Facilities
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
-    public function checkOverlappingBookings($facilityId, $date, $startTime, $duration)
-    {
+    public function getBookedTimesByDate($facilityId, $date) {
+        $this->db->query('SELECT booking_time, duration, booked_by, user_id 
+                          FROM bookings 
+                          WHERE facility_id = :facility_id 
+                          AND booking_date = :date
+                          ORDER BY booking_time ASC');
+        
+        $this->db->bind(':facility_id', $facilityId);
+        $this->db->bind(':date', $date);
+        
+        return $this->db->resultSet();
+    }
+       
+    public function checkBookingOverlap($facilityId, $date, $startTime, $duration) {
         $this->db->query('SELECT * FROM bookings 
                           WHERE facility_id = :facility_id 
                           AND booking_date = :date 
@@ -209,15 +221,16 @@ class M_Facilities
                               OR 
                               (TIME_TO_SEC(:start_time) <= TIME_TO_SEC(booking_time) 
                                AND TIME_TO_SEC(:start_time) + (:duration * 3600) >= TIME_TO_SEC(booking_time) + (duration * 3600))
-                          )');
+                              )');
 
         $this->db->bind(':facility_id', $facilityId);
         $this->db->bind(':date', $date);
         $this->db->bind(':start_time', $startTime);
         $this->db->bind(':duration', $duration);
 
-        return $this->db->resultSet();
+        return $this->db->single();
     }
+        
     public function getActiveBookingsCount() {
         $this->db->query("SELECT COUNT(*) as count FROM bookings 
                           WHERE booking_date >= CURDATE() 

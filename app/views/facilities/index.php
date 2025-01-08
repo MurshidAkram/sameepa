@@ -58,12 +58,17 @@
       </div>
 
       <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
       <script>
-        function showUnavailableMessage() {
-            alert('This facility is currently unavailable for booking.');
-        }
-    </script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const descriptions = document.querySelectorAll('.facility-card p');
+        
+        descriptions.forEach(p => {
+            if (p.scrollHeight > p.offsetHeight) {
+                p.insertAdjacentHTML('beforeend', '<span style="position: absolute; right: 0; bottom: 0; background: white; padding-left: 4px;">...</span>');
+            }
+        });
+    });
+</script>
 
   </body>
   </html>
