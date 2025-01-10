@@ -118,6 +118,17 @@ class M_Groups
         return (int)$result['discussion_count']; // Convert array access to integer return
     }
     public function deleteGroup($id) {
+        // First delete related records from group_members
+        $this->db->query('DELETE FROM group_members WHERE group_id = :id');
+        $this->db->bind(':id', $id);
+        $this->db->execute();
+
+        // Then delete related records from groups_report
+        $this->db->query('DELETE FROM groups_report WHERE group_id = :id');
+        $this->db->bind(':id', $id);
+        $this->db->execute();
+
+        // Finally delete the group
         $this->db->query('DELETE FROM groups WHERE group_id = :id');
         $this->db->bind(':id', $id);
         return $this->db->execute();
@@ -152,6 +163,40 @@ class M_Groups
                          ORDER BY g.created_date DESC');
         $this->db->bind(':user_id', $userId);
         return $this->db->resultSet();
+    }
+    public function reportGroup($groupId, $userId, $reason) {
+        $this->db->query('INSERT INTO groups_report (group_id, reported_by, reason) VALUES (:group_id, :reported_by, :reason)');
+        
+        $this->db->bind(':group_id', $groupId);
+        $this->db->bind(':reported_by', $userId);
+        $this->db->bind(':reason', $reason);
+        
+        return $this->db->execute();
+    }
+    
+    public function getGroupReports($groupId) {
+        $this->db->query('SELECT gr.*, u.name as reporter_name 
+                          FROM groups_report gr 
+                          JOIN users u ON gr.reported_by = u.id 
+                          WHERE gr.group_id = :group_id 
+                          ORDER BY gr.created_at DESC');
+        
+        $this->db->bind(':group_id', $groupId);
+        return $this->db->resultSet();
+    }
+    public function getReportedGroups() {
+        $this->db->query('SELECT gr.*, g.group_name, g.group_description, u.name as reporter_name 
+                          FROM groups_report gr 
+                          JOIN groups g ON gr.group_id = g.group_id 
+                          JOIN users u ON gr.reported_by = u.id 
+                          ORDER BY gr.created_at DESC');
+        return $this->db->resultSet();
+    }   
+    
+    public function ignoreReport($reportId) {
+        $this->db->query('DELETE FROM groups_report WHERE id = :id');
+        $this->db->bind(':id', $reportId);
+        return $this->db->execute();
     }
     
 }

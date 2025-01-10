@@ -36,6 +36,9 @@
             </div>
 
             <div class="admin-actions">
+                <a href="<?php echo URLROOT; ?>/groups/reported" class="btn-reported">
+                    <i class="fas fa-flag"></i> Reported Groups
+                </a>
                 <a href="<?php echo URLROOT; ?>/groups/create" class="btn-create">
                     <i class="fas fa-plus"></i> Create New Group
                 </a>
@@ -82,6 +85,9 @@
                               </a>
                               <a href="<?php echo URLROOT; ?>/groups/update/<?php echo $group->group_id; ?>" class="btn-update-group">
                                   <i class="fas fa-edit"></i>
+                              </a>
+                              <a href="<?php echo URLROOT; ?>/groups/reported_group_message/<?php echo $group->group_id; ?>" class="btn-reports-group">
+                                  <i class="fas fa-flag"></i>
                               </a>
                               <form action="<?php echo URLROOT; ?>/groups/delete/<?php echo $group->group_id; ?>" method="POST" style="display: inline;">
                                   <button type="submit" class="btndeletegroup" onclick="return confirm('Are you sure you want to delete this group?')">

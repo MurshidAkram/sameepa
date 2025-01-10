@@ -208,4 +208,43 @@ class Groups extends Controller
     public function getMemberCount($groupId) {
         return $this->groupsModel->getMemberCount($groupId);
     }
+    public function report($groupId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $reason = trim($_POST['reason']);
+            
+            if (empty($reason)) {
+                flash('report_message', 'Please provide a reason for the report', 'alert alert-danger');
+                redirect('groups/report/' . $groupId);
+            }
+            
+            if ($this->groupsModel->reportGroup($groupId, $_SESSION['user_id'], $reason)) {
+                flash('group_message', 'Group reported successfully');
+                redirect('groups/viewgroup/' . $groupId);
+            } else {
+                flash('report_message', 'Something went wrong', 'alert alert-danger');
+                redirect('groups/report/' . $groupId);
+            }
+        } else {
+            $data = [
+                'group_id' => $groupId
+            ];
+            
+            $this->view('groups/report', $data);
+        }
+    }
+    public function reported() {
+        $reported_groups = $this->groupsModel->getReportedGroups();
+        $data = [
+            'reported_groups' => $reported_groups
+        ];
+        $this->view('groups/reported', $data);
+    }
+    
+    public function ignore_report($reportId) {
+        if ($this->groupsModel->ignoreReport($reportId)) {
+            flash('group_message', 'Report Ignored');
+            redirect('groups/reported');
+        }
+    }
+    
 }
