@@ -110,13 +110,13 @@ class M_Groups
         return (int)$result['member_count']; // Convert array access to integer return
     }
     
-
     public function getTotalDiscussionsCount() 
     {
-        $this->db->query('SELECT COUNT(*) as discussion_count FROM group_discussions');
+        $this->db->query('SELECT COUNT(*) as discussion_count FROM group_chats');
         $result = $this->db->single();
-        return (int)$result['discussion_count']; // Convert array access to integer return
+        return (int)$result['discussion_count'];
     }
+    
     public function deleteGroup($id) {
         // First delete related records from group_members
         $this->db->query('DELETE FROM group_members WHERE group_id = :id');
@@ -198,5 +198,21 @@ class M_Groups
         $this->db->bind(':id', $reportId);
         return $this->db->execute();
     }
+    public function saveMessage($groupId, $userId, $message) {
+        $this->db->query('INSERT INTO group_chats (group_id, user_id, message) VALUES (:group_id, :user_id, :message)');
+        $this->db->bind(':group_id', $groupId);
+        $this->db->bind(':user_id', $userId);
+        $this->db->bind(':message', $message);
+        return $this->db->execute();
+    }
     
+    public function getGroupMessages($groupId) {
+        $this->db->query('SELECT gc.*, u.name as sender_name, u.image_data, u.image_type 
+                          FROM group_chats gc 
+                          JOIN users u ON gc.user_id = u.id 
+                          WHERE gc.group_id = :group_id 
+                          ORDER BY gc.sent_at ASC');
+        $this->db->bind(':group_id', $groupId);
+        return $this->db->resultSet();
+    }
 }

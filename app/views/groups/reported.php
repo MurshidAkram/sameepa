@@ -55,7 +55,7 @@
                                 <span class="comment-date"><?php echo date('F j, Y g:i A', strtotime($group->created_at)); ?></span>
                                 <div class="comment-actions">
                                     <form action="<?php echo URLROOT; ?>/groups/delete/<?php echo $group->group_id; ?>" method="POST" style="display: inline;">
-                                        <button type="submit" class="btn-delete-comment" onclick="return confirm('Are you sure you want to delete this group?')">
+                                        <button type="submit" class="btndelcomment" onclick="return confirm('Are you sure you want to delete this group?')">
                                             Delete Group
                                         </button>
                                     </form>

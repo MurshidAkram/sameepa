@@ -2,12 +2,12 @@
 class Groups extends Controller
 {
     protected $groupsModel;
-
     public function __construct()
     {
         // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
+            $this->userModel = $this->model('User');
         }
 
         // Check if user has appropriate role
@@ -163,10 +163,46 @@ class Groups extends Controller
         
         $this->view('groups/update', $data);
     }
-    public function chat()
-    {
-        $this->view('groups/chat');
+    public function chat($groupId) {
+        $group = $this->groupsModel->getGroupById($groupId);
+        $messages = $this->groupsModel->getGroupMessages($groupId);
+        $memberCount = $this->groupsModel->getMemberCount($groupId);
+        
+        $data = [
+            'group' => $group,
+            'messages' => $messages,
+            'member_count' => $memberCount
+        ];
+        
+        $this->view('groups/chat', $data);
     }
+    
+    public function sendMessage() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $groupId = $_POST['group_id'];
+            $message = trim($_POST['message']);
+            
+            if (!empty($message)) {
+                if ($this->groupsModel->saveMessage($groupId, $_SESSION['user_id'], $message)) {
+                    $user = $this->userModel->getUserById($_SESSION['user_id']);
+                    $response = [
+                        'success' => true,
+                        'message' => $message,
+                        'sender' => $_SESSION['name'],
+                        'timestamp' => date('Y-m-d H:i:s'),
+                        'profile_image' => $user->profile_image ? base64_encode($user->profile_image) : null,
+                        'profile_image_type' => $user->profile_image_type
+                    ];
+                } else {
+                    $response = ['success' => false];
+                }
+                echo json_encode($response);
+                exit;
+            }
+        }
+    }
+    
+    
     public function admin_dashboard()
     {
         $groups = $this->groupsModel->getAllGroups();

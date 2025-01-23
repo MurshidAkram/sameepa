@@ -1132,7 +1132,7 @@
     gap: 10px;
 }
 
-.btn-delete-comment,
+.btndelcomment,
 .btn-ignore-report {
     padding: 6px 12px;
     border-radius: 15px;
@@ -1141,12 +1141,14 @@
     transition: all 0.3s ease;
 }
 
-.btn-delete-comment {
+.btndelcomment {
     background-color: #ff4444;
-    color: white;
+    color: white; 
+    border: none;
+    padding: 8px 14px;
 }
 
-.btn-delete-comment:hover {
+.btndelcomment:hover {
     background-color: #cc0000;
 }
 

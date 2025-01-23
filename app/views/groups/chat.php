@@ -29,62 +29,92 @@
         }
         ?>
         <main class="group-chat-main">
-            <div class="group-chat-container">
-                <div class="group-chat-header">
-                    <div class="group-chat-info">
-                        <h2>Book Club Chat</h2>
-                        <span>15 members</span>
-                    </div>
-                    <a href="<?php echo URLROOT; ?>/groups/viewgroup/1" class="back-to-group">
-                        <i class="fas fa-arrow-left"></i> Back to Group
-                    </a>
+        <div class="group-chat-container">
+    <div class="group-chat-header">
+        <div class="group-chat-info">
+            <h2><?php echo $data['group']['group_name']; ?></h2>
+            <span><?php echo $data['member_count']; ?> members</span>
+        </div>
+        <a href="<?php echo URLROOT; ?>/groups/viewgroup/<?php echo $data['group']['group_id']; ?>" class="back-to-group">
+            <i class="fas fa-arrow-left"></i> Back to Group
+        </a>
+    </div>
+    
+    <div class="group-chat-messages" id="chatMessages">
+    <?php foreach($data['messages'] as $message): ?>
+        <div class="chat-message <?php echo ($message->user_id == $_SESSION['user_id']) ? 'sent' : 'received'; ?>">
+            <?php if($message->user_id != $_SESSION['user_id']): ?>
+                <?php if(!empty($message->image_data)): ?>
+                    <img src="data:<?php echo $message->image_type; ?>;base64,<?php echo base64_encode($message->image_data); ?>" alt="User" class="message-avatar">
+                <?php else: ?>
+                    <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="User" class="message-avatar">
+                <?php endif; ?>
+            <?php endif; ?>
+            <div class="message-content">
+                <div class="message-info">
+                    <?php if($message->user_id != $_SESSION['user_id']): ?>
+                        <span class="message-sender"><?php echo $message->sender_name; ?></span>
+                    <?php endif; ?>
+                    <span class="message-time"><?php echo date('h:i A', strtotime($message->sent_at)); ?></span>
                 </div>
-                <div class="group-chat-messages">
-                    <div class="chat-message received">
-                        <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="User" class="message-avatar">
-                        <div class="message-content">
-                            <div class="message-info">
-                                <span class="message-sender">Sarah Johnson</span>
-                                <span class="message-time">10:30 AM</span>
-                            </div>
-                            <p>What did everyone think of chapter 5?</p>
-                        </div>
-                    </div>
-
-                    <div class="chat-message sent">
-                        <div class="message-content">
-                            <div class="message-info">
-                                <span class="message-time">10:32 AM</span>
-                            </div>
-                            <p>The plot twist was unexpected!</p>
-                        </div>
-                    </div>
-
-                    <div class="chat-message received">
-                        <img src="<?php echo URLROOT; ?>/img/default-user2.jpg" alt="User" class="message-avatar">
-                        <div class="message-content">
-                            <div class="message-info">
-                                <span class="message-sender">Michael Chen</span>
-                                <span class="message-time">10:35 AM</span>
-                            </div>
-                            <p>I loved how the author developed the characters.</p>
-                        </div>
-                    </div>
-
-                    <!-- Add Emily Davis and final sent message -->
-                </div>
-                <div class="group-chat-input">
-                    <input type="text" placeholder="Type your message...">
-                    <button class="send-message">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
+                <p><?php echo $message->message; ?></p>
             </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+    <div class="group-chat-input">
+        <input type="text" id="messageInput" placeholder="Type your message...">
+        <button class="send-message" id="sendMessage">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
         </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+document.getElementById('sendMessage').addEventListener('click', sendMessage);
+
+function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    
+    if (message) {
+        fetch('<?php echo URLROOT; ?>/groups/sendMessage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `group_id=<?php echo $data['group']['group_id']; ?>&message=${encodeURIComponent(message)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                appendMessage(data);
+                messageInput.value = '';
+            }
+        });
+    }
+}
+
+function appendMessage(data) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageHTML = `
+        <div class="chat-message sent">
+            <div class="message-content">
+                <div class="message-info">
+                    <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+                <p>${data.message}</p>
+            </div>
+        </div>
+    `;
+    chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+</script>
 </body>
 
 </html>
