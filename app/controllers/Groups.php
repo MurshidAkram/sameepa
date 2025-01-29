@@ -190,13 +190,14 @@ class Groups extends Controller
                         'message' => $message,
                         'sender' => $_SESSION['name'],
                         'timestamp' => date('Y-m-d H:i:s'),
-                        'profile_image' => $user->profile_image ? base64_encode($user->profile_image) : null,
-                        'profile_image_type' => $user->profile_image_type
+                        'profile_image' => $user->profile_picture ? base64_encode($user->profile_picture) : null,
                     ];
+                    redirect("groups/chat/{$groupId}");
                 } else {
                     $response = ['success' => false];
                 }
                 echo json_encode($response);
+                redirect("groups/chat/{$groupId}");
                 exit;
             }
         }

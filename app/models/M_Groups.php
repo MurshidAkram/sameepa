@@ -207,7 +207,7 @@ class M_Groups
     }
     
     public function getGroupMessages($groupId) {
-        $this->db->query('SELECT gc.*, u.name as sender_name, u.image_data, u.image_type 
+        $this->db->query('SELECT gc.*, u.name as sender_name, u.profile_picture 
                           FROM group_chats gc 
                           JOIN users u ON gc.user_id = u.id 
                           WHERE gc.group_id = :group_id 

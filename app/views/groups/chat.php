@@ -44,8 +44,8 @@
     <?php foreach($data['messages'] as $message): ?>
         <div class="chat-message <?php echo ($message->user_id == $_SESSION['user_id']) ? 'sent' : 'received'; ?>">
             <?php if($message->user_id != $_SESSION['user_id']): ?>
-                <?php if(!empty($message->image_data)): ?>
-                    <img src="data:<?php echo $message->image_type; ?>;base64,<?php echo base64_encode($message->image_data); ?>" alt="User" class="message-avatar">
+                <?php if(!empty($message->profile_picture)): ?>
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($message->profile_picture); ?>" alt="User" class="message-avatar">
                 <?php else: ?>
                     <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="User" class="message-avatar">
                 <?php endif; ?>
@@ -105,7 +105,7 @@ function appendMessage(data) {
         <div class="chat-message sent">
             <div class="message-content">
                 <div class="message-info">
-                    <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    <span class="message-time">${new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                 </div>
                 <p>${data.message}</p>
             </div>
