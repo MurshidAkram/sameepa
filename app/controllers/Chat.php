@@ -36,4 +36,22 @@ class Chat extends Controller
 
         $this->view('chat/requests');
     }
+
+    public function report()
+    {
+
+        $this->view('chat/report');
+    }
+
+    public function viewchat()
+    {
+
+        $this->view('chat/viewchat');
+    }
+
+    public function viewreport()
+    {
+
+        $this->view('chat/viewreport');
+    }
 }

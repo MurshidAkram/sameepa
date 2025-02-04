@@ -1,4 +1,3 @@
-<!-- app/views/chat/requests.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +9,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
 
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
-    <title>Chat Requests | <?php echo SITENAME; ?></title>
+    <title>Chat Reports | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
@@ -35,7 +34,7 @@
             <aside class="groups-sidebar">
                 <h2>Chat Navigation</h2>
                 <nav class="groups-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-createds-group">My Chats</a>
+                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-creates-group">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="btn-views-group">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-joineds-groups">Chat Requests</a>
                     <a href="<?php echo URLROOT; ?>/chat/report" class="btn-views-members">Report</a>
@@ -43,41 +42,47 @@
             </aside>
 
             <div class="groups-content">
-                <h1>Chat Requests</h1>
-                <p>Pending and incoming chat invitations.</p>
+                <h1>Chat Reports</h1>
+                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/viewreport">
+                    <input type="text" name="search" placeholder="Search reports...">
+                    <button type="submit">Search</button>
+                </form>
+                <p>Review and manage chat-related reports and incidents.</p>
 
                 <div class="groups-grid">
-                    <!-- Chat Request Card Template -->
+                    <!-- Report Card Template -->
                     <div class="group-card">
                         <div class="group-image">
-                            <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="Jane Smith">
+                            <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="Report from John Doe">
                         </div>
                         <div class="group-details">
-                            <h3 class="group-title">Mrs. Jeewa</h3>
+                            <h3 class="group-title">Inappropriate Message</h3>
                             <div class="group-info">
                                 <p class="group-category">
-                                    <i class="fas fa-user-tag"></i>
-                                    Admin
+                                    <i class="fas fa-flag"></i>
+                                    Status: Pending
                                 </p>
                                 <p class="group-creator">
                                     <i class="fas fa-clock"></i>
-                                    Requested: 3 hours ago
+                                    Reported: 3 hours ago
                                 </p>
                             </div>
                             <div class="group-actions">
-                                <a href="<?php echo URLROOT; ?>/chat/accept/1" class="btn-update-group">Accept</a>
-                                <a href="<?php echo URLROOT; ?>/chat/decline/1" class="btn-delete-group">Decline</a>
+                                <a href="<?php echo URLROOT; ?>/chat/viewreport" class="btn-view-group">View Details</a>
+                                <span class="member-count">
+                                    <i class="fas fa-user"></i>
+                                    Reported By
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Repeat similar chat request card structures -->
+                    <!-- Repeat similar report card structures -->
                 </div>
 
-                <!-- No Requests Placeholder -->
-                <div class="no-groups">
-                    <p>No pending chat requests.</p>
-                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-view-group">Find Users to Chat</a>
+                <!-- No Reports Placeholder -->
+                <div class="no-groups" style="display: none;">
+                    <p>No chat reports at this time.</p>
                 </div>
             </div>
         </main>

@@ -1,3 +1,4 @@
+<!-- app/views/chat/index.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/chats.css">
-    <title>Chat | <?php echo SITENAME; ?></title>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
+    <title>Chats | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
@@ -16,7 +17,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -30,50 +30,61 @@
         }
         ?>
 
-        <main class="chat-main">
-            <aside class="chat-sidebar">
-                <h2>Chat Options</h2>
-                <nav class="chat-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-chat-active active">Chats</a>
-                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-chat-search">Find Users</a>
-                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-chat-requests">Chat Requests</a>
-
+        <main class="groups-main">
+            <aside class="groups-sidebar">
+                <h2>Chat Navigation</h2>
+                <nav class="groups-nav">
+                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-creates-group">My Chats</a>
+                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-views-group">Search Users</a>
+                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-joined-groups">Chat Requests</a>
+                    <a href="<?php echo URLROOT; ?>/chat/report" class="btn-views-members">Report</a>
                 </nav>
             </aside>
 
-            <div class="chat-content">
-                <div class="chat-header">
-                    <h1>My Chats</h1>
-                    <div class="chat-search-container">
-                        <input type="text" placeholder="Search chats..." class="chat-search-input">
-                        <button class="chat-search-btn"><i class="fas fa-search"></i></button>
+            <div class="groups-content">
+                <h1>My Chats</h1>
+                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat">
+                    <input type="text" name="search" placeholder="Search chats...">
+                    <button type="submit">Search</button>
+                </form>
+                <p>Connect and communicate with residents, admins, and community members!</p>
+
+                <div class="groups-grid">
+                    <!-- Chat Card Template -->
+                    <div class="group-card">
+                        <div class="group-image">
+                            <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="Chat with John Doe">
+                        </div>
+                        <div class="group-details">
+                            <h3 class="group-title">Mr. Sunil</h3>
+                            <div class="group-info">
+                                <p class="group-category">
+                                    <i class="fas fa-user-tag"></i>
+                                    Resident
+                                </p>
+                                <p class="group-creator">
+                                    <i class="fas fa-clock"></i>
+                                    Last Message: 2 hours ago
+                                </p>
+                            </div>
+                            <div class="group-actions">
+                                <span class="member-count">
+                                    <i class="fas fa-envelope"></i>
+                                    3 Unread
+                                </span>
+                                <a href="<?php echo URLROOT; ?>/chat/viewchat/1" class="btn-view-group">View Chat</a>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Repeat similar chat card structures for other chats -->
                 </div>
 
-                <div class="chats-list">
-                    <div class="chat-list-item">
-                        <div class="chat-user-avatar">
-                            <img src="<?php echo URLROOT; ?>/img/user-avatar.png" alt="User Avatar">
-                        </div>
-                        <div class="chat-user-info">
-                            <h3 class="chat-user-name">Mr. Kamal</h3>
-                            <p class="chat-last-message">Good Morning neighbour!</p>
-                        </div>
-                        <div class="chat-metadata">
-                            <span class="chat-timestamp">2:30 PM</span>
-                        </div>
-                        <div class="chat-actions">
-                            <button class="btn-chat-delete"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
+                <!-- No Chats Placeholder -->
+                <div class="no-groups" style="display: none;">
+                    <p>No active chats yet.</p>
+                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-view-group">Start a New Chat</a>
                 </div>
-
-                <?php if (empty($data['chats'])): ?>
-                    <div class="no-chats">
-                        <p>No active chats.</p>
-                        <a href="<?php echo URLROOT; ?>/chat/search" class="btn-start-chat">Find Users</a>
-                    </div>
-                <?php endif; ?>
             </div>
         </main>
     </div>

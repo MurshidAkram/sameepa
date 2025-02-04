@@ -404,11 +404,25 @@ class M_Users
             return false;
         }
     }
-    public function getActiveUsers()
-    {
-        $this->db->query("SELECT COUNT(*) as count FROM users WHERE is_active = 1");
-        $result = $this->db->single();
-        return $result ? $result->count : 0;
+    public function getActiveUsers() {
+        try {
+            $this->db->query('SELECT COUNT(*) AS activeUsersCount FROM users WHERE is_active = 1');
+            $result = $this->db->single(); // Fetch a single row
+            
+            if (!$result) {
+                error_log("Database query failed or returned empty result.");
+                return 0; // Default to 0 in case of failure
+            }
+    
+            error_log("Fetched Active Users: " . print_r($result, true)); // Debugging output
+    
+            return (int) $result['activeUsersCount']; // Ensure returning an integer
+        } catch (Exception $e) {
+            error_log("Error fetching active users: " . $e->getMessage());
+            return 0; // Return 0 on failure
+        }
     }
+    
+    
     
 }

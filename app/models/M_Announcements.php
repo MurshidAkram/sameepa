@@ -110,9 +110,19 @@ class M_Announcements {
         $this->db->bind(':user_id', $userId);
         return $this->db->single();
     }
-    public function getActiveAnnouncements()
-    {
-        $this->db->query("SELECT title FROM announcements WHERE is_active = 1");
-        return $this->db->resultSet();
+    
+    public function getActiveAnnouncements() {
+        try {
+            $this->db->query('
+                SELECT title
+                FROM announcements
+                ORDER BY created_at DESC
+            ');
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log("Error fetching announcements: " . $e->getMessage());
+            return [];
+        }
     }
+    
 }

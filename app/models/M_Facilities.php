@@ -206,4 +206,29 @@ class M_Facilities
 
         return $this->db->resultSet();
     }
+    
+    public function getTodayBookings() {
+        try {
+            // Set specific date instead of today
+            $specificDate = '2024-11-28';
+    
+            $this->db->query('
+                SELECT 
+                    b.booking_time AS time,
+                    SUM(CASE WHEN b.facility_name = "Gym" THEN 1 ELSE 0 END) AS gym,
+                    SUM(CASE WHEN b.facility_name = "Community Pool" THEN 1 ELSE 0 END) AS pool,
+                    SUM(CASE WHEN b.facility_name = "Tennis Court" THEN 1 ELSE 0 END) AS tennis
+                FROM bookings b 
+                WHERE DATE(b.booking_date) = :today
+                GROUP BY b.booking_time
+                ORDER BY b.booking_time
+            ');
+            $this->db->bind(':today', $specificDate);
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log("Error fetching bookings: " . $e->getMessage());
+            return [];
+        }
+    }
+    
 }

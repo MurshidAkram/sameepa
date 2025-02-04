@@ -20,40 +20,43 @@
         <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
 
         <main>
-            <section class="dashboard-overview">
-                <div class="user-count">
-                    <span>Active Users: <?php echo htmlspecialchars($data['activeUsers'] ?? 0); ?></span>
-                </div>
+        
+<?php 
+$activeUsers = $data['activeUsers'] ?? 0; 
+if (is_numeric($activeUsers)) : ?>
+    <div class="user-count">
+        <span>Active Users: <?php echo $activeUsers; ?></span>
+    </div>
+<?php endif; ?>
+
 
                 <h1>Welcome to the Super Admin Dashboard</h1>
 
                 <div class="dashboard-grid">
                     <!-- Bookings Card -->
                     <div class="card bookings-card">
-                        <h2>Today's Bookings</h2>
-                        <table class="bookings-table">
-                            <tr>
-                                <th>Time</th>
-                                <th>Gym</th>
-                                <th>Pool</th>
-                                <th>Tennis Court</th>
-                            </tr>
-                            <?php if (!empty($data['bookings'])): ?>
-                                <?php foreach ($data['bookings'] as $time => $booking): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($time); ?></td>
-                                        <td><?php echo htmlspecialchars($booking['gym'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars($booking['pool'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars($booking['tennis'] ?? ''); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="4">No bookings available for today.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </table>
-                    </div>
+    <h2>Today's Bookings</h2>
+    <table class="bookings-table">
+        <tr>
+            <th>Time</th>
+            <th>Gym</th>
+            <th>Pool</th>
+            <th>Tennis Court</th>
+        </tr>
+        <?php if (!empty($data['bookings'])): ?>
+            <?php foreach ($data['bookings'] as $booking): ?>
+                <tr>
+                    <td><?php echo date('H:i', strtotime($booking->time)); ?></td>
+                    <td><?php echo ($booking->gym > 0) ? $booking->gym : '-'; ?></td>
+                    <td><?php echo ($booking->pool > 0) ? $booking->pool : '-'; ?></td>
+                    <td><?php echo ($booking->tennis > 0) ? $booking->tennis : '-'; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr><td colspan="4">No bookings for today</td></tr>
+        <?php endif; ?>
+    </table>
+</div>
 
                     <!-- Payment Card -->
                     <div class="card payment-card">
@@ -62,41 +65,47 @@
                     </div>
 
                     <!-- Announcements Card -->
-                    <div class="card announcements-card">
-                        <h2>Active Announcements</h2>
-                        <ul>
-                            <?php if (!empty($data['announcements'])): ?>
-                                <?php foreach ($data['announcements'] as $announcement): ?>
-                                    <li><?php echo htmlspecialchars($announcement); ?></li>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <li>No active announcements.</li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
+                   <!-- Announcements Card -->
+<div class="card announcements-card">
+    <h2>Active Announcements</h2>
+    <ul>
+        <?php if (!empty($data['announcement'])): ?>
+            <?php foreach ($data['announcement'] as $announcement): ?>
+                <li><?php echo htmlspecialchars($announcement->title); ?></li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li>No active announcements</li>
+        <?php endif; ?>
+    </ul>
+</div>
 
                     <!-- Complaints Chart -->
-                    <div class="bar-chart-container">
+                    <!-- <div class="bar-chart-container">
                         <h2>Complaints Status</h2>
                         <canvas id="monthlyComplaintsChart"></canvas>
-                    </div>
+                    </div> -->
 
                     <!-- Events Card -->
-                    <div class="card events-card">
-                        <h2>Today's Events</h2>
-                        <ul>
-                            <?php if (!empty($data['todayEvents'])): ?>
-                                <?php foreach ($data['todayEvents'] as $event): ?>
-                                    <li>
-                                        <span class="event-title"><?php echo htmlspecialchars($event->event_title ?? 'No Title'); ?></span>
-                                        <span class="event-time"><?php echo htmlspecialchars($event->event_time ?? ''); ?></span>
-                                    </li>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <li>No events scheduled for today.</li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
+<div class="card events-card">
+    <h2>Today's Events</h2>
+    <ul>
+        <?php if (!empty($data['todayEvents'])): ?>
+            <?php foreach ($data['todayEvents'] as $event): ?>
+                <li>
+                    <span class="event-title">
+                        <?php echo htmlspecialchars($event->event_title ?? 'No Title'); ?>
+                    </span>
+                    <span class="event-time">
+                        <?php echo htmlspecialchars($event->event_time ?? 'TBD'); ?>
+                    </span>
+                </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li>No events scheduled for today.</li>
+        <?php endif; ?>
+    </ul>
+</div>
+
                 </div>
             </section>
         </main>
@@ -104,7 +113,7 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <script>
+    <!-- <script>
         // Complaints Chart
         const complaintsData = <?php echo json_encode($data['complaintsStats'] ?? []); ?>;
         const barCtx = document.getElementById('monthlyComplaintsChart').getContext('2d');
@@ -126,7 +135,7 @@
                     }
                 }
             }
-        });
+        }); -->
 
         // Payment Chart
         const paymentStats = <?php echo json_encode($data['payments'] ?? ['paid' => 0, 'unpaid' => 0]); ?>;
