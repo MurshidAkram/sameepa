@@ -16,6 +16,9 @@
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
+    <!-- <a href="<?php echo URLROOT; ?>/events" class="back-button">
+                    <i class="fas fa-arrow-left"></i> 
+                </a> -->
         <?php
         switch ($_SESSION['user_role_id']) {
             case 1:
@@ -33,12 +36,15 @@
         <main class="groups-main">
             <aside class="groups-sidebar">
                 <h2>Chat Navigation</h2>
-                <nav class="groups-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-creates-group">My Chats</a>
-                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-views-group">Search Users</a>
-                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-joined-groups">Chat Requests</a>
-                    <a href="<?php echo URLROOT; ?>/chat/report" class="btn-views-members">Report</a>
-                </nav>
+                <?php $current_page = basename($_SERVER['REQUEST_URI']);?>
+
+<nav class="groups-nav">
+    <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
+    <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
+    <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
+    <a href="<?php echo URLROOT; ?>/chat/report" class="<?php echo ($current_page == 'report' ? 'active' : ''); ?>">Report</a>
+</nav>
+
             </aside>
 
             <div class="groups-content">
@@ -48,36 +54,26 @@
                     <button type="submit">Search</button>
                 </form>
                 <p>Connect and communicate with residents, admins, and community members!</p>
-
                 <div class="groups-grid">
-                    <!-- Chat Card Template -->
-                    <div class="group-card">
-                        <div class="group-image">
-                            <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="Chat with John Doe">
-                        </div>
-                        <div class="group-details">
-                            <h3 class="group-title">Mr. Sunil</h3>
-                            <div class="group-info">
-                                <p class="group-category">
-                                    <i class="fas fa-user-tag"></i>
-                                    Resident
-                                </p>
-                                <p class="group-creator">
-                                    <i class="fas fa-clock"></i>
-                                    Last Message: 2 hours ago
-                                </p>
+                    <?php if (!empty($data['users'])): ?>
+                        <?php foreach ($data['users'] as $user): ?>
+                            <div class="group-card">
+                                <div class="group-image">
+                                    <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="<?php echo $user->name; ?>">
+                                </div>
+                                <div class="group-details">
+                                    <h3 class="group-title"><?php echo $user->name; ?></h3>
+                                    <div class="group-actions">
+                                        <a href="<?php echo URLROOT; ?>/chat/viewChat/<?php echo $user->id; ?>" class="btn-view-group">Start Chat</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="group-actions">
-                                <span class="member-count">
-                                    <i class="fas fa-envelope"></i>
-                                    3 Unread
-                                </span>
-                                <a href="<?php echo URLROOT; ?>/chat/viewchat/1" class="btn-view-group">View Chat</a>
-                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="no-groups">
+                            <p>No users found.</p>
                         </div>
-                    </div>
-
-                    <!-- Repeat similar chat card structures for other chats -->
+                    <?php endif; ?>
                 </div>
 
                 <!-- No Chats Placeholder -->
@@ -92,5 +88,22 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".groups-nav a");
+
+    links.forEach(link => {
+        link.addEventListener("click", function () {
+            // Remove active class from all links
+            links.forEach(l => l.classList.remove("active"));
+
+            // Add active class to the clicked link
+            this.classList.add("active");
+        });
+    });
+});
+
+    </script>
+
 
 </html>

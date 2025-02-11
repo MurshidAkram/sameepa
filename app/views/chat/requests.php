@@ -34,51 +34,223 @@
         <main class="groups-main">
             <aside class="groups-sidebar">
                 <h2>Chat Navigation</h2>
-                <nav class="groups-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-createds-group">My Chats</a>
-                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-views-group">Search Users</a>
-                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-joineds-groups">Chat Requests</a>
-                    <a href="<?php echo URLROOT; ?>/chat/report" class="btn-views-members">Report</a>
-                </nav>
+                <?php $current_page = basename($_SERVER['REQUEST_URI']);?>
+
+<nav class="groups-nav">
+    <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
+    <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
+    <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
+    <a href="<?php echo URLROOT; ?>/chat/report" class="<?php echo ($current_page == 'report' ? 'active' : ''); ?>">Report</a>
+</nav>
             </aside>
 
             <div class="groups-content">
                 <h1>Chat Requests</h1>
-                <p>Pending and incoming chat invitations.</p>
 
                 <div class="groups-grid">
-                    <!-- Chat Request Card Template -->
-                    <div class="group-card">
-                        <div class="group-image">
-                            <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="Jane Smith">
-                        </div>
-                        <div class="group-details">
-                            <h3 class="group-title">Mrs. Jeewa</h3>
-                            <div class="group-info">
-                                <p class="group-category">
-                                    <i class="fas fa-user-tag"></i>
-                                    Admin
-                                </p>
-                                <p class="group-creator">
-                                    <i class="fas fa-clock"></i>
-                                    Requested: 3 hours ago
-                                </p>
-                            </div>
-                            <div class="group-actions">
-                                <a href="<?php echo URLROOT; ?>/chat/accept/1" class="btn-update-group">Accept</a>
-                                <a href="<?php echo URLROOT; ?>/chat/decline/1" class="btn-delete-group">Decline</a>
-                            </div>
-                        </div>
+    <?php if (!empty($data['requests'])): ?>
+        <?php foreach ($data['requests'] as $request): ?>
+            <div class="group-card" id="request-<?php echo $request->id; ?>">
+                <div class="group-image">
+                    <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="User profile">
+                </div>
+                <div class="group-details">
+                    <h3 class="group-title"><?php echo htmlspecialchars($request->name); ?></h3>
+                    <div class="group-actions" id="actions-<?php echo $request->id; ?>">
+                        <button onclick="acceptRequest(<?php echo $request->id; ?>, <?php echo $request->sender_id; ?>)" 
+                                class="btn-update-group">Accept</button>
+                        <button onclick="declineRequest(<?php echo $request->id; ?>)" 
+                                class="btn-delete-group">Decline</button>
                     </div>
-
-                    <!-- Repeat similar chat request card structures -->
                 </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="no-groups">
+            <p>No pending chat requests.</p>
+            <a href="<?php echo URLROOT; ?>/chat/search" class="btn-view-group">Find Users to Chat</a>
+        </div>
+    <?php endif; ?>
+</div>
 
-                <!-- No Requests Placeholder -->
-                <div class="no-groups">
-                    <p>No pending chat requests.</p>
-                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-view-group">Find Users to Chat</a>
-                </div>
+<style>
+.group-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.group-image {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+}
+
+.group-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.group-details {
+    flex: 1;
+}
+
+.group-title {
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.group-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-update-group, .btn-delete-group {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-update-group {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-delete-group {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-update-group:hover {
+    background-color: #45a049;
+}
+
+.btn-delete-group:hover {
+    background-color: #da190b;
+}
+
+.btn-start-chat {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.btn-start-chat:hover {
+    background-color: #45a049;
+}
+</style>
+<script>
+function acceptRequest(requestId, userId) {
+    console.log('Starting accept request, ID:', requestId, 'UserID:', userId);
+    
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const baseUrl = "<?php echo URLROOT; ?>";
+
+    fetch(`${baseUrl}/chat/acceptRequest/${requestId}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json().catch(() => { throw new Error("Invalid JSON response"); }))
+    .then(data => {
+        console.log('Processed data:', data);
+        if (data.success) {
+            const actionsDiv = document.getElementById('actions-' + requestId);
+            console.log("actionsDiv:", actionsDiv); 
+
+            if (actionsDiv) {
+                actionsDiv.innerHTML = `
+                    <a href="${baseUrl}/chat/viewChat/${userId}" 
+                       class="btn-start-chat">Start Chat</a>
+                `;
+            } else {
+                console.error('Error: actionsDiv not found for requestId:', requestId);
+            }
+        } else {
+            throw new Error(data.message || 'Unknown error occurred');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred: ' + error.message);
+    });
+}
+
+
+
+
+function declineRequest(requestId) {
+    if (!confirm('Are you sure you want to decline this chat request?')) return;
+
+    fetch('<?php echo URLROOT; ?>/chat/declineRequest/' + requestId, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const requestCard = document.getElementById('request-' + requestId);
+            if (requestCard) requestCard.remove();
+
+            // Recheck if all requests are removed
+            setTimeout(() => {
+                const requestsGrid = document.querySelector('.groups-grid');
+                if(requestsGrid && !requestsGrid.querySelector('.group-card')) {
+                    requestsGrid.innerHTML = `
+                        <div class="no-groups">
+                            <p>No pending chat requests.</p>
+                            <a href="<?php echo URLROOT; ?>/chat/search" class="btn-view-group">Find Users to Chat</a>
+                        </div>
+                    `;
+                }
+            }, 200);
+        } else {
+            alert(data.message || 'Failed to decline request');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request');
+    });
+}
+
+</script>
+
+<style>
+.btn-start-chat {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.btn-start-chat:hover {
+    background-color: #45a049;
+}
+</style>
             </div>
         </main>
     </div>
@@ -86,5 +258,106 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".groups-nav a");
 
+    links.forEach(link => {
+        link.addEventListener("click", function () {
+            // Remove active class from all links
+            links.forEach(l => l.classList.remove("active"));
+
+            // Add active class to the clicked link
+            this.classList.add("active");
+        });
+    });
+});
+
+    
+// 3. Update JavaScript in requests.php:
+function acceptRequest(requestId, userId) {
+    console.log('Starting accept request, ID:', requestId, 'UserID:', userId);
+    
+    // Add CSRF token if your system uses it
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    
+    fetch(`<?php echo URLROOT; ?>/chat/Requests/${requestId}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token
+        },
+        credentials: 'same-origin' // Include cookies
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text().then(text => {
+            console.log('Raw response:', text);
+            return text ? JSON.parse(text) : {}
+        });
+    })
+    .then(data => {
+        console.log('Processed data:', data);
+        if(data.success) {
+            const actionsDiv = document.getElementById('actions-' + requestId);
+            if (actionsDiv) {
+                actionsDiv.innerHTML = `
+                    <a href="<?php echo URLROOT; ?>/chat/viewChat/${userId}" 
+                       class="btn-start-chat">Start Chat</a>
+                `;
+            }
+        } else {
+            throw new Error(data.message || 'Unknown error occurred');
+        }
+    })
+    .catch(error => {
+        console.error('Detailed error:', error);
+        alert('An error occurred: ' + error.message);
+    });
+}
+
+function declineRequest(requestId) {
+    if (!confirm('Are you sure you want to decline this chat request?')) {
+        return;
+    }
+
+    fetch('<?php echo URLROOT; ?>/chat/declineRequest/' + requestId, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            const requestCard = document.getElementById('request-' + requestId);
+            if (requestCard) {
+                requestCard.remove();
+                
+                const requestsGrid = document.querySelector('.groups-grid');
+                if(requestsGrid && requestsGrid.children.length === 0) {
+                    requestsGrid.innerHTML = `
+                        <div class="no-groups">
+                            <p>No pending chat requests.</p>
+                            <a href="<?php echo URLROOT; ?>/chat/search" 
+                               class="btn-view-group">Find Users to Chat</a>
+                        </div>
+                    `;
+                }
+            }
+        } else {
+            alert(data.message || 'Failed to decline request');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while processing your request');
+    });
+}
+
+    </script>
 </html>

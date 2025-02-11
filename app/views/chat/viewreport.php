@@ -33,12 +33,14 @@
         <main class="groups-main">
             <aside class="groups-sidebar">
                 <h2>Chat Navigation</h2>
-                <nav class="groups-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="btn-creates-group">My Chats</a>
-                    <a href="<?php echo URLROOT; ?>/chat/search" class="btn-views-group">Search Users</a>
-                    <a href="<?php echo URLROOT; ?>/chat/requests" class="btn-joineds-groups">Chat Requests</a>
-                    <a href="<?php echo URLROOT; ?>/chat/report" class="btn-views-members">Report</a>
-                </nav>
+                <?php $current_page = basename($_SERVER['REQUEST_URI']);?>
+
+<nav class="groups-nav">
+    <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
+    <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
+    <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
+    <a href="<?php echo URLROOT; ?>/chat/report" class="<?php echo ($current_page == 'report' ? 'active' : ''); ?>">Report</a>
+</nav>
             </aside>
 
             <div class="group-view-container">
@@ -114,5 +116,20 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".groups-nav a");
 
+    links.forEach(link => {
+        link.addEventListener("click", function () {
+            // Remove active class from all links
+            links.forEach(l => l.classList.remove("active"));
+
+            // Add active class to the clicked link
+            this.classList.add("active");
+        });
+    });
+});
+
+    </script>
 </html>
