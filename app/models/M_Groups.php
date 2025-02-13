@@ -215,4 +215,43 @@ class M_Groups
         $this->db->bind(':group_id', $groupId);
         return $this->db->resultSet();
     }
+
+    public function reportMessage($groupId, $messageId, $userId, $reason) {
+        $this->db->query('INSERT INTO reported_group_message (group_id, message_id, reported_by, reason) VALUES (:group_id, :message_id, :reported_by, :reason)');
+        
+        $this->db->bind(':group_id', $groupId);
+        $this->db->bind(':message_id', $messageId);
+        $this->db->bind(':reported_by', $userId);
+        $this->db->bind(':reason', $reason);
+        
+        return $this->db->execute();
+    }
+    
+    public function getReportedMessages() {
+        $this->db->query('SELECT rgm.*, gc.message, gc.user_id, u.name as reporter_name, us.name as sender_name 
+                          FROM reported_group_message rgm 
+                          JOIN group_chats gc ON rgm.message_id = gc.id 
+                          JOIN users u ON rgm.reported_by = u.id 
+                          JOIN users us ON gc.user_id = us.id 
+                          ORDER BY rgm.created_at DESC');
+        return $this->db->resultSet();
+    }
+    
+    public function ignoreMessageReport($reportId) {
+        $this->db->query('DELETE FROM reported_group_message WHERE id = :id');
+        $this->db->bind(':id', $reportId);
+        return $this->db->execute();
+    }
+    
+    public function deleteMessage($messageId) {
+        // First delete related records from reported_group_message
+        $this->db->query('DELETE FROM reported_group_message WHERE message_id = :message_id');
+        $this->db->bind(':message_id', $messageId);
+        $this->db->execute();
+    
+        // Then delete the message from group_chats
+        $this->db->query('DELETE FROM group_chats WHERE id = :id');
+        $this->db->bind(':id', $messageId);
+        return $this->db->execute();
+    }
 }

@@ -809,6 +809,7 @@
 .search-btn:hover {
     background: #9a009a;
 }
+
   .admin-actions {
       margin-bottom: 2rem;
       display: flex;
@@ -832,12 +833,14 @@
       background: #9a009a;
       transform: translateY(-2px);
   }
+
 .groups-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
+
   .stat-card {
       background: white;
       padding: 2rem;
@@ -1221,4 +1224,57 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.report-form-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.report-form-container textarea {
+    width: 95%;
+    height: 100px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.report-form-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.report-form-container button[type="submit"] {
+    background-color: #e22d2d;
+    color: white;
+}
+
+.report-form-container button[type="button"] {
+    background-color: #4d4d4d;
+    color: white;
+}
+
+.report-message-btn {
+    background-color: #e22d2d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.report-message-btn:hover {
+    background-color: #ee5151;
 }

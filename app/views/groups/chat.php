@@ -58,6 +58,7 @@
                     <span class="message-time"><?php echo date('h:i A', strtotime($message->sent_at)); ?></span>
                 </div>
                 <p><?php echo $message->message; ?></p>
+                <button class="report-message-btn" onclick="showReportForm(<?php echo $message->id; ?>)">Report</button>
             </div>
         </div>
     <?php endforeach; ?>
@@ -70,6 +71,16 @@
         </button>
     </div>
         </main>
+    </div>
+
+    <div id="reportFormContainer" class="report-form-container" style="display: none;">
+        <form id="reportForm" action="<?php echo URLROOT; ?>/groups/report_message" method="POST">
+            <input type="hidden" name="group_id" id="reportGroupId">
+            <input type="hidden" name="message_id" id="reportMessageId">
+            <textarea name="reason" id="reportReason" placeholder="Reason for reporting" required></textarea>
+            <button type="submit" class="btn-submit">Submit Report</button>
+            <button type="button" onclick="hideReportForm()" class="btn-cancel">Cancel</button>
+        </form>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
@@ -113,6 +124,16 @@ function appendMessage(data) {
     `;
     chatMessages.insertAdjacentHTML('beforeend', messageHTML);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showReportForm(messageId) {
+    document.getElementById('reportGroupId').value = <?php echo $data['group']['group_id']; ?>;
+    document.getElementById('reportMessageId').value = messageId;
+    document.getElementById('reportFormContainer').style.display = 'block';
+}
+
+function hideReportForm() {
+    document.getElementById('reportFormContainer').style.display = 'none';
 }
 </script>
 </body>

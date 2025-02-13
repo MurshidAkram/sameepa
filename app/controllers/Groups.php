@@ -192,12 +192,11 @@ class Groups extends Controller
                         'timestamp' => date('Y-m-d H:i:s'),
                         'profile_image' => $user->profile_picture ? base64_encode($user->profile_picture) : null,
                     ];
-                    redirect("groups/chat/{$groupId}");
                 } else {
                     $response = ['success' => false];
                 }
                 echo json_encode($response);
-                redirect("groups/chat/{$groupId}");
+                //redirect("groups/chat/{$groupId}");
                 exit;
             }
         }
@@ -281,6 +280,51 @@ class Groups extends Controller
         if ($this->groupsModel->ignoreReport($reportId)) {
             flash('group_message', 'Report Ignored');
             redirect('groups/reported');
+        }
+    }
+
+    public function report_message() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $groupId = $_POST['group_id'];
+            $messageId = $_POST['message_id'];
+            $reason = trim($_POST['reason']);
+            
+            if (empty($reason)) {
+                flash('report_message', 'Please provide a reason for the report', 'alert alert-danger');
+                redirect('groups/chat/' . $groupId);
+            }
+            
+            if ($this->groupsModel->reportMessage($groupId, $messageId, $_SESSION['user_id'], $reason)) {
+                flash('group_message', 'Message reported successfully');
+                redirect('groups/chat/' . $groupId);
+            } else {
+                flash('report_message', 'Something went wrong', 'alert alert-danger');
+                redirect('groups/chat/' . $groupId);
+            }
+        }
+    }
+    
+    public function reported_messages() {
+        $reported_messages = $this->groupsModel->getReportedMessages();
+        $data = [
+            'reported_messages' => $reported_messages
+        ];
+        $this->view('groups/reported_messages', $data);
+    }
+    
+    public function ignore_message_report($reportId) {
+        if ($this->groupsModel->ignoreMessageReport($reportId)) {
+            flash('group_message', 'Report Ignored');
+            redirect('groups/reported_messages');
+        }
+    }
+    
+    public function delete_message($messageId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->groupsModel->deleteMessage($messageId)) {
+                flash('group_message', 'Message Deleted');
+                redirect('groups/reported_messages');
+            }
         }
     }
     
