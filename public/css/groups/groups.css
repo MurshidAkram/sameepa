@@ -1265,16 +1265,37 @@
     color: white;
 }
 
-.report-message-btn {
-    background-color: #e22d2d;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
+/* Add this CSS to your existing stylesheet or within a <style> tag in your HTML file */
+.message-content {
+    position: relative;
+    background: #f0f2f5;
+    padding: 10px 15px;
+    border-radius: 15px;
+    padding-bottom: 35px; /* Add extra padding at the bottom to accommodate the buttons */
 }
 
-.report-message-btn:hover {
-    background-color: #ee5151;
+.report-message-btn, .delete-message-btn {
+    background: none;
+    border: none;
+    color: #ff0000; /* Red color for delete button */
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    bottom: 20px;
+}
+
+.report-message-btn {
+    right: 15px;
+}
+
+.delete-message-btn {
+    right: 15px;
+}
+
+.report-message-btn i, .delete-message-btn i {
+    font-size: 1.2em; /* Adjust icon size as needed */
+}
+
+.report-message-btn:hover, .delete-message-btn:hover {
+    color: #cc0000; /* Darker red on hover */
 }

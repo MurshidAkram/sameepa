@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
     <title>Group Chat - Book Club | <?php echo SITENAME; ?></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
@@ -42,7 +43,7 @@
     
     <div class="group-chat-messages" id="chatMessages">
     <?php foreach($data['messages'] as $message): ?>
-        <div class="chat-message <?php echo ($message->user_id == $_SESSION['user_id']) ? 'sent' : 'received'; ?>">
+        <div class="chat-message <?php echo ($message->user_id == $_SESSION['user_id']) ? 'sent' : 'received'; ?>" data-id="<?php echo $message->id; ?>">
             <?php if($message->user_id != $_SESSION['user_id']): ?>
                 <?php if(!empty($message->profile_picture)): ?>
                     <img src="data:image/jpeg;base64,<?php echo base64_encode($message->profile_picture); ?>" alt="User" class="message-avatar">
@@ -58,7 +59,16 @@
                     <span class="message-time"><?php echo date('h:i A', strtotime($message->sent_at)); ?></span>
                 </div>
                 <p><?php echo $message->message; ?></p>
-                <button class="report-message-btn" onclick="showReportForm(<?php echo $message->id; ?>)">Report</button>
+                <?php if($message->user_id != $_SESSION['user_id']): ?>
+                    <button class="report-message-btn" onclick="showReportForm(<?php echo $message->id; ?>)">
+                        <i class="fas fa-flag"></i>
+                    </button>
+                <?php endif; ?>
+                <?php if($message->user_id == $_SESSION['user_id']): ?>
+                    <button class="delete-message-btn" onclick="deleteMessage(<?php echo $message->id; ?>)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                <?php endif; ?>
             </div>
         </div>
     <?php endforeach; ?>
@@ -103,22 +113,25 @@ function sendMessage() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                appendMessage(data);
+                appendMessage(data.message, data.timestamp, data.sender_name, data.profile_picture);
                 messageInput.value = '';
             }
         });
     }
 }
 
-function appendMessage(data) {
+function appendMessage(message, timestamp, senderName, profilePicture) {
     const chatMessages = document.getElementById('chatMessages');
     const messageHTML = `
-        <div class="chat-message sent">
+        <div class="chat-message sent" data-id="${message.id}">
             <div class="message-content">
                 <div class="message-info">
-                    <span class="message-time">${new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    <span class="message-time">${new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                 </div>
-                <p>${data.message}</p>
+                <p>${message}</p>
+                <button class="delete-message-btn" onclick="deleteMessage(${message.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
             </div>
         </div>
     `;
@@ -134,6 +147,29 @@ function showReportForm(messageId) {
 
 function hideReportForm() {
     document.getElementById('reportFormContainer').style.display = 'none';
+}
+
+function deleteMessage(messageId) {
+    if (confirm('Are you sure you want to delete this message?')) {
+        fetch(`<?php echo URLROOT; ?>/groups/deleteOwnMessage/${messageId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `messageId=${messageId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const messageElement = document.querySelector(`.chat-message[data-id="${data.messageId}"]`);
+                if (messageElement) {
+                    messageElement.remove();
+                }
+            } else {
+                alert(data.message || 'Failed to delete message');
+            }
+        });
+    }
 }
 </script>
 </body>

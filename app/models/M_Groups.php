@@ -1,4 +1,3 @@
-
 <?php
 class M_Groups
 {
@@ -244,12 +243,22 @@ class M_Groups
     }
     
     public function deleteMessage($messageId) {
-        // First delete related records from reported_group_message
         $this->db->query('DELETE FROM reported_group_message WHERE message_id = :message_id');
         $this->db->bind(':message_id', $messageId);
         $this->db->execute();
     
-        // Then delete the message from group_chats
+        $this->db->query('DELETE FROM group_chats WHERE id = :id');
+        $this->db->bind(':id', $messageId);
+        return $this->db->execute();
+    }
+
+    public function getMessageById($messageId) {
+        $this->db->query('SELECT * FROM group_chats WHERE id = :id');
+        $this->db->bind(':id', $messageId);
+        return $this->db->single();
+    }
+
+    public function deleteOwnMessage($messageId) {
         $this->db->query('DELETE FROM group_chats WHERE id = :id');
         $this->db->bind(':id', $messageId);
         return $this->db->execute();

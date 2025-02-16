@@ -190,7 +190,7 @@ class Groups extends Controller
                         'message' => $message,
                         'sender' => $_SESSION['name'],
                         'timestamp' => date('Y-m-d H:i:s'),
-                        'profile_image' => $user->profile_picture ? base64_encode($user->profile_picture) : null,
+                        'profile_image' => $user->profile_picture ? base64_encode($user->profile_picture) : null
                     ];
                 } else {
                     $response = ['success' => false];
@@ -325,6 +325,23 @@ class Groups extends Controller
                 flash('group_message', 'Message Deleted');
                 redirect('groups/reported_messages');
             }
+        }
+    }
+    
+    public function deleteOwnMessage($messageId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $message = $this->groupsModel->getMessageById($messageId);
+
+            if ($message && $message->user_id == $_SESSION['user_id']) {
+                if ($this->groupsModel->deleteOwnMessage($messageId)) {
+                    echo json_encode(['success' => true, 'messageId' => $messageId]);  // Add messageId to response
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to delete message']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            }
+            exit;
         }
     }
     
