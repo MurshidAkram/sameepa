@@ -94,6 +94,13 @@ public function addVisitorPass($data) {
     }
 }
 
+//***************************************************resident contact*********************************** */
+
+public function searchResidentContacts($query) {
+    $this->db->query("SELECT * FROM residents WHERE resident_name LIKE :q OR address LIKE :q OR phone_number LIKE :q");
+    $this->db->bind(':q', '%' . $query . '%');
+    return $this->db->resultSet();
+}
 
 }
 ?>

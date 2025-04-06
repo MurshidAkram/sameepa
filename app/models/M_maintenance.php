@@ -26,7 +26,6 @@ public function addMember($data) {
     $this->db->bind(':name', $data['name']);
     $this->db->bind(':specialization', $data['specialization']);
     $this->db->bind(':experience', $data['experience']);
-   
     $this->db->bind(':profile_image', $data['profile_image']);
     $this->db->bind(':phone_number', $data['phone_number']);
 

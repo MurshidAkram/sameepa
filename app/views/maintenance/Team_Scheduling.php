@@ -160,21 +160,7 @@ h1, h2 {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
 }
 
-.card-hvac .profile-img {
-    border-color: #2ecc71;
-}
 
-.card-electrical .profile-img {
-    border-color: #e67e22;
-}
-
-.card-plumbing .profile-img {
-    border-color: #9b59b6;
-}
-
-.card-general .profile-img {
-    border-color: #c0392b;
-}
 
 /* Button Styling */
 .btn {
@@ -259,11 +245,16 @@ h1, h2 {
 }
 
 .profile-img img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 200%;            /* Makes the image perfectly circular */
     border: 3px solid #3498db;
-    object-fit: cover;
+    object-fit: cover;             /* Ensures the image fills the circle */
+    object-position: center;       /* Centers the content */
+    display: block;                /* Removes whitespace below image */
+    background-color: #f5f5f5;     /* Fallback background */
+    box-sizing: border-box;        /* Includes border in sizing */
+
 }
 
 .profile-details {
@@ -595,10 +586,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+     // Handle form submission
+     memberForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Validate phone number
+        if (!phoneRegex.test(phoneInput.value)) {
+            alert('Please enter a valid 10-digit phone number');
+            return;
+        }
+
+        // Here you would typically send the data to your server
+        // For demonstration, we'll just refresh the page after a short delay
+        setTimeout(() => {
+            window.location.reload();
+        }, 500); // Small delay to allow user to see the success state if needed
+    });
+
     // Close modal
     closeModal.addEventListener('click', () => {
         memberModal.classList.remove('active');
-        memberForm.reset(); // Reset form on close
     });
 
     // Real-time phone number validation

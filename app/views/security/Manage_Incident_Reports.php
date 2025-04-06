@@ -180,33 +180,6 @@ h3 {
     background-color: #e67e22;
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Background Overlay */
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: white;
-    margin: 5% auto;
-    padding: 20px;
-    border-radius: 8px;
-    width: 70%;
-    max-width: 600px;
-}
-
-.modal-content h3 {
-    margin-bottom: 15px;
-    color:#800080;
-}
 
 .close {
     color: #aaa;
@@ -288,6 +261,81 @@ main {
     padding-right: 95px;
     padding-bottom: 20px;
 }
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 400px;
+    background-color: #ffffff; /* Dark Violet */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    display: none;
+}
+
+/* Modal active state (visible) */
+.modal.active {
+    display: block;
+  
+}
+
+/* Modal header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #fff; /* Light text color */
+}
+
+.modal-header .close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #e8c8e3; /* Light Violet */
+    transition: color 0.3s ease;
+}
+
+.modal-header .close:hover {
+    color: #f1d1f6; /* Lighter Violet on hover */
+}
+
+/* Modal form inputs and select */
+.modal-form input, .modal-form select {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0 10px;
+    border: 1px solid black; /* Light Violet border */
+    border-radius: 5px;
+    background-color: #f6e4f7; /* Light Violet background */
+    color:  black; /* Dark Violet text */
+}
+
+/* Form input and select focus effects */
+.modal-form input:focus, .modal-form select:focus {
+    outline: none;
+    border-color: #e8c8e3; /* Light Violet border on focus */
+    box-shadow: 0 0 5px rgba(232, 200, 227, 0.5); /* Subtle shadow */
+}
+
+/* Form submit button */
+.modal-form button {
+    background-color: #7a4d9c; /* Medium Violet */
+    color: #fff;
+    border: none;
+    padding: 12px;
+    width: 95%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-form button:hover {
+    background-color: #9b66c9; /* Lighter Violet on hover */
+}
+
 
 /* Responsive Styles */
 @media (max-width: 768px) {
@@ -314,11 +362,6 @@ main {
     .incident-report-form {
         width: 100%;
     }
-
-    .modal-content {
-        width: 90%;
-    }
-
     main {
         margin-left: 0;
         padding: 10px;
@@ -437,44 +480,49 @@ main {
         <!-- Modal to View Incident Details -->
         <div id="incidentModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
+                <span type="button" class="btn1" onclick="cancelIncidentForm()">&times;</span>
                 <h3 class="too">Description Of Incident Report</h3>
                 <p id="incident_details"></p>
             </div>
         </div>
 
         <!-- Incident Report Form -->
-        <div class="incident-report-form" id="incidentForm">
+        <div class="modal" id="incidentForm">
+        <div class="modal-header">
     <h3>Report New Incident</h3>
-    <form id="incidentFormElement">
-        <div class="form-group">
+    <span class="close" id="closeModal">&times;</span>
+    </div>
+    <form class="modal-form" id="incidentFormElement">
+        
             <label for="incident_type">Incident Type</label>
             <select id="incident_type" name="incident_type">
                 <option value="fire">Fire</option>
                 <option value="theft">Theft</option>
                 <option value="accident">Accident</option>
             </select>
-        </div>
-        <div class="form-group">
+     
+      
             <label for="incident_date">Date</label>
             <input type="date" id="incident_date" name="incident_date">
-        </div>
-        <div class="form-group">
+        
+       
             <label for="incident_time">Time</label>
             <input type="time" id="incident_time" name="incident_time">
-        </div>
-        <div class="form-group">
+       
+        
             <label for="incident_location">Location</label>
             <input type="text" id="incident_location" name="incident_location">
-        </div>
-        <div class="form-group">
+     
+       
             <label for="incident_description">Description</label>
             <textarea id="incident_description" name="incident_description"></textarea>
-        </div>
-        <div class="form-group">
-            <button type="button" class="btn1" onclick="submitIncidentForm()">Submit Report</button>
+     
+
             <button type="button" class="btn1" onclick="cancelIncidentForm()">Cancel</button>
-        </div>
+           
+            <div class="modal-buttons">
+           <button type="button" class="btn1" onclick="cancelIncidentForm()">Save</button> 
+       </div>
     </form>
 </div>
 
@@ -486,8 +534,15 @@ main {
     // Show the Incident Form
     function showIncidentForm() {
         document.getElementById("incidentForm").style.display = "block";
+        const closeModal = document.getElementById('closeModal');
     }
 
+
+       // Close modal
+       closeModal.cancelIncidentForm()('click', () => {
+        memberModal.classList.remove('active');
+    });
+    
     // Close the Modal
     function closeModal() {
         document.getElementById("incidentModal").style.display = "none";

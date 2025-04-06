@@ -221,11 +221,21 @@ public function Delete_Contact($id) {
 
 //********************************************************************************************************************************************** */
 
-    public function Resident_Contacts()
-    {
-        // Load the view for managing resident contacts
-        $this->view('security/Resident_Contacts');
+// View page without loading data
+public function residents_contact() {
+    $this->view('security/Resident_Contacts');
+}
+
+// API endpoint to return JSON search results
+public function search_residents() {
+    if (isset($_GET['search_query'])) {
+        $query = trim($_GET['search_query']);
+        $results = $this->securityModel->searchResidentContacts($query);
+        echo json_encode($results);
+    } else {
+        echo json_encode([]);
     }
+}
 
 }
 

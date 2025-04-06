@@ -191,7 +191,9 @@
             const query = document.getElementById('search_query').value.toLowerCase();
 
             // Perform the AJAX request
-            fetch('<?php echo URLROOT; ?>/security/Resident_Contacts?search_query=' + query)
+      
+            fetch('<?php echo URLROOT; ?>/security/search_residents?search_query=' + query)
+
                 .then(response => response.json())
                 .then(data => {
                     // Populate the table with search results
