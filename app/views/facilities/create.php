@@ -86,6 +86,12 @@
                                required min="1" class="form-control">
                     </div>
 
+                    <div class="form-group">
+                        <label for="facility_image">Facility Image:</label>
+                        <input type="file" name="facility_image" id="facility_image" class="form-control">
+                        <small class="form-text text-muted">Upload an image of the facility (JPG, PNG, GIF)</small>
+                    </div>
+
                     <div class="form-buttons">
                         <button type="submit" class="btn btn-primary">Create Facility</button>
                         <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="btn btn-cancel">Cancel</a>

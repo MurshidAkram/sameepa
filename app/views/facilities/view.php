@@ -49,6 +49,13 @@
                         </div>
                     </div>
 
+                    <?php if (!empty($data['facility']['image_path'])): ?>
+                    <div class="facility-image">
+                        <img src="<?php echo URLROOT . '/' . $data['facility']['image_path']; ?>" 
+                             alt="<?php echo $data['facility']['name']; ?>">
+                    </div>
+                    <?php endif; ?>
+
                     <div class="facility-info">
                         <div class="facility-description">
                             <h4>Description</h4>

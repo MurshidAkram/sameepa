@@ -56,6 +56,19 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="facility_image">Facility Image:</label>
+                        <?php if (!empty($data['facility']['image_path'])): ?>
+                            <div class="current-image">
+                                <img src="<?php echo URLROOT . '/' . $data['facility']['image_path']; ?>" 
+                                    alt="Current facility image" style="max-width: 200px;">
+                                <p>Current image</p>
+                            </div>
+                        <?php endif; ?>
+                        <input type="file" name="facility_image" id="facility_image" class="form-control">
+                        <small class="form-text text-muted">Upload a new image to replace the current one (JPG, PNG, GIF)</small>
+                    </div>
+
                     <div class="form-buttons">
                         <button type="submit" class="btn-submit">Save Changes</button>
                         <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="btn-cancel">Cancel</a>

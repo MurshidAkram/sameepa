@@ -34,8 +34,38 @@ class Facilities extends Controller
                 'capacity' => trim($_POST['capacity']),
                 'status' => 'available',
                 'created_by' => $adminId,
+                'image_path' => '',
                 'errors' => []
             ];
+
+            if (isset($_FILES['facility_image']) && $_FILES['facility_image']['error'] == 0) {
+                $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                $filename = $_FILES['facility_image']['name'];
+                $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+                
+                // Check if file extension is allowed
+                if (!in_array(strtolower($file_ext), $allowed)) {
+                    $data['errors'][] = 'Invalid file format. Allowed formats: jpg, jpeg, png, gif';
+                } else {
+                    // Create unique filename
+                    $new_filename = uniqid() . '.' . $file_ext;
+                    $upload_dir = 'uploads/facilities/';
+                    
+                    // Create directory if it doesn't exist
+                    if (!file_exists($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+                    
+                    $destination = $upload_dir . $new_filename;
+                    
+                    // Move uploaded file
+                    if (move_uploaded_file($_FILES['facility_image']['tmp_name'], $destination)) {
+                        $data['image_path'] = $destination;
+                    } else {
+                        $data['errors'][] = 'Error uploading file';
+                    }
+                }
+            }
 
             if ($this->facilityModel->findFacilityByName($data['name'])) {
                 flash('facility_message', 'A facility with this name already exists', 'alert alert-danger');
@@ -61,6 +91,7 @@ class Facilities extends Controller
                 'name' => '',
                 'description' => '',
                 'capacity' => '',
+                'image_path' => '',
                 'errors' => []
             ];
             $this->view('facilities/create', $data);
@@ -160,8 +191,44 @@ class Facilities extends Controller
                 'description' => trim($_POST['description']),
                 'capacity' => trim($_POST['capacity']),
                 'status' => trim($_POST['status']),
+                'image_path' => '',
                 'errors' => []
             ];
+
+            if (isset($_FILES['facility_image']) && $_FILES['facility_image']['error'] == 0) {
+                $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                $filename = $_FILES['facility_image']['name'];
+                $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+                
+                // Check if file extension is allowed
+                if (!in_array(strtolower($file_ext), $allowed)) {
+                    $data['errors'][] = 'Invalid file format. Allowed formats: jpg, jpeg, png, gif';
+                } else {
+                    // Create unique filename
+                    $new_filename = uniqid() . '.' . $file_ext;
+                    $upload_dir = 'uploads/facilities/';
+                    
+                    // Create directory if it doesn't exist
+                    if (!file_exists($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+                    
+                    $destination = $upload_dir . $new_filename;
+                    
+                    // Move uploaded file
+                    if (move_uploaded_file($_FILES['facility_image']['tmp_name'], $destination)) {
+                        $data['image_path'] = $destination;
+                        
+                        // Delete old image if exists
+                        $facility = $this->facilityModel->getFacilityById($id);
+                        if (!empty($facility['image_path']) && file_exists($facility['image_path'])) {
+                            unlink($facility['image_path']);
+                        }
+                    } else {
+                        $data['errors'][] = 'Error uploading file';
+                    }
+                }
+            }
 
             // Validate name
             if (empty($data['name'])) {
@@ -244,7 +311,15 @@ class Facilities extends Controller
 
             if ($this->facilityModel->createBooking($bookingData)) {
                 $_SESSION['success_message'] = 'Facility booked successfully';
-                redirect('facilities');
+    
+                // Redirect based on user role
+                if ($_SESSION['user_role_id'] == 1) {
+                    redirect('facilities/index');
+                } else if (in_array($_SESSION['user_role_id'], [2, 3])) {
+                    redirect('facilities/allmybookings');
+                } else {
+                    redirect('/'); // Default fallback
+                }
             }
         }
 

@@ -131,11 +131,13 @@
 
                               <div class="form-buttons">
                                   <button type="submit" class="btn btn-primary">Book Facility</button>
-                                  <?php if ($_SESSION['user_role_id'] == 2): ?>
-                                      <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="btn btn-cancel">Cancel</a>
-                                  <?php else: ?>
-                                      <a href="<?php echo URLROOT; ?>/facilities/index" class="btn btn-cancel">Cancel</a>
-                                  <?php endif; ?>
+                                  <?php if ($_SESSION['user_role_id'] == 1): ?>
+                                        <a href="<?php echo URLROOT; ?>/facilities/index" class="btn btn-cancel">Cancel</a>
+                                    <?php elseif ($_SESSION['user_role_id'] == 2 || $_SESSION['user_role_id'] == 3): ?>
+                                        <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="btn btn-cancel">Cancel</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo URLROOT; ?>/" class="btn btn-cancel">Cancel</a>
+                                    <?php endif; ?>
                               </div>
                           </form>
                       </div>

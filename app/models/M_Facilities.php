@@ -104,6 +104,7 @@ class M_Facilities
         $this->db->bind(':booking_time', $data['booking_time']);
         $this->db->bind(':duration', $data['duration']);
         $this->db->bind(':booked_by', $userName);
+        $this->db->bind(':image_path', $data['image_path']);
         $this->db->bind(':user_id', $userId);
 
         return $this->db->execute();
@@ -163,14 +164,29 @@ class M_Facilities
     }
     public function updateBooking($data)
     {
-        $this->db->query('UPDATE bookings SET booking_date = :booking_date, 
-                          booking_time = :booking_time, duration = :duration 
+        if (!empty($data['image_path'])) {
+            $this->db->query('UPDATE facilities 
+                          SET name = :name, 
+                              description = :description, 
+                              capacity = :capacity, 
+                              status = :status,
+                              image_path = :image_path
                           WHERE id = :id');
+            $this->db->bind(':image_path', $data['image_path']);
+        } else {
+            $this->db->query('UPDATE facilities 
+                          SET name = :name, 
+                              description = :description, 
+                              capacity = :capacity, 
+                              status = :status
+                          WHERE id = :id');
+        }
 
         $this->db->bind(':id', $data['id']);
-        $this->db->bind(':booking_date', $data['booking_date']);
-        $this->db->bind(':booking_time', $data['booking_time']);
-        $this->db->bind(':duration', $data['duration']);
+        $this->db->bind(':name', $data['name']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':capacity', $data['capacity']);
+        $this->db->bind(':status', $data['status']);
 
         return $this->db->execute();
     }
