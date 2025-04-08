@@ -54,20 +54,42 @@ public function deleteContact($id) {
 //**************************************************** Visitor passes************************************************************************************
 
 public function getVisitorPasses() {
-    // Query today's visitor passes from the database
-    $queryToday = "SELECT * FROM Visitor_Passes WHERE visit_date = CURDATE()";
+    // Query today's visitor passes with formatted time
+    $queryToday = "SELECT 
+                    visitor_name,
+                    visitor_count,
+                    resident_name,
+                    DATE_FORMAT(visit_date, '%Y-%m-%d') as visit_date,
+                    DATE_FORMAT(visit_time, '%H:%i') as visit_time,
+                    duration,
+                    purpose
+                  FROM visitor_passes 
+                  WHERE visit_date = CURDATE()
+                  ORDER BY visit_time DESC";
     $this->db->query($queryToday);
-    $todayResult = $this->db->resultSet();  // Get today's passes
+    $todayResult = $this->db->resultSet();
 
-    // Query historical visitor passes
-    $queryHistory = "SELECT * FROM Visitor_Passes WHERE visit_date < CURDATE()";
+    // Query historical visitor passes with formatted date
+    $queryHistory = "SELECT 
+                    visitor_name,
+                    visitor_count,
+                    resident_name,
+                    purpose,
+                    DATE_FORMAT(visit_date, '%M %e, %Y') as formatted_date,
+                    DATE_FORMAT(visit_time, '%H:%i') as visit_time,
+                    DATE_FORMAT(visit_date, '%Y-%m-%d') as visit_date,
+                    duration
+                  FROM visitor_passes 
+                  WHERE visit_date < CURDATE()
+                  ORDER BY visit_date DESC, visit_time DESC
+                  LIMIT 100"; // Limit to 100 most recent for performance
     $this->db->query($queryHistory);
-    $historyResult = $this->db->resultSet();  // Get historical passes
+    $historyResult = $this->db->resultSet();
 
-    // Combine both results and return them as an associative array
     return [
         'todayPasses' => $todayResult,
-        'historyPasses' => $historyResult
+        'historyPasses' => $historyResult,
+        'status' => 'success'
     ];
 }
 
@@ -96,11 +118,24 @@ public function addVisitorPass($data) {
 
 //***************************************************resident contact*********************************** */
 
-public function searchResidentContacts($query) {
-    $this->db->query("SELECT * FROM residents WHERE resident_name LIKE :q OR address LIKE :q OR phone_number LIKE :q");
+public function searchResidentContacts($query)
+{
+    $this->db->query("SELECT 
+                        resident_name,
+                        address,
+                        phonenumber AS phone_number,
+                        fixed_line,
+                        email
+                      FROM residents_contact
+                      WHERE resident_name LIKE :q 
+                         OR address LIKE :q 
+                         OR phonenumber LIKE :q
+                         OR fixed_line LIKE :q
+                         OR email LIKE :q");
+    
     $this->db->bind(':q', '%' . $query . '%');
     return $this->db->resultSet();
-}
+} 
 
 }
 ?>

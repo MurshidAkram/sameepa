@@ -12,11 +12,86 @@
 </head>
 
 <style>
-  /* Basic container styling */
+  
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 400px;
+    background-color: #ffffff; /* Dark Violet */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    display: none;
+}
+
+/* Modal active state (visible) */
+.modal.active {
+    display: block;
+  
+}
+
+/* Modal header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #fff; /* Light text color */
+}
+
+.modal-header .close {
+    font-size: 2.5rem;
+    cursor: pointer;
+    color:rgb(244, 8, 209); /* Light Violet */
+    transition: color 0.3s ease;
+}
+
+
+
+/* Modal form inputs and select */
+.modal-form input, .modal-form select {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0 10px;
+    border: 1px solid black; /* Light Violet border */
+    border-radius: 5px;
+    background-color: #f6e4f7; /* Light Violet background */
+    color:  black; /* Dark Violet text */
+}
+
+/* Form input and select focus effects */
+.modal-form input:focus, .modal-form select:focus {
+    outline: none;
+    border-color: #e8c8e3; /* Light Violet border on focus */
+    box-shadow: 0 0 5px rgba(232, 200, 227, 0.5); /* Subtle shadow */
+}
+
+/* Form submit button */
+.modal-form button {
+    background-color: #7a4d9c; /* Medium Violet */
+    color: #fff;
+    border: none;
+    padding: 12px;
+    width: 95%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-form button:hover {
+    background-color: #9b66c9; /* Lighter Violet on hover */
+}
+
+
+
 .visitor-pass-container {
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(155, 4, 4, 0.1);
   padding: 20px;
   margin-top: 20px;
 }
@@ -25,20 +100,10 @@
 h2, h3 {
   color: #800080;
   font-family: Arial, sans-serif;
+  position: inherit;
 }
 
-/* Form styling */
-.new-pass-form, .modal-content {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
 
-.new-pass-form h2, .modal-content h2 {
-  color: #800080;
-}
 
 .form-group {
   margin-bottom: 15px;
@@ -90,18 +155,8 @@ input:focus, textarea:focus {
   background-color: darkblue;
 }
 
-.btn-cancel {
-  background-color: #dc3545;
-  color: #fff;
-  
-}
 
-.modal-buttons {
-  display: flex;
-  place-items: center;
-  gap: 250px;
 
-}
 
 
 /* Table styling */
@@ -135,42 +190,10 @@ input:focus, textarea:focus {
 }
 
 #searchTodayPass:focus, #searchHistoryPass:focus {
-  border-color: #04f08e;
+  border-color: #E0AAFF;
   box-shadow: 0 0 4px rgba(0, 69, 124, 0.3);
 }
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-  position: relative;
-  background-color: #fff;
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 8px;
-  width: 50%; /* Set width to 50% */
-  height: 60%; /* Set height to 60% */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  overflow-y: auto; /* Enable scrolling if content overflows */
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .visitor-pass-container, .new-pass-form, .modal-content, .pass-table {
-    padding: 15px;
-  }
-
-
-}
 
 </style>
 <body>
@@ -186,47 +209,40 @@ input:focus, textarea:focus {
                 <!-- Create Visitor Pass Button -->
                 <button id="openModalBtn" class="btn-submit">Create Visitor Pass</button>
 
-
-                <!-- Modal for Creating Visitor Pass -->
-                <div id="visitorPassModal" class="modal">
-    <div class="modal-content">
+<!-- Modal for Creating Visitor Pass -->
+<div class="modal" id="visitorPassModal">
+    <div class="modal-header">
         <h2>Create New Visitor Pass</h2>
-        <form id="visitorPassForm" action="<?php echo URLROOT; ?>/security/Add_Visitor_Pass" method="POST">
-            <div class="form-group">
-                <label for="visitor_name">Visitor Name:</label>
-                <input type="text" id="visitor_name" name="visitor_name" required>
-            </div>
-            <div class="form-group">
-                <label for="visitor_count">Number of Visitors:</label>
-                <input type="number" id="visitor_count" name="visitor_count" min="1" required>
-            </div>
-            <div class="form-group">
-                <label for="resident_name">Resident Name to Meet:</label>
-                <input type="text" id="resident_name" name="resident_name" required>
-            </div>
-            <div class="form-group">
-                <label for="visit_date">Visit Date:</label>
-                <input type="date" id="visit_date" name="visit_date" required>
-            </div>
-            <div class="form-group">
-                <label for="visit_time">Visit Time:</label>
-                <input type="time" id="visit_time" name="visit_time" required>
-            </div>
-            <div class="form-group">
-                <label for="duration">Expected Duration (hours):</label>
-                <input type="number" id="duration" name="duration" min="1" max="24" required>
-            </div>
-            <div class="form-group">
-                <label for="purpose">Purpose of Visit:</label>
-                <textarea id="purpose" name="purpose" rows="3" required></textarea>
-            </div>
-            <div class="modal-buttons">
-                <button type="submit" class="btn-save">Save</button>
-                <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
-            </div>
-        </form>
+        <span class="close btn cancel-btn" id="closeVisitorModal">&times;</span>
     </div>
+    <form class="modal-form" id="visitorPassForm" action="<?php echo URLROOT; ?>/security/Add_Visitor_Pass" method="POST">
+        <label for="visitor_name">Visitor Name:</label>
+        <input type="text" id="visitor_name" name="visitor_name" required>
+
+        <label for="visitor_count">Number of Visitors:</label>
+        <input type="number" id="visitor_count" name="visitor_count" min="1" required>
+
+        <label for="resident_name">Resident Name to Meet:</label>
+        <input type="text" id="resident_name" name="resident_name" required>
+
+        <label for="visit_date">Visit Date:</label>
+        <input type="date" id="visit_date" name="visit_date" required>
+
+        <label for="visit_time">Visit Time:</label>
+        <input type="time" id="visit_time" name="visit_time" required>
+
+        <label for="duration">Expected Duration (hours):</label>
+        <input type="number" id="duration" name="duration" min="1" max="24" required>
+
+        <label for="purpose">Purpose of Visit:</label>
+        <textarea id="purpose" name="purpose" rows="3" required></textarea>
+
+        <div class="modal-buttons">
+            <button type="submit" class="btn save-btn">Save</button>
+        </div>
+    </form>
 </div>
+   
 
                         
 <!-- Current Visitor Passes -->
@@ -236,11 +252,12 @@ input:focus, textarea:focus {
     <table class="pass-table">
         <thead>
             <tr>
-                <th>Pass ID</th>
                 <th>Visitor Name</th>
                 <th>Number of Visitors</th>
                 <th>Resident Name</th>
                 <th>Visit Time</th>
+                <th>Visit Date</th>
+                <th>Purpose</th>
             </tr>
         </thead>
         <tbody id="todayPasses">
@@ -256,12 +273,13 @@ input:focus, textarea:focus {
     <table class="pass-table">
         <thead>
             <tr>
-                <th>Pass ID</th>
+                
                 <th>Visitor Name</th>
                 <th>Number of Visitors</th>
                 <th>Resident Name</th>
                 <th>Visit Time</th>
                 <th>Visit Date</th>
+                <th>Purpose</th>
             </tr>
         </thead>
         <tbody id="historyPasses">
@@ -325,7 +343,12 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 if (data.success) {
                     alert('Visitor Pass Added Successfully! ID: ' + data.id);
-                    window.location.href = '<?php echo URLROOT; ?>/security/Manage_Visitor_Passes';  // Redirect after success
+                    // Refresh the tables after successful addition
+                    fetchVisitorPassData();
+                    // Close the modal
+                    modal.style.display = 'none';
+                    // Reset the form
+                    visitorPassForm.reset();
                 } else {
                     alert('Error: ' + data.message);  // Show error message if any
                 }
@@ -335,27 +358,46 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Add search functionality for both tables
+    const searchTodayPass = document.getElementById('searchTodayPass');
+    if (searchTodayPass) {
+        searchTodayPass.addEventListener('input', function() {
+            filterTable('todayPasses', this.value.toLowerCase());
+        });
+    }
+
+    const searchHistoryPass = document.getElementById('searchHistoryPass');
+    if (searchHistoryPass) {
+        searchHistoryPass.addEventListener('input', function() {
+            filterTable('historyPasses', this.value.toLowerCase());
+        });
+    }
 });
 
 // Fetch visitor pass data (today and history) from the server
 const fetchVisitorPassData = () => {
-    fetch('<?php echo URLROOT; ?>/security/Manage_Visitor_Passes')  // Replace with your actual endpoint
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const todayPassesData = data.todayPasses;  // Data for today's passes
-                const historyPassesData = data.historyPasses;  // Data for historical passes
+    fetch('<?php echo URLROOT; ?>/security/Manage_Visitor_Passes', {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // Indicate this is an AJAX request
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const todayPassesData = data.todayPasses;  // Data for today's passes
+            const historyPassesData = data.historyPasses;  // Data for historical passes
 
-                // Populate both tables with dynamic data
-                populateTable('todayPasses', todayPassesData);  // Today's passes
-                populateTable('historyPasses', historyPassesData);  // Historical passes
-            } else {
-                console.error('Error fetching data:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);  // Log any fetch errors
-        });
+            // Populate both tables with dynamic data
+            populateTable('todayPasses', todayPassesData);  // Today's passes
+            populateTable('historyPasses', historyPassesData);  // Historical passes
+        } else {
+            console.error('Error fetching data:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);  // Log any fetch errors
+    });
 };
 
 // Function to populate a table dynamically
@@ -365,18 +407,70 @@ const populateTable = (tableBodyId, data) => {
         // Map through the data and create the table rows dynamically
         tableBody.innerHTML = data.map(pass => `
             <tr>
-                <td>${pass.pass_id}</td>
+                
                 <td>${pass.visitor_name}</td>
                 <td>${pass.visitor_count}</td>
                 <td>${pass.resident_name}</td>
                 <td>${pass.visit_time}</td>
-                ${pass.visit_date ? `<td>${pass.visit_date}</td>` : ''}  <!-- Conditionally add the visit date -->
+                <td>${pass.visit_date || pass.formatted_date || ''}</td>
+                <td>${pass.purpose}</td>
             </tr>
         `).join('');
     } else {
-        console.warn('No data available or invalid format');
+        console.warn('No data available or invalid format for table:', tableBodyId);
+        tableBody.innerHTML = '<tr><td colspan="6">No data available</td></tr>';
     }
 };
+
+// Function to filter table rows based on search input
+const filterTable = (tableBodyId, searchText) => {
+    const tableBody = document.getElementById(tableBodyId);
+    if (!tableBody) return;
+
+    const rows = tableBody.getElementsByTagName('tr');
+    
+    for (let row of rows) {
+        const cells = row.getElementsByTagName('td');
+        let rowText = '';
+        
+        // Combine all cell text for searching
+        for (let cell of cells) {
+            rowText += cell.textContent.toLowerCase() + ' ';
+        }
+        
+        // Show/hide row based on search match
+        if (rowText.includes(searchText)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+};
+
+//******************************************************close form******************************************************** */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the modal and close button elements
+    const modal = document.getElementById('visitorPassModal');
+    const closeBtn = document.getElementById('closeVisitorModal');
+    
+    // Close modal when clicking the × button
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            // Optional: Reset the form if needed
+            document.getElementById('visitorPassForm').reset();
+        });
+    }
+    
+    // Optional: Close when clicking outside the modal
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            document.getElementById('visitorPassForm').reset();
+        }
+    });
+});
 </script>
 
 

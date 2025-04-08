@@ -214,30 +214,30 @@
 //****************************************************DELETE PART******************************************* */
                   
 // Delete a contact
-function deleteContact(id) {
-        // Confirm deletion
-        if (confirm('Are you sure you want to delete this contact?')) {
-            fetch(`<?php echo URLROOT; ?>/security/Delete_Contact/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Remove the contact from the UI
-                    document.getElementById(`contact-${id}`).remove();
-                } else {
-                    alert('Failed to delete contact');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while deleting the contact.');
-            });
-        }
-    }
+// function deleteContact(id) {
+//         // Confirm deletion
+//         if (confirm('Are you sure you want to delete this contact?')) {
+//             fetch(`<?php echo URLROOT; ?>/security/Delete_Contact/${id}`, {
+//                 method: 'DELETE',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 }
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 if (data.success) {
+//                     // Remove the contact from the UI
+//                     document.getElementById(`contact-${id}`).remove();
+//                 } else {
+//                     alert('Failed to delete contact');
+//                 }
+//             })
+//             .catch(error => {
+//                 console.error('Error:', error);
+//                 alert('An error occurred while deleting the contact.');
+//             });
+//         }
+//     }
 
 </script>
 

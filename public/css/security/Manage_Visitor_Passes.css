@@ -81,7 +81,7 @@ textarea {
 }
 
 .pass-table thead {
-  background-color: hwb(189 3% 22%);
+  background-color: hwb(189 58% 9%);
   color: #ffffff;
 }
 
@@ -96,7 +96,7 @@ textarea {
 }
 
 .pass-table tr:hover {
-  background-color: #97ebaf;
+  background-color: #E0AAFF;
 }
 
 .pass-table th {
@@ -121,7 +121,7 @@ textarea {
 }
 
 #searchTodayPass:focus, #searchHistoryPass:focus {
-  border-color: #04f08e;
+  border-color: #E0AAFF;
   box-shadow: 0 0 4px rgba(0, 69, 124, 0.3);
 }
 

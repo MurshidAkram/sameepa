@@ -30,7 +30,7 @@ class Security extends Controller
         }
     }
 
-//************************************************************************************************************************************************* */
+//**************************************************dash board********************************************************* */
 
     public function dashboard()
     {
@@ -45,20 +45,31 @@ class Security extends Controller
         $this->view('security/dashboard', $data);
     }
 
-//********************************************************************************************************************************************** */
+//*************************************visitor passes******************************************************** */
 
 public function Manage_Visitor_Passes() {
-    // Retrieve today's and historical visitor passes from the model
-    $pass = $this->securityModel->getVisitorPasses();
-
-    // Prepare the data to be passed to the view
+    // Get passes data from model
+    $passes = $this->securityModel->getVisitorPasses();
+    
+    // Check if this is an AJAX request
+    if ($this->isAjaxRequest()) {
+        header('Content-Type: application/json');
+        echo json_encode($passes);
+        exit;
+    }
+    
+    // Regular view loading
     $data = [
-        'todayPasses' => $pass['todayPasses'],  // Data for today's passes
-        'historyPasses' => $pass['historyPasses'] // Data for historical passes
+        'todayPasses' => $passes['todayPasses'],
+        'historyPasses' => $passes['historyPasses']
     ];
-
-    // Load the view and pass the data to it
+    
     $this->view('security/Manage_Visitor_Passes', $data);
+}
+
+private function isAjaxRequest() {
+    return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 }
 
 
@@ -107,13 +118,13 @@ public function Add_Visitor_Pass() {
     }
 
     // If not a POST request, load the form view
-    $this->view('security/Add_Visitor_Pass');
+    $this->view('security/Manage_Visitor_Passes');
 }
 
 
 
 
-//********************************************************************************************************************************************** */
+//**********************************************Manage_Duty_Schedule************************************************************************************************ */
 
     public function Manage_Duty_Schedule()
     {
@@ -122,7 +133,7 @@ public function Add_Visitor_Pass() {
     }
 
 
-//********************************************************************************************************************************************** */
+//*******************************************Emergency_Contacts*************************************************************************************************** */
 
     public function Emergency_Contacts() {
         $contacts = $this->securityModel->getAllContacts();
@@ -208,7 +219,7 @@ public function Delete_Contact($id) {
         }
     }
 }
-//********************************************************************************************************************************************** */
+//******************************************Manage_Incident_Reports******************************************************************************************* */
 
     public function Manage_Incident_Reports()
     {
@@ -219,24 +230,35 @@ public function Delete_Contact($id) {
         ]);
     }
 
-//********************************************************************************************************************************************** */
-
-// View page without loading data
-public function residents_contact() {
+//*****************************************Resident_Contacts***************************************************************************************************** */
+public function Resident_Contacts()
+{
+    // Check if this is a search request
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search_query'])) {
+        // Handle the AJAX search request
+        $query = trim($_GET['search_query']);
+        
+        // Validate input
+        if (empty($query)) {
+            echo json_encode(['error' => 'Search query cannot be empty']);
+            return;
+        }
+        
+        // Sanitize input
+        $query = filter_var($query, FILTER_SANITIZE_STRING);
+        
+        // Get search results from model
+        $results = $this->securityModel->searchResidentContacts($query);
+        
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode($results);
+        exit;
+    }
+    
+    // Load the regular view if not an AJAX request
     $this->view('security/Resident_Contacts');
 }
-
-// API endpoint to return JSON search results
-public function search_residents() {
-    if (isset($_GET['search_query'])) {
-        $query = trim($_GET['search_query']);
-        $results = $this->securityModel->searchResidentContacts($query);
-        echo json_encode($results);
-    } else {
-        echo json_encode([]);
-    }
-}
-
 }
 
 ?>

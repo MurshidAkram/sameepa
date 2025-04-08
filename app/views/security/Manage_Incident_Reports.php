@@ -181,21 +181,6 @@ h3 {
 }
 
 
-.close {
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute;
-    top: 10px;
-    right: 25px;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 /* Filters */
 .incident-filters {
@@ -261,6 +246,39 @@ main {
     padding-right: 95px;
     padding-bottom: 20px;
 }
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .incident-filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .incident-filters label {
+        margin-bottom: 5px;
+    }
+
+    .incident-filters select,
+    .incident-filters input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .incident-log-table th,
+    .incident-log-table td {
+        padding: 10px;
+    }
+
+    .incident-report-form {
+        width: 100%;
+    }
+    main {
+        margin-left: 0;
+        padding: 10px;
+    }
+}
+
 .modal {
     position: fixed;
     top: 50%;
@@ -292,15 +310,13 @@ main {
 }
 
 .modal-header .close {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     cursor: pointer;
-    color: #e8c8e3; /* Light Violet */
+    color:rgb(244, 8, 209); /* Light Violet */
     transition: color 0.3s ease;
 }
 
-.modal-header .close:hover {
-    color: #f1d1f6; /* Lighter Violet on hover */
-}
+
 
 /* Modal form inputs and select */
 .modal-form input, .modal-form select {
@@ -334,38 +350,6 @@ main {
 
 .modal-form button:hover {
     background-color: #9b66c9; /* Lighter Violet on hover */
-}
-
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .incident-filters {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .incident-filters label {
-        margin-bottom: 5px;
-    }
-
-    .incident-filters select,
-    .incident-filters input {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .incident-log-table th,
-    .incident-log-table td {
-        padding: 10px;
-    }
-
-    .incident-report-form {
-        width: 100%;
-    }
-    main {
-        margin-left: 0;
-        padding: 10px;
-    }
 }
     </style>
 </head>
@@ -486,46 +470,41 @@ main {
             </div>
         </div>
 
-        <!-- Incident Report Form -->
-        <div class="modal" id="incidentForm">
-        <div class="modal-header">
-    <h3>Report New Incident</h3>
-    <span class="close" id="closeModal">&times;</span>
+      <!-- Incident Report Form -->
+<div class="modal" id="incidentForm">
+    <div class="modal-header">
+        <h2>Report New Incident</h2>
+        <span class="close btn cancel-btn" id="closeVisitorModal">&times;</span>
     </div>
-    <form class="modal-form" id="incidentFormElement">
-        
-            <label for="incident_type">Incident Type</label>
-            <select id="incident_type" name="incident_type">
-                <option value="fire">Fire</option>
-                <option value="theft">Theft</option>
-                <option value="accident">Accident</option>
-            </select>
-     
-      
-            <label for="incident_date">Date</label>
-            <input type="date" id="incident_date" name="incident_date">
-        
-       
-            <label for="incident_time">Time</label>
-            <input type="time" id="incident_time" name="incident_time">
-       
-        
-            <label for="incident_location">Location</label>
-            <input type="text" id="incident_location" name="incident_location">
-     
-       
-            <label for="incident_description">Description</label>
-            <textarea id="incident_description" name="incident_description"></textarea>
-     
+    <form class="modal-form" id="incidentFormElement" action="<?php echo URLROOT; ?>/security/Report_Incident" method="POST">
+        <label for="incident_type">Incident Type:</label>
+        <select id="incident_type" name="incident_type" required>
+            <option value="">Select Incident Type</option>
+            <option value="fire">Fire</option>
+            <option value="theft">Theft</option>
+            <option value="accident">Accident</option>
+            <option value="vandalism">Vandalism</option>
+            <option value="medical">Medical Emergency</option>
+            <option value="security_breach">Security Breach</option>
+        </select>
 
-            <button type="button" class="btn1" onclick="cancelIncidentForm()">Cancel</button>
-           
-            <div class="modal-buttons">
-           <button type="button" class="btn1" onclick="cancelIncidentForm()">Save</button> 
-       </div>
+        <label for="incident_date">Date:</label>
+        <input type="date" id="incident_date" name="incident_date" required>
+
+        <label for="incident_time">Time:</label>
+        <input type="time" id="incident_time" name="incident_time" required>
+
+        <label for="incident_location">Location:</label>
+        <input type="text" id="incident_location" name="incident_location" required>
+
+        <label for="incident_description">Description:</label>
+        <textarea id="incident_description" name="incident_description" rows="3" required></textarea>
+
+        <div class="modal-buttons">
+            <button type="submit" class="btn save-btn">Save</button>
+        </div>
     </form>
 </div>
-
 
     </main>
 </div>
@@ -632,6 +611,31 @@ main {
             }
         }
     }
+//***************************************close form***************************************** */
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the modal and close button elements
+    const modal = document.getElementById('visitorPassModal');
+    const closeBtn = document.getElementById('closeVisitorModal');
+    
+    // Close modal when clicking the × button
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            // Optional: Reset the form if needed
+            document.getElementById('visitorPassForm').reset();
+        });
+    }
+    
+    // Optional: Close when clicking outside the modal
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            document.getElementById('visitorPassForm').reset();
+        }
+    });
+});
 </script>
 
 </body>

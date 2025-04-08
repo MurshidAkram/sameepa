@@ -100,16 +100,14 @@
             text-align: left;
         }
 
-        .resident-contacts-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+        
 
         .resident-contacts-table tr:nth-child(odd) {
-            background-color: #e6f7ff;
+            background-color:rgb(248, 197, 248);
         }
 
         .resident-contacts-table tr:hover {
-            background-color: #ddd;
+            background-color: #E0AAFF;
         }
 
         .form-submit {
@@ -145,7 +143,7 @@
         <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
         <main>
-            <h2 class="to">Residents Contacts</h2>
+           
 
             <!-- Search Bar for Finding Resident Contacts -->
             <section id="search-section">
@@ -191,9 +189,7 @@
             const query = document.getElementById('search_query').value.toLowerCase();
 
             // Perform the AJAX request
-      
-            fetch('<?php echo URLROOT; ?>/security/search_residents?search_query=' + query)
-
+            fetch('<?php echo URLROOT; ?>/security/Resident_Contacts?search_query=' + query)
                 .then(response => response.json())
                 .then(data => {
                     // Populate the table with search results
@@ -216,10 +212,12 @@
                         resultsTable.style.display = 'table';
                     } else {
                         resultsTable.style.display = 'none';
+                        alert("cannot find the resident details");
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
+                    
                 });
         }
     </script>
