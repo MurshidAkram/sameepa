@@ -71,7 +71,13 @@
                               <label for="image">Update Group Image (Optional):</label>
                               <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/gif" class="form-control">
                               <small class="form-text text-muted">Leave empty to keep current image. Allowed formats: JPG, PNG, GIF</small>
-                          </div>
+
+                              <?php if(isset($data['errors']) && is_array($data['errors'])): ?>
+                                <?php foreach($data['errors'] as $error): ?>
+                                    <div class="error-message"><?php echo $error; ?></div>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                                </div>
 
                           <div class="form-buttons">
                               <button type="submit" class="btn-submit">Update Group</button>

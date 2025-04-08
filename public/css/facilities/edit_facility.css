@@ -106,6 +106,18 @@ h1 {
     transform: translateY(-2px);
 }
 
+.error-message {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+
 @media (max-width: 768px) {
     .edit-facility-container {
         padding: 1.5rem;

@@ -33,23 +33,85 @@ class Groups extends Controller
                 'description' => trim($_POST['description']),
                 'created_by' => $_SESSION['user_id'],
                 'image_data' => null,
-                'image_type' => null
+                'image_type' => null,
+                'errors' => []
             ];
     
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
-                $data['image_type'] = $_FILES['image']['type'];
-            }
-    
-            if ($this->groupsModel->createGroup($data)) {
-                if ($_SESSION['user_role_id'] == 2) {
-                    redirect('groups/admin_dashboard');
-                } else {
-                    redirect('groups/index');
+            // Handle file upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                // Check for upload errors
+                if ($_FILES['image']['error'] === UPLOAD_ERR_INI_SIZE || 
+                    $_FILES['image']['error'] === UPLOAD_ERR_FORM_SIZE) {
+                    $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                } 
+                else if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                    $data['errors'][] = 'There was an error uploading the image. Error code: ' . $_FILES['image']['error'];
+                }
+                else {
+                    // Check file size (1MB limit)
+                    $maxSize = 1 * 1024 * 1024; // 1MB in bytes
+                    if ($_FILES['image']['size'] > $maxSize) {
+                        $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                    } 
+                    else {
+                        // Check file type
+                        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+                            $data['errors'][] = 'Invalid file type. Only JPG, PNG, and GIF images are allowed.';
+                        } 
+                        else {
+                            // All checks passed, process the image
+                            try {
+                                // Get the file size
+                                $fileSize = filesize($_FILES['image']['tmp_name']);
+                                
+                                // Check if file size is within MySQL's max_allowed_packet limit
+                                if ($fileSize > 1048576) { // 1MB in bytes
+                                    $data['errors'][] = 'Image is too large for database storage. Please use an image smaller than 1MB.';
+                                } else {
+                                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
+                                    $data['image_type'] = $_FILES['image']['type'];
+                                }
+                            } catch (Exception $e) {
+                                $data['errors'][] = 'Error processing image: ' . $e->getMessage();
+                            }
+                        }
+                    }
                 }
             }
+    
+            if (empty($data['errors'])) {
+                try {
+                    if ($this->groupsModel->createGroup($data)) {
+                        if ($_SESSION['user_role_id'] == 2) {
+                            redirect('groups/admin_dashboard');
+                        } else {
+                            redirect('groups/index');
+                        }
+                    }
+                } catch (PDOException $e) {
+                    // Handle database errors
+                    if (strpos($e->getMessage(), 'max_allowed_packet') !== false) {
+                        $data['errors'][] = 'The image is too large for the database. Please use a smaller image (less than 1MB).';
+                    } else {
+                        $data['errors'][] = 'Database error: ' . $e->getMessage();
+                    }
+                    $this->view('groups/create', $data);
+                }
+            } else {
+                // If there are errors, show the form again with error messages
+                $this->view('groups/create', $data);
+            }
+        } else {
+            // Initial GET request
+            $data = [
+                'title' => '',
+                'category' => '',
+                'description' => '',
+                'errors' => []
+            ];
+            $this->view('groups/create', $data);
         }
-        $this->view('groups/create');
     }
 
       // Add this method to serve images
@@ -131,38 +193,95 @@ class Groups extends Controller
                 'category' => trim($_POST['category']),
                 'description' => trim($_POST['description']),
                 'image_data' => null,
-                'image_type' => null
+                'image_type' => null,
+                'errors' => []
             ];
-
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
-                $data['image_type'] = $_FILES['image']['type'];
-            }
-
-            if ($this->groupsModel->updateGroup($data)) {
-                if ($_SESSION['user_role_id'] == 2) {
-                    redirect('groups/admin_dashboard');
-                } else {
-                    redirect('groups/my_groups');
+    
+            // Handle file upload if a new image is provided
+            if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                // Check for upload errors
+                if ($_FILES['image']['error'] === UPLOAD_ERR_INI_SIZE || 
+                    $_FILES['image']['error'] === UPLOAD_ERR_FORM_SIZE) {
+                    $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                } 
+                else if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                    $data['errors'][] = 'There was an error uploading the image. Error code: ' . $_FILES['image']['error'];
+                }
+                else {
+                    // Check file size (1MB limit)
+                    $maxSize = 1 * 1024 * 1024; // 1MB in bytes
+                    if ($_FILES['image']['size'] > $maxSize) {
+                        $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                    } 
+                    else {
+                        // Check file type
+                        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+                            $data['errors'][] = 'Invalid file type. Only JPG, PNG, and GIF images are allowed.';
+                        } 
+                        else {
+                            // All checks passed, process the image
+                            try {
+                                // Get the file size
+                                $fileSize = filesize($_FILES['image']['tmp_name']);
+                                
+                                // Check if file size is within MySQL's max_allowed_packet limit
+                                if ($fileSize > 1048576) { // 1MB in bytes
+                                    $data['errors'][] = 'Image is too large for database storage. Please use an image smaller than 1MB.';
+                                } else {
+                                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
+                                    $data['image_type'] = $_FILES['image']['type'];
+                                }
+                            } catch (Exception $e) {
+                                $data['errors'][] = 'Error processing image: ' . $e->getMessage();
+                            }
+                        }
+                    }
                 }
             }
+    
+            if (empty($data['errors'])) {
+                try {
+                    if ($this->groupsModel->updateGroup($data)) {
+                        if ($_SESSION['user_role_id'] == 2) {
+                            redirect('groups/admin_dashboard');
+                        } else {
+                            redirect('groups/my_groups');
+                        }
+                    }
+                } catch (PDOException $e) {
+                    // Handle database errors
+                    if (strpos($e->getMessage(), 'max_allowed_packet') !== false) {
+                        $data['errors'][] = 'The image is too large for the database. Please use a smaller image (less than 1MB).';
+                    } else {
+                        $data['errors'][] = 'Database error: ' . $e->getMessage();
+                    }
+                    $this->view('groups/update', $data);
+                }
+            } else {
+                // If there are errors, show the form again with error messages
+                $this->view('groups/update', $data);
+            }
         } else {
+            // GET request - show edit form
             $group = $this->groupsModel->getGroupById($id);
             
             if (!$group) {
                 redirect('groups/my_groups');
             }
-
+    
             $data = [
                 'id' => $id,
                 'title' => $group['group_name'],
                 'category' => $group['group_category'],
-                'description' => $group['group_description']
+                'description' => $group['group_description'],
+                'errors' => []
             ];
+            
+            $this->view('groups/update', $data);
         }
-        
-        $this->view('groups/update', $data);
     }
+    
     public function chat($groupId) {
         $group = $this->groupsModel->getGroupById($groupId);
         $messages = $this->groupsModel->getGroupMessages($groupId);

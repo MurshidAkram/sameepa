@@ -32,7 +32,7 @@
               
                 <h1>Edit Facility</h1>
                 
-                <form action="<?php echo URLROOT; ?>/facilities/edit/<?php echo $data['facility']['id']; ?>" method="POST" class="facility-form">
+                <form action="<?php echo URLROOT; ?>/facilities/edit/<?php echo $data['facility']['id']; ?>" method="POST" enctype="multipart/form-data" class="facility-form">
                     <div class="form-group">
                         <label for="name">Facility Name:</label>
                         <input type="text" name="name" id="name" value="<?php echo $data['facility']['name']; ?>" required maxlength="255" class="form-control">
@@ -57,16 +57,22 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="facility_image">Facility Image:</label>
-                        <?php if (!empty($data['facility']['image_path'])): ?>
+                        <label for="image">Update Facility Image (Optional):</label>
+                        <?php if (!empty($data['facility']['image_data'])): ?>
                             <div class="current-image">
-                                <img src="<?php echo URLROOT . '/' . $data['facility']['image_path']; ?>" 
+                                <img src="<?php echo URLROOT; ?>/facilities/getImage/<?php echo $data['facility']['id']; ?>" 
                                     alt="Current facility image" style="max-width: 200px;">
                                 <p>Current image</p>
                             </div>
                         <?php endif; ?>
-                        <input type="file" name="facility_image" id="facility_image" class="form-control">
-                        <small class="form-text text-muted">Upload a new image to replace the current one (JPG, PNG, GIF)</small>
+                        <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/gif" class="form-control">
+                        <small class="form-text text-muted">Upload a new image to replace the current one (JPG, PNG, GIF). Maximum size: 1MB</small>
+                        
+                        <?php if(isset($data['errors']) && is_array($data['errors'])): ?>
+                            <?php foreach($data['errors'] as $error): ?>
+                                <div class="error-message"><?php echo $error; ?></div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
 
                     <div class="form-buttons">

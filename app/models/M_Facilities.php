@@ -19,18 +19,20 @@ class M_Facilities
     }
 
     public function createFacility($data)
-    {
-        $this->db->query('INSERT INTO facilities (name, description, capacity, status, created_by) 
-                         VALUES (:name, :description, :capacity, :status, :created_by)');
+{
+    $this->db->query('INSERT INTO facilities (name, description, capacity, status, image_data, image_type, created_by) 
+                     VALUES (:name, :description, :capacity, :status, :image_data, :image_type, :created_by)');
 
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':capacity', $data['capacity']);
-        $this->db->bind(':status', $data['status']);
-        $this->db->bind(':created_by', $data['created_by']);
+    $this->db->bind(':name', $data['name']);
+    $this->db->bind(':description', $data['description']);
+    $this->db->bind(':capacity', $data['capacity']);
+    $this->db->bind(':status', $data['status']);
+    $this->db->bind(':image_data', $data['image_data']);
+    $this->db->bind(':image_type', $data['image_type']);
+    $this->db->bind(':created_by', $data['created_by']);
 
-        return $this->db->execute();
-    }
+    return $this->db->execute();
+}
 
     public function getAdminIdByUserId($userId)
     {
@@ -64,23 +66,45 @@ class M_Facilities
         return $this->db->execute();
     }
 
-    public function updateFacility($data) {
-        $this->db->query('UPDATE facilities 
-                          SET name = :name, 
-                              description = :description, 
-                              capacity = :capacity, 
-                              status = :status 
-                          WHERE id = :id');
+public function updateFacility($data) {
+    // Start with the base SQL without image fields
+    $sql = 'UPDATE facilities SET 
+            name = :name, 
+            description = :description, 
+            capacity = :capacity, 
+            status = :status';
+    
+    // If there's a new image, add image fields to the SQL
+    if (!empty($data['image_data'])) {
+        $sql .= ', image_data = :image_data, image_type = :image_type';
+    }
+    
+    // Complete the SQL
+    $sql .= ' WHERE id = :id';
+    
+    $this->db->query($sql);
+    
+    // Bind the standard values
+    $this->db->bind(':id', $data['id']);
+    $this->db->bind(':name', $data['name']);
+    $this->db->bind(':description', $data['description']);
+    $this->db->bind(':capacity', $data['capacity']);
+    $this->db->bind(':status', $data['status']);
+    
+    // If there's a new image, bind the image values
+    if (!empty($data['image_data'])) {
+        $this->db->bind(':image_data', $data['image_data']);
+        $this->db->bind(':image_type', $data['image_type']);
+    }
+    
+    // Execute
+    return $this->db->execute();
+}
 
-        // Bind values
-        $this->db->bind(':id', $data['id']);
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':capacity', $data['capacity']);
-        $this->db->bind(':status', $data['status']);
-
-        // Execute
-        return $this->db->execute();
+    public function getFacilityImage($id) {
+        $this->db->query('SELECT image_data, image_type FROM facilities WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
     }
 
     public function validateUser($userId)
@@ -104,7 +128,6 @@ class M_Facilities
         $this->db->bind(':booking_time', $data['booking_time']);
         $this->db->bind(':duration', $data['duration']);
         $this->db->bind(':booked_by', $userName);
-        $this->db->bind(':image_path', $data['image_path']);
         $this->db->bind(':user_id', $userId);
 
         return $this->db->execute();
@@ -164,32 +187,20 @@ class M_Facilities
     }
     public function updateBooking($data)
     {
-        if (!empty($data['image_path'])) {
-            $this->db->query('UPDATE facilities 
-                          SET name = :name, 
-                              description = :description, 
-                              capacity = :capacity, 
-                              status = :status,
-                              image_path = :image_path
+        $this->db->query('UPDATE bookings SET 
+                          booking_date = :booking_date, 
+                          booking_time = :booking_time, 
+                          duration = :duration
                           WHERE id = :id');
-            $this->db->bind(':image_path', $data['image_path']);
-        } else {
-            $this->db->query('UPDATE facilities 
-                          SET name = :name, 
-                              description = :description, 
-                              capacity = :capacity, 
-                              status = :status
-                          WHERE id = :id');
-        }
-
+    
         $this->db->bind(':id', $data['id']);
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':capacity', $data['capacity']);
-        $this->db->bind(':status', $data['status']);
-
+        $this->db->bind(':booking_date', $data['booking_date']);
+        $this->db->bind(':booking_time', $data['booking_time']);
+        $this->db->bind(':duration', $data['duration']);
+    
         return $this->db->execute();
     }
+    
     public function deleteBooking($id)
     {
         $this->db->query('DELETE FROM bookings WHERE id = :id');

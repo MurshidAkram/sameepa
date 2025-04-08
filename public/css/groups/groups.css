@@ -1299,3 +1299,15 @@
 .report-message-btn:hover, .delete-message-btn:hover {
     color: #cc0000; /* Darker red on hover */
 }
+
+.error-messages {
+    background: #fff3f3;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-bottom: 0.5rem;
+}

@@ -146,30 +146,37 @@
           }
 
           document.getElementById('editBookingForm').addEventListener('submit', async (e) => {
-              e.preventDefault();
-              const bookingId = document.getElementById('bookingId').value;
-              const formData = {
-                  booking_date: document.getElementById('editBookingDate').value,
-                  booking_time: document.getElementById('editBookingTime').value,
-                  duration: document.getElementById('editDuration').value
-              };
+    e.preventDefault();
+    const bookingId = document.getElementById('bookingId').value;
+    
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('booking_date', document.getElementById('editBookingDate').value);
+    formData.append('booking_time', document.getElementById('editBookingTime').value);
+    formData.append('duration', document.getElementById('editDuration').value);
 
-              try {
-                  const response = await fetch(`<?php echo URLROOT; ?>/facilities/updateBooking/${bookingId}`, {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify(formData)
-                  });
+    try {
+        const response = await fetch(`<?php echo URLROOT; ?>/facilities/updateBooking/${bookingId}`, {
+            method: 'POST',
+            body: formData // Send as FormData
+        });
 
-                  if (response.ok) {
-                      window.location.reload();
-                  }
-              } catch (error) {
-                  console.error('Error:', error);
-              }
-          });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success) {
+            window.location.reload();
+        } else {
+            alert(result.message || 'Failed to update booking');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while updating the booking');
+    }
+});
 
           async function removeBooking(bookingId) {
               if (confirm('Are you sure you want to remove this booking?')) {

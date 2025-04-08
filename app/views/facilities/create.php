@@ -65,31 +65,32 @@
                 }
                 </script>
 
-                <form action="<?php echo URLROOT; ?>/facilities/create" method="POST" onsubmit="return validateFacilityForm()">
+                <!-- Add enctype attribute to the form -->
+                <form action="<?php echo URLROOT; ?>/facilities/create" method="POST" enctype="multipart/form-data" onsubmit="return validateFacilityForm()">
 
                     <div class="form-group">
                         <label for="name">Facility Name:</label>
                         <input type="text" name="name" id="name" value="<?php echo $data['name']; ?>" 
-                               required maxlength="255" class="form-control">
-                               <?php flash('facility_message'); ?>
+                            required maxlength="255" class="form-control">
+                            <?php flash('facility_message'); ?>
                     </div>
 
                     <div class="form-group">
                         <label for="description">Description:</label>
                         <textarea name="description" id="description" rows="6" required 
-                                  class="form-control"><?php echo $data['description']; ?></textarea>
+                                class="form-control"><?php echo $data['description']; ?></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="capacity">Capacity:</label>
                         <input type="number" name="capacity" id="capacity" value="<?php echo $data['capacity']; ?>" 
-                               required min="1" class="form-control">
+                            required min="1" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label for="facility_image">Facility Image:</label>
-                        <input type="file" name="facility_image" id="facility_image" class="form-control">
-                        <small class="form-text text-muted">Upload an image of the facility (JPG, PNG, GIF)</small>
+                        <label for="image">Facility Image (Optional):</label>
+                        <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/gif" class="form-control">
+                        <small class="form-text text-muted">Upload an image of the facility (JPG, PNG, GIF). Maximum size: 1MB</small>
                     </div>
 
                     <div class="form-buttons">

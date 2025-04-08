@@ -45,25 +45,6 @@ window.onclick = function(event) {
     }
 }
 
-async function viewFacility(id) {
-    try {
-        const response = await fetch(`${URLROOT}/facilities/getFacilityData/${id}`);
-        const facility = await response.json();
-        
-        // Populate modal with facility data
-        document.getElementById('viewName').textContent = facility.name;
-        document.getElementById('viewDescription').textContent = facility.description;
-        document.getElementById('viewCapacity').textContent = facility.capacity;
-        document.getElementById('viewStatus').textContent = facility.status;
-        document.getElementById('viewCreator').textContent = facility.creator_name;
-        
-        // Show modal
-        viewModal.style.display = "block";
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
 async function editFacility(id) {
     try {
         const response = await fetch(`${URLROOT}/facilities/getFacilityData/${id}`);
