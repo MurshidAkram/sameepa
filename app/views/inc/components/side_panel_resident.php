@@ -18,6 +18,6 @@
  -->
                 <li><a href="<?php echo URLROOT; ?>/resident/payments">My Payments</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/reports">Security</a></li>
-                <li><a href="<?php echo URLROOT; ?>/resident/complaints">Complaints</a></li>
+                <li><a href="<?php echo URLROOT; ?>/complaints/mycomplaints">Complaints</a></li>
         </ul>
 </aside>

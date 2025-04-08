@@ -67,9 +67,6 @@
                             </div>
                             <div class="poll-actions">
                                 <a href="<?php echo URLROOT; ?>/polls/viewpoll" class="btn-view-poll">View Results</a>
-                                <?php if (strtotime($poll->end_date) > time()) : ?>
-                                    <a href="<?php echo URLROOT; ?>/polls/edit" class="btn-edit-poll">Edit</a>
-                                <?php endif; ?>
                                 <a href="<?php echo URLROOT; ?>/polls/delete/<?php echo $poll->id; ?>" class="btn-delete-poll">Delete</a>
                             </div>
                         </div>
