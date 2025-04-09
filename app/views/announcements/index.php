@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/announcements/announcements.css">
-    <title>Community Announcements | <?php echo SITENAME; ?></title>
+    <title> Community Announcements | <?php echo SITENAME; ?></title>
 </head>
 
 <body>

@@ -3,6 +3,8 @@
 class Resident extends Controller
 {
     private $residentModel;
+    private $listingModel;
+
 
     public function __construct()
     {

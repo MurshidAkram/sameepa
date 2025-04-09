@@ -9,7 +9,6 @@ class SuperAdmin extends Controller
         $this->checkSuperAdminAuth();
 
         // Initialize any resident-specific models if needed
-        // $this->residentModel = $this->model('M_Resident');
     }
 
     private function checkSuperAdminAuth()

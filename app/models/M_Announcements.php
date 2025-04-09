@@ -71,31 +71,6 @@ class M_Announcements
         return $this->db->single();
     }
 
-    public function getAnnouncementStats()
-    {
-        // Get total announcements
-        $this->db->query('SELECT COUNT(*) as total FROM announcements');
-        $total = $this->db->single()['total'];
-
-        // Get active announcements (created within last 30 days)
-        $this->db->query('SELECT COUNT(*) as active FROM announcements WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)');
-        $active = $this->db->single()['active'];
-
-        // Get this month's announcements
-        $this->db->query('SELECT COUNT(*) as monthly FROM announcements WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())');
-        $monthly = $this->db->single()['monthly'];
-
-        // Get total reactions
-        $this->db->query('SELECT COUNT(*) as total_reactions FROM announcement_reactions');
-        $reactions = $this->db->single()['total_reactions'];
-
-        return [
-            'total' => $total,
-            'active' => $active,
-            'monthly' => $monthly,
-            'reactions' => $reactions
-        ];
-    }
 
     public function getAllAnnouncements($searchTerm = '')
     {
@@ -109,33 +84,7 @@ class M_Announcements
             $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
         }
 
-        $query .= ' ORDER BY a.created_at DESC';
-
-        $this->db->query($query);
-
-        if (!empty($searchTerm)) {
-            $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
-        }
-
-        return $this->db->resultSet();
-    }
-
-    // Update getAllAnnouncements to include type and status
-    public function getAllAnnouncements2($searchTerm = '')
-    {
-        $query = 'SELECT a.*, u.name as creator_name,
-              CASE 
-                WHEN DATEDIFF(NOW(), a.created_at) <= 30 THEN "active"
-                ELSE "archived"
-              END as status
-              FROM announcements a
-              JOIN users u ON a.created_by = u.id';
-
-        if (!empty($searchTerm)) {
-            $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
-        }
-
-        $query .= ' ORDER BY a.created_at DESC';
+        $query .= ' ORDER BY a.updated_at DESC';
 
         $this->db->query($query);
 
@@ -171,4 +120,74 @@ class M_Announcements
         $this->db->bind(':user_id', $userId);
         return $this->db->single();
     }
+
+
+    //DONE BY SANKAVI FOR THE ADMIN AND SUPER ADMIN DASHBOARDS
+    public function getActiveAnnouncements()
+    {
+        try {
+            $this->db->query('
+                SELECT title
+                FROM announcements
+                ORDER BY created_at DESC
+            ');
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log("Error fetching announcements: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    // public function getAnnouncementStats()
+    // {
+    //     // Get total announcements
+    //     $this->db->query('SELECT COUNT(*) as total FROM announcements');
+    //     $total = $this->db->single()['total'];
+
+    //     // Get active announcements (created within last 30 days)
+    //     $this->db->query('SELECT COUNT(*) as active FROM announcements WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)');
+    //     $active = $this->db->single()['active'];
+
+    //     // Get this month's announcements
+    //     $this->db->query('SELECT COUNT(*) as monthly FROM announcements WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())');
+    //     $monthly = $this->db->single()['monthly'];
+
+    //     // Get total reactions
+    //     $this->db->query('SELECT COUNT(*) as total_reactions FROM announcement_reactions');
+    //     $reactions = $this->db->single()['total_reactions'];
+
+    //     return [
+    //         'total' => $total,
+    //         'active' => $active,
+    //         'monthly' => $monthly,
+    //         'reactions' => $reactions
+    //     ];
+    // }
+
+    // Update getAllAnnouncements to include type and status
+    // public function getAllAnnouncements2($searchTerm = '')
+    // {
+    //     $query = 'SELECT a.*, u.name as creator_name,
+    //           CASE 
+    //             WHEN DATEDIFF(NOW(), a.created_at) <= 30 THEN "active"
+    //             ELSE "archived"
+    //           END as status
+    //           FROM announcements a
+    //           JOIN users u ON a.created_by = u.id';
+
+    //     if (!empty($searchTerm)) {
+    //         $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+    //     }
+
+    //     $query .= ' ORDER BY a.created_at DESC';
+
+    //     $this->db->query($query);
+
+    //     if (!empty($searchTerm)) {
+    //         $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
+    //     }
+
+    //     return $this->db->resultSet();
+    // }
+
 }

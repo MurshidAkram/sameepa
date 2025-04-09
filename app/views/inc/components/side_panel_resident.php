@@ -2,7 +2,7 @@
 <aside>
         <ul>
 
-                <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li>
+                <!-- <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li> -->
                 <li><a href="<?php echo URLROOT; ?>/announcements/index">Community Announcements</a></li>
                 <li><a href="<?php echo URLROOT; ?>/posts/index">Feed</a></li>
                 <li><a href="<?php echo URLROOT; ?>/chat/index">Chats</a></li>
