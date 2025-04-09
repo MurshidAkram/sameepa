@@ -230,7 +230,7 @@ public function Delete_Contact($id) {
         ]);
     }
 
-//*****************************************Resident_Contacts***************************************************************************************************** */
+//*****************************************Search Resident_Contacts in Manage_Visitor_Passes***************************************************************************************************** */
 public function Resident_Contacts()
 {
     // Check if this is a search request
@@ -256,9 +256,7 @@ public function Resident_Contacts()
         exit;
     }
     
-    // Load the regular view if not an AJAX request
-    $this->view('security/Resident_Contacts');
-}
-}
-
+    // Load the regular view
+    $this->view('security/Resident_Contacts'); // Changed to correct view name
+}}
 ?>

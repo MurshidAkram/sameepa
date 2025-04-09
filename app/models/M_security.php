@@ -117,25 +117,21 @@ public function addVisitorPass($data) {
 }
 
 //***************************************************resident contact*********************************** */
-
 public function searchResidentContacts($query)
 {
     $this->db->query("SELECT 
-                        resident_name,
-                        address,
-                        phonenumber AS phone_number,
-                        fixed_line,
-                        email
-                      FROM residents_contact
-                      WHERE resident_name LIKE :q 
-                         OR address LIKE :q 
-                         OR phonenumber LIKE :q
-                         OR fixed_line LIKE :q
-                         OR email LIKE :q");
-    
+                        u.name,
+                        u.email,
+                        r.phonenumber,
+                        r.address,
+                        u.id as user_id
+                      FROM users u
+                      JOIN residents r ON u.id = r.user_id
+                      WHERE (u.name LIKE :q OR r.address LIKE :q)
+                        AND u.role_id = 1"); // Assuming role_id 1 is for residents
+
     $this->db->bind(':q', '%' . $query . '%');
     return $this->db->resultSet();
-} 
-
+}
 }
 ?>

@@ -203,7 +203,7 @@
                             row.innerHTML = ` 
                                 <td>${resident.resident_name}</td>
                                 <td>${resident.address}</td>
-                                <td>${resident.phone_number}</td>
+                                <td>${resident.phonenumber}</td>
                                 <td>${resident.fixed_line}</td>
                                 <td>${resident.email}</td>
                             `;
