@@ -83,7 +83,7 @@ class Groups extends Controller
             if (empty($data['errors'])) {
                 try {
                     if ($this->groupsModel->createGroup($data)) {
-                        if ($_SESSION['user_role_id'] == 2) {
+                        if (in_array($_SESSION['user_role_id'], [2, 3])) {
                             redirect('groups/admin_dashboard');
                         } else {
                             redirect('groups/index');
@@ -243,7 +243,7 @@ class Groups extends Controller
             if (empty($data['errors'])) {
                 try {
                     if ($this->groupsModel->updateGroup($data)) {
-                        if ($_SESSION['user_role_id'] == 2) {
+                        if (in_array($_SESSION['user_role_id'], [2, 3])) {
                             redirect('groups/admin_dashboard');
                         } else {
                             redirect('groups/my_groups');
@@ -346,7 +346,7 @@ class Groups extends Controller
           if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               if ($this->groupsModel->deleteGroup($id)) {
                   flash('group_message', 'Group Removed');
-                  if ($_SESSION['user_role_id'] == 2) {
+                  if (in_array($_SESSION['user_role_id'], [2, 3])) {
                       redirect('groups/admin_dashboard');
                   } else {
                       redirect('groups/my_groups');

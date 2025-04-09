@@ -42,7 +42,7 @@
               <?php endif; ?>
               <div class="group-view-container">
                   <div class="top-actions">
-                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                    <?php if (in_array($_SESSION['user_role_id'], [2, 3])): ?>
                         <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="back-button">
                             <i class="fas fa-arrow-left"></i> Back to Dashboard
                         </a>
@@ -51,7 +51,7 @@
                             <i class="fas fa-arrow-left"></i> Back to Groups
                         </a>
                     <?php endif; ?> 
-                      <?php if ($_SESSION['user_role_id'] == 2 || $_SESSION['user_id'] == $data['group']['created_by']): ?>
+                      <?php if (in_array($_SESSION['user_role_id'], [2, 3]) || $_SESSION['user_id'] == $data['group']['created_by']): ?>
                           <button class="bdelview" onclick="deleteGroup(<?php echo $data['group']['group_id']; ?>)">
                               <i class="fas fa-trash"></i> Delete Group
                           </button>
@@ -151,7 +151,7 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            <?php if ($_SESSION['user_role_id'] == 2): ?>
+                            <?php if (in_array($_SESSION['user_role_id'], [2, 3])): ?>
                                 window.location.href = '<?php echo URLROOT; ?>/groups/admin_dashboard';
                             <?php else: ?>
                                 window.location.href = '<?php echo URLROOT; ?>/groups';
