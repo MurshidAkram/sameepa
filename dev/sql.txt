@@ -255,6 +255,35 @@ CREATE TABLE complaint_responses (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE chats (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     user1_id INT NOT NULL,
+     user2_id INT NOT NULL,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
+     FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE
+ );
+ CREATE TABLE messages (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     chat_id INT NOT NULL,
+     sender_id INT NOT NULL,
+     message TEXT NOT NULL,
+     is_read BOOLEAN DEFAULT FALSE,
+     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
+     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+ );
+ 
+ CREATE TABLE chat_requests (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     sender_id INT NOT NULL,
+     recipient_id INT NOT NULL,
+     status ENUM('pending', 'accepted', 'declined') DEFAULT 'pending',
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+     FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE
+ );
+
 
 
 

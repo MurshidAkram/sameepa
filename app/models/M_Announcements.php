@@ -120,10 +120,10 @@ class M_Announcements
         return $this->db->resultSet();
     }
 
-// Update getAllAnnouncements to include type and status
-public function getAllAnnouncements2($searchTerm = '')
-{
-    $query = 'SELECT a.*, u.name as creator_name,
+    // Update getAllAnnouncements to include type and status
+    public function getAllAnnouncements2($searchTerm = '')
+    {
+        $query = 'SELECT a.*, u.name as creator_name,
               CASE 
                 WHEN DATEDIFF(NOW(), a.created_at) <= 30 THEN "active"
                 ELSE "archived"
@@ -131,20 +131,20 @@ public function getAllAnnouncements2($searchTerm = '')
               FROM announcements a
               JOIN users u ON a.created_by = u.id';
 
-    if (!empty($searchTerm)) {
-        $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+        if (!empty($searchTerm)) {
+            $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+        }
+
+        $query .= ' ORDER BY a.created_at DESC';
+
+        $this->db->query($query);
+
+        if (!empty($searchTerm)) {
+            $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
+        }
+
+        return $this->db->resultSet();
     }
-
-    $query .= ' ORDER BY a.created_at DESC';
-
-    $this->db->query($query);
-
-    if (!empty($searchTerm)) {
-        $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
-    }
-
-    return $this->db->resultSet();
-}
 
     public function addReaction($data)
     {

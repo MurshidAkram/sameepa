@@ -208,17 +208,16 @@ class Announcements extends Controller
         if (!in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('announcements');
         }
-    
+
         $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
         $announcements = $this->announcementModel->getAllAnnouncements2($searchTerm);
         $stats = $this->announcementModel->getAnnouncementStats();
-    
+
         $data = [
             'announcements' => $announcements,
             'stats' => $stats
         ];
-    
+
         $this->view('announcements/admin_dashboard', $data);
     }
-    
 }
