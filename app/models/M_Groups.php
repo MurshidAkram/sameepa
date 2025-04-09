@@ -202,8 +202,13 @@ class M_Groups
         $this->db->bind(':group_id', $groupId);
         $this->db->bind(':user_id', $userId);
         $this->db->bind(':message', $message);
-        return $this->db->execute();
+        
+        if ($this->db->execute()) {
+            return $this->db->lastInsertId(); // Return the new message ID
+        }
+        return false;
     }
+    
     
     public function getGroupMessages($groupId) {
         $this->db->query('SELECT gc.*, u.name as sender_name, u.profile_picture 
@@ -224,16 +229,6 @@ class M_Groups
         $this->db->bind(':reason', $reason);
         
         return $this->db->execute();
-    }
-    
-    public function getReportedMessages() {
-        $this->db->query('SELECT rgm.*, gc.message, gc.user_id, u.name as reporter_name, us.name as sender_name 
-                          FROM reported_group_message rgm 
-                          JOIN group_chats gc ON rgm.message_id = gc.id 
-                          JOIN users u ON rgm.reported_by = u.id 
-                          JOIN users us ON gc.user_id = us.id 
-                          ORDER BY rgm.created_at DESC');
-        return $this->db->resultSet();
     }
     
     public function ignoreMessageReport($reportId) {
@@ -263,4 +258,17 @@ class M_Groups
         $this->db->bind(':id', $messageId);
         return $this->db->execute();
     }
+
+    public function getReportedMessagesByGroupId($groupId) {
+        $this->db->query('SELECT rgm.*, gc.message, gc.user_id, u.name as reporter_name, us.name as sender_name 
+                        FROM reported_group_message rgm 
+                        JOIN group_chats gc ON rgm.message_id = gc.id 
+                        JOIN users u ON rgm.reported_by = u.id 
+                        JOIN users us ON gc.user_id = us.id 
+                        WHERE rgm.group_id = :group_id
+                        ORDER BY rgm.created_at DESC');
+        $this->db->bind(':group_id', $groupId);
+        return $this->db->resultSet();
+    }
+
 }

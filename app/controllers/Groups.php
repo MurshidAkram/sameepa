@@ -302,11 +302,14 @@ class Groups extends Controller
             $message = trim($_POST['message']);
             
             if (!empty($message)) {
-                if ($this->groupsModel->saveMessage($groupId, $_SESSION['user_id'], $message)) {
+                // Save the message and get the new message ID
+                $messageId = $this->groupsModel->saveMessage($groupId, $_SESSION['user_id'], $message);
+                if ($messageId) {
                     $user = $this->userModel->getUserById($_SESSION['user_id']);
                     $response = [
                         'success' => true,
                         'message' => $message,
+                        'message_id' => $messageId, // Include the message ID
                         'sender' => $_SESSION['name'],
                         'timestamp' => date('Y-m-d H:i:s'),
                         'profile_image' => $user->profile_picture ? base64_encode($user->profile_picture) : null
@@ -315,12 +318,10 @@ class Groups extends Controller
                     $response = ['success' => false];
                 }
                 echo json_encode($response);
-                //redirect("groups/chat/{$groupId}");
                 exit;
             }
         }
-    }
-    
+    }    
     
     public function admin_dashboard()
     {
@@ -423,13 +424,32 @@ class Groups extends Controller
         }
     }
     
-    public function reported_messages() {
-        $reported_messages = $this->groupsModel->getReportedMessages();
+    // Modify the reported_messages method to accept a group ID parameter
+    public function reported_messages($groupId = null) {
+        // If no group ID is provided, redirect to admin dashboard
+        if (!$groupId) {
+            redirect('groups/admin_dashboard');
+        }
+        
+        // Get the group details to display in the view
+        $group = $this->groupsModel->getGroupById($groupId);
+        
+        // If group doesn't exist, redirect to admin dashboard
+        if (!$group) {
+            redirect('groups/admin_dashboard');
+        }
+        
+        // Get reported messages for this specific group
+        $reported_messages = $this->groupsModel->getReportedMessagesByGroupId($groupId);
+        
         $data = [
+            'group' => $group,
             'reported_messages' => $reported_messages
         ];
+        
         $this->view('groups/reported_messages', $data);
     }
+
     
     public function ignore_message_report($reportId) {
         if ($this->groupsModel->ignoreMessageReport($reportId)) {

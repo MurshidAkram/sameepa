@@ -1106,9 +1106,9 @@
     border-bottom: 1px solid #eee;
 }
 
-.comment-author {
+.comment-content {
     font-weight: bold;
-    color: #800080;
+    color: #333;
 }
 
 .comment-date {
@@ -1122,7 +1122,7 @@
     gap: 10px;
 }
 
-.comment-content {
+.comment-author {
     color: #333;
     line-height: 1.6;
     margin-bottom: 15px;
@@ -1310,4 +1310,8 @@
 .error-message {
     color: #dc3545;
     margin-bottom: 0.5rem;
+}
+
+.reportedreason{
+    font-weight: bold;
 }

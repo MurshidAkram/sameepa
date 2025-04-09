@@ -51,8 +51,8 @@
                     <?php foreach ($data['reported_groups'] as $group) : ?>
                         <div class="comment-card">
                             <div class="comment-header">
-                                <span class="comment-author"><?php echo $group->group_name; ?></span>
-                                <span class="comment-date"><?php echo date('F j, Y g:i A', strtotime($group->created_at)); ?></span>
+                                <p> <span class="comment-author"><?php echo $group->group_name; ?></span> </p>
+                                <span class="comment-date"><?php echo date('F j, Y g:i A', strtotime($group->created_at)); ?></span>                               
                                 <div class="comment-actions">
                                     <form action="<?php echo URLROOT; ?>/groups/delete/<?php echo $group->group_id; ?>" method="POST" style="display: inline;">
                                         <button type="submit" class="btndelcomment" onclick="return confirm('Are you sure you want to delete this group?')">
@@ -62,9 +62,9 @@
                                     <a href="<?php echo URLROOT; ?>/groups/ignore_report/<?php echo $group->id; ?>" class="btn-ignore-report">Ignore Report</a>
                                 </div>
                             </div>
-                            <p class="comment-content"><?php echo $group->group_description; ?></p>
+                            <p class="comment-content"> Reported for: <?php echo $group->reason; ?></p>
                             <div class="comment-footer">
-                                <span class="comment-report-reason">Reported by: <?php echo $group->reporter_name; ?> for: <?php echo $group->reason; ?></span>
+                                <span class="comment-report-reason">Reported by: <?php echo $group->reporter_name; ?></span>
                             </div>
                         </div>
                     <?php endforeach; ?>

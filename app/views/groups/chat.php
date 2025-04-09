@@ -113,23 +113,24 @@ function sendMessage() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                appendMessage(data.message, data.timestamp, data.sender_name, data.profile_picture);
+                // Pass the message ID to the appendMessage function
+                appendMessage(data.message, data.timestamp, data.sender, data.message_id);
                 messageInput.value = '';
             }
         });
     }
 }
 
-function appendMessage(message, timestamp, senderName, profilePicture) {
+function appendMessage(message, timestamp, senderName, messageId) {
     const chatMessages = document.getElementById('chatMessages');
     const messageHTML = `
-        <div class="chat-message sent" data-id="${message.id}">
+        <div class="chat-message sent" data-id="${messageId}">
             <div class="message-content">
                 <div class="message-info">
                     <span class="message-time">${new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                 </div>
                 <p>${message}</p>
-                <button class="delete-message-btn" onclick="deleteMessage(${message.id})">
+                <button class="delete-message-btn" onclick="deleteMessage(${messageId})">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>

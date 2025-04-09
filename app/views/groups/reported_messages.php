@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
     <title>Reported Messages | <?php echo SITENAME; ?></title>
 </head>
@@ -24,14 +25,14 @@
         ?>
 
         <main class="reported-main">
+           <!-- Add this to the top of the reported_messages.php view -->
             <div class="top-page">
                 <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="back-button">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </div>
 
-            <h1>Reported Messages</h1>
-
+            <h1>Reported Messages for <?php echo $data['group']['group_name']; ?></h1>
             <?php if (empty($data['reported_messages'])) : ?>
                 <p>No reported messages found.</p>
             <?php else : ?>
@@ -39,7 +40,7 @@
                     <?php foreach ($data['reported_messages'] as $message) : ?>
                         <div class="comment-card">
                             <div class="comment-header">
-                                <span class="comment-author"><?php echo $message->sender_name; ?></span>
+                                <p><span class="comment-content"><?php echo $message->message; ?> &nbsp </span> <span class="comment-author"> By: <?php echo $message->sender_name; ?></span> </p>
                                 <span class="comment-date"><?php echo date('F j, Y g:i A', strtotime($message->created_at)); ?></span>
                                 <div class="comment-actions">
                                     <form action="<?php echo URLROOT; ?>/groups/delete_message/<?php echo $message->message_id; ?>" method="POST" style="display: inline;">
@@ -50,9 +51,9 @@
                                     <a href="<?php echo URLROOT; ?>/groups/ignore_message_report/<?php echo $message->id; ?>" class="btn-ignore-report">Ignore Report</a>
                                 </div>
                             </div>
-                            <p class="comment-content"><?php echo $message->message; ?></p>
+                            <p class="reportedreason"> Reported for: <?php echo $message->reason; ?> </p>
                             <div class="comment-footer">
-                                <span class="comment-report-reason">Reported by: <?php echo $message->reporter_name; ?> for: <?php echo $message->reason; ?></span>
+                                <span class="comment-report-reason">Reported by: <?php echo $message->reporter_name; ?></span>
                             </div>
                         </div>
                     <?php endforeach; ?>
