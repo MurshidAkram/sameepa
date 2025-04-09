@@ -44,7 +44,7 @@
                   <div class="top-actions">
                     <?php if ($_SESSION['user_role_id'] == 2): ?>
                         <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="back-button">
-                            <i class="fas fa-arrow-left"></i> Back to Groups
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
                         </a>
                     <?php else: ?>
                         <a href="<?php echo URLROOT; ?>/groups" class="back-button">
@@ -105,6 +105,9 @@
                                     onclick="window.location.href='<?php echo URLROOT; ?>/groups/chat/<?php echo $data['group']['group_id']; ?>'">
                                 <i class="fas fa-comments"></i> Group Chat
                             </button>
+                            <button class="report-button" onclick="window.location.href='<?php echo URLROOT; ?>/groups/report/<?php echo $data['group']['group_id']; ?>'">
+                                <i class="fas fa-flag"></i> Report Group
+                            </button>           
                         </div>
                     </div>
                 </div>

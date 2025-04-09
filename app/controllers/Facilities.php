@@ -22,36 +22,90 @@ class Facilities extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Get the admin ID for this user
             $adminId = $this->facilityModel->getAdminIdByUserId($_SESSION['user_id']);
-
+    
             if (!$adminId) {
                 flash('facility_message', 'You do not have permission to create facilities', 'alert alert-danger');
                 redirect('facilities');
             }
-
+    
             $data = [
                 'name' => trim($_POST['name']),
                 'description' => trim($_POST['description']),
                 'capacity' => trim($_POST['capacity']),
                 'status' => 'available',
                 'created_by' => $adminId,
+                'image_data' => null,
+                'image_type' => null,
                 'errors' => []
             ];
-
-            if ($this->facilityModel->findFacilityByName($data['name'])) {
-                flash('facility_message', 'A facility with this name already exists', 'alert alert-danger');
-                redirect('facilities/create');
+    
+            // Handle file upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                // Check for upload errors
+                if ($_FILES['image']['error'] === UPLOAD_ERR_INI_SIZE || 
+                    $_FILES['image']['error'] === UPLOAD_ERR_FORM_SIZE) {
+                    $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                } 
+                else if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                    $data['errors'][] = 'There was an error uploading the image. Error code: ' . $_FILES['image']['error'];
+                }
+                else {
+                    // Check file size (1MB limit)
+                    $maxSize = 1 * 1024 * 1024; // 1MB in bytes
+                    if ($_FILES['image']['size'] > $maxSize) {
+                        $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                    } 
+                    else {
+                        // Check file type
+                        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+                            $data['errors'][] = 'Invalid file type. Only JPG, PNG, and GIF images are allowed.';
+                        } 
+                        else {
+                            // All checks passed, process the image
+                            try {
+                                // Get the file size
+                                $fileSize = filesize($_FILES['image']['tmp_name']);
+                                
+                                // Check if file size is within MySQL's max_allowed_packet limit
+                                if ($fileSize > 1048576) { // 1MB in bytes
+                                    $data['errors'][] = 'Image is too large for database storage. Please use an image smaller than 1MB.';
+                                } else {
+                                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
+                                    $data['image_type'] = $_FILES['image']['type'];
+                                }
+                            } catch (Exception $e) {
+                                $data['errors'][] = 'Error processing image: ' . $e->getMessage();
+                            }
+                        }
+                    }
+                }
             }
-
+    
+            if ($this->facilityModel->findFacilityByName($data['name'])) {
+                $data['errors'][] = 'A facility with this name already exists';
+            }
+    
             if (empty($data['name'])) {
                 $data['errors'][] = 'Please enter facility name';
             }
             if (empty($data['capacity'])) {
                 $data['errors'][] = 'Please enter capacity';
             }
-
+    
             if (empty($data['errors'])) {
-                if ($this->facilityModel->createFacility($data)) {
-                    redirect('facilities/admin_dashboard');
+                try {
+                    if ($this->facilityModel->createFacility($data)) {
+                        redirect('facilities/admin_dashboard');
+                    }
+                } catch (PDOException $e) {
+                    // Handle database errors
+                    if (strpos($e->getMessage(), 'max_allowed_packet') !== false) {
+                        $data['errors'][] = 'The image is too large for the database. Please use a smaller image (less than 1MB).';
+                    } else {
+                        $data['errors'][] = 'Database error: ' . $e->getMessage();
+                    }
+                    $this->view('facilities/create', $data);
                 }
             } else {
                 $this->view('facilities/create', $data);
@@ -65,7 +119,7 @@ class Facilities extends Controller
             ];
             $this->view('facilities/create', $data);
         }
-    }
+    }    
 
     public function viewFacility($id)
     {
@@ -144,14 +198,13 @@ class Facilities extends Controller
         $this->view('facilities/view', $data);
     }
     
-
     public function edit($id)
     {
         // Check admin permission
         if (!in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('facilities');
         }
-
+    
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $data = [
@@ -160,38 +213,110 @@ class Facilities extends Controller
                 'description' => trim($_POST['description']),
                 'capacity' => trim($_POST['capacity']),
                 'status' => trim($_POST['status']),
+                'image_data' => null,
+                'image_type' => null,
                 'errors' => []
             ];
-
+    
+            // Handle file upload if a new image is provided
+            if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                // Check for upload errors
+                if ($_FILES['image']['error'] === UPLOAD_ERR_INI_SIZE || 
+                    $_FILES['image']['error'] === UPLOAD_ERR_FORM_SIZE-1) {
+                    $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                } 
+                else if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                    $data['errors'][] = 'There was an error uploading the image. Error code: ' . $_FILES['image']['error'];
+                }
+                else {
+                    // Check file size (2MB limit)
+                    // Inside the edit method where file upload is handled
+                    // Change the maxSize variable from 2MB to 1MB
+                    $maxSize = 1 * 1024 * 1024; // 1MB in bytes
+                    if ($_FILES['image']['size'] > $maxSize) {
+                        $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
+                    } 
+ 
+                    else {
+                        // Check file type
+                        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        if (!in_array($_FILES['image']['type'], $allowedTypes)) {
+                            $data['errors'][] = 'Invalid file type. Only JPG, PNG, and GIF images are allowed.';
+                        } 
+                        else {
+                            // All checks passed, process the image
+                            try {
+                                // Get the file size
+                                $fileSize = filesize($_FILES['image']['tmp_name']);
+                                
+                                // Check if file size is within MySQL's max_allowed_packet limit (typically 1-4MB by default)
+                                // Setting a conservative limit of 1MB to be safe
+                                if ($fileSize > 1048576) { // 1MB in bytes
+                                    $data['errors'][] = 'Image is too large for database storage. Please use an image smaller than 1MB.';
+                                } else {
+                                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
+                                    $data['image_type'] = $_FILES['image']['type'];
+                                }
+                            } catch (Exception $e) {
+                                $data['errors'][] = 'Error processing image: ' . $e->getMessage();
+                            }
+                        }
+                    }
+                }
+            }
+    
             // Validate name
             if (empty($data['name'])) {
                 $data['errors'][] = 'Please enter facility name';
             } elseif (strlen($data['name']) < 3) {
                 $data['errors'][] = 'Name must be at least 3 characters';
             }
-
+    
             // Validate capacity
             if (empty($data['capacity'])) {
                 $data['errors'][] = 'Please enter capacity';
             } elseif (!is_numeric($data['capacity']) || $data['capacity'] < 1) {
                 $data['errors'][] = 'Capacity must be a positive number';
             }
-
+    
             // Check for duplicate name
             if ($this->facilityModel->findFacilityByNameExcept($data['name'], $id)) {
                 $data['errors'][] = 'A facility with this name already exists';
             }
-
+    
             if (empty($data['errors'])) {
-                if ($this->facilityModel->updateFacility($data)) {
-                    flash('facility_message', 'Facility updated successfully');
-                    redirect('facilities/admin_dashboard');
-                } else {
-                    flash('facility_message', 'Something went wrong', 'alert alert-danger');
+                try {
+                    if ($this->facilityModel->updateFacility($data)) {
+                        flash('facility_message', 'Facility updated successfully');
+                        redirect('facilities/admin_dashboard');
+                    } else {
+                        flash('facility_message', 'Something went wrong', 'alert alert-danger');
+                        
+                        // Get the facility data again to display the form
+                        $facility = $this->facilityModel->getFacilityById($id);
+                        $data['facility'] = $facility;
+                        
+                        $this->view('facilities/edit_facility', $data);
+                    }
+                } catch (PDOException $e) {
+                    // Handle database errors
+                    if (strpos($e->getMessage(), 'max_allowed_packet') !== false) {
+                        $data['errors'][] = 'The image is too large for the database. Please use a smaller image (less than 1MB).';
+                    } else {
+                        $data['errors'][] = 'Database error: ' . $e->getMessage();
+                    }
+                    
+                    // Get the facility data again to display the form
+                    $facility = $this->facilityModel->getFacilityById($id);
+                    $data['facility'] = $facility;
+                    
                     $this->view('facilities/edit_facility', $data);
                 }
             } else {
                 // Load view with errors
+                $facility = $this->facilityModel->getFacilityById($id);
+                $data['facility'] = $facility;
+                
                 $this->view('facilities/edit_facility', $data);
             }
         } else {
@@ -201,13 +326,24 @@ class Facilities extends Controller
             if (!$facility) {
                 redirect('facilities/admin_dashboard');
             }
-
+    
             $data = [
                 'facility' => $facility,
                 'errors' => []
             ];
-
+    
             $this->view('facilities/edit_facility', $data);
+        }
+    }
+    
+
+    // Add a method to serve images from the database
+    public function getImage($id) {
+        $facility = $this->facilityModel->getFacilityImage($id);
+        if ($facility && $facility['image_data']) {
+            header("Content-Type: " . $facility['image_type']);
+            echo $facility['image_data'];
+            exit();
         }
     }
 
@@ -218,28 +354,41 @@ class Facilities extends Controller
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Get facility details
             $facility = $this->facilityModel->getFacilityById($id);
-
+            
             $bookingData = [
                 'facility_id' => $id,
                 'facility_name' => $facility['name'],
-                'user_id' => $_SESSION['user_id'],
                 'booking_date' => $_POST['booking_date'],
                 'booking_time' => $_POST['booking_time'],
-                'duration' => $_POST['duration'],
-                'booked_by' => $_SESSION['name'] // Get from session
+                'duration' => $_POST['duration']
             ];
+
+            // Check for overlaps before creating booking
+            $overlap = $this->facilityModel->checkBookingOverlap(
+                $id,
+                $bookingData['booking_date'],
+                $bookingData['booking_time'],
+                $bookingData['duration']
+            );
+
+            if ($overlap) {
+                $_SESSION['error_message'] = 'This time slot is already booked';
+                redirect('facilities/book/' . $id);
+                return;
+            }
 
             if ($this->facilityModel->createBooking($bookingData)) {
                 $_SESSION['success_message'] = 'Facility booked successfully';
-                if ($_SESSION['user_role_id'] == 2) {
-                    redirect('facilities/admin_dashboard');
+    
+                // Redirect based on user role
+                if ($_SESSION['user_role_id'] == 1) {
+                    redirect('facilities/index');
+                } else if (in_array($_SESSION['user_role_id'], [2, 3])) {
+                    redirect('facilities/allmybookings');
                 } else {
-                    redirect('facilities');
+                    redirect('/'); // Default fallback
                 }
-            } else {
-                die('Something went wrong');
             }
         }
 
@@ -302,24 +451,25 @@ class Facilities extends Controller
     public function updateBooking($id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Get the POST data
-            $data = json_decode(file_get_contents("php://input"));
-
+            // Get form data instead of JSON
             $bookingData = [
                 'id' => $id,
-                'booking_date' => $data->booking_date,
-                'booking_time' => $data->booking_time,
-                'duration' => $data->duration
+                'booking_date' => $_POST['booking_date'],
+                'booking_time' => $_POST['booking_time'],
+                'duration' => $_POST['duration']
             ];
-
+    
             // Update booking in database through model
             if ($this->facilityModel->updateBooking($bookingData)) {
                 echo json_encode(['success' => true]);
             } else {
-                echo json_encode(['success' => false]);
+                echo json_encode(['success' => false, 'message' => 'Database update failed']);
             }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
         }
     }
+
     public function cancelBooking($id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -399,22 +549,27 @@ class Facilities extends Controller
 
         return $errors;
     }
-    public function checkOverlap()
-    {
+    public function getBookedTimes($facilityId, $date) {
+        $bookings = $this->facilityModel->getBookedTimesByDate($facilityId, $date);
+        header('Content-Type: application/json');
+        echo json_encode($bookings);
+    }
+
+    public function checkOverlap() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = json_decode(file_get_contents("php://input"));
-
-            $overlappingBookings = $this->facilityModel->checkOverlappingBookings(
+            
+            $conflictingBooking = $this->facilityModel->checkBookingOverlap(
                 $data->facilityId,
                 $data->date,
-                $data->startTime,
+                $data->time,
                 $data->duration
             );
-
+            
             header('Content-Type: application/json');
             echo json_encode([
-                'hasOverlap' => !empty($overlappingBookings),
-                'overlappingBookings' => $overlappingBookings
+                'hasOverlap' => !empty($conflictingBooking),
+                'conflictingBooking' => $conflictingBooking
             ]);
         }
     }

@@ -49,6 +49,13 @@
                         </div>
                     </div>
 
+                    <?php if (!empty($data['facility']['image_data'])): ?>
+                    <div class="facility-image">
+                        <img src="<?php echo URLROOT; ?>/facilities/getImage/<?php echo $data['facility']['id']; ?>" 
+                            alt="<?php echo $data['facility']['name']; ?>">
+                    </div>
+                    <?php endif; ?>
+
                     <div class="facility-info">
                         <div class="facility-description">
                             <h4>Description</h4>
@@ -59,6 +66,19 @@
                             <p><strong>Capacity:</strong> <?php echo $data['facility']['capacity']; ?> people</p>
                             <p><strong>Created By:</strong> <?php echo $data['facility']['creator_name']; ?></p>
                         </div>
+                        
+                        <?php if (in_array($_SESSION['user_role_id'], [2, 3])): ?>
+                            <div class="admin-actions">
+                                <a href="<?php echo URLROOT; ?>/facilities/edit/<?php echo $data['facility']['id']; ?>" class="btn-edit">
+                                    <i class="fas fa-edit"></i> Edit Facility
+                                </a>
+                                <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $data['facility']['id']; ?>" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">
+                                        <i class="fas fa-trash"></i> Delete Facility
+                                    </button>
+                                </form>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

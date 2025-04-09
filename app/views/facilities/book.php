@@ -50,12 +50,36 @@
                             <!-- Dates will be populated by JavaScript -->
                         </div>
                     </div>
-                    <div class="time-slots">
-                        <h3>Available Time Slots</h3>
-                        <div id="timeSlots">
-                            <p class="select-date-message">Please select a date to view available time slots</p>
-                        </div>
+                    <div class="booked-times-container">
+                     <div class="bookedtimes">
+                        <h2>Booked Times</h2>
+                        <table class="booked-times-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Duration</th>
+                                    <th>Booked By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookedTimesBody">
+                                <?php if(isset($data['booked_times'])): ?>
+                                    <?php foreach($data['booked_times'] as $booking): ?>
+                                        <tr class="<?php echo ($booking->user_id == $_SESSION['user_id']) ? 'own-booking' : ''; ?>">
+                                            <td><?php echo $booking->booking_time; ?></td>
+                                            <td><?php echo $booking->duration; ?> hours</td>
+                                            <td><?php echo $booking->booked_by; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="3">Select a date to view bookings</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                     </div>
                     </div>
+                    <div id="booking-error"></div>
                 </div>
                   <div class="booking-right-panel">
                       <div class="booking-form-container">
@@ -107,30 +131,41 @@
 
                               <div class="form-buttons">
                                   <button type="submit" class="btn btn-primary">Book Facility</button>
-                                  <?php if ($_SESSION['user_role_id'] == 2): ?>
-                                      <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="btn btn-cancel">Cancel</a>
-                                  <?php else: ?>
-                                      <a href="<?php echo URLROOT; ?>/facilities/index" class="btn btn-cancel">Cancel</a>
-                                  <?php endif; ?>
+                                  <?php if ($_SESSION['user_role_id'] == 1): ?>
+                                        <a href="<?php echo URLROOT; ?>/facilities/index" class="btn btn-cancel">Cancel</a>
+                                    <?php elseif ($_SESSION['user_role_id'] == 2 || $_SESSION['user_role_id'] == 3): ?>
+                                        <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="btn btn-cancel">Cancel</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo URLROOT; ?>/" class="btn btn-cancel">Cancel</a>
+                                    <?php endif; ?>
                               </div>
                           </form>
                       </div>
 
                       <div class="bookings-table-container">
-                          <div class="my-bookings">
-                              <h2>My Bookings</h2>
-                              <table class="bookings-table">
-                                  <thead>
-                                      <tr>
-                                          <th>Date</th>
-                                          <th>Time</th>
-                                          <th>Duration</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody id="bookingsTableBody">
-                                  </tbody>
-                              </table>
-                          </div>
+                        <div class="my-bookings">
+                            <h2>My Bookings</h2>
+                            <table class="bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookingsTableBody">
+                                    <?php if(isset($data['my_bookings'])): ?>
+                                        <?php foreach($data['my_bookings'] as $booking): ?>
+                                            <tr>
+                                                <td><?php echo $booking->booking_date; ?></td>
+                                                <td><?php echo $booking->booking_time; ?></td>
+                                                <td><?php echo $booking->duration; ?> hours</td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                       </div>
                   </div>
               </div>

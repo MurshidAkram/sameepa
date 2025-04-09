@@ -1,117 +1,472 @@
 .facility-main {
     flex: 1;
     padding: 2rem;
+    background-color: #f5f5f5;
 }
 
 .facility-details-container {
     background: #fff;
-    border-radius: 8px;
-    padding: 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 900px;
     margin: 0 auto;
+    transition: transform 0.3s ease;
 }
 
-  .back-button {
-      align-self: flex-start;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 12px 24px;
-      background-color: #757575;
-      color: #fff;
-      border-radius: 25px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: 100;
-      transition: background-color 0.3s, transform 0.2s;
-      margin-bottom: 2rem;
-      margin-left: calc((100% - 800px) / 2); /* Aligns with the form container */
-  }
+.facility-details-container:hover {
+    transform: translateY(-5px);
+}
 
-  .back-button:hover {
-      background-color: #616161;
-      transform: translateY(-2px);
-  }
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 24px;
+    background-color: #800080;
+    color: #fff;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: 2rem;
+    margin-left: calc((100% - 900px) / 2);
+    box-shadow: 0 2px 8px rgba(128, 0, 128, 0.3);
+}
 
-  .facility-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-  }
+.back-button:hover {
+    background-color: #6a006a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(128, 0, 128, 0.4);
+}
 
-  .facility-header h1 {
-      font-size: 2rem;
-      color: #800080;
-  }
+.back-button:active {
+    transform: translateY(0);
+}
 
-  @media (max-width: 868px) {
-      .back-button {
-          margin-left: 2rem; /* Responsive margin for smaller screens */
-      }
-  }
+.facility-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 1.5rem;
+}
+
+.facility-header h1 {
+    font-size: 2.2rem;
+    color: #800080;
+    font-weight: 700;
+    margin: 0;
+}
+
+.facility-image {
+    width: 100%;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.facility-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.facility-image img:hover {
+    transform: scale(1.02);
+}
 
 .status-box {
-    padding: 0.5rem 1rem;
-    border-radius: 15px;
+    padding: 0.5rem 0;
 }
 
 .facility-status {
-    font-weight: bold;
-    padding: 0.5rem 0.8rem;
-    border-radius: 15px;
-    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
 }
 
 .facility-status.available {
     background: #e8f5e9;
     color: #2e7d32;
+    border: 1px solid #c8e6c9;
 }
 
 .facility-status.unavailable {
     background: #ffebee;
     color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.facility-info {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
 }
 
 .facility-description {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
-.facility-description h3 {
-    font-size: 1.5rem;
+.facility-description h4 {
+    font-size: 1.4rem;
     color: #333;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.facility-description h4:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: #800080;
 }
 
 .facility-description p {
     color: #555;
+    line-height: 1.7;
+    font-size: 1.05rem;
 }
 
 .facility-metadata {
     display: grid;
-    gap: 1rem;
-    padding: 1.5rem;
-    background: #e5e6e6;
-    border-radius: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1.8rem;
+    background: #f9f7fa;
+    border-radius: 10px;
     margin-bottom: 2rem;
     color: #444;
+    border-left: 4px solid #800080;
 }
 
 .facility-metadata p {
     margin: 0;
     color: #555;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
 }
 
 .facility-metadata strong {
     color: #333;
     margin-right: 0.5rem;
+    font-weight: 600;
+}
+
+/* Admin action buttons */
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: flex-end;
+}
+
+.btn-edit, .btn-delete {
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    text-decoration: none;
+}
+
+.btn-edit {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #1976D2;
+}
+
+.btn-delete {
+    background-color: #F44336;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #D32F2F;
+}
+
+.error-message {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Enhanced Facility Cards with Images - New Design */
+.facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+}
+
+.facility-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 5rem; /* Add padding to the top of the card */
+}
+
+.facility-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(128, 0, 128, 0.2);
+}
+
+.facility-card .facility-image {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    margin-bottom: 0;
+    position: relative;
+    border: 0.5px solid #000000;
+}
+
+.facility-card .facility-image::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    z-index: 1;
+}
+
+.facility-card .facility-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.facility-card:hover .facility-image img {
+    transform: scale(1.1);
+}
+
+.facility-card .facility-content {
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.facility-card h3 {
+    font-size: 1.6rem;
+    color: #800080;
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 0.8rem;
+}
+
+.facility-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background-color: #800080;
+}
+
+.facility-card .facility-description {
+    margin-bottom: 1.5rem;
+    position: relative;
+    max-height: 4.5rem;
+    overflow: hidden;
+}
+
+.facility-card .facility-description p {
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.facility-card .facility-metadata {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: rgba(128, 0, 128, 0.05);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    border-left: 4px solid #800080;
+}
+
+.facility-card .status-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+}
+
+.facility-card .facility-status {
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.facility-card .facility-status.available {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #000000;
+}
+
+.facility-card .facility-status.unavailable {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #000000;
+}
+
+.facility-card .facility-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+}
+
+.facility-card .fac-btn-view,
+.facility-card .fac-btn-book {
+    padding: 0.8rem 1.2rem;
+    border-radius: 30px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    flex: 1;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.facility-card .fac-btn-view {
+    background-color: #ffc107;
+    color: #333;
+    border: 1px solid #e0a800;
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 3;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-width: fit-content;
+}
+
+.facility-card .fac-btn-view:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.4);
+}
+
+
+.facility-card .fac-btn-book {
+    background-color: #800080;
+    color: white;
+    border: none;
+    width: 100%;
+}
+
+.facility-card .fac-btn-book:hover {
+    background-color: #6a006a;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(128, 0, 128, 0.3);
+}
+
+.facility-card .fac-btn-book.unavailable {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+}
+
+/* Status badge position */
+.facility-card .status-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+}
+
+@media (max-width: 992px) {
+    .back-button {
+        margin-left: 0;
+    }
+    
+    .facility-details-container {
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
     .facility-header {
         flex-direction: column;
-        gap: 1rem;
         align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .facility-metadata {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-edit, .btn-delete {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .facilities-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .facility-card .facility-actions {
+        flex-direction: column;
     }
 }
