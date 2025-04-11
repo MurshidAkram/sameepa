@@ -31,7 +31,11 @@
                 <div class="header-actions">
                     <h1>My Facility Bookings</h1>
                     <div class="action-buttons">
-                        <a href="<?php echo URLROOT; ?>/facilities" class="btn-back">Back</a>
+                        <?php if ($_SESSION['user_role_id'] == 1): ?>
+                            <a href="<?php echo URLROOT; ?>/facilities" class="fac-btn-back">Back</a>
+                        <?php else: ?>
+                            <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="fac-btn-back">Back</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             
@@ -53,8 +57,8 @@
                             <td><?php echo date('H:i', strtotime($booking->booking_time)); ?></td>
                             <td><?php echo $booking->duration; ?></td>
                             <td>
-                                <button class="btn-edit" onclick="editBooking(<?php echo $booking->id; ?>)">Edit</button>
-                                <button class="btn-cancel" onclick="cancelBooking(<?php echo $booking->id; ?>)">Cancel</button>
+                                <button class="fac-btn-edit" onclick="editBooking(<?php echo $booking->id; ?>)">Edit</button>
+                                <button class="fac-btn-cancel" onclick="cancelBooking(<?php echo $booking->id; ?>)">Cancel</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -79,7 +83,7 @@
                             <label for="editDuration">Duration (hours):</label>
                             <input type="number" id="editDuration" name="duration" min="1" max="24" required>
                         </div>
-                        <button type="submit" class="btn-submit">Update Booking</button>
+                        <button type="submit" class="fac-btn-submit">Update Booking</button>
                     </form>
                 </div>
             </div>
@@ -126,30 +130,37 @@
           }
         
           document.getElementById('editBookingForm').addEventListener('submit', async (e) => {
-              e.preventDefault();
-              const bookingId = document.getElementById('bookingId').value;
-              const formData = {
-                  booking_date: document.getElementById('editBookingDate').value,
-                  booking_time: document.getElementById('editBookingTime').value,
-                  duration: document.getElementById('editDuration').value
-              };
+    e.preventDefault();
+    const bookingId = document.getElementById('bookingId').value;
+    
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('booking_date', document.getElementById('editBookingDate').value);
+    formData.append('booking_time', document.getElementById('editBookingTime').value);
+    formData.append('duration', document.getElementById('editDuration').value);
 
-              try {
-                  const response = await fetch(`<?php echo URLROOT; ?>/facilities/updateBooking/${bookingId}`, {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify(formData)
-                  });
+    try {
+        const response = await fetch(`<?php echo URLROOT; ?>/facilities/updateBooking/${bookingId}`, {
+            method: 'POST',
+            body: formData // Send as FormData
+        });
 
-                  if (response.ok) {
-                      window.location.reload();
-                  }
-              } catch (error) {
-                  console.error('Error:', error);
-              }
-          });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success) {
+            window.location.reload();
+        } else {
+            alert(result.message || 'Failed to update booking');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while updating the booking');
+    }
+});
 
           span.onclick = () => modal.style.display = 'none';
           window.onclick = (event) => {

@@ -2,24 +2,14 @@
 
 class SuperAdmin extends Controller
 {
+    private $superadminModel;
 
-    private $userModel;
-    private $facilityModel;
-    private $eventModel;
-    private $announcementModel;
-    
     public function __construct()
     {
-        // Load the necessary models
-        $this->userModel = $this->model('M_Users');
-        $this->facilityModel = $this->model('M_Facilities');
-        $this->eventModel = $this->model('M_Events');
-        $this->announcementModel = $this->model('M_Announcements');
-       
+        $this->checkSuperAdminAuth();
+
+        // Initialize any resident-specific models if needed
     }
-
-    
-
 
     private function checkSuperAdminAuth()
     {
@@ -36,31 +26,71 @@ class SuperAdmin extends Controller
             exit();
         }
     }
-    public function dashboard() 
+
+    public function dashboard()
     {
-        // Get active users count
-        $activeCount = $this->userModel->getActiveUsers();
-        $todayBookings = $this->facilityModel->getTodayBookings();
-        $todayEvents = $this->eventModel->getTodayEvents();
-        $announcements = $this->announcementModel->getActiveAnnouncements();
-
-        
+        // Get any necessary data for the dashboard
         $data = [
-            'activeUsers' => $activeCount,
-            'bookings' => $todayBookings,
-            'todayEvents' => $todayEvents,
-            'announcement' => $announcements
-
+            'user_id' => $_SESSION['user_id'],
+            'email' => $_SESSION['user_email'],
+            'role' => $_SESSION['user_role']
         ];
 
+        // Load resident dashboard view with data
         $this->view('superadmin/dashboard', $data);
     }
 
+
+
+
+    /*public function announcements()
+    {
+        // Load the Settings view
+        $this->view('superadmin/announcements');
+    }
+        */
+
+
+
+    // Add more methods as needed
+
+
+
+    // public function index() {
+    //     // Fetch all users from the model
+    //     $users = $this->superAdminModel->getAllUsers();
+
+    //     // Prepare data to pass to the view
+    //     $data = [
+    //         'users' => $users,
+    //         'is_admin' => in_array($_SESSION['user_role_id'], [2, 3]) // Adjust roles as necessary
+    //     ];
+
+    //     // Load the view with the data
+    //     $this->view('superadmin/users', $data);
+    // }
+
+
+
+    public function payments()
+    {
+        // Load the Settings view
+        $this->view('superadmin/payments');
+    }
+
+    public function create_payment()
+    {
+        $this->view('superadmin/create_payment');
+    }
 
     public function reports()
     {
         // Load the Settings view
         $this->view('superadmin/reports');
     }
-   
+    // public function announcements()
+    // {
+    //     // Load the Settings view
+    //     $this->view('superadmin/announcements');
+    // }
 }

@@ -20,7 +20,6 @@ class Events extends Controller
         $this->eventModel = $this->model('M_Events');
     }
 
-    // In Events.php controller, update the index method:
     public function index()
     {
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -78,13 +77,15 @@ class Events extends Controller
             // If no errors, create event
             if (empty($data['errors'])) {
                 if ($this->eventModel->createEvent($data)) {
-                    //flash('event_message', 'Event Created Successfully');
-                    redirect('events');
+                    if ($_SESSION['user_role_id'] == 2) {
+                        redirect('events/admin_dashboard');
+                    } else {
+                        redirect('events/index');
+                    }
                 } else {
                     die('Something went wrong');
                 }
             } else {
-                // Load view with errors
                 $this->view('events/create', $data);
             }
         } else {
@@ -102,7 +103,7 @@ class Events extends Controller
         }
     }
 
-    private function validateEventData(&$data)
+    private function validateEventData($data)
     {
         // Validate Title
         if (empty($data['title'])) {
@@ -147,12 +148,12 @@ class Events extends Controller
             exit;
         }
 
+
         // Return default image if no image found
         header("Content-Type: image/png");
         readfile(APPROOT . '/public/img/default-event.png');
     }
 
-    // Change this method name from 'view' to 'viewEvent'
     public function viewevent($id)
     {
         $event = $this->eventModel->getEventById($id);
@@ -178,9 +179,11 @@ class Events extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $event = $this->eventModel->getEventById($id);
 
+
             if (!$event) {
                 die('Event not found');
             }
+
 
             if ($this->eventModel->joinEvent($id, $_SESSION['user_id'])) {
                 echo json_encode(['success' => true]);
@@ -225,6 +228,7 @@ class Events extends Controller
             return;
         }
 
+
         $participants = $this->eventModel->getEventParticipants($eventId);
         echo json_encode($participants);
     }
@@ -237,6 +241,7 @@ class Events extends Controller
                 echo json_encode(['success' => false, 'message' => 'Unauthorized']);
                 return;
             }
+
 
             if ($this->eventModel->deleteEvent($id)) {
                 echo json_encode(['success' => true]);
@@ -257,8 +262,10 @@ class Events extends Controller
 
             if ($this->eventModel->deleteEvent($id)) {
                 echo json_encode(['success' => true]);
+                redirect('events/admin_dashboard');
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to delete event']);
+                redirect('events/admin_dashboard');
             }
         }
     }
@@ -277,15 +284,16 @@ class Events extends Controller
 
     public function update($id)
     {
-        // Check if user is the event creator
-        if (!$this->eventModel->isEventCreator($id, $_SESSION['user_id'])) {
-            //flash('error', 'Unauthorized access');
+        // Modified check: Allow admin/superadmin to edit any event
+        if (!$this->eventModel->isEventCreator($id, $_SESSION['user_id']) && 
+            !in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('events/index');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
 
             // Initialize data array
             $data = [
@@ -300,6 +308,7 @@ class Events extends Controller
                 'errors' => []
             ];
 
+
             // Handle image upload if present
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                 $allowed = ['image/jpeg', 'image/png', 'image/gif'];
@@ -312,8 +321,10 @@ class Events extends Controller
                 }
             }
 
+
             // Validate data
             $this->validateEventData($data);
+
 
             // If no errors, update event
             if (empty($data['errors'])) {
@@ -349,17 +360,45 @@ class Events extends Controller
             $this->view('events/update', $data);
         }
     }
-
-
-    
-
-    public function showTodayEvents()
+    public function admin_dashboard()
     {
-        // Fetch today's events from the model
-        $data['todayEvents'] = $this->eventModel->getTodayEvents();
-    
-        // Load the view and pass the events data
-        $this->view('superadmin/dashboard', $data);
+        // Check if user is admin or superadmin
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('pages/error');
+        }
+
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        
+        // Get all events with search parameter
+        $events = $this->eventModel->getAllEventsForAdmin($search);
+
+        $data = [
+            'events' => $events,
+            'search' => $search
+        ];
+
+        $this->view('events/admin_dashboard', $data);
     }
-    
+    public function searchEvents()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $searchTerm = trim($_POST['search']);
+            $events = $this->eventModel->searchEvents($searchTerm);
+            
+            header('Content-Type: application/json');
+            echo json_encode($events);
+        }
+    }
+
+    public function filterEvents()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $status = $_POST['status'];
+            $events = $this->eventModel->filterEventsByStatus($status);
+            
+            header('Content-Type: application/json');
+            echo json_encode($events);
+        }
+    }
 }
+

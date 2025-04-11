@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/form-styles.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/facilities/create.css">
     <title>Create Facility | <?php echo SITENAME; ?></title>
 </head>
 <body>
@@ -65,29 +65,37 @@
                 }
                 </script>
 
-                <form action="<?php echo URLROOT; ?>/facilities/create" method="POST" onsubmit="return validateFacilityForm()">
+                <!-- Add enctype attribute to the form -->
+                <form action="<?php echo URLROOT; ?>/facilities/create" method="POST" enctype="multipart/form-data" onsubmit="return validateFacilityForm()">
 
                     <div class="form-group">
                         <label for="name">Facility Name:</label>
                         <input type="text" name="name" id="name" value="<?php echo $data['name']; ?>" 
-                               required maxlength="255" class="form-control">
+                            required maxlength="255" class="form-control">
+                            <?php flash('facility_message'); ?>
                     </div>
 
                     <div class="form-group">
                         <label for="description">Description:</label>
                         <textarea name="description" id="description" rows="6" required 
-                                  class="form-control"><?php echo $data['description']; ?></textarea>
+                                class="form-control"><?php echo $data['description']; ?></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="capacity">Capacity:</label>
                         <input type="number" name="capacity" id="capacity" value="<?php echo $data['capacity']; ?>" 
-                               required min="1" class="form-control">
+                            required min="1" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Facility Image (Optional):</label>
+                        <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/gif" class="form-control">
+                        <small class="form-text text-muted">Upload an image of the facility (JPG, PNG, GIF). Maximum size: 1MB</small>
                     </div>
 
                     <div class="form-buttons">
-                        <button type="submit" class="btn-submit">Create Facility</button>
-                        <a href="<?php echo URLROOT; ?>/facilities" class="btn-cancel">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Facility</button>
+                        <a href="<?php echo URLROOT; ?>/facilities/admin_dashboard" class="btn btn-cancel">Cancel</a>
                     </div>
                 </form>
             </div>

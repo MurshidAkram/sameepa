@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/facilities/facilities.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/facilities/facility_view.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/facilities/view_facility.css">
     <title>Facilities | <?php echo SITENAME; ?></title>
 </head>
 <body>
@@ -31,211 +31,59 @@
         <main class="facilities-main">
             <h1>Facility Management</h1>
             <div class="action-buttons">
-                <?php if($_SESSION['user_role_id'] == 2): ?>
-                    <a href="<?php echo URLROOT; ?>/facilities/create" class="btn-create">Create New Facility</a>
-                    <a href="<?php echo URLROOT; ?>/facilities/allbookings" class="btn-admin-bookings">All Bookings</a>
-                <?php endif; ?>
-                <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="btn-bookings">My Bookings</a>
+                <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="fac-btn-bookings">My Bookings</a>
             </div>
                                     
             <div class="facilities-grid">
                 <?php foreach($data['facilities'] as $facility): ?>
                     <div class="facility-card">
-                        <h3><?php echo $facility->name; ?></h3>
-                        <p><?php echo $facility->description; ?></p>
-                        <div class="facility-details">
-                            <span><i class="fas fa-users"></i> Capacity: <?php echo $facility->capacity; ?></span>
-                            <span><i class="fas fa-info-circle"></i> Status: <?php echo $facility->status; ?></span>
-                        </div>
-                        <div class="facility-actions">
-                            <button onclick="viewFacility(<?php echo $facility->id; ?>)" class="btn-view">View</button>
-                            <?php if($facility->status == 'available'): ?>
-                                <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>/<?php echo urlencode($facility->name); ?>" class="btn-book">Booking</a>
+                    <a href="<?php echo URLROOT; ?>/facilities/viewFacility/<?php echo $facility->id; ?>" class="fac-btn-view">View Details</a>
+                        <div class="facility-image">
+                            <?php if(isset($facility->image_data) && $facility->image_data): ?>
+                                <img src="data:<?php echo $facility->image_type; ?>;base64,<?php echo base64_encode($facility->image_data); ?>" alt="<?php echo $facility->name; ?>">
                             <?php else: ?>
-                                <button onclick="showUnavailableMessage()" class="btn-book disabled">Booking</button>
+                                <img src="<?php echo URLROOT; ?>/img/facility-placeholder.jpg" alt="Facility placeholder">
                             <?php endif; ?>
-                            <?php if($_SESSION['user_role_id'] == 2): ?>
-                                <form action="<?php echo URLROOT; ?>/facilities/delete/<?php echo $facility->id; ?>" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this facility?')">Delete</button>
-                                </form>
-                            <?php endif; ?>
+                            <div class="status-badge">
+                                <span class="facility-status <?php echo strtolower($facility->status); ?>">
+                                    <?php echo $facility->status; ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="facility-content">
+                            <h3><?php echo $facility->name; ?></h3>
+                            <div class="facility-description">
+                                <p><?php echo $facility->description; ?></p>
+                            </div>
+                            <div class="facility-metadata">
+                                <p><strong>Capacity:</strong> <?php echo $facility->capacity; ?></p>
+                            </div>
+                            <div class="facility-actions">
+                                <?php if($facility->status == 'available'): ?>
+                                    <a href="<?php echo URLROOT; ?>/facilities/book/<?php echo $facility->id; ?>" class="fac-btn-book">Book Now</a>
+                                <?php else: ?>
+                                    <button disabled class="fac-btn-book unavailable">Unavailable</button>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
-              <!-- Modal -->
-              <div id="facilityModal" class="modal">
-                  <div class="modal-content">
-                      <span class="close">×</span>
-                      <div class="facility-details-section">
-                          <h1 id="facilityTitle"></h1>
-                          <div class="facility-meta">
-                              <div class="meta-item">
-                                  <i class="fas fa-users"></i>
-                                  <span id="facilityCapacity"></span>
-                              </div>
-                              <div class="meta-item">
-                                  <i class="fas fa-info-circle"></i>
-                                  <span id="facilityStatus"></span>
-                              </div>
-                          </div>
-                          <div class="facility-description">
-                              <h2>About This Facility</h2>
-                              <p id="facilityDescription"></p>
-                          </div>
-                        
-                          <!-- Add Edit Form Section -->
-                          <div id="editFormSection" style="display: none;">
-                              <h2>Edit Facility</h2>
-                              <form id="editFacilityForm">
-                                  <input type="hidden" id="editFacilityId">
-                                  <div class="form-group">
-                                      <label for="editName">Facility Name</label>
-                                      <input type="text" id="editName" name="name" required>
-                                  </div>
-                                
-                                  <div class="form-group">
-                                      <label for="editDescription">Description</label>
-                                      <textarea id="editDescription" name="description" required></textarea>
-                                  </div>
-                                
-                                  <div class="form-group">
-                                      <label for="editCapacity">Capacity</label>
-                                      <input type="number" id="editCapacity" name="capacity" required>
-                                  </div>
-                                
-                                  <div class="form-group">
-                                      <label for="editStatus">Status</label>
-                                      <select id="editStatus" name="status">
-                                          <option value="available">Available</option>
-                                          <option value="unavailable">Unavailable</option>
-                                      </select>
-                                  </div>
-                                
-                                  <button type="submit" class="btn-submit">Update Facility</button>
-                              </form>
-                          </div>
-
-                          <?php if($_SESSION['user_role_id'] == 2): ?>
-                              <button id="toggleEditBtn" class="btn-edit">Edit Facility</button>
-                          <?php endif; ?>
-                      </div>
-                  </div>
-              </div>
-          </main>
+        </main>
       </div>
 
       <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
       <script>
-        function showUnavailableMessage() {
-            alert('This facility is currently unavailable for booking.');
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+        const descriptions = document.querySelectorAll('.facility-description p');
+        
+        descriptions.forEach(p => {
+            if (p.scrollHeight > p.offsetHeight) {
+                p.insertAdjacentHTML('beforeend', '<span style="position: absolute; right: 0; bottom: 0; background: white; padding-left: 4px;">...</span>');
+            }
+        });
+    });
+</script>
 
-          const modal = document.getElementById('facilityModal');
-          const closeBtn = document.getElementsByClassName('close')[0];
-          const editFormSection = document.getElementById('editFormSection');
-          const toggleEditBtn = document.getElementById('toggleEditBtn');
-          const editFacilityForm = document.getElementById('editFacilityForm');
-
-          async function viewFacility(id) {
-              try {
-                  const response = await fetch(`<?php echo URLROOT; ?>/facilities/getFacilityData/${id}`);
-                  const facility = await response.json();
-                
-                  document.getElementById('facilityTitle').textContent = facility.name;
-                  document.getElementById('facilityCapacity').textContent = `Capacity: ${facility.capacity}`;
-                  document.getElementById('facilityStatus').textContent = `Status: ${facility.status}`;
-                  document.getElementById('facilityDescription').textContent = facility.description;
-                
-                  // Populate edit form
-                  document.getElementById('editFacilityId').value = facility.id;
-                  document.getElementById('editName').value = facility.name;
-                  document.getElementById('editDescription').value = facility.description;
-                  document.getElementById('editCapacity').value = facility.capacity;
-                  document.getElementById('editStatus').value = facility.status;
-                
-                  modal.style.display = 'block';
-              } catch (error) {
-                  console.error('Error:', error);
-              }
-          }
-
-          closeBtn.onclick = function() {
-              modal.style.display = 'none';
-          }
-
-          window.onclick = function(event) {
-              if (event.target == modal) {
-                  modal.style.display = 'none';
-              }
-          }
-
-          toggleEditBtn.onclick = function() {
-              const viewContent = document.querySelector('.facility-details-section');
-              if (editFormSection.style.display === 'none') {
-                  editFormSection.style.display = 'block';
-                  toggleEditBtn.textContent = 'Cancel Edit';
-              } else {
-                  editFormSection.style.display = 'none';
-                  toggleEditBtn.textContent = 'Edit Facility';
-              }
-          }
-
-          editFacilityForm.onsubmit = async function(e) {
-              e.preventDefault();
-              
-              const name = document.getElementById('editName').value.trim();
-              const description = document.getElementById('editDescription').value.trim();
-              const capacity = parseInt(document.getElementById('editCapacity').value);
-
-              if (name.length < 3 || name.length > 255) {
-                  alert('Facility name must be between 3 and 255 characters');
-                  return false;
-              }
-
-              if (description.length < 10) {
-                  alert('Description must be at least 10 characters');
-                  return false;
-              }
-
-              if (isNaN(capacity) || capacity <= 0) {
-                  alert('Capacity must be a positive number');
-                  return false;
-              }
-
-              const facilityId = document.getElementById('editFacilityId').value;
-              const formData = {
-                  name: name,
-                  description: description,
-                  capacity: capacity,
-                  status: document.getElementById('editStatus').value
-              };
-
-              try {
-                  const response = await fetch(`<?php echo URLROOT; ?>/facilities/edit/${facilityId}`, {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify(formData)
-                  });
-
-                  const result = await response.json();
-                  
-                  if (result.error) {
-                      alert(result.error);
-                      return;
-                  }
-
-                  if (response.ok) {
-                      window.location.reload();
-                  }
-              } catch (error) {
-                  console.error('Error:', error);
-              }
-          }      
-        </script>
   </body>
   </html>
-

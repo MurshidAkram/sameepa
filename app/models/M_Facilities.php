@@ -10,22 +10,25 @@ class M_Facilities
 
     public function getAllFacilities()
     {
-        $this->db->query('SELECT f.*, u.name as creator_name 
+        $this->db->query('SELECT f.*, a.user_id, u.name as creator_name 
                          FROM facilities f 
-                         JOIN users u ON f.created_by = u.id 
+                         JOIN admins a ON f.created_by = a.id
+                         JOIN users u ON a.user_id = u.id 
                          ORDER BY f.created_at DESC');
         return $this->db->resultSet();
     }
 
     public function createFacility($data)
     {
-        $this->db->query('INSERT INTO facilities (name, description, capacity, status, created_by) 
-                         VALUES (:name, :description, :capacity, :status, :created_by)');
+        $this->db->query('INSERT INTO facilities (name, description, capacity, status, image_data, image_type, created_by) 
+                     VALUES (:name, :description, :capacity, :status, :image_data, :image_type, :created_by)');
 
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':capacity', $data['capacity']);
         $this->db->bind(':status', $data['status']);
+        $this->db->bind(':image_data', $data['image_data']);
+        $this->db->bind(':image_type', $data['image_type']);
         $this->db->bind(':created_by', $data['created_by']);
 
         return $this->db->execute();
@@ -33,7 +36,9 @@ class M_Facilities
 
     public function getAdminIdByUserId($userId)
     {
-        $this->db->query('SELECT id FROM admins WHERE user_id = :user_id');
+        $this->db->query('SELECT id FROM admins WHERE user_id = :user_id 
+                          UNION 
+                          SELECT id FROM superadmins WHERE user_id = :user_id');
         $this->db->bind(':user_id', $userId);
         $result = $this->db->single();
         return $result['id'] ?? null;
@@ -42,13 +47,16 @@ class M_Facilities
 
     public function getFacilityById($id)
     {
-        $this->db->query('SELECT f.*, u.name as creator_name 
+        $this->db->query('SELECT f.*, a.user_id, u.name as creator_name 
                          FROM facilities f 
-                         JOIN users u ON f.created_by = u.id 
+                         JOIN admins a ON f.created_by = a.id
+                         JOIN users u ON a.user_id = u.id 
                          WHERE f.id = :id');
         $this->db->bind(':id', $id);
-        return $this->db->single();
+        $result = $this->db->single();
+        return $result ? $result : null;
     }
+
 
     public function deleteFacility($id)
     {
@@ -60,15 +68,45 @@ class M_Facilities
 
     public function updateFacility($data)
     {
-        $this->db->query('UPDATE facilities SET name = :name, description = :description, capacity = :capacity, status = :status WHERE id = :id');
+        // Start with the base SQL without image fields
+        $sql = 'UPDATE facilities SET 
+            name = :name, 
+            description = :description, 
+            capacity = :capacity, 
+            status = :status';
 
+        // If there's a new image, add image fields to the SQL
+        if (!empty($data['image_data'])) {
+            $sql .= ', image_data = :image_data, image_type = :image_type';
+        }
+
+        // Complete the SQL
+        $sql .= ' WHERE id = :id';
+
+        $this->db->query($sql);
+
+        // Bind the standard values
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':capacity', $data['capacity']);
         $this->db->bind(':status', $data['status']);
 
+        // If there's a new image, bind the image values
+        if (!empty($data['image_data'])) {
+            $this->db->bind(':image_data', $data['image_data']);
+            $this->db->bind(':image_type', $data['image_type']);
+        }
+
+        // Execute
         return $this->db->execute();
+    }
+
+    public function getFacilityImage($id)
+    {
+        $this->db->query('SELECT image_data, image_type FROM facilities WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
     }
 
     public function validateUser($userId)
@@ -151,8 +189,10 @@ class M_Facilities
     }
     public function updateBooking($data)
     {
-        $this->db->query('UPDATE bookings SET booking_date = :booking_date, 
-                          booking_time = :booking_time, duration = :duration 
+        $this->db->query('UPDATE bookings SET 
+                          booking_date = :booking_date, 
+                          booking_time = :booking_time, 
+                          duration = :duration
                           WHERE id = :id');
 
         $this->db->bind(':id', $data['id']);
@@ -162,6 +202,7 @@ class M_Facilities
 
         return $this->db->execute();
     }
+
     public function deleteBooking($id)
     {
         $this->db->query('DELETE FROM bookings WHERE id = :id');
@@ -174,14 +215,28 @@ class M_Facilities
         $this->db->bind(':name', $name);
         return $this->db->single();
     }
-    public function findFacilityByNameExcept($name, $currentId)
+    public function findFacilityByNameExcept($name, $id)
     {
-        $this->db->query('SELECT * FROM facilities WHERE name = :name AND id != :current_id');
+        $this->db->query('SELECT * FROM facilities WHERE name = :name AND id != :id');
         $this->db->bind(':name', $name);
-        $this->db->bind(':current_id', $currentId);
+        $this->db->bind(':id', $id);
         return $this->db->single();
     }
-    public function checkOverlappingBookings($facilityId, $date, $startTime, $duration)
+    public function getBookedTimesByDate($facilityId, $date)
+    {
+        $this->db->query('SELECT booking_time, duration, booked_by, user_id 
+                          FROM bookings 
+                          WHERE facility_id = :facility_id 
+                          AND booking_date = :date
+                          ORDER BY booking_time ASC');
+
+        $this->db->bind(':facility_id', $facilityId);
+        $this->db->bind(':date', $date);
+
+        return $this->db->resultSet();
+    }
+
+    public function checkBookingOverlap($facilityId, $date, $startTime, $duration)
     {
         $this->db->query('SELECT * FROM bookings 
                           WHERE facility_id = :facility_id 
@@ -197,38 +252,54 @@ class M_Facilities
                               OR 
                               (TIME_TO_SEC(:start_time) <= TIME_TO_SEC(booking_time) 
                                AND TIME_TO_SEC(:start_time) + (:duration * 3600) >= TIME_TO_SEC(booking_time) + (duration * 3600))
-                          )');
+                              )');
 
         $this->db->bind(':facility_id', $facilityId);
         $this->db->bind(':date', $date);
         $this->db->bind(':start_time', $startTime);
         $this->db->bind(':duration', $duration);
 
+        return $this->db->single();
+    }
+
+    public function getActiveBookingsCount()
+    {
+        $this->db->query("SELECT COUNT(*) as count FROM bookings 
+                          WHERE booking_date >= CURDATE() 
+                          OR (booking_date = CURDATE() AND booking_time >= CURTIME())");
+
+        $result = $this->db->single();
+        return $result['count'];
+    }
+
+
+    public function hasActiveBookings($facilityId)
+    {
+        $this->db->query('SELECT COUNT(*) as count FROM bookings 
+                        WHERE facility_id = :facility_id 
+                        AND booking_date >= CURDATE()');
+        $this->db->bind(':facility_id', $facilityId);
+        $result = $this->db->single();
+        return $result['count'] > 0;
+    }
+
+    public function searchFacilities($searchTerm)
+    {
+        $this->db->query('SELECT * FROM facilities 
+                        WHERE name LIKE :search 
+                        OR description LIKE :search');
+        $this->db->bind(':search', '%' . $searchTerm . '%');
         return $this->db->resultSet();
     }
-    
-    public function getTodayBookings() {
-        try {
-            // Set specific date instead of today
-            $specificDate = '2024-11-28';
-    
-            $this->db->query('
-                SELECT 
-                    b.booking_time AS time,
-                    SUM(CASE WHEN b.facility_name = "Gym" THEN 1 ELSE 0 END) AS gym,
-                    SUM(CASE WHEN b.facility_name = "Community Pool" THEN 1 ELSE 0 END) AS pool,
-                    SUM(CASE WHEN b.facility_name = "Tennis Court" THEN 1 ELSE 0 END) AS tennis
-                FROM bookings b 
-                WHERE DATE(b.booking_date) = :today
-                GROUP BY b.booking_time
-                ORDER BY b.booking_time
-            ');
-            $this->db->bind(':today', $specificDate);
-            return $this->db->resultSet();
-        } catch (Exception $e) {
-            error_log("Error fetching bookings: " . $e->getMessage());
-            return [];
+
+    public function filterFacilitiesByStatus($status)
+    {
+        if ($status === 'all') {
+            return $this->getAllFacilities();
         }
+
+        $this->db->query('SELECT * FROM facilities WHERE status = :status');
+        $this->db->bind(':status', $status);
+        return $this->db->resultSet();
     }
-    
 }

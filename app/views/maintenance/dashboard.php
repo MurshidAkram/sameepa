@@ -99,7 +99,7 @@ main {
 
 .card {
     flex: 1 1 calc(25% - 20px);
-    background: linear-gradient(to bottom right, #6200ea, #a991f2);
+    background: (#A93CC7);
     color: #fff;
     padding: 20px;
     border-radius: 15px;
@@ -118,7 +118,7 @@ main {
 .card h3 {
     margin: 0 0 10px;
     font-size: 1.5rem;
-    color: #ffeb3b;
+    color: #800080;
 }
 
 .card p {
@@ -139,7 +139,7 @@ main {
     flex: 1;
     padding: 20px;
     border-radius: 15px;
-    background: linear-gradient(to bottom right, yellow, #ffa726);
+    background:( #4C3E4F);
     color: #000;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s, box-shadow 0.3s;
@@ -264,10 +264,10 @@ footer {
                     <h3>Scheme Maintenance</h3>
                     <p>Upcoming: 8 | Ongoing: 3 | Past: 15</p>
                 </div>
-                <div class="card">
+                <!-- <div class="card">
                     <h3>Inventory Stock</h3>
                     <p>Low: 5 | Critical: 2</p>
-                </div>
+                </div> -->
                 <div class="card">
                     <h3>Team Productivity</h3>
                     <p>Avg Tasks/Day: 7 | Completion Rate: 95%</p>
@@ -280,10 +280,10 @@ footer {
                     <h4>Repair Categories</h4>
                     <canvas id="repair-category-chart"></canvas>
                 </div>
-                <div class="chart-card">
+                <!-- <div class="chart-card">
                     <h4>Response Time Metrics</h4>
                     <canvas id="response-time-chart"></canvas>
-                </div>
+                </div> -->
                 <div class="chart-card">
                     <h4>Resident Satisfaction</h4>
                     <canvas id="satisfaction-chart"></canvas>
@@ -325,31 +325,32 @@ footer {
                 labels: ['Electrical', 'Plumbing', 'HVAC', 'Other'],
                 datasets: [{
                     data: [25, 30, 20, 25],
-                    backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0'],
+                    backgroundColor: ['#8A2BE2', '#7B68EE', '#6A5ACD', '#9370DB'],
+
                 }]
             }
         });
 
-        // Response Time Metrics Chart
-        const responseTimeCtx = document.getElementById('response-time-chart').getContext('2d');
-        new Chart(responseTimeCtx, {
-            type: 'bar',
-            data: {
-                labels: ['1-2 hrs', '2-4 hrs', '4-8 hrs', '8+ hrs'],
-                datasets: [{
-                    label: 'Tasks',
-                    data: [10, 20, 15, 5],
-                    backgroundColor: '#4caf50',
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        // // Response Time Metrics Chart
+        // const responseTimeCtx = document.getElementById('response-time-chart').getContext('2d');
+        // new Chart(responseTimeCtx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ['1-2 hrs', '2-4 hrs', '4-8 hrs', '8+ hrs'],
+        //         datasets: [{
+        //             label: 'Tasks',
+        //             data: [10, 20, 15, 5],
+        //             backgroundColor: '#A93CC7',
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
 
         // Resident Satisfaction Chart
         const satisfactionCtx = document.getElementById('satisfaction-chart').getContext('2d');
@@ -360,7 +361,7 @@ footer {
                 datasets: [{
                     label: 'Satisfaction Rate (%)',
                     data: [85, 88, 90, 92, 91, 95],
-                    borderColor: '#ff5a5f',
+                    borderColor: '#800080',
                     fill: false,
                     tension: 0.3
                 }]

@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/maintenance/dashboard.css">
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/main.min.css' rel='stylesheet' />
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/main.min.css" rel="stylesheet" />
     <title>Team Scheduling | <?php echo SITENAME; ?></title>
 
+
     <style>
-        /* General Styles */
-        /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -21,13 +20,33 @@
             color: #2c3e50;
         }
 
+
+
         /* Dashboard Layout */
         .dashboard-container {
             display: flex;
         }
 
         /* Side Panel Styling */
+        .side-panel {
+            width: 300px;
+            background-color: #34495e;
+            color: #fff;
+            padding: 20px;
+            height: 100vh;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+        }
 
+        .side-panel a {
+            color: #bdc3c7;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .side-panel a:hover {
+            color: #1abc9c;
+        }
 
         /* Main Content Styling */
         main {
@@ -39,8 +58,9 @@
             margin: 20px;
         }
 
-        h1 {
-            color: #2c3e50;
+        h1,
+        h2 {
+            color: #800080;
         }
 
         /* Profile Cards */
@@ -157,7 +177,7 @@
 
         /* Button Styling */
         .btn {
-            background-color: #3498db;
+            background-color: #336699;
             color: #fff;
             border: none;
             padding: 10px 15px;
@@ -207,7 +227,7 @@
         }
 
         .delete-btn {
-            background-color: #3498db;
+            background-color: lightcoral;
             /* Blue color */
             color: white;
             /* Text color */
@@ -226,7 +246,6 @@
 
         /* Edit Button Hover Effect */
         .delete-btn:hover {
-            background-color: #2980b9;
             /* Darker blue on hover */
             transform: translateY(-2px);
             /* Lift effect */
@@ -239,7 +258,7 @@
         .team-profile-card {
             display: flex;
             align-items: center;
-            background-color: #ffffff;
+            background-color: #f6e4f7;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -298,6 +317,7 @@
         }
 
         /* Modal */
+        /* Modal background and position */
         .modal {
             position: fixed;
             top: 50%;
@@ -305,7 +325,8 @@
             transform: translate(-50%, -50%);
             width: 60%;
             max-width: 400px;
-            background-color: #fff;
+            background-color: #ffffff;
+            /* Dark Violet */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             padding: 20px;
@@ -313,62 +334,85 @@
             display: none;
         }
 
+        /* Modal active state (visible) */
         .modal.active {
             display: block;
+
         }
 
+        /* Modal header */
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            color: #fff;
+            /* Light text color */
         }
 
         .modal-header .close {
             font-size: 1.5rem;
             cursor: pointer;
+            color: #e8c8e3;
+            /* Light Violet */
+            transition: color 0.3s ease;
         }
 
+        .modal-header .close:hover {
+            color: #f1d1f6;
+            /* Lighter Violet on hover */
+        }
+
+        /* Modal form inputs and select */
         .modal-form input,
         .modal-form select {
-            width: 100%;
+            width: 90%;
             padding: 10px;
             margin: 5px 0 10px;
-            border: 1px solid #ddd;
+            border: 1px solid black;
+            /* Light Violet border */
             border-radius: 5px;
+            background-color: #f6e4f7;
+            /* Light Violet background */
+            color: black;
+            /* Dark Violet text */
         }
+
+        /* Form input and select focus effects */
+        .modal-form input:focus,
+        .modal-form select:focus {
+            outline: none;
+            border-color: #e8c8e3;
+            /* Light Violet border on focus */
+            box-shadow: 0 0 5px rgba(232, 200, 227, 0.5);
+            /* Subtle shadow */
+        }
+
+        /* Form submit button */
+        .modal-form button {
+            background-color: #7a4d9c;
+            /* Medium Violet */
+            color: #fff;
+            border: none;
+            padding: 12px;
+            width: 95%;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-form button:hover {
+            background-color: #9b66c9;
+            /* Lighter Violet on hover */
+        }
+
+
 
         .h1position {
             padding-left: 300px;
         }
 
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
 
-        table th,
-        table td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        table th {
-            background-color: #2c3e50;
-            color: #fff;
-        }
-
-        table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        table tr:hover {
-            background-color: #f5f5f5;
-        }
 
         .shift-allocation,
         .alerts {
@@ -380,6 +424,55 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             width: 80%;
+        }
+
+        /* Container for the search bar */
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Input field for the search bar */
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 30px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        /* Focus effect on the input field */
+        .search-input:focus {
+            border-color: #4caf50;
+        }
+
+        /* Button to trigger search */
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            padding: 10px;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* Hover effect for the search button */
+        .search-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* FontAwesome icon style */
+        .search-btn i {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -394,86 +487,41 @@
         <!-- Main Content -->
         <main>
             <h1>Team Scheduling</h1>
+            <div class="search-container">
+                <input type="text" id="searchBar" class="search-input" placeholder="Search for members specialization ....">
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i> <!-- FontAwesome search icon -->
+                </button>
+            </div>
 
             <!-- Add New Maintenance Member -->
             <div class="button-container">
                 <button class="btn" id="addMemberBtn">Add New Maintenance Member</button>
             </div>
 
-
             <h2>Team Profiles</h2>
-            <!-- Comprehensive Team Profiles -->
+            <!-- Team Profiles Section -->
             <section class="team-profile">
-
-                <!-- HVAC Specialist -->
-                <div class="team-profile-card card-hvac">
-                    <div class="profile-img">
-                        <img src="/img/hvac.jpg" alt="HVAC Specialist">
+                <?php foreach ($data['members'] as $member): ?>
+                    <div class="team-profile-card" data-id="<?php echo $member->id; ?>">
+                        <div class="profile-img">
+                            <img src="<?php echo URLROOT . '/img/' . $member->profile_image; ?>" alt="<?php echo $member->specialization; ?>">
+                        </div>
+                        <div class="profile-details">
+                            <h3 class="member-name"><?php echo $member->name; ?></h3>
+                            <p class="member-specialization">Specialization: <?php echo $member->specialization; ?></p>
+                            <p class="member-experience">Experience: <?php echo $member->experience; ?> years</p>
+                            <p class="member-phone_number">Phone Number: <?php echo $member->phone_number; ?></p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </div>
                     </div>
-                    <div class="profile-details">
-                        <h3>Malith Damsara</h3>
-                        <p>Specialization: HVAC</p>
-                        <p>Experience: 8 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn" onclick="editMember('John Doe', 'HVAC', 8)">Edit</button>
-                        <button class="delete-btn" onclick="deleteMember('John Doe')">Delete</button>
-                    </div>
-                </div>
-
-                <!-- Electrical Specialist -->
-                <div class="team-profile-card card-electrical">
-                    <div class="profile-img">
-                        <img src="/img/electrical.jpg" alt="Electrical Specialist">
-                    </div>
-                    <div class="profile-details">
-                        <h3>Sasila Sadamsara</h3>
-                        <p>Specialization: Electrical</p>
-                        <p>Experience: 5 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn" onclick="editMember('Jane Smith', 'Electrical', 5)">Edit</button>
-                        <button class="delete-btn" onclick="deleteMember('Jane Smith')">Delete</button>
-                    </div>
-                </div>
-
-                <!-- Plumbing Specialist -->
-                <div class="team-profile-card card-plumbing">
-                    <div class="profile-img">
-                        <img src="/img/plumbing.jpg" alt="Plumbing Specialist">
-                    </div>
-                    <div class="profile-details">
-                        <h3>Geeth Pasida</h3>
-                        <p>Specialization: Plumbing</p>
-                        <p>Experience: 6 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn" onclick="editMember('Mike Johnson', 'Plumbing', 6)">Edit</button>
-                        <button class="delete-btn" onclick="deleteMember('Mike Johnson')">Delete</button>
-                    </div>
-                </div>
-
-                <!-- General Maintenance -->
-                <div class="team-profile-card card-general">
-                    <div class="profile-img">
-                        <img src="/img/general.jpg" alt="General Maintenance">
-                    </div>
-                    <div class="profile-details">
-                        <h3>Vishwa Nimsara</h3>
-                        <p>Specialization: Plumbing</p>
-                        <p>Experience: 4 years</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="edit-btn" onclick="editMember('Sarah Lee', 'General Maintenance', 4)">Edit</button>
-                        <button class="delete-btn" onclick="deleteMember('Sarah Lee')">Delete</button>
-                    </div>
-                </div>
-
-
+                <?php endforeach; ?>
             </section>
 
-            <!-- Other Sections (Shift Allocation, Availability, etc.) -->
-
+        </main>
     </div>
 
     <!-- Modal for Adding/Editing Member -->
@@ -491,135 +539,203 @@
                 <option value="HVAC">HVAC</option>
                 <option value="Electrical">Electrical</option>
                 <option value="Plumbing">Plumbing</option>
+                <option value="Carpentry">Carpentry</option>
+                <option value="Painting">Painting</option>
+                <option value="Welding">Welding</option>
+                <option value="Elevator Maintenance">Elevator Maintenance</option>
+                <option value="Fire Safety Systems">Fire Safety Systems</option>
+                <option value="Security Systems">Security Systems</option>
+                <option value="Waste Management">Waste Management</option>
+                <option value="Water Treatment">Water Treatment</option>
+                <option value="Generator Maintenance">Generator Maintenance</option>
+                <option value="CCTV Installation & Maintenance">CCTV Installation & Maintenance</option>
+
+
             </select>
 
             <label for="experience">Experience (Years):</label>
-            <input type="number" id="experience" name="experience" required>
+            <input type="number" id="experience" name="experience" required min="1" max="35" step="1">
 
-            <label for="certifications">Certifications:</label>
-            <input type="text" id="certifications" name="certifications">
+
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" required
+                pattern="^\d{10}$" title="Phone number must be exactly 10 digits" maxlength="10">
 
             <label for="profileImage">Profile Image:</label>
             <input type="file" id="profileImage" name="profileImage" accept="image/*">
 
-            <button type="submit" class="btn">Save</button>
+            <div class="modal-buttons">
+
+                <button type="submit" class="btn save-btn">Save</button>
+
+            </div>
         </form>
     </div>
-    <!-- Main Content -->
 
-    <div class="h1position">
-        <h1>Team Scheduling</h1>
+    <!-- Placeholder for success message -->
+    <div id="successMessage" class="success-message" style="display: none;">
+        Member has been saved successfully!
     </div>
 
-
-    <!-- Shift Allocation Section -->
-    <section class="shift-allocation">
-        <h2>Shift Allocation Metrics</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Team Member</th>
-                    <th>Assigned Shifts</th>
-                    <th>Completed Tasks</th>
-                    <th>Hours Worked</th>
-                    <th>Overtime Hours</th>
-                    <th>Performance Rating</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Malith Damsara</td>
-                    <td>5</td>
-                    <td>15</td>
-                    <td>40</td>
-                    <td>5</td>
-                    <td>4.5 / 5</td>
-                </tr>
-                <tr>
-                    <td>Sasila Sadamsara</td>
-                    <td>6</td>
-                    <td>20</td>
-                    <td>38</td>
-                    <td>2</td>
-                    <td>4.8 / 5</td>
-                </tr>
-                <tr>
-                    <td>Geeth Pasida</td>
-                    <td>4</td>
-                    <td>12</td>
-                    <td>32</td>
-                    <td>3</td>
-                    <td>4.2 / 5</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-
-    </div>
-    </main>
 
     <!-- Footer -->
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
     <script>
-        const addMemberBtn = document.getElementById('addMemberBtn');
-        const memberModal = document.getElementById('memberModal');
-        const closeModal = document.getElementById('closeModal');
-        const memberForm = document.getElementById('memberForm');
+        document.addEventListener('DOMContentLoaded', () => {
+            const addMemberBtn = document.getElementById('addMemberBtn');
+            const memberModal = document.getElementById('memberModal');
+            const closeModal = document.getElementById('closeModal');
+            const memberForm = document.getElementById('memberForm');
+            const teamProfileSection = document.querySelector('.team-profile');
+            const phoneInput = document.getElementById('phone_number');
+            const phoneRegex = /^\d{10}$/; // Regex for exactly 10 digits
+            let editingMemberId = null;
 
-        // Open modal for adding a new member
-        addMemberBtn.addEventListener('click', () => {
-            memberModal.classList.add('active');
-            document.getElementById('modalTitle').textContent = 'Add New Member';
-            memberForm.reset(); // Reset the form for new entries
+            // Open modal for adding a new member
+            addMemberBtn.addEventListener('click', () => {
+                editingMemberId = null; // Reset editing mode
+                memberModal.classList.add('active');
+                memberForm.reset(); // Reset the form
+                document.getElementById('modalTitle').textContent = 'Add New Member';
+            });
+
+            // Open modal for editing an existing member
+            teamProfileSection.addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-btn')) {
+                    const card = e.target.closest('.team-profile-card');
+                    editingMemberId = card.dataset.id;
+
+                    // Populate the form with existing data
+                    const name = card.querySelector('.member-name').textContent;
+                    const specialization = card.querySelector('.member-specialization').textContent.split(': ')[1];
+                    const experience = card.querySelector('.member-experience').textContent.split(': ')[1].replace(' years', '');
+                    const phone_number = card.querySelector('.member-phone_number').textContent.split(': ')[1];
+
+                    document.getElementById('name').value = name;
+                    document.getElementById('specialization').value = specialization;
+                    document.getElementById('experience').value = experience;
+                    document.getElementById('phone_number').value = phone_number;
+                    document.getElementById('modalTitle').textContent = 'Edit Member';
+
+                    memberModal.classList.add('active');
+                }
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                memberModal.classList.remove('active');
+            });
+
+            // Real-time phone number validation
+            phoneInput.addEventListener('input', function() {
+                if (!phoneRegex.test(this.value.trim())) {
+                    this.setCustomValidity('Phone number must be exactly 10 digits.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+
+            // Handle form submission for adding/editing a member
+            memberForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const phoneNumber = phoneInput.value.trim();
+
+                // Final validation before submitting
+                if (!phoneRegex.test(phoneNumber)) {
+                    alert('Phone number must be exactly 10 digits.');
+                    return; // Stop form submission
+                }
+
+                const formData = new FormData(this); // Collect form data, including files
+                const url = editingMemberId ?
+                    `<?php echo URLROOT; ?>/maintenance/editMember/${editingMemberId}` :
+                    `<?php echo URLROOT; ?>/maintenance/addMember`;
+
+                fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (editingMemberId) {
+                                // Update the existing card
+                                const card = document.querySelector(`.team-profile-card[data-id="${editingMemberId}"]`);
+                                card.querySelector('.member-name').textContent = data.name;
+                                card.querySelector('.member-specialization').textContent = `Specialization: ${data.specialization}`;
+                                card.querySelector('.member-experience').textContent = `Experience: ${data.experience} years`;
+                                card.querySelector('.member-phone_number').textContent = `Phone Number: ${data.phone_number}`;
+
+                                // Update profile image if provided
+                                if (data.profile_image) {
+                                    card.querySelector('.profile-img img').src = data.profile_image;
+                                }
+
+                            } else {
+                                // Add a new card
+                                const newCard = `
+                            <div class="team-profile-card" data-id="${data.id}">
+                                <div class="profile-img">
+                                    <img src="${data.profile_image}" alt="${data.specialization}">
+                                </div>
+                                <div class="profile-details">
+                                    <h3 class="member-name">${data.name}</h3>
+                                    <p class="member-specialization">Specialization: ${data.specialization}</p>
+                                    <p class="member-experience">Experience: ${data.experience} years</p>
+                                    <p class="member-phone_number">Phone Number: ${data.phone_number}</p>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Delete</button>
+                                </div>
+                            </div>`;
+                                teamProfileSection.innerHTML += newCard;
+                            }
+                            // Close the modal after success
+                            memberModal.classList.remove('active');
+                        } else {
+                            alert(data.message || 'Error saving member');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+            // Delete functionality
+            teamProfileSection.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    const card = e.target.closest('.team-profile-card');
+                    const memberId = card.getAttribute('data-id');
+
+                    if (confirm('Are you sure you want to delete this member?')) {
+                        fetch(`<?php echo URLROOT; ?>/maintenance/deleteMember/${memberId}`, {
+                                method: 'DELETE'
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    card.remove(); // Remove card from the DOM
+                                } else {
+                                    alert('Error deleting member');
+                                }
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
+                }
+            });
         });
 
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            memberModal.classList.remove('active');
-        });
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const query = document.getElementById('searchBar').value.trim().toLowerCase();
 
-        // Handle form submission (for adding or editing members)
-        memberForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Member saved successfully!');
-            memberModal.classList.remove('active');
-        });
-
-        // Edit member function
-        function editMember(name, specialization, experience) {
-            memberModal.classList.add('active');
-            document.getElementById('modalTitle').textContent = `Edit Member - ${name}`;
-            document.getElementById('name').value = name;
-            document.getElementById('specialization').value = specialization;
-            document.getElementById('experience').value = experience;
-            // Optionally, fill in other fields like certifications and profile image if needed.
-        }
-
-        // Delete member function with a confirmation prompt
-        function deleteMember(name) {
-            if (confirm(`Are you sure you want to delete ${name}?`)) {
-                // Perform the delete action, e.g., alert for now or perform a server call
-                alert(`${name} deleted successfully!`);
-                // Optionally, you could remove the member's profile card from the page:
-                // const card = document.querySelector(`.team-profile-card:has(h3:contains('${name}'))`);
-                // card.remove();  // Uncomment to remove the card from the DOM
+            if (query) {
+                // Add your search functionality here (e.g., filtering members)
+                console.log(`Searching for: ${query}`);
+                // For example, you could filter a list of team members based on this search term
+            } else {
+                alert('Please enter a search term');
             }
-        }
-
-        // Example of adding event listeners to the action buttons on team profile cards
-        document.querySelectorAll('.team-profile-card').forEach(card => {
-            const name = card.querySelector('h3').textContent;
-            const specialization = card.querySelector('p:nth-child(2)').textContent.split(': ')[1];
-            const experience = card.querySelector('p:nth-child(3)').textContent.split(': ')[1];
-
-            card.querySelector('.edit-btn').addEventListener('click', () => {
-                editMember(name, specialization, experience);
-            });
-
-            card.querySelector('.delete-btn').addEventListener('click', () => {
-                deleteMember(name);
-            });
         });
     </script>
 </body>

@@ -9,6 +9,139 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/polls.css">
     <title>Create Poll | <?php echo SITENAME; ?></title>
+
+    <style>
+        /* Create Poll Form Enhancements */
+        .create-poll-container {
+            background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
+            border: 1px solid #d1d9e6;
+            padding: 2.5rem;
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                0 5px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .create-poll-container:hover {
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.08),
+                0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .poll-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .poll-form input,
+        .poll-form textarea {
+            border: 1.5px solid #e0e0e0;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .poll-form input:focus,
+        .poll-form textarea:focus {
+            border-color: #800080;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(128, 0, 128, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .btn-cancel,
+        .btn-primary {
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1.5px solid #d0d0d0;
+        }
+
+        .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-primary {
+            background-color: #800080;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #660066;
+            transform: translateY(-2px);
+        }
+
+        .form-text.text-muted {
+            color: #777;
+            font-style: italic;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Poll Choices Styling */
+        .poll-choices-container {
+            background: linear-gradient(to right, #f9f9f9, #f5f5f5);
+            border: 1px solid #e6e6e6;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .poll-choice-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .poll-choice-input input {
+            flex-grow: 1;
+        }
+
+        .btn-remove-choice {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-remove-choice:hover {
+            background-color: #ff1a1a;
+        }
+    </style>
 </head>
 
 <body>

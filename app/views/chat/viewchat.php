@@ -16,7 +16,7 @@
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
-    
+
         <?php
         switch ($_SESSION['user_role_id']) {
             case 1:
@@ -30,25 +30,25 @@
                 break;
         }
         ?>
-<main class="chat-main">
-<div class="groups-content">
-    
-    <a href="<?php echo URLROOT; ?>/chat/index" class="back-button">
-        <i class="fas fa-arrow-left"></i>
-    </a>
-   
-   
-        <div class="chat-messages" id="chat-messages">
-            <div class="name-card">
+        <main class="chat-main">
+            <div class="groups-content">
+
+                <a href="<?php echo URLROOT; ?>/chat/index" class="back-button">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+
+
+                <div class="chat-messages" id="chat-messages">
+                    <div class="name-card">
                         <div class="name-image">
                             <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="Chat with John Doe">
                         </div>
-                            <h3 class="title">Mr. Sunil</h3>
-            </div>
-                 <div class="back-image">
-                 <img src="<?php echo URLROOT; ?>/img/chat.jpg" alt="Chat with John Doe">
-                        </div>
-                        <?php if (!empty($data['messages'])): ?>
+                        <h3 class="title">Mr. Sunil</h3>
+                    </div>
+                    <div class="back-image">
+                        <img src="<?php echo URLROOT; ?>/img/chat.jpg" alt="Chat with John Doe">
+                    </div>
+                    <?php if (!empty($data['messages'])): ?>
                         <?php foreach ($data['messages'] as $message): ?>
                             <div class="message-wrapper <?php echo ($message->sender_id == $_SESSION['user_id']) ? 'sent' : 'received'; ?>">
                                 <div class="message">
@@ -62,10 +62,10 @@
                     <?php else: ?>
                         <div class="no-messages">No messages yet. Start the conversation!</div>
                     <?php endif; ?>
-        </div>
-      
+                </div>
 
-        <form class="chat-form" action="<?php echo URLROOT; ?>/chat/sendMessage" method="POST">
+
+                <form class="chat-form" action="<?php echo URLROOT; ?>/chat/sendMessage" method="POST">
                     <input type="hidden" name="chat_id" value="<?php echo $data['chat']->id; ?>">
                     <input type="hidden" name="recipient_id" value="<?php echo $data['otherUser']->id; ?>">
                     <div class="chat-input-container">
@@ -75,10 +75,10 @@
                         </button>
                     </div>
                 </form>
-    
-    
-</main>
-</div>
+
+
+        </main>
+    </div>
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>

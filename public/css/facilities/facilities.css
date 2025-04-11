@@ -1,6 +1,5 @@
 /* Main Layout */
 .facilities-main {
-    background-color: white;
     padding: 2rem;
     margin: 0 auto;
     border-radius: 8px;
@@ -10,24 +9,6 @@
 .facilities-main h1 {
     color: #800080;
     margin-bottom: 2rem;
-}
-
-/* Create Facility Button */
-.btn-create {
-    display: inline-block;
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 4px;
-    text-decoration: none;
-    margin-bottom: 2rem;
-    transition: background-color 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.btn-create:hover {
-    background-color: #45a049;
-    transform: translateY(-3px);
 }
 
 /* Facilities Grid */
@@ -41,11 +22,15 @@
 
 /* Facility Card */
 .facility-card {
-    background: #e3e0e0;
+    position: relative;
+    background: white;
     border-radius: 8px;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; 
 }
 
 .facility-card:hover {
@@ -62,6 +47,16 @@
     color: #555555;
     margin-bottom: 1rem;
     line-height: 1.5;
+    height: 3em;
+    overflow: hidden;
+    position: relative;
+}
+
+.facility-card p:after {
+    content: '...';
+    position: absolute;
+    display: inline;
+    padding-left: 3px;
 }
 
 .facility-details {
@@ -73,45 +68,55 @@
 
 .facility-actions {
     display: flex;
-    gap: 1rem;
+    justify-content: center;
     border-top: 1px solid #800080;
     padding-top: 1rem;
 }
 
 /* Action Buttons */
-.btn-view, .btn-book, .btn-delete {
+.fac-btn-view, .fac-btn-book{
     padding: 8px 16px;
     border-radius: 4px;
     text-decoration: none;
     text-align: center;
     font-size: 0.9rem;
     transition: opacity 0.3s;
+    border: none;
+    cursor: pointer;
 }
 
-.btn-view {
+.fac-btn-view {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #28a745;
+    color: white;
+}
+
+.fac-btn-book {
+    width: 100%;
     background-color: #800080;
     color: white;
+    padding: 18px 16px;
+    border-radius: 100px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: opacity 0.3s;
+    border: none;
+    cursor: pointer;
 }
 
-.btn-book {
-    background-color: #f39c12;
-    color: white;
+.fac-btn-book.unavailable {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
+    padding: 20px 18px;
 }
 
-.btn-delete {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.btn-view:hover, .btn-book:hover, .btn-delete:hover {
+.fac-btn-view:hover, .fac-btn-book:hover{
     opacity: 0.9;
-}
-
-/* Create/Edit Form Styles */
-.create-facility {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
+    transform: translateY(-2px);
 }
 
 .form-group {
@@ -145,33 +150,6 @@
     margin-top: 2rem;
 }
 
-.btn-submit {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    width: 100px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.btn-cancel {
-    background-color: #95a5a6;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 1rem;
-}
-
-.btn-submit:hover {
-    background-color: #45a049;
-}
-
-.btn-cancel:hover {
-    background-color: #7f8c8d;
-}
 
 /* Status Indicators */
 .status-available {
@@ -206,7 +184,7 @@
     margin-bottom: 20px;
 }
 
-.btn-bookings {
+.fac-btn-bookings {
     background-color: #2196F3;
     color: white;
     padding: 12px 24px;
@@ -218,12 +196,12 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-bookings:hover {
+.fac-btn-bookings:hover {
     background-color: #1976D2;
     transform: translateY(-3px);
 }
 
-.btn-admin-bookings {
+.fac-btn-admin-bookings {
     background-color: #673AB7;
     color: white;
     padding: 12px 24px;
@@ -235,7 +213,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-admin-bookings:hover {
+.fac-btn-admin-bookings:hover {
     background-color: #5E35B1;
     transform: translateY(-3px);
 }

@@ -14,6 +14,7 @@ $userModel = new M_Users();
             <img src="<?php echo URLROOT; ?>/public/img/sitelogo.svg" alt="Sameepa Logo">
         </a>
 
+
         <ul class="navbar-menu">
             <li class="notification-dropdown">
                 <a href="<?php echo URLROOT; ?>/notifications" class="notification-link">
@@ -28,7 +29,6 @@ $userModel = new M_Users();
                 <?php switch ($_SESSION['user_role_id']):
                     case 1: // Resident 
                 ?>
-                        <li><a href="<?php echo URLROOT; ?>/resident/dashboard">Dashboard</a></li>
                     <?php break;
                     case 2: // Admin 
                     ?>
@@ -36,7 +36,6 @@ $userModel = new M_Users();
                     <?php break;
                     case 3: // SuperAdmin 
                     ?>
-                        <li><a href="<?php echo URLROOT; ?>/superadmin/dashboard">Dashboard</a></li>
                     <?php break;
                     case 4: // Maintenance 
                     ?>
@@ -44,7 +43,6 @@ $userModel = new M_Users();
                     <?php break;
                     case 5: // Security 
                     ?>
-                        <li><a href="<?php echo URLROOT; ?>/security/dashboard">Dashboard</a></li>
                     <?php break;
                     case 6: // External Service Provider 
                     ?>
@@ -88,6 +86,10 @@ $userModel = new M_Users();
         padding-right: 15px;
         padding-left: 15px;
         font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar-logo img {
+        height: 80px;
     }
 
     .navdiv {
@@ -184,8 +186,9 @@ $userModel = new M_Users();
             display: none;
         }
 
-        .profile-link {
-            justify-content: center;
-        }
+    }
+
+    .profile-link {
+        justify-content: center;
     }
 </style>

@@ -13,108 +13,105 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-        /* General Styles */
+        /* Dashboard Styles */
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #eef2f3, #ffffff);
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7;
             margin: 0;
+            padding: 0;
             color: #333;
         }
 
         .dashboard-container {
             display: flex;
-            min-height: 100vh;
-            padding: 20px;
-            gap: 20px;
+            /* Use flexbox layout */
+            gap: 10px;
+            /* Small gap between the side panel and main content */
+            width: 90%;
+            /* Full width of the container */
+            /* padding: 20px; */
         }
 
         .side-panel {
-            flex-shrink: 0;
+            width: 320px;
+            /* Width of the side panel */
+            background-color: #f4f4f4;
+            /* Light background color */
+            /* padding: 15px; */
+            border-radius: 8px;
+            /* Rounded corners (optional) */
         }
 
+        /* Main content styling */
         .main-content {
-            flex-grow: 1;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            /* 95% width of the container */
+            background-color: #fff;
+            /* White background for main content */
+            padding: 15px;
+            border-radius: 8px;
+            /* Rounded corners (optional) */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Optional shadow */
         }
 
-        /* Headers */
         h1 {
-            margin: 0 0 10px;
-            font-size: 2rem;
-            color: #3f51b5;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #800080;
         }
 
-        /* Section Styles */
+
         .section {
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
             padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
 
-        .section h2 {
-            color: #3f51b5;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-
-        table th {
-            background: linear-gradient(to right, #42a5f5, #1e88e5);
-            color: #fff;
-            padding: 15px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        table td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-            color: #555;
-        }
-
-        table tbody tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        table tbody tr:hover {
-            background: #f1f7ff;
-        }
-
-        /* Export Button Styles */
-        .export {
-            display: inline-block;
-            padding: 10px 15px;
-            background: #3f51b5;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
             margin-top: 20px;
         }
 
-        .export:hover {
-            background: #303f9f;
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #dfe6e9;
+            text-align: left;
         }
 
-        /* Canvas Styles */
+        th {
+            background-color: #800080;
+            color: #fff;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
         canvas {
             margin-top: 20px;
-            max-width: 100%;
+        }
+
+        .export {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            background: linear-gradient(90deg, violet, #641975);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.5);
+
         }
     </style>
 </head>
@@ -181,7 +178,7 @@
                         <tr>
                             <th>Location</th>
                             <th>Equipment</th>
-                            <th>Times Serviced</th>
+                            <th>No.of instances maintained</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -230,8 +227,8 @@
                     datasets: [{
                         label: 'Ratings',
                         data: [5, 3, 4, 2, 5],
-                        backgroundColor: '#3498db',
-                        borderColor: '#2980b9',
+                        backgroundColor: '#9B26B6',
+                        borderColor: 'black',
                         borderWidth: 1
                     }]
                 },
@@ -252,10 +249,10 @@
                 data: {
                     labels: ['Building 1', 'Building 2', 'Building 1', 'Building 4', 'Building 3'],
                     datasets: [{
-                        label: 'Times Serviced',
+                        label: 'No.of instances maintained',
                         data: [12, 8, 5, 7, 10],
-                        backgroundColor: '#e74c3c',
-                        borderColor: '#c0392b',
+                        backgroundColor: '#A629C2',
+                        borderColor: 'black',
                         borderWidth: 1
                     }]
                 },
@@ -299,7 +296,9 @@
                 doc.text(title, 10, 10);
 
                 // Save the PDF
-                doc.save(`${title.replace(/\s+/g, '_')}.pdf`);
+                /*  doc.save($ {
+                     title.replace(/\s+/g, '_')
+                 }.pdf); */
             };
         });
     </script>

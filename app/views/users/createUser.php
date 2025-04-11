@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/superadmin/createUser.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
-    <title><?php echo SITENAME; ?> Create Users</title>
+    <title><?php echo SITENAME; ?> Create Employee Account</title>
 </head>
 
 <body>
@@ -19,7 +19,7 @@
 
         <main>
             <div class="form-wrapper">
-                <h1>Create Employee</h1>
+                <h1>Create Employee Account</h1>
                 <?php if (!empty($data['errors'])): ?>
                     <div class="form-errors">
                         <?php foreach ($data['errors'] as $error): ?>
@@ -38,12 +38,23 @@
                     </div>
                     <div class="form-group">
                         <label for="role">Role:</label>
-                        <select name="role" id="role">
+                        <select name="role" id="role" style="
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s;">
                             <option value="">Select Role</option>
+                            <!-- <option value="1">Resident</option> -->
                             <option value="2">Admin</option>
+                            <option value="3">SuperAdmin</option>
                             <option value="4">Maintenance</option>
                             <option value="5">Security</option>
-                           
+                            <!--                             <option value="6">External Service Provider</option>
+ -->
                         </select>
                     </div>
                     <!-- <div class="form-group resident-only">
@@ -62,7 +73,7 @@
                         <label for="confirm_password">Confirm Password:</label>
                         <input type="password" name="confirm_password" id="confirm_password">
                     </div>
-                    <button type="submit" class="form-submit">Create</button>
+                    <button type="submit" class="form-submit">Create Employee Account</button>
                 </form>
             </div>
 

@@ -1,15 +1,17 @@
 <?php
+
 class Resident extends Controller
 {
+    private $residentModel;
     private $listingModel;
+
 
     public function __construct()
     {
-        // Check authentication
         $this->checkResidentAuth();
-        
-        // Initialize listing model
-        $this->listingModel = $this->model('M_Listing');
+
+        // Initialize any resident-specific models if needed
+        // $this->residentModel = $this->model('M_Resident');
     }
 
     private function checkResidentAuth()
@@ -19,228 +21,79 @@ class Resident extends Controller
             header('Location: ' . URLROOT . '/users/login');
             exit();
         }
+
+        // Check if user is a resident (role_id = 1)
+        if ($_SESSION['user_role_id'] != 1) {
+            // Redirect to unauthorized page
+            header('Location: ' . URLROOT . '/pages/unauthorized');
+            exit();
+        }
     }
 
-    public function index()
-{
-    try {
-        // Get all listings
+    public function dashboard()
+    {
+        // Get any necessary data for the dashboard
         $data = [
-            'listings' => $this->listingModel->getAllListings() ?: [], // Default to an empty arra
-            'search' => '' // Keep search if needed later
+            'user_id' => $_SESSION['user_id'],
+            'email' => $_SESSION['user_email'],
+            'role' => $_SESSION['user_role']
         ];
 
-        // Load view with data
-        $this->view('resident/exchange', $data);
-
-    } catch (Exception $e) {
-        die('Something went wrong: ' . $e->getMessage());
+        // Load resident dashboard view with data
+        $this->view('resident/dashboard', $data);
     }
-}
 
-   
-
-    public function create_listing()
+    /*public function announcements()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        // Load resident dashboard view
+        $this->view('resident/announcements');
+    }*/
 
-            // Initialize data array
-            $data = [
-                'title' => trim($_POST['title']),
-                'type' => trim($_POST['type']),
-                'description' => trim($_POST['description']),
-                'image_data' => null,
-                'image_type' => null,
-                'posted_by' => $_SESSION['user_id'],
-                'errors' => []
-            ];
-
-            // Handle image upload if present
-            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-                $allowed = ['image/jpeg', 'image/png', 'image/gif','image/webp'];
-
-                if (in_array($_FILES['image']['type'], $allowed)) {
-                    // Read image data
-                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
-                    $data['image_type'] = $_FILES['image']['type'];
-                } else {
-                    $data['errors'][] = 'Invalid file type. Only JPG, PNG and GIF are allowed.';
-                }
-            }
-
-            // Validate data
-            $this->validateData($data);
-
-            // If no errors, create event
-            if (empty($data['errors'])) {
-                if ($this->listingModel->createListing($data)) {
-                    //flash('event_message', 'Event Created Successfully');
-                    redirect('resident/exchange');
-                } else {
-                    die('Something went wrong');
-                }
-            } else {
-                // Load view with errors
-                $this->view('resident/exchange', $data);
-            }
-        } else {
-            // Init data
-            $data = [
-                'title' => '',
-                'type'=>'',
-                'description' => '',
-                'location' => '',
-                'errors' => []
-            ];
-
-            $this->view('resident/create_listing', $data);
-        }
-    }
-
-    private function validateData(&$data)
+    /*public function events()
     {
-        // Validate Title
-        if (empty($data['title'])) {
-            $data['errors'][] = 'Please enter event title';
-        } elseif (strlen($data['title']) > 255) {
-            $data['errors'][] = 'Title cannot exceed 255 characters';
-        }
+        // Load resident dashboard view
+        $this->view('resident/events');
+    }*/
 
-        // Validate Description
-        if (empty($data['description'])) {
-            $data['errors'][] = 'Please enter event description';
-        }
-
-
-
-    }
-
-    // Method to display event images
-    public function image($id)
+    public function visitor_passes()
     {
-        $image = $this->listingModel->getListingImage($id);
-
-        if ($image && $image['image_data']) {
-            header("Content-Type: " . $image['image_type']);
-            echo $image['image_data'];
-            exit;
-        }
-
-        // Return default image if no image found
-        header("Content-Type: image/png");
-        readfile(APPROOT . '/public/img/default.png');
+        $this->view('resident/visitor_passes');
     }
 
-    public function my_listing() {
-        $data = [
-            'listings' => $this->listingModel->getUserListings($_SESSION['user_id'])
-        ];
-        $this->view('resident/my_listing', $data);
+    public function facilities()
+    {
+        $this->view('resident/facilities');
+    }
+
+    public function maintenance()
+    {
+        $this->view('resident/maintenance');
+    }
+
+    public function external_services()
+    {
+        $this->view('resident/external_services');
+    }
+
+    public function payments()
+    {
+        $this->view('resident/payments');
+    }
+
+    public function reports()
+    {
+        $this->view('resident/reports');
     }
 
 
-    public function update_listing() {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $listingId = isset($_GET['listing_id']) ? filter_var($_GET['listing_id'], FILTER_SANITIZE_NUMBER_INT) : null;
-            
-            if (!$listingId || !$this->listingModel->isListingOwner($listingId, $_SESSION['user_id'])) {
-                $_SESSION['error'] = 'Invalid listing or unauthorized access';
-                redirect('resident/my_listing');
-                return;
-            }
-    
-            $listing = $this->listingModel->getListingById($listingId);
-            
-            if (!$listing) {
-                $_SESSION['error'] = 'Listing not found';
-                redirect('resident/my_listing');
-                return;
-            }
-    
-            $data = [
-                'id' => $listing['id'],
-                'title' => $listing['title'],
-                'description' => $listing['description'],
-                'type' => $listing['type'],
-                'errors' => []
-            ];
-    
-            $this->view('resident/create_listing', $data);
-    
-        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Initialize data array
-            $data = [
-                'id' => filter_var($_POST['listing_id'], FILTER_SANITIZE_NUMBER_INT),
-                'title' => trim(filter_var($_POST['title'], FILTER_SANITIZE_STRING)),
-                'description' => trim(filter_var($_POST['description'], FILTER_SANITIZE_STRING)),
-                'type' => trim(filter_var($_POST['type'], FILTER_SANITIZE_STRING)),
-                'user_id' => $_SESSION['user_id'],
-                'image_data' => null,
-                'image_type' => null,
-                'errors' => []
-            ];
-    
-            // Validate owner
-            if (!$this->listingModel->isListingOwner($data['id'], $data['user_id'])) {
-                $_SESSION['error'] = 'Unauthorized access';
-                redirect('resident/my_listing');
-                return;
-            }
-    
-            // Validate required fields
-            if (empty($data['title'])) {
-                $data['errors'][] = 'Title is required';
-            }
-            if (empty($data['description'])) {
-                $data['errors'][] = 'Description is required';
-            }
-            if (empty($data['type'])) {
-                $data['errors'][] = 'Type is required';
-            }
-    
-            // Handle optional image upload
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-                $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                
-                if (in_array($_FILES['image']['type'], $allowed)) {
-                    $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
-                    $data['image_type'] = $_FILES['image']['type'];
-                } else {
-                    $data['errors'][] = 'Invalid file type. Only JPG, PNG, GIF and WebP are allowed.';
-                }
-            }
-    
-            // Process update if no errors
-            if (empty($data['errors'])) {
-                if ($this->listingModel->updateListing($data)) {
-                    $_SESSION['message'] = 'Listing updated successfully!';
-                    redirect('resident/my_listing');
-                } else {
-                    $_SESSION['error'] = 'Failed to update listing';
-                    $this->view('resident/create_listing', $data);
-                }
-            } else {
-                // Reload form with errors
-                $this->view('resident/create_listing', $data);
-            }
-        } else {
-            redirect('resident/my_listing');
-        }
-    }
 
-    public function delete() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['listing_id'])) {
-            $listingId = $_POST['listing_id'];
-            
+    /*  public function complaints()
+    {
+        $this->view('resident/complaints');
+    } */
 
-            if ($this->listingModel->deleteListing($listingId)) {
-                $_SESSION['message'] = 'Listing deleted successfully';
-            } else {
-                $_SESSION['error'] = 'Failed to delete listing';
-            }
-        }
-        redirect('resident/my_listing');
+    public function incident()
+    {
+        $this->view('resident/incident');
     }
 }

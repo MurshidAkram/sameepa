@@ -3,7 +3,6 @@
 class Users extends Controller
 {
     private $userModel;
-    
 
     public function __construct()
     {
@@ -104,14 +103,7 @@ class Users extends Controller
     public function signup()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (!isset($_FILES['verification_document']) || $_FILES['verification_document']['error'] !== UPLOAD_ERR_OK) {
-                $data['errors'][] = 'Verification document is required';
-            }
 
-            $file = $_FILES['verification_document'];
-            if ($file['type'] != 'application/pdf') {
-                $data['errors'][] = 'Only PDF files are allowed';
-            }
 
             $data = [
                 'name' => trim($_POST['name']),
@@ -123,6 +115,14 @@ class Users extends Controller
                 'phonenumber' => trim($_POST['phonenumber']),
                 'errors' => []
             ];
+            if (!isset($_FILES['verification_document']) || $_FILES['verification_document']['error'] !== UPLOAD_ERR_OK) {
+                $data['errors'][] = 'Verification document is required';
+            }
+
+            $file = $_FILES['verification_document'];
+            if ($file['type'] != 'application/pdf') {
+                $data['errors'][] = 'Only PDF files are allowed';
+            }
 
             $userData = [
                 'name' => $data['name'],
@@ -202,6 +202,9 @@ class Users extends Controller
                 $data['errors'][] = 'Email already exists';
             }
         }
+        if (empty($data['role_id'])) {
+            $data['errors'][] = 'Please select a user role';
+        }
         if (!empty($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $data['errors'][] = 'Please enter a valid email address';
         }
@@ -228,7 +231,8 @@ class Users extends Controller
     {
         // Unset all session variables
         session_unset();
-
+        // Destroy the session
+        session_destroy();
         // Destroy the session
         session_destroy();
 
@@ -280,11 +284,12 @@ class Users extends Controller
         if (empty($data['name'])) {
             $data['errors'][] = 'Name is required';
         }
-        if (empty($data['email'])) {
-            $data['errors'][] = 'Email is required';
+        if (!empty($data['new_password']) && $data['new_password'] !== $data['confirm_password']) {
+            $data['errors'][] = 'Passwords do not match';
         }
-        if (!empty($data['new_password']) && strlen($data['new_password']) < 6) {
-            $data['errors'][] = 'Password must be at least 6 characters';
+        // Validation
+        if (empty($data['name'])) {
+            $data['errors'][] = 'Name is required';
         }
         if (!empty($data['new_password']) && $data['new_password'] !== $data['confirm_password']) {
             $data['errors'][] = 'Passwords do not match';
@@ -410,12 +415,14 @@ class Users extends Controller
         // Fetch user details from the database
         $user = $this->userModel->getUserById($userId);
         $verificationDoc = $this->userModel->getUserVerificationDocument($userId);
+        $users = $this->userModel->getResidentAddressAndPhone($userId);
 
         // Initialize response array
         $response = [
             'name' => $user['name'] ?? '',
             'email' => $user['email'] ?? '',
-            'address' => $user['address'] ?? '',
+            'address' => $users['address'] ?? '',
+            'phonenumber' => $users['phonenumber'] ?? '',
             'verification_filename' => $verificationDoc['role_verification_filename'] ?? null,
             'role_verification_document' => null
         ];
@@ -524,5 +531,22 @@ class Users extends Controller
         }
         exit();
     }
-    
+    public function updateAddress()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $userId = $data['user_id'];
+        $newAddress = $data['address'];
+
+        if (empty($newAddress)) {
+            echo json_encode(['success' => false, 'message' => 'Address cannot be empty']);
+            return;
+        }
+
+        // Update the address in the database
+        if ($this->userModel->updateAddress($userId, $newAddress)) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update address']);
+        }
+    }
 }

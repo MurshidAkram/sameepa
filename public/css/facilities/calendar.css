@@ -1,43 +1,39 @@
-.time-slots {
-    margin: 20px 0;
-
+/* Add new styles for booked times table */
+.booked-times-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
 }
 
-.time-slot {
+.booked-times-table th,
+.booked-times-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.booked-times-table thead {
+    background-color: #6c757d;
+    color: white;
+}
+
+.booking-error {
+    color: #dc3545;
     padding: 10px;
-    margin: 5px 0;
+    margin: 10px 0;
+    border: 1px solid #dc3545;
     border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.time-slot.available {
-    background-color: #e8f5e9;
-    border: 1px solid #81c784;
-}
-
-.time-slot.booked {
     background-color: #ffebee;
-    border: 1px solid #e57373;
-    cursor: not-allowed;
 }
 
-.time-slot.booked .status {
-    color: #d32f2f;
-}
-
-
-.time-slot.selected {
-    background-color: #bbdefb;
-    border: 2px solid #1976d2;
-}
-
-  .calendar {
+  .calendar {     
       background: #fff;
       border-radius: 12px;
       padding: 25px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-
       margin-bottom: 30px;
   }
 
@@ -139,11 +135,6 @@
     flex: 1;
 }
 
-.my-bookings {
-    margin-top: 2rem;
-    padding: 1rem;
-}
-
   .bookings-table {
       width: 100%;
       border-collapse: collapse;
@@ -155,7 +146,7 @@
   }
 
   .bookings-table thead {
-      background-color: #4CAF50;
+      background-color: #6c757d;
       color: white;
   }
 
@@ -178,21 +169,132 @@
       border-bottom: none;
   }
 
-  .my-bookings {
-      margin-top: 30px;
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  .my-bookings,
+  .bookedtimes{
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    padding: 1rem;
   }
 
-  .my-bookings h2 {
-      color: #333;
+  .my-bookings h2,
+  .bookedtimes h2 {
+      color: #800080;
       margin-bottom: 15px;
   }
+  
 .no-bookings-message {
     text-align: center;
     padding: 20px;
     color: #666;
     font-style: italic;
+}
+
+.calendar-date.past-date {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+}
+
+/* Booking Form Styles */
+.booking-form-container {
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.booking-right-panel h1 {
+    color: #800080;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-primary {
+    padding: 0.75rem 1.5rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    padding: 0.75rem 1.5rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .booking-container {
+        flex-direction: column;
+    }
+
+    .booking-right-panel {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .btn-primary, .btn-cancel {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+.booked-times-table tr.own-booking {
+    background-color: #e8f5e9;  /* Light green color */
 }

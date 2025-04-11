@@ -36,7 +36,15 @@
 
             <div class="forums-actions">
                 <a href="<?php echo URLROOT; ?>/forums/create" class="btn-create-forum">Create New Forum</a>
-                <a href="<?php echo URLROOT; ?>/forums" class="btn-my-forums">← Back to All Forums</a>
+                <?php if ($_SESSION['user_role_id'] == 2): ?>
+                <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="btn-my-forums">
+                    <i class="fas fa-arrow-left"></i> Back to All Forums
+                </a>
+            <?php else: ?>
+                <a href="<?php echo URLROOT; ?>/forums" class="btn-my-forums">
+                    <i class="fas fa-arrow-left"></i> Back to All Forums
+                </a>
+            <?php endif; ?>
             </div>
 
             <div class="forums-list">
@@ -54,10 +62,10 @@
                                 <span class="forum-comments-index">💬: <?php echo $this->getCommentCountByForumId($forum->id); ?></span>
                             </div>
                             <div class="forum-actions">
-                                <a href="<?php echo URLROOT; ?>/forums/view_forum/<?php echo $forum->id; ?>" class="btn-view-forum">View Forum</a>
+                                <a href="<?php echo URLROOT; ?>/forums/view_forum/<?php echo $forum->id; ?>" class="btn-view-forum">View</a>
                                 <!-- Change this line in myforums.php -->
                                 <a href="<?php echo URLROOT; ?>/forums/deletemyForum/<?php echo $forum->id; ?>" class="btn-delete-forum" onclick="return confirm('Are you sure you want to delete this forum?');">Delete</a> <?php if ($_SESSION['user_role_id'] >= 2) : ?>
-                                    <a href="<?php echo URLROOT; ?>/forums/reported_comments/<?php echo $forum->id; ?>" class="btn-reported-comments">Reported Comments</a>
+                                    <a href="<?php echo URLROOT; ?>/forums/reported_comments/<?php echo $forum->id; ?>" class="btn-reported-comments">Reports</a>
                                 <?php endif; ?>
                             </div>
                         </div>

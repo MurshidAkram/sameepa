@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,14 +30,7 @@
             letter-spacing: 1px;
         }
 
-        footer {
-            background-color: #2d3436;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto;
-            font-size: 14px;
-        }
+
 
         .content {
             display: flex;
@@ -71,7 +65,7 @@
 
         h1 {
             text-align: center;
-            color: #6c5ce7;
+            color: #800080;
             margin: 0;
             font-weight: 700;
         }
@@ -82,14 +76,15 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px 15px;
             border: 1px solid #ddd;
             text-align: center;
         }
 
         th {
-            background-color: #6c5ce7;
+            background-color: #800080;
             color: white;
         }
 
@@ -106,16 +101,16 @@
             transition: all 0.3s ease;
         }
 
-        .btn{
+        .btn {
             width: 25%;
-    padding: 15px;
-    background-color: #6c5ce7;
-    color: white;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+            padding: 15px;
+            background-color: #336699;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .btn-edit {
@@ -162,7 +157,8 @@
             text-align: center;
         }
 
-        .modal-content input, .modal-content select {
+        .modal-content input,
+        .modal-content select {
             width: 90%;
             padding: 10px;
             margin-bottom: 15px;
@@ -185,151 +181,157 @@
             background-color: #555;
         }
 
-        
+
         /* Calendar Container css*/
-.calendar-container {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
+        .calendar-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
 
-h3 {
-    font-size: 1.8em;
-    color: #4A90E2;
-    margin-bottom: 15px;
-    text-align: center;
-}
+        h3 {
+            font-size: 1.8em;
+            color: #800080;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
-/* Month Navigation */
-.month-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+        /* Month Navigation */
+        .month-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-.month-navigation button {
-    padding: 10px 20px;
-    background-color: #4A90E2;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: background-color 0.5s ease;
-}
+        .month-navigation button {
+            padding: 10px 20px;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.5s ease;
+        }
 
-.month-navigation button:hover {
-    background-color: #357ABD;
-}
+        .month-navigation button:hover {
+            background-color: #357ABD;
+        }
 
-#current-month {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
-}
+        #current-month {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
 
-/* Calendar Grid */
-.calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-gap: 5px;
-    padding: 10px;
-    text-align: center;
-    font-size: 1.1em;
-}
+        /* Calendar Grid */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 5px;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.1em;
+        }
 
-/* Days of the Week Header */
-.day-header {
-    font-weight: bold;
-    color: #4A90E2;
-    padding: 10px;
-}
+        /* Days of the Week Header */
+        .day-header {
+            font-weight: bold;
+            color: #4A90E2;
+            padding: 10px;
+        }
 
-/* Day Cells */
-.day {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
+        /* Day Cells */
+        .day {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
 
-.day:hover {
-    background-color: #e0f2ff;
-}
+        .day:hover {
+            background-color: #e0f2ff;
+        }
 
-.day.empty {
-    visibility: hidden;
-}
+        .day.empty {
+            visibility: hidden;
+        }
 
-/* Officer Shifts within each day */
-.day div {
-    margin-top: 5px;
-    font-size: 0.85em;
-    border-radius: 4px;
-    padding: 5px;
-    color: #fff;
-    background-color: #7f8c8d;
-    text-align: left;
-}
+        /* Officer Shifts within each day */
+        .day div {
+            margin-top: 5px;
+            font-size: 0.85em;
+            border-radius: 4px;
+            padding: 5px;
+            color: #fff;
+            background-color: #7f8c8d;
+            text-align: left;
+        }
 
-/* Calendar Day Cell: If day has shifts assigned */
-.day:not(.empty) {
-    position: relative;
-}
+        /* Calendar Day Cell: If day has shifts assigned */
+        .day:not(.empty) {
+            position: relative;
+        }
 
-.day div {
-    position: absolute;
-    bottom: 5px;
-    left: 5px;
-    right: 5px;
-}
+        .day div {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            right: 5px;
+        }
 
-/* Officer Shift Color Indicator */
-.day div {
-    font-size: 0.9em;
-    padding: 4px 8px;
-    background-color: #4A90E2;
-    color: #fff;
-    border-radius: 6px;
-}
+        /* Officer Shift Color Indicator */
+        .day div {
+            font-size: 0.9em;
+            padding: 4px 8px;
+            background-color: #4A90E2;
+            color: #fff;
+            border-radius: 6px;
+        }
 
-/* Add custom colors to shifts */
-.day div:nth-child(1) {
-    background-color: #4CAF50; /* Green */
-}
+        /* Add custom colors to shifts */
+        .day div:nth-child(1) {
+            background-color: #4CAF50;
+            /* Green */
+        }
 
-.day div:nth-child(2) {
-    background-color: #2196F3; /* Blue */
-}
+        .day div:nth-child(2) {
+            background-color: #2196F3;
+            /* Blue */
+        }
 
-.day div:nth-child(3) {
-    background-color: #F44336; /* Red */
-}
+        .day div:nth-child(3) {
+            background-color: #F44336;
+            /* Red */
+        }
 
-.day div:nth-child(4) {
-    background-color: #FF9800; /* Orange */
-}
+        .day div:nth-child(4) {
+            background-color: #FF9800;
+            /* Orange */
+        }
 
-.day div:nth-child(5) {
-    background-color: #9C27B0; /* Purple */
-}
-.today{
-    padding-top: 30px;
-    color: #4A90E2;
-    font-size: 30px;
-}
+        .day div:nth-child(5) {
+            background-color: #9C27B0;
+            /* Purple */
+        }
 
+        .today {
+            padding-top: 30px;
+            color: #800080;
+            font-size: 30px;
+        }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
-    <header>
-        <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
-    </header>
+
+    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+
 
     <!-- Content Section -->
     <div class="content">
@@ -340,7 +342,7 @@ h3 {
 
         <!-- Main Content Section -->
         <div class="container">
-            <h1 >Duty Schedule</h1>
+            <h1>Duty Schedule</h1>
 
             <button class="btn" onclick="openModal()">Create Schedule</button>
 
@@ -423,42 +425,40 @@ h3 {
                     <option value="16-24">4 PM - 12 AM</option>
                     <option value="24-8">00 AM - 8 AM</option>
                 </select>
-                <button type="button" class="btn-cancel"  onclick="saveDuty()">Save</button>
+                <button type="button" class="btn-cancel" onclick="saveDuty()">Save</button>
                 <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
             </form>
         </div>
     </div>
 
     <!-- calender part -->
-      <!-- Calendar View -->
-      <div class="calendar-container">
-                <h3>Calendar View</h3>
+    <!-- Calendar View -->
+    <div class="calendar-container">
+        <h3>Calendar View</h3>
 
-                <!-- Month Navigation -->
-                <div class="month-navigation">
-                    <button onclick="navigateMonth(-1)">Previous</button>
-                    <span id="current-month"></span>
-                    <button onclick="navigateMonth(1)">Next</button>
-                </div>
+        <!-- Month Navigation -->
+        <div class="month-navigation">
+            <button onclick="navigateMonth(-1)">Previous</button>
+            <span id="current-month"></span>
+            <button onclick="navigateMonth(1)">Next</button>
+        </div>
 
-                <div class="calendar" id="calendar">
-                    <!-- Days of the week -->
+        <div class="calendar" id="calendar">
+            <!-- Days of the week -->
 
-                    <div class="day-header">Sunday</div>
-                    <div class="day-header">Monday</div>
-                    <div class="day-header">Tuesday</div>
-                    <div class="day-header">Wednesday</div>
-                    <div class="day-header">Thursday</div>
-                    <div class="day-header">Friday</div>
-                    <div class="day-header">Saturday</div>
-                   
-                </div>
-            </div>
+            <div class="day-header">Sunday</div>
+            <div class="day-header">Monday</div>
+            <div class="day-header">Tuesday</div>
+            <div class="day-header">Wednesday</div>
+            <div class="day-header">Thursday</div>
+            <div class="day-header">Friday</div>
+            <div class="day-header">Saturday</div>
 
-    <!-- Footer -->
-    <footer>
-        <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-    </footer>
+        </div>
+    </div>
+
+    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+
 
     <script>
         const modal = document.getElementById('scheduleModal');
@@ -507,32 +507,51 @@ h3 {
             closeModal();
         }
 
-function editDuty(button) {
-    const row = button.parentElement.parentElement;
-    editingRow = row;
+        function editDuty(button) {
+            const row = button.parentElement.parentElement;
+            editingRow = row;
 
-    document.getElementById('officer_id').value = row.cells[0].innerText;
-    document.getElementById('officer_name').value = row.cells[1].innerText;
-    document.getElementById('duty_date').value = row.cells[2].innerText;
-    document.getElementById('shift').value = row.cells[3].innerText;
+            document.getElementById('officer_id').value = row.cells[0].innerText;
+            document.getElementById('officer_name').value = row.cells[1].innerText;
+            document.getElementById('duty_date').value = row.cells[2].innerText;
+            document.getElementById('shift').value = row.cells[3].innerText;
 
-    openModal();
-}
+            openModal();
+        }
 
-function deleteDuty(button) {
-    const row = button.parentElement.parentElement;
-    row.remove();
-}
+        function deleteDuty(button) {
+            const row = button.parentElement.parentElement;
+            row.remove();
+        }
 
-// calender part
+        // calender part
 
-let currentMonth = new Date();
-        const officers = [
-            { id: '001', name: 'John Doe', color: '#4CAF50' },
-            { id: '002', name: 'Jane Smith', color: '#2196F3' },
-            { id: '003', name: 'Mark Lee', color: '#F44336' },
-            { id: '004', name: 'Emma Brown', color: '#FF9800' },
-            { id: '005', name: 'Alice White', color: '#9C27B0' },
+        let currentMonth = new Date();
+        const officers = [{
+                id: '001',
+                name: 'John Doe',
+                color: '#4CAF50'
+            },
+            {
+                id: '002',
+                name: 'Jane Smith',
+                color: '#2196F3'
+            },
+            {
+                id: '003',
+                name: 'Mark Lee',
+                color: '#F44336'
+            },
+            {
+                id: '004',
+                name: 'Emma Brown',
+                color: '#FF9800'
+            },
+            {
+                id: '005',
+                name: 'Alice White',
+                color: '#9C27B0'
+            },
         ];
         const shifts = ['8-12', '8-16', '16-20', '16-24', '24-8']; // Shift timings
         let schedule = {}; // Store schedule by date
@@ -576,7 +595,10 @@ let currentMonth = new Date();
             const today = new Date().getDate();
             if (schedule[today]) {
                 schedule[today].forEach((entry) => {
-                    const { officer, shift } = entry;
+                    const {
+                        officer,
+                        shift
+                    } = entry;
 
                     const row = table.insertRow();
                     row.innerHTML = `
@@ -609,7 +631,10 @@ let currentMonth = new Date();
 
                     // Add each officer's shift to the day
                     schedule[day].forEach((entry) => {
-                        const { officer, shift } = entry;
+                        const {
+                            officer,
+                            shift
+                        } = entry;
                         const officerBlock = document.createElement('div');
                         officerBlock.textContent = `${officer.name} (${shift})`;
                         officerBlock.style.backgroundColor = officer.color;
@@ -658,12 +683,11 @@ let currentMonth = new Date();
         }
 
         // Initialize page
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             updateCalendar(currentMonth.getMonth(), currentMonth.getFullYear());
             generateMonthlySchedule(currentMonth.getMonth(), currentMonth.getFullYear());
         });
+    </script>
+</body>
 
-
-
-</script>
-</body> </html> 
+</html>

@@ -97,7 +97,7 @@
         .action {
             width: 48%;
     padding: 15px;
-    background-color: #4CAF50;
+    background-color: #2980b9;
     color: white;
     font-size: 18px;
     border: none;
@@ -107,7 +107,7 @@
         }
 
         .action:hover {
-            background-color: #2980b9;
+            background-color: #D2B4DE;
         }
         /* Table Styling */
         .data-table {
@@ -165,15 +165,15 @@
             <section class="section">
                 <h3 class="too">Key Metrics</h3>
                 <div class="grid">
-                    <div class="card" style="background-color: #1abc9c;">
+                    <!-- <div class="card" style="background-color:#9B59B6;">
                         <h3>Total Alerts</h3>
                         <p>Today: <span id="total-alerts">15</span></p>
-                    </div>
-                    <div class="card" style="background-color: #3498db;">
+                    </div> -->
+                    <div class="card" style="background-color: #D2B4DE;">
                         <h3>Active Visitor Passes</h3>
                         <p>Currently: <span id="active-passes">5</span></p>
                     </div>
-                    <div class="card" style="background-color: #f39c12;">
+                    <div class="card" style="background-color: #D2B4DE;">
                         <h3>Security Personnel On Duty</h3>
                         <p>Active: <span id="on-duty">10</span></p>
                     </div>
@@ -344,10 +344,10 @@
             <section class="chart">
                 <h3 class="too">Analytics and Reports</h3>
                 <div class="grid">
-                    <div class="chart">
+                    <!-- <div class="chart">
                         <h3>Maintenance Requests</h3>
                         <canvas id="maintenanceRequestsCanvas"></canvas>
-                    </div>
+                    </div> -->
                     <div class="chart">
                         <h3>Incident Response Time</h3>
                         <canvas id="responseTimeCanvas"></canvas>
@@ -405,7 +405,7 @@ function toggleTable(tableId) {
                 datasets: [{
                     label: 'Access Logs (Visitors)',
                     data: [10, 20, 30, 40, 25, 35, 50],
-                    backgroundColor: '#2ecc71',  // Green for visitors
+                    backgroundColor: '#9b59b6',  // Green for visitors
                     borderColor: '#27ae60',
                     borderWidth: 1
                 }]
@@ -431,7 +431,8 @@ function toggleTable(tableId) {
                 labels: ['Theft', 'Fire', 'Access Violation'],
                 datasets: [{
                     data: [10, 15, 5],
-                    backgroundColor: ['#e74c3c', '#f39c12', '#3498db']
+                    backgroundColor: ['#800080', '#9b59b6', '#6A5ACD']
+
                 }]
             }
         });
@@ -444,25 +445,25 @@ function toggleTable(tableId) {
                 datasets: [{
                     label: 'Visitors',
                     data: [12, 20, 30, 25, 35, 50, 40],
-                    borderColor: '#2ecc71',
+                    borderColor: '#6A5ACD',
                     fill: true,
-                    backgroundColor: 'rgba(46, 204, 113, 0.2)'
+                    backgroundColor: 'rgba(138, 43, 226, 0.2)'
                 }]
             }
         });
 
-        // Maintenance Requests Chart
-        new Chart(document.getElementById('maintenanceRequestsCanvas').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-                datasets: [{
-                    label: 'Requests',
-                    data: [10, 12, 8, 15, 20],
-                    backgroundColor: '#e67e22'
-                }]
-            }
-        });
+        // // Maintenance Requests Chart
+        // new Chart(document.getElementById('maintenanceRequestsCanvas').getContext('2d'), {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        //         datasets: [{
+        //             label: 'Requests',
+        //             data: [10, 12, 8, 15, 20],
+        //             backgroundColor: '#6A5ACD'
+        //         }]
+        //     }
+        // });
 
         // Incident Response Time Chart
         new Chart(document.getElementById('responseTimeCanvas').getContext('2d'), {
@@ -472,7 +473,7 @@ function toggleTable(tableId) {
                 datasets: [{
                     label: 'Response Time (minutes)',
                     data: [10, 15, 12, 18, 20],
-                    backgroundColor: '#3498db'
+                    backgroundColor: '#9b59b6'
                 }]
             }
         });

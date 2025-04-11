@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
     <title>Search Chats | <?php echo SITENAME; ?></title>
 </head>
@@ -34,14 +33,14 @@
         <main class="groups-main">
             <aside class="groups-sidebar">
                 <h2>Chat Navigation</h2>
-                <?php $current_page = basename($_SERVER['REQUEST_URI']);?>
+                <?php $current_page = basename($_SERVER['REQUEST_URI']); ?>
 
-<nav class="groups-nav">
-    <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
-    <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
-    <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
-    <a href="<?php echo URLROOT; ?>/chat/report" class="<?php echo ($current_page == 'report' ? 'active' : ''); ?>">Report</a>
-</nav>
+                <nav class="groups-nav">
+                    <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
+                    <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
+                    <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
+                    <a href="<?php echo URLROOT; ?>/chat/report" class="<?php echo ($current_page == 'report' ? 'active' : ''); ?>">Report</a>
+                </nav>
             </aside>
 
             <div class="groups-content">
@@ -51,26 +50,26 @@
                     <button type="submit">Search</button>
                 </form>
                 <div class="groups-grid">
-    <?php if (!empty($data['users'])): ?>
-        <?php foreach ($data['users'] as $user): ?>
-            <div class="group-card">
-                <div class="group-image">
-                    <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="<?php echo $user->name; ?>">
+                    <?php if (!empty($data['users'])): ?>
+                        <?php foreach ($data['users'] as $user): ?>
+                            <div class="group-card">
+                                <div class="group-image">
+                                    <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="<?php echo $user->name; ?>">
+                                </div>
+                                <div class="group-details">
+                                    <h3 class="group-title"><?php echo $user->name; ?></h3>
+                                    <div class="group-actions">
+                                        <a href="<?php echo URLROOT; ?>/chat/sendRequest/<?php echo $user->id; ?>" class="btn-send-request">Send Request</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="no-groups">
+                            <p>No users found.</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <div class="group-details">
-                    <h3 class="group-title"><?php echo $user->name; ?></h3>
-                    <div class="group-actions">
-                        <a href="<?php echo URLROOT; ?>/chat/sendRequest/<?php echo $user->id; ?>" class="btn-send-request">Send Request</a>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div class="no-groups">
-            <p>No users found.</p>
-        </div>
-    <?php endif; ?>
-</div>
             </div>
         </main>
     </div>
@@ -79,19 +78,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const links = document.querySelectorAll(".groups-nav a");
+    document.addEventListener("DOMContentLoaded", function() {
+        const links = document.querySelectorAll(".groups-nav a");
 
-    links.forEach(link => {
-        link.addEventListener("click", function () {
-            // Remove active class from all links
-            links.forEach(l => l.classList.remove("active"));
+        links.forEach(link => {
+            link.addEventListener("click", function() {
+                // Remove active class from all links
+                links.forEach(l => l.classList.remove("active"));
 
-            // Add active class to the clicked link
-            this.classList.add("active");
+                // Add active class to the clicked link
+                this.classList.add("active");
+            });
         });
     });
-});
+</script>
 
-    </script>
 </html>

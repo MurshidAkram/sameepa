@@ -303,30 +303,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>INV-001</td>
-                            <td>Air Filter</td>
-                            <td>2024-09-15</td>
-                            <td>40</td>
-                            <td>
-                                <button class="btn btn-edit">Edit</button>
-                                <button class="btn btn-delete">Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>INV-002</td>
-                            <td>Light Bulb</td>
-                            <td>2024-08-22</td>
-                            <td>10</td>
-                            <td>
-                                <button class="btn btn-edit">Edit</button>
-                                <button class="btn btn-delete">Delete</button>
-                            </td>
-                        </tr>
+
                     </tbody>
                 </table>
             </section>
-
         </div>
 
     </div>
@@ -366,9 +346,9 @@
 
                 <input type="text" name="item_id" id="item_id" placeholder="Item ID" readonly required>
 
-                <input type="date" name="usage_date" id="usage_date" required>
-
+                <input type="date" name="usage_date" id="usage_date" readonly required>
                 <input type="time" name="usage_time" id="usage_time" required>
+
 
                 <input type="number" name="quantity" id="quantity" placeholder="Quantity" required>
 
@@ -378,92 +358,45 @@
         </div>
     </div>
 
-
-
     <script>
-        function showForm() {
-            document.getElementById("form-overlay").style.display = "flex";
-        }
+        // Automatically populate current date in the 'usage_date' field
+        document.addEventListener("DOMContentLoaded", function() {
+            const today = new Date().toISOString().split("T")[0];
+            document.getElementById("usage_date").value = today;
+            document.getElementById("usage_date").min = today; // Prevent selecting dates in the past
+        });
 
-        function closeForm() {
-            document.getElementById("form-overlay").style.display = "none";
-        }
-
-        function editLog(logId) {
-            // Make an AJAX request to fetch the log data by its ID
-            fetch("<?php echo URLROOT; ?>/maintenance/getInventoryUsageLogById/" + logId)
-                .then(response => response.json())
-                .then(data => {
-                    // Populate the form fields with the existing log data
-                    document.getElementById("item_id").value = data.item_id;
-                    document.getElementById("item_name").value = data.item_name;
-                    document.getElementById("usage_date").value = data.usage_date;
-                    document.getElementById("usage_time").value = data.usage_time;
-                    document.getElementById("quantity").value = data.quantity;
-
-                    // Disable all fields except the quantity field
-                    document.getElementById("item_id").disabled = true;
-                    document.getElementById("item_name").disabled = true;
-                    document.getElementById("usage_date").disabled = true;
-                    document.getElementById("usage_time").disabled = true;
-                    document.getElementById("quantity").disabled = false;
-
-                    // Open the form overlay
-                    document.getElementById("form-overlay").style.display = "flex";
-                })
-                .catch(error => console.error("Error fetching log data:", error));
-        }
-
-
-
-        function deleteLog(logId) {
-            if (confirm("Are you sure you want to delete this log?")) {
-                window.location.href = "<?php echo URLROOT; ?>/maintenance/deleteInventoryUsage/" + logId;
-            }
-        }
-
-        function searchTable(tableId) {
-            let input = document.getElementById("search-usage");
-            let filter = input.value.toUpperCase();
-            let table = document.getElementById(tableId);
-            let trs = table.getElementsByTagName("tr");
-
-            for (let i = 1; i < trs.length; i++) {
-                let td = trs[i].getElementsByTagName("td");
-                let found = false;
-                for (let j = 0; j < td.length; j++) {
-                    if (td[j].textContent.toUpperCase().indexOf(filter) > -1) {
-                        found = true;
-                        break;
-                    }
-                }
-                trs[i].style.display = found ? "" : "none";
-            }
-        }
-
-        function clearSearch(inputId) {
-            document.getElementById(inputId).value = "";
-            searchTable('usage-log');
-        }
-
+        // Validate that 'usage_time' is the current time or later
         function validateForm() {
-            let item_id = document.getElementById("item_id").value;
-            let quantity = document.getElementById("quantity").value;
+            const item_id = document.getElementById("item_id").value;
+            const quantity = document.getElementById("quantity").value;
+            const usage_date = document.getElementById("usage_date").value;
+            const usage_time = document.getElementById("usage_time").value;
 
-            if (item_id == "" || quantity <= 0) {
+            if (!item_id || quantity <= 0) {
                 alert("Please fill out all fields with valid data.");
+                return false;
+            }
+
+            const currentDateTime = new Date();
+            const selectedDateTime = new Date(`${usage_date}T${usage_time}`);
+
+            if (selectedDateTime < currentDateTime) {
+                alert("Please select the current time or a future time.");
                 return false;
             }
 
             return true;
         }
 
+        // Automatically set item ID based on item name
         function setItemId() {
             const itemName = document.getElementById("item_name").value;
             const itemId = getItemIdByName(itemName);
             document.getElementById("item_id").value = itemId; // Populate the Item ID field
         }
 
+        // Map item names to item IDs
         function getItemIdByName(itemName) {
             const items = {
                 "Air Filter": "INV-001",
@@ -489,7 +422,109 @@
             };
             return items[itemName] || ""; // Return the corresponding Item ID or an empty string if not found
         }
+
+        // Open and close form functions
+        function showForm() {
+            document.getElementById("form-overlay").style.display = "flex";
+        }
+
+        function closeForm() {
+            document.getElementById("form-overlay").style.display = "none";
+        }
+
+        // Edit log function remains unchanged
+        function editLog(logId) {
+            fetch(`<?php echo URLROOT; ?>/maintenance/getInventoryUsageLogById/${logId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Populate all form fields
+                    document.getElementById("item_id").value = data.item_id || '';
+                    document.getElementById("item_name").value = data.item_name || '';
+                    document.getElementById("usage_date").value = data.usage_date || '';
+                    document.getElementById("usage_time").value = data.usage_time || '';
+                    document.getElementById("quantity").value = data.quantity || '';
+
+                    // Make only quantity editable
+                    document.getElementById("item_id").readOnly = true;
+                    document.getElementById("item_name").readOnly = true;
+                    document.getElementById("usage_date").readOnly = true;
+                    document.getElementById("usage_time").readOnly = false;
+                    document.getElementById("quantity").readOnly = false;
+                    document.getElementById("quantity").focus(); // Optional: set focus on quantity
+
+                    // Open the form overlay
+                    document.getElementById("form-overlay").style.display = "flex";
+                })
+                .catch(error => {
+                    console.error("Error fetching log data:", error);
+                    alert('Failed to load log details. Please try again.');
+                });
+        }
+
+        function deleteLog(logId) {
+            if (confirm("Are you sure you want to delete this log?")) {
+                window.location.href = "<?php echo URLROOT; ?>/maintenance/deleteInventoryUsage/" + logId;
+            }
+        }
+
+        // Search and clear search functions remain unchanged
+        function searchTable(tableId) {
+            let input = document.getElementById("search-usage");
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById(tableId);
+            let trs = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < trs.length; i++) {
+                let td = trs[i].getElementsByTagName("td");
+                let found = false;
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j].textContent.toUpperCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+                trs[i].style.display = found ? "" : "none";
+            }
+        }
+
+        function clearSearch(inputId) {
+            document.getElementById(inputId).value = "";
+            searchTable('usage-log');
+        }
+
+
+        //search available store
+        // function searchTable(tableId) {
+        //     let input = document.getElementById("search-store");
+        //     let filter = input.value.toUpperCase();
+        //     let table = document.getElementById(tableId);
+        //     let trs = table.getElementsByTagName("tr");
+
+        //     for (let i = 1; i < trs.length; i++) {
+        //         let td = trs[i].getElementsByTagName("td");
+        //         let found = false;
+        //         for (let j = 0; j < td.length; j++) {
+        //             if (td[j].textContent.toUpperCase().indexOf(filter) > -1) {
+        //                 found = true;
+        //                 break;
+        //             }
+        //         }
+        //         trs[i].style.display = found ? "" : "none";
+        //     }
+        // }
+
+        // //available store clear
+        // function clearSearch(inputId) {
+        //     document.getElementById(inputId).value = "";
+        //     searchTable('store');
+        // }
     </script>
+
 
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>

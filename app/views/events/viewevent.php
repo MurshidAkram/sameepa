@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/events/events.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/event_view.css">
     <title><?php echo $data['event']['title']; ?> | <?php echo SITENAME; ?></title>
 </head>
+
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
@@ -31,22 +31,37 @@
         }
         ?>
 
-
         <main class="events-main">
-            <aside class="events-sidebar">
-                <h2>Event Navigation</h2>
-                <nav class="events-nav">
-                    <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
-                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
-                    <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
-                    <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
-                </nav>
-            </aside>
+            <?php if ($_SESSION['user_role_id'] == 1): ?>
+                <aside class="events-sidebar">
+                    <h2>Event Navigation</h2>
+                    <nav class="events-nav">
+                        <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
+                        <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
+                        <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
+                        <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
+                    </nav>
+                </aside>
+            <?php endif; ?>
             <div class="event-view-container">
-                <a href="<?php echo URLROOT; ?>/events" class="back-button">
-                    <i class="fas fa-arrow-left"></i> Back to Events
-                </a>
-
+                <div class="top-actions">
+                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                    <a href="<?php echo URLROOT; ?>/events/admin_dashboard" class="back-button">
+                        <i class="fas fa-arrow-left"></i> Back to Events
+                    </a>
+                    <?php else: ?>
+                        <a href="<?php echo URLROOT; ?>/events" class="back-button">
+                            <i class="fas fa-arrow-left"></i> Back to Events
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                        <form action="<?php echo URLROOT; ?>/events/admindelete/<?php echo $data['event']['id']; ?>" method="post">
+                            <button type="submit" class="adminremoveeve" onclick="return confirm('Are you sure you want to delete this facility?')">
+                                <i class="fas fa-trash"></i> Delete Event
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                </div>
                 <div class="event-view-content">
                     <div class="event-image-section">
                         <img src="<?php echo URLROOT; ?>/events/image/<?php echo $data['event']['id']; ?>"
@@ -107,6 +122,7 @@
             const eventId = button.dataset.eventId;
             const isJoined = button.dataset.isJoined === 'true';
 
+
             try {
                 const response = await fetch(`<?php echo URLROOT; ?>/events/${isJoined ? 'leave' : 'join'}/${eventId}`, {
                     method: 'POST',
@@ -115,7 +131,9 @@
                     }
                 });
 
+
                 const data = await response.json();
+
 
                 if (data.success) {
                     // Reload the current page
@@ -128,6 +146,27 @@
                 alert('An error occurred. Please try again.');
             }
         });
+
+        function deleteEvent(eventId) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                fetch(`<?php echo URLROOT; ?>/events/admindelete/${eventId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Check user role and redirect accordingly
+                        <?php if ($_SESSION['user_role_id'] == 2): ?>
+                            window.location.href = '<?php echo URLROOT; ?>/events/admin_dashboard';
+                        <?php else: ?>
+                            window.location.href = '<?php echo URLROOT; ?>/events';
+                        <?php endif; ?>
+                    } else {
+                        alert('Failed to delete event');
+                    }
+                });
+            }
+        }
     </script>
 </body>
 

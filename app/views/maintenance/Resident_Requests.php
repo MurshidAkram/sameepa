@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Resident Requests | <?php echo SITENAME; ?></title>
     <style>
-        /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(to bottom, #eef2f3, #ffffff);
@@ -36,7 +35,7 @@
         .content-header h1 {
             margin: 0 0 10px;
             font-size: 2rem;
-            color: #3f51b5;
+            color: #800080;
         }
 
         .content-header p {
@@ -81,7 +80,7 @@
         }
 
         .dashboard-table th {
-            background: linear-gradient(to right, #42a5f5, #1e88e5);
+            background: #800080;
             color: #fff;
             padding: 15px;
             font-weight: bold;
@@ -228,7 +227,11 @@
         }
 
         /* Request History Section */
-
+        h2 {
+            color: #800080;
+            font-size: 1.8rem;
+            margin: 20px 0 10px;
+        }
 
         /* Footer */
         footer {
@@ -254,7 +257,7 @@
 
             <!-- Enhanced Search & Filters -->
             <section class="filter-section">
-                <input type="text" placeholder="Search by Request ID..." />
+                <input type="text" placeholder="Searching ...." />
                 <select>
                     <option value="" disabled selected>Filter by Request Type</option>
                     <option value="repair">Repair</option>
@@ -289,10 +292,11 @@
                             <th>Request ID</th>
                             <th>Resident Details</th>
                             <th>Type of Request</th>
+                            <th>Specialization</th>
                             <th>Urgency</th>
-                            <th>Status</th>
-                            <th>Assigned Technician</th>
-                            <th>Estimated Completion</th>
+                            <th>Resident Contact</th>
+                            <th>Assigned Maintainer</th>
+                            <th>Maintenance Due Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -301,28 +305,30 @@
                             <td>R001</td>
                             <td>Malith Damsara,12B</td>
                             <td>Repair</td>
+                            <td>Electrical</td>
                             <td>High</td>
-                            <td>Pending</td>
+                            <td>0771178945</td>
                             <td>Technician A</td>
                             <td>2024-09-18</td>
                             <td class="action-buttons">
                                 <!-- <button class="btn-edit">Edit</button> -->
-                                <button class="btn-delete">Delete</button>
-                                <button class="btn-urgent">Mark as Urgent</button>
+                                <button class="btn-delete">Delete & Submit</button>
+                                <button class="btn-urgent">Add Maintainer</button>
                             </td>
                         </tr>
                         <tr>
                             <td>R002</td>
                             <td>Sasila Sadamsara,10A</td>
                             <td>Installation</td>
+                            <td>Plumbing</td>
                             <td>Medium</td>
-                            <td>In Progress</td>
+                            <td>0776270882</td>
                             <td>Technician B</td>
                             <td>2024-09-19</td>
                             <td class="action-buttons">
                                 <!-- <button class="btn-edit">Edit</button> -->
-                                <button class="btn-delete">Delete</button>
-                                <button class="btn-urgent">Mark as Urgent</button>
+                                <button class="btn-delete">Delete & Submit</button>
+                                <button class="btn-urgent">Add Maintainer</button>
                             </td>
                         </tr>
                     </tbody>
@@ -365,7 +371,7 @@
             </div>
 
             <!-- Attachments & Media Upload -->
-            <h2>Attachments & Media</h2>
+            <!-- <h2>Attachments & Media</h2>
             <form action="<?php echo URLROOT; ?>/maintenance/upload_media" method="POST" enctype="multipart/form-data">
                 <div class="file-input">
                     <label for="media-upload">Upload Image/Video:</label>
@@ -374,7 +380,7 @@
                 </div>
             </form>
 
-            <!-- Completion Rating -->
+             Completion Rating 
             <h2>Completion Rating</h2>
             <div class="completion-rating">
                 <label for="rating">Rate the completion:</label>
@@ -387,7 +393,7 @@
                     <option value="1">Very Poor</option>
                 </select>
                 <button>Submit Rating</button>
-            </div>
+            </div> -->
         </main>
     </div>
 

@@ -23,7 +23,7 @@
 
 /* Section headings */
 h2, h3 {
-  color: #d30eed;
+  color: #800080;
   font-family: Arial, sans-serif;
 }
 
@@ -37,7 +37,7 @@ h2, h3 {
 }
 
 .new-pass-form h2, .modal-content h2 {
-  color: #dd4cf0;
+  color: #800080;
 }
 
 .form-group {
@@ -87,7 +87,7 @@ input:focus, textarea:focus {
 }
 
 .btn-submit:hover, .btn-save:hover {
-  background-color: #285680;
+  background-color: darkblue;
 }
 
 .btn-cancel {
@@ -103,9 +103,6 @@ input:focus, textarea:focus {
 
 }
 
-.btn-cancel:hover {
-  background-color: #c82333;
-}
 
 /* Table styling */
 .pass-table {
@@ -116,7 +113,7 @@ input:focus, textarea:focus {
 }
 
 .pass-table thead {
-  background-color: #3b5998;
+  background-color: #800080;
   color: #fff;
 }
 
@@ -126,13 +123,7 @@ input:focus, textarea:focus {
   border: 1px solid #ddd;
 }
 
-.pass-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
 
-.pass-table tr:hover {
-  background-color: #97ebaf;
-}
 
 /* Search input */
 #searchTodayPass, #searchHistoryPass {
@@ -178,9 +169,7 @@ input:focus, textarea:focus {
     padding: 15px;
   }
 
-  h2, h3 {
-    font-size: 1.5rem;
-  }
+
 }
 
 </style>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,12 @@
     <title>Community Events | <?php echo SITENAME; ?></title>
 </head>
 
+
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -45,6 +46,7 @@
                 <h1>Community Events</h1>
                 <!-- In index.php view, add this after the <h1> tag -->
                 <form class="events-search" method="GET" action="<?php echo URLROOT; ?>/events">
+
                     <input
                         type="text"
                         name="search"
@@ -133,5 +135,6 @@
         }
     </script>
 </body>
+
 
 </html>

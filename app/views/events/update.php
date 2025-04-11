@@ -32,16 +32,17 @@
         ?>
 
         <main class="events-main">
-            <aside class="events-sidebar">
-                <h2>Event Navigation</h2>
-                <nav class="events-nav">
-                    <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
-                    <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
-                    <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
-                    <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
-                </nav>
-            </aside>
-
+            <?php if ($_SESSION['user_role_id'] == 1): ?>
+                <aside class="events-sidebar">
+                    <h2>Event Navigation</h2>
+                    <nav class="events-nav">
+                        <a href="<?php echo URLROOT; ?>/events/index" class="btn-created-event">Events</a>
+                        <a href="<?php echo URLROOT; ?>/events/create" class="btn-created-event">Create Event</a>
+                        <a href="<?php echo URLROOT; ?>/events/joined" class="btn-joined-events">Joined Events</a>
+                        <a href="<?php echo URLROOT; ?>/events/my_events" class="btn-my-events">My Events</a>
+                    </nav>
+                </aside>
+            <?php endif; ?>
             <div class="events-content">
                 <div class="create-event-container">
                     <h1>Update Event</h1>

@@ -1,14 +1,17 @@
 <?php
-class M_Announcements {
+class M_Announcements
+{
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = new Database;
     }
 
-    public function createAnnouncement($data) {
+    public function createAnnouncement($data)
+    {
         $this->db->query('INSERT INTO announcements (title, content, created_by) VALUES (:title, :content, :created_by)');
-        
+
         // Bind values
         $this->db->bind(':title', $data['title']);
         $this->db->bind(':content', $data['content']);
@@ -18,9 +21,10 @@ class M_Announcements {
         return $this->db->execute();
     }
 
-    public function updateAnnouncement($data) {
+    public function updateAnnouncement($data)
+    {
         $this->db->query('UPDATE announcements SET title = :title, content = :content WHERE id = :id');
-        
+
         // Bind values
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':title', $data['title']);
@@ -30,7 +34,8 @@ class M_Announcements {
         return $this->db->execute();
     }
 
-    public function deleteAnnouncement($id) {
+    public function deleteAnnouncement($id)
+    {
         try {
             $this->db->beginTransaction();
 
@@ -52,8 +57,9 @@ class M_Announcements {
         }
     }
 
-    public function getAnnouncementById($id) {
-    $this->db->query('SELECT a.*, u.name as creator_name,
+    public function getAnnouncementById($id)
+    {
+        $this->db->query('SELECT a.*, u.name as creator_name,
                      (SELECT COUNT(*) FROM announcement_reactions 
                       WHERE announcement_id = a.id AND reaction_type = "like") as likes,
                      (SELECT COUNT(*) FROM announcement_reactions 
@@ -61,11 +67,13 @@ class M_Announcements {
                      FROM announcements a 
                      JOIN users u ON a.created_by = u.id 
                      WHERE a.id = :id');
-    $this->db->bind(':id', $id);
-    return $this->db->single();
-}
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
 
-    public function getAllAnnouncements($searchTerm = '') {
+
+    public function getAllAnnouncements($searchTerm = '')
+    {
         $query = 'SELECT a.*, u.name as creator_name,
                   (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "like") as likes,
                   (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "dislike") as dislikes
@@ -76,7 +84,7 @@ class M_Announcements {
             $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
         }
 
-        $query .= ' ORDER BY a.created_at DESC';
+        $query .= ' ORDER BY a.updated_at DESC';
 
         $this->db->query($query);
 
@@ -87,7 +95,8 @@ class M_Announcements {
         return $this->db->resultSet();
     }
 
-    public function addReaction($data) {
+    public function addReaction($data)
+    {
         // First remove any existing reaction from this user
         $this->db->query('DELETE FROM announcement_reactions WHERE announcement_id = :announcement_id AND user_id = :user_id');
         $this->db->bind(':announcement_id', $data['announcement_id']);
@@ -103,15 +112,19 @@ class M_Announcements {
         return $this->db->execute();
     }
 
-    public function getUserReaction($announcementId, $userId) {
+    public function getUserReaction($announcementId, $userId)
+    {
         $this->db->query('SELECT reaction_type FROM announcement_reactions 
                          WHERE announcement_id = :announcement_id AND user_id = :user_id');
         $this->db->bind(':announcement_id', $announcementId);
         $this->db->bind(':user_id', $userId);
         return $this->db->single();
     }
-    
-    public function getActiveAnnouncements() {
+
+
+    //DONE BY SANKAVI FOR THE ADMIN AND SUPER ADMIN DASHBOARDS
+    public function getActiveAnnouncements()
+    {
         try {
             $this->db->query('
                 SELECT title
@@ -124,5 +137,57 @@ class M_Announcements {
             return [];
         }
     }
-    
+
+    // public function getAnnouncementStats()
+    // {
+    //     // Get total announcements
+    //     $this->db->query('SELECT COUNT(*) as total FROM announcements');
+    //     $total = $this->db->single()['total'];
+
+    //     // Get active announcements (created within last 30 days)
+    //     $this->db->query('SELECT COUNT(*) as active FROM announcements WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)');
+    //     $active = $this->db->single()['active'];
+
+    //     // Get this month's announcements
+    //     $this->db->query('SELECT COUNT(*) as monthly FROM announcements WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())');
+    //     $monthly = $this->db->single()['monthly'];
+
+    //     // Get total reactions
+    //     $this->db->query('SELECT COUNT(*) as total_reactions FROM announcement_reactions');
+    //     $reactions = $this->db->single()['total_reactions'];
+
+    //     return [
+    //         'total' => $total,
+    //         'active' => $active,
+    //         'monthly' => $monthly,
+    //         'reactions' => $reactions
+    //     ];
+    // }
+
+    // Update getAllAnnouncements to include type and status
+    // public function getAllAnnouncements2($searchTerm = '')
+    // {
+    //     $query = 'SELECT a.*, u.name as creator_name,
+    //           CASE 
+    //             WHEN DATEDIFF(NOW(), a.created_at) <= 30 THEN "active"
+    //             ELSE "archived"
+    //           END as status
+    //           FROM announcements a
+    //           JOIN users u ON a.created_by = u.id';
+
+    //     if (!empty($searchTerm)) {
+    //         $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+    //     }
+
+    //     $query .= ' ORDER BY a.created_at DESC';
+
+    //     $this->db->query($query);
+
+    //     if (!empty($searchTerm)) {
+    //         $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
+    //     }
+
+    //     return $this->db->resultSet();
+    // }
+
 }

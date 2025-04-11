@@ -51,10 +51,14 @@
                             <span class="forum-comments-index">💬: <?php echo $this->getCommentCountByForumId($forum->id); ?></span>
                         </div>
                         <div class="forum-actions">
-                            <a href="<?php echo URLROOT; ?>/forums/view_forum/<?php echo $forum->id; ?>" class="btn-view-forum">View Forum</a>
+                            <?php if ($_SESSION['user_role_id'] == 2) : ?>
+                                <a href="<?php echo URLROOT; ?>/forums/view_forum/<?php echo $forum->id; ?>" class="btn-view-forum">View</a>
+                            <?php else : ?>
+                                <a href="<?php echo URLROOT; ?>/forums/view_forum/<?php echo $forum->id; ?>" class="btn-view-forum2">View Forum</a>
+                            <?php endif; ?>
                             <?php if ($_SESSION['user_role_id'] >= 2) : ?>
-                                <a href="<?php echo URLROOT; ?>/forums/delete/<?php echo $forum->id; ?>" class="btn-delete-forum">Delete</a>
-                                <a href="<?php echo URLROOT; ?>/forums/reported_comments/<?php echo $forum->id; ?>" class="btn-reported-comments">Reported Comments</a>
+                                <a href="<?php echo URLROOT; ?>/forums/delete/<?php echo $forum->id; ?>" class="btn-delete-forum" onclick="return confirm('Are you sure you want to delete this forum?')">Delete</a>
+                                <a href="<?php echo URLROOT; ?>/forums/reported_comments/<?php echo $forum->id; ?>" class="btn-reported-comments">Reports</a>
                             <?php endif; ?>
                         </div>
                     </div>

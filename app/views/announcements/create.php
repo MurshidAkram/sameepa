@@ -34,7 +34,7 @@
             <div class="create-announcement-container">
                 <div class="page-header">
                     <h1>Create New Announcement</h1>
-                    <a href="<?php echo URLROOT; ?>/announcements/index" class="btn btn-back">
+                    <a href="<?php echo URLROOT; ?>/announcements/admin_dashboard" class="btn btn-back">
                         <i class="fas fa-arrow-left"></i> Back to Announcements
                     </a>
                 </div>
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="<?php echo URLROOT; ?>/announcements/index" class="btn btn-cancel">Cancel</a>
+                        <a href="<?php echo URLROOT; ?>/announcements/admin_dashboard" class="btn btn-cancel">Cancel</a>
                         <button type="submit" class="btn btn-primary">Create Announcement</button>
                     </div>
                 </form>

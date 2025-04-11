@@ -20,93 +20,95 @@
         <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
 
         <main>
-        
-<?php 
-$activeUsers = $data['activeUsers'] ?? 0; 
-if (is_numeric($activeUsers)) : ?>
-    <div class="user-count">
-        <span>Active Users: <?php echo $activeUsers; ?></span>
-    </div>
-<?php endif; ?>
+
+            <?php
+            $activeUsers = $data['activeUsers'] ?? 0;
+            if (is_numeric($activeUsers)) : ?>
+                <div class="user-count">
+                    <span>Active Users: <?php echo $activeUsers; ?></span>
+                </div>
+            <?php endif; ?>
 
 
-                <h1>Welcome to the Super Admin Dashboard</h1>
+            <h1>Welcome to the Super Admin Dashboard</h1>
 
-                <div class="dashboard-grid">
-                    <!-- Bookings Card -->
-                    <div class="card bookings-card">
-    <h2>Today's Bookings</h2>
-    <table class="bookings-table">
-        <tr>
-            <th>Time</th>
-            <th>Gym</th>
-            <th>Pool</th>
-            <th>Tennis Court</th>
-        </tr>
-        <?php if (!empty($data['bookings'])): ?>
-            <?php foreach ($data['bookings'] as $booking): ?>
-                <tr>
-                    <td><?php echo date('H:i', strtotime($booking->time)); ?></td>
-                    <td><?php echo ($booking->gym > 0) ? $booking->gym : '-'; ?></td>
-                    <td><?php echo ($booking->pool > 0) ? $booking->pool : '-'; ?></td>
-                    <td><?php echo ($booking->tennis > 0) ? $booking->tennis : '-'; ?></td>
-                </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <tr><td colspan="4">No bookings for today</td></tr>
-        <?php endif; ?>
-    </table>
-</div>
+            <div class="dashboard-grid">
+                <!-- Bookings Card -->
+                <div class="card bookings-card">
+                    <h2>Today's Bookings</h2>
+                    <table class="bookings-table">
+                        <tr>
+                            <th>Time</th>
+                            <th>Gym</th>
+                            <th>Pool</th>
+                            <th>Tennis Court</th>
+                        </tr>
+                        <?php if (!empty($data['bookings'])): ?>
+                            <?php foreach ($data['bookings'] as $booking): ?>
+                                <tr>
+                                    <td><?php echo date('H:i', strtotime($booking->time)); ?></td>
+                                    <td><?php echo ($booking->gym > 0) ? $booking->gym : '-'; ?></td>
+                                    <td><?php echo ($booking->pool > 0) ? $booking->pool : '-'; ?></td>
+                                    <td><?php echo ($booking->tennis > 0) ? $booking->tennis : '-'; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4">No bookings for today</td>
+                            </tr>
+                        <?php endif; ?>
+                    </table>
+                </div>
 
-                    <!-- Payment Card -->
-                    <div class="card payment-card">
-                        <h2>Monthly Payments</h2>
-                        <canvas id="paymentChart"></canvas>
-                    </div>
+                <!-- Payment Card -->
+                <div class="card payment-card">
+                    <h2>Monthly Payments</h2>
+                    <canvas id="paymentChart"></canvas>
+                </div>
 
-                    <!-- Announcements Card -->
-                   <!-- Announcements Card -->
-<div class="card announcements-card">
-    <h2>Active Announcements</h2>
-    <ul>
-        <?php if (!empty($data['announcement'])): ?>
-            <?php foreach ($data['announcement'] as $announcement): ?>
-                <li><?php echo htmlspecialchars($announcement->title); ?></li>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <li>No active announcements</li>
-        <?php endif; ?>
-    </ul>
-</div>
+                <!-- Announcements Card -->
+                <!-- Announcements Card -->
+                <div class="card announcements-card">
+                    <h2>Active Announcements</h2>
+                    <ul>
+                        <?php if (!empty($data['announcement'])): ?>
+                            <?php foreach ($data['announcement'] as $announcement): ?>
+                                <li><?php echo htmlspecialchars($announcement->title); ?></li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li>No active announcements</li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
 
-                    <!-- Complaints Chart -->
-                    <!-- <div class="bar-chart-container">
+                <!-- Complaints Chart -->
+                <!-- <div class="bar-chart-container">
                         <h2>Complaints Status</h2>
                         <canvas id="monthlyComplaintsChart"></canvas>
                     </div> -->
 
-                    <!-- Events Card -->
-<div class="card events-card">
-    <h2>Today's Events</h2>
-    <ul>
-        <?php if (!empty($data['todayEvents'])): ?>
-            <?php foreach ($data['todayEvents'] as $event): ?>
-                <li>
-                    <span class="event-title">
-                        <?php echo htmlspecialchars($event->event_title ?? 'No Title'); ?>
-                    </span>
-                    <span class="event-time">
-                        <?php echo htmlspecialchars($event->event_time ?? 'TBD'); ?>
-                    </span>
-                </li>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <li>No events scheduled for today.</li>
-        <?php endif; ?>
-    </ul>
-</div>
-
+                <!-- Events Card -->
+                <div class="card events-card">
+                    <h2>Today's Events</h2>
+                    <ul>
+                        <?php if (!empty($data['todayEvents'])): ?>
+                            <?php foreach ($data['todayEvents'] as $event): ?>
+                                <li>
+                                    <span class="event-title">
+                                        <?php echo htmlspecialchars($event->event_title ?? 'No Title'); ?>
+                                    </span>
+                                    <span class="event-time">
+                                        <?php echo htmlspecialchars($event->event_time ?? 'TBD'); ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li>No events scheduled for today.</li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
+
+            </div>
             </section>
         </main>
     </div>
@@ -137,27 +139,27 @@ if (is_numeric($activeUsers)) : ?>
             }
         }); -->
 
-        // Payment Chart
-        const paymentStats = <?php echo json_encode($data['payments'] ?? ['paid' => 0, 'unpaid' => 0]); ?>;
-        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
-        new Chart(paymentCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Paid', 'Unpaid'],
-                datasets: [{
-                    data: [paymentStats.paid, paymentStats.unpaid],
-                    backgroundColor: ['#800080', '#e0e0e0']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
+    // Payment Chart
+    const paymentStats = <?php echo json_encode($data['payments'] ?? ['paid' => 0, 'unpaid' => 0]); ?>;
+    const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+    new Chart(paymentCtx, {
+    type: 'pie',
+    data: {
+    labels: ['Paid', 'Unpaid'],
+    datasets: [{
+    data: [paymentStats.paid, paymentStats.unpaid],
+    backgroundColor: ['#800080', '#e0e0e0']
+    }]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+    legend: {
+    position: 'bottom'
+    }
+    }
+    }
+    });
     </script>
 </body>
 
