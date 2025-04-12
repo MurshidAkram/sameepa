@@ -165,32 +165,60 @@ function hideReportForm() {
 }
 
 function deleteMessage(messageId) {
-    if (messageId === 0) {
-        alert('Cannot delete a message that has not been saved yet. Please refresh the page.');
-        return;
-    }
-    
     if (confirm('Are you sure you want to delete this message?')) {
         fetch(`<?php echo URLROOT; ?>/groups/deleteOwnMessage/${messageId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `messageId=${messageId}`
+            }
         })
-        .then(response => response.json())
+        .then(response => {
+            // First check if the response is OK
+            if (!response.ok) {
+                throw new Error('Server returned status ' + response.status);
+            }
+            
+            // Get the content type
+            const contentType = response.headers.get('content-type');
+            
+            // If it's JSON, parse it
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            }
+            
+            // Otherwise, get the text and try to parse it as JSON
+            return response.text().then(text => {
+                try {
+                    // Try to extract JSON from the response if it contains HTML
+                    const jsonMatch = text.match(/\{.*\}/);
+                    if (jsonMatch) {
+                        return JSON.parse(jsonMatch[0]);
+                    }
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse response as JSON:', text);
+                    throw new Error('Invalid response format');
+                }
+            });
+        })
         .then(data => {
             if (data.success) {
-                const messageElement = document.querySelector(`.chat-message[data-id="${data.messageId}"]`);
+                const messageElement = document.querySelector(`.chat-message[data-id="${messageId}"]`);
                 if (messageElement) {
                     messageElement.remove();
                 }
             } else {
                 alert(data.message || 'Failed to delete message');
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the message');
         });
     }
 }
+
+
 </script>
 
 </body>

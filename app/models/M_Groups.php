@@ -250,13 +250,39 @@ class M_Groups
     public function getMessageById($messageId) {
         $this->db->query('SELECT * FROM group_chats WHERE id = :id');
         $this->db->bind(':id', $messageId);
-        return $this->db->single();
+        
+        // Return as an object for consistency
+        $result = $this->db->single();
+        
+        // If result is an array, convert it to an object
+        if (is_array($result)) {
+            $result = (object)$result;
+        }
+        
+        return $result;
     }
-
+    
     public function deleteOwnMessage($messageId) {
-        $this->db->query('DELETE FROM group_chats WHERE id = :id');
-        $this->db->bind(':id', $messageId);
-        return $this->db->execute();
+        try {
+            $this->db->beginTransaction();
+            
+            // First remove any reports for this message
+            $this->db->query('DELETE FROM reported_group_message WHERE message_id = :message_id');
+            $this->db->bind(':message_id', $messageId);
+            $this->db->execute();
+            
+            // Then delete the message itself
+            $this->db->query('DELETE FROM group_chats WHERE id = :id');
+            $this->db->bind(':id', $messageId);
+            $result = $this->db->execute();
+            
+            $this->db->commit();
+            return $result;
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log('Error in deleteOwnMessage: ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function getReportedMessagesByGroupId($groupId) {
