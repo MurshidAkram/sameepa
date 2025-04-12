@@ -212,8 +212,8 @@ class M_Events
     public function getEventsByStatus($status)
     {
         $today = date('Y-m-d');
-        
-        switch($status) {
+
+        switch ($status) {
             case 'upcoming':
                 $sql = "SELECT * FROM events WHERE date > :today";
                 break;
@@ -272,7 +272,7 @@ class M_Events
         if ($status === 'all') {
             return $this->getAllEventsForAdmin();
         }
-        
+
         $this->db->query('SELECT e.*, u.name as creator_name,
                         CASE 
                             WHEN e.date > CURDATE() THEN "upcoming"
@@ -291,4 +291,25 @@ class M_Events
         return $this->db->resultSet();
     }
 
+    //DONE BY SANKAVI FOR THE SUPER ADMIN DASHBOARD
+    // public function getTodayEvents()
+    // {
+    //     try {
+    //         // Set specific date instead of today (for testing)
+    //         $specificDate = '2024-11-30';
+
+    //         $this->db->query('
+    //             SELECT 
+    //                 title AS event_title,
+    //                 time AS event_time
+    //             FROM events
+    //             WHERE DATE(date) = :today
+    //             ORDER BY time
+    //         ');
+    //         $this->db->bind(':today', $specificDate);
+    //         return $this->db->resultSet();
+    //     } catch (Exception $e) {
+    //         error_log("Error fetching today's events: " . $e->getMessage());
+    //         return [];
+    //     }
 }

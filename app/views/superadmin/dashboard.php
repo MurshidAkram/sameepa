@@ -20,126 +20,104 @@
         <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
 
         <main>
-            <section class="dashboard-overview">
+
+            <?php
+            $activeUsers = $data['activeUsers'] ?? 0;
+            if (is_numeric($activeUsers)) : ?>
                 <div class="user-count">
-                    <span>Active Users: 150</span>
+                    <span>Active Users: <?php echo $activeUsers; ?></span>
+                </div>
+            <?php endif; ?>
+
+
+            <h1>Welcome to the Super Admin Dashboard</h1>
+
+            <div class="dashboard-grid">
+                <!-- Bookings Card -->
+                <div class="card bookings-card">
+                    <h2>Today's Bookings</h2>
+                    <table class="bookings-table">
+                        <tr>
+                            <th>Time</th>
+                            <th>Gym</th>
+                            <th>Pool</th>
+                            <th>Tennis Court</th>
+                        </tr>
+                        <?php if (!empty($data['bookings'])): ?>
+                            <?php foreach ($data['bookings'] as $booking): ?>
+                                <tr>
+                                    <td><?php echo date('H:i', strtotime($booking->time)); ?></td>
+                                    <td><?php echo ($booking->gym > 0) ? $booking->gym : '-'; ?></td>
+                                    <td><?php echo ($booking->pool > 0) ? $booking->pool : '-'; ?></td>
+                                    <td><?php echo ($booking->tennis > 0) ? $booking->tennis : '-'; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4">No bookings for today</td>
+                            </tr>
+                        <?php endif; ?>
+                    </table>
                 </div>
 
-                <h1>Welcome to the Super Admin Dashboard</h1>
+                <!-- Payment Card -->
+                <div class="card payment-card">
+                    <h2>Monthly Payments</h2>
+                    <canvas id="paymentChart"></canvas>
+                </div>
 
-                <div class="dashboard-grid">
-                    <div class="card bookings-card">
-                        <h2>Today's Bookings</h2>
-                        <table class="bookings-table">
-                            <tr>
-                                <th>Time</th>
-                                <th>Gym</th>
-                                <th>Pool</th>
-                                <th>Tennis Court</th>
-                            </tr>
-                            <tr>
-                                <td>9:00 AM</td>
-                                <td class="booked">John Doe</td>
-                                <td></td>
-                                <td class="booked">Jane Smith</td>
-                            </tr>
-                            <tr>
-                                <td>10:00 AM</td>
-                                <td></td>
-                                <td class="booked">Alice Johnson</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>11:00 AM</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>12:00 PM</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>1:00 PM</td>
-                                <td class="booked">Chad Simon</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>2:00 PM</td>
-                                <td></td>
-                                <td class="booked">Ethan Philiphs</td>
-                                <td class="booked">Josh England</td>
-                            </tr>
-                            <tr>
-                                <td>3:00 PM</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>4:00 PM</td>
-                                <td class="booked">Tobi Payne</td>
-                                <td class="booked">JoJo Siwa</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>5:00 PM</td>
-                                <td></td>
-                                <td class="booked">Harry Kane</td>
-                                <td></td>
-                            </tr>
+                <!-- Announcements Card -->
+                <!-- Announcements Card -->
+                <div class="card announcements-card">
+                    <h2>Active Announcements</h2>
+                    <ul>
+                        <?php if (!empty($data['announcement'])): ?>
+                            <?php foreach ($data['announcement'] as $announcement): ?>
+                                <li><?php echo htmlspecialchars($announcement->title); ?></li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li>No active announcements</li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
 
-                        </table>
-                    </div>
-
-                    <div class="card payment-card">
-                        <h2>Monthly Payments</h2>
-                        <canvas id="paymentChart"></canvas>
-                    </div>
-
-                    <div class="card announcements-card">
-                        <h2>Active Announcements</h2>
-                        <ul>
-                            <li>Community Meeting Next Week</li>
-                            <li>New Recycling Guidelines</li>
-                            <li>Pool Maintenance Schedule</li>
-                        </ul>
-                    </div>
-
-                    <div class="bar-chart-container">
+                <!-- Complaints Chart -->
+                <!-- <div class="bar-chart-container">
                         <h2>Complaints Status</h2>
                         <canvas id="monthlyComplaintsChart"></canvas>
-                    </div>
+                    </div> -->
 
-                    <div class="card events-card">
-                        <h2>Today's Events</h2>
-                        <ul>
-                            <li>
-                                <span class="event-title">Yoga Class</span>
-                                <span class="event-time">10:00 AM</span>
-                            </li>
-                            <li>
-                                <span class="event-title">Book Club Meeting</span>
-                                <span class="event-time">2:00 PM</span>
-                            </li>
-                            <li>
-                                <span class="event-title">Community Dinner</span>
-                                <span class="event-time">7:00 PM</span>
-                            </li>
-                        </ul>
-                    </div>
+                <!-- Events Card -->
+                <div class="card events-card">
+                    <h2>Today's Events</h2>
+                    <ul>
+                        <?php if (!empty($data['todayEvents'])): ?>
+                            <?php foreach ($data['todayEvents'] as $event): ?>
+                                <li>
+                                    <span class="event-title">
+                                        <?php echo htmlspecialchars($event->event_title ?? 'No Title'); ?>
+                                    </span>
+                                    <span class="event-time">
+                                        <?php echo htmlspecialchars($event->event_time ?? 'TBD'); ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li>No events scheduled for today.</li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
+
+            </div>
             </section>
         </main>
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <script>
-        // Bar Chart
+    <!-- <script>
+        // Complaints Chart
+        const complaintsData = <?php echo json_encode($data['complaintsStats'] ?? []); ?>;
         const barCtx = document.getElementById('monthlyComplaintsChart').getContext('2d');
         new Chart(barCtx, {
             type: 'bar',
@@ -147,7 +125,7 @@
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
                     label: 'Number of Complaints',
-                    data: [12, 19, 3, 5, 2, 3, 8, 14, 7, 10, 6, 9],
+                    data: complaintsData,
                     backgroundColor: '#6a006a'
                 }]
             },
@@ -159,35 +137,29 @@
                     }
                 }
             }
-        });
+        }); -->
 
-        // Payment Chart
-        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
-        new Chart(paymentCtx, {
-            type: 'pie', // Change from 'doughnut' to 'pie'
-            data: {
-                labels: ['Paid', 'Unpaid'],
-                datasets: [{
-                    data: [175, 25],
-                    backgroundColor: ['#800080', '#e0e0e0']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '';
-                            }
-                        }
-                    }
-                }
-            }
-        });
+    // Payment Chart
+    const paymentStats = <?php echo json_encode($data['payments'] ?? ['paid' => 0, 'unpaid' => 0]); ?>;
+    const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+    new Chart(paymentCtx, {
+    type: 'pie',
+    data: {
+    labels: ['Paid', 'Unpaid'],
+    datasets: [{
+    data: [paymentStats.paid, paymentStats.unpaid],
+    backgroundColor: ['#800080', '#e0e0e0']
+    }]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+    legend: {
+    position: 'bottom'
+    }
+    }
+    }
+    });
     </script>
 </body>
 

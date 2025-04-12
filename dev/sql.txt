@@ -181,5 +181,196 @@ CREATE TABLE maintenance_members (
 );
 
 
+-- Table for polls
+CREATE TABLE polls (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_by INT NOT NULL,
+    end_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
+);
+
+-- Table for poll choices/options
+CREATE TABLE poll_choices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    poll_id INT NOT NULL,
+    choice_text VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (poll_id) REFERENCES polls(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Table for poll votes
+CREATE TABLE poll_votes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    poll_id INT NOT NULL,
+    choice_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (poll_id) REFERENCES polls(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (choice_id) REFERENCES poll_choices(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    UNIQUE KEY unique_vote (poll_id, user_id) -- Ensures one vote per user per poll
+);
+
+
+-- Complaints table to store all complaints
+CREATE TABLE complaints (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    status ENUM('pending', 'in_progress', 'resolved') DEFAULT 'pending',
+    priority ENUM('low', 'medium', 'high') DEFAULT 'medium',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP NULL,
+    resolved_by INT NULL,
+    category VARCHAR(100) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (resolved_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Complaint responses table to store replies/updates
+CREATE TABLE complaint_responses (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    complaint_id INT NOT NULL,
+    user_id INT NOT NULL,
+    response TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (complaint_id) REFERENCES complaints(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE chats (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     user1_id INT NOT NULL,
+     user2_id INT NOT NULL,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
+     FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE
+ );
+ CREATE TABLE messages (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     chat_id INT NOT NULL,
+     sender_id INT NOT NULL,
+     message TEXT NOT NULL,
+     is_read BOOLEAN DEFAULT FALSE,
+     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
+     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+ );
+ 
+ CREATE TABLE chat_requests (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     sender_id INT NOT NULL,
+     recipient_id INT NOT NULL,
+     status ENUM('pending', 'accepted', 'declined') DEFAULT 'pending',
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+     FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE
+ );
+
+ CREATE TABLE facilities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL COMMENT 'Facility name',
+    description TEXT COMMENT 'Facility description',
+    capacity INT COMMENT 'Capacity of the facility',
+   image_path VARCHAR(255),
+    status ENUM('available', 'unavailable') DEFAULT 'available' COMMENT 'Facility status',
+    created_by INT NOT NULL COMMENT 'Admin ID who created this facility',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Date and time of creation',
+    FOREIGN KEY (created_by) REFERENCES admins(id) ON DELETE CASCADE
+);
+
+CREATE TABLE bookings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    facility_id INT,
+    facility_name VARCHAR(255),
+    booking_date DATE,
+    booking_time TIME,
+    duration INT,
+    booked_by VARCHAR(255),
+    user_id INT,
+    FOREIGN KEY (facility_id) REFERENCES facilities(id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE groups (
+    group_id INT AUTO_INCREMENT PRIMARY KEY,
+    group_name VARCHAR(255) NOT NULL,
+    group_category VARCHAR(100) NOT NULL,
+    group_members_count INT DEFAULT 0,
+    created_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    group_description TEXT,
+    created_by INT NOT NULL,
+    image_data LONGBLOB, 
+    image_type VARCHAR(50), 
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE group_members (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    group_id INT,
+    user_id INT,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (group_id) REFERENCES groups(group_id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+ALTER TABLE group_members 
+ADD UNIQUE KEY unique_member (group_id, user_id);
+
+
+CREATE TABLE groups_report (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    group_id INT NOT NULL,
+    reported_by INT NOT NULL,
+    reason TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (group_id) REFERENCES groups(group_id),
+    FOREIGN KEY (reported_by) REFERENCES users(id)
+);
+
+CREATE TABLE group_chats (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each message
+    group_id INT NOT NULL,             -- Links the message to a specific group
+    user_id INT NOT NULL,              -- Links the message to the sender's user ID
+    message TEXT NOT NULL,             -- The actual message content
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp of when the message was sent
+    FOREIGN KEY (group_id) REFERENCES groups(group_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE reported_group_message (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    group_id INT NOT NULL,
+    message_id INT NOT NULL,
+    reported_by INT NOT NULL,
+    reason TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (group_id) REFERENCES groups(group_id),
+    FOREIGN KEY (message_id) REFERENCES group_chats(id),
+    FOREIGN KEY (reported_by) REFERENCES users(id)
+);
+ALTER TABLE facilities 
+ADD COLUMN image_data LONGBLOB COMMENT 'Facility image data' AFTER status,
+ADD COLUMN image_type VARCHAR(50) COMMENT 'Facility image MIME type' AFTER image_data;
+
+
 
 

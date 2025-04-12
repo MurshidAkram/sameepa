@@ -9,6 +9,53 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/polls.css">
     <title>Community Polls | <?php echo SITENAME; ?></title>
+
+    <style>
+        .poll-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .poll-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .poll-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        .status-active {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-ended {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .status-voted {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .poll-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,7 +63,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -39,57 +85,52 @@
                 <a href="<?php echo URLROOT; ?>/polls/mypolls" class="btn-my-polls">My Polls</a>
             </div>
 
-            <div class="polls-list">
-                <?php
-                $samplePolls = [
-                    (object)[
-                        'id' => 1,
-                        'title' => 'Community Garden Location',
-                        'description' => 'Help us decide the best location for our new community garden. Your input matters!',
-                        'created_by' => 5,
-                        'end_date' => date('Y-m-d', strtotime('+2 weeks'))
-                    ],
-                    (object)[
-                        'id' => 2,
-                        'title' => 'Weekend Community Event',
-                        'description' => 'Vote for the type of community event you\'d like to see this summer.',
-                        'created_by' => 3,
-                        'end_date' => date('Y-m-d', strtotime('+1 month'))
-                    ],
-                    (object)[
-                        'id' => 3,
-                        'title' => 'Playground Renovation',
-                        'description' => 'We want to improve our community playground. Share your thoughts on what upgrades are needed most.',
-                        'created_by' => 1,
-                        'end_date' => date('Y-m-d', strtotime('+3 weeks'))
-                    ],
-                    (object)[
-                        'id' => 4,
-                        'title' => 'New Recycling Program',
-                        'description' => 'Should we implement a more comprehensive recycling program in our community?',
-                        'created_by' => 2,
-                        'end_date' => date('Y-m-d', strtotime('+1 week'))
-                    ]
-                ];
-                $data['polls'] = $samplePolls;
+            <?php flash('poll_message'); ?>
 
-                foreach ($data['polls'] as $poll) : ?>
-                    <div class="poll-card">
-                        <h2 class="poll-title"><?php echo $poll->title; ?></h2>
-                        <p class="poll-description"><?php echo $poll->description; ?></p>
-                        <div class="poll-details">
-                            <span class="poll-creator">Created by: Resident</span>
-                            <span class="poll-end-date">Ends: <?php echo date('M d, Y', strtotime($poll->end_date)); ?></span>
-                        </div>
-                        <div class="poll-actions">
-                            <a href="<?php echo URLROOT; ?>/polls/viewpoll" class="btn-view-poll">View Poll</a>
-                            <?php if ($poll->created_by == $_SESSION['user_id'] || $_SESSION['user_role_id'] >= 2) : ?>
-                                <a href="<?php echo URLROOT; ?>/polls/edit" class="btn-edit-poll">Edit</a>
-                                <a href="<?php echo URLROOT; ?>/polls/delete/<?php echo $poll->id; ?>" class="btn-delete-poll">Delete</a>
+            <div class="polls-list">
+                <?php if (!empty($data['polls'])) : ?>
+                    <?php foreach ($data['polls'] as $poll) : ?>
+                        <div class="poll-card">
+                            <?php if ($poll->has_ended) : ?>
+                                <span class="poll-status status-ended">Ended</span>
+                            <?php elseif ($poll->user_has_voted) : ?>
+                                <span class="poll-status status-voted">Voted</span>
+                            <?php else : ?>
+                                <span class="poll-status status-active">Active</span>
                             <?php endif; ?>
+
+                            <h2 class="poll-title"><?php echo $poll->title; ?></h2>
+                            <p class="poll-description"><?php echo $poll->description; ?></p>
+
+                            <div class="poll-details">
+                                <span class="poll-creator">Created by: <?php echo $poll->creator_name; ?></span>
+                                <span class="poll-end-date">Ends: <?php echo date('M d, Y', strtotime($poll->end_date)); ?></span>
+                            </div>
+
+                            <div class="poll-stats">
+                                <span><?php echo $poll->total_votes; ?> votes</span>
+                                <span><?php echo $poll->total_choices; ?> choices</span>
+                            </div>
+
+                            <div class="poll-actions">
+                                <a href="<?php echo URLROOT; ?>/polls/viewpoll/<?php echo $poll->id; ?>" class="btn-view-poll">
+                                    <?php echo $poll->user_has_voted ? 'View Results' : 'Vote Now'; ?>
+                                </a>
+
+                                <?php if ($poll->created_by == $_SESSION['user_id'] || $_SESSION['user_role_id'] >= 2) : ?>
+                                    <?php if (!$poll->has_ended) : ?>
+                                        <!--                                         <a href="<?php echo URLROOT; ?>/polls/edit/<?php echo $poll->id; ?>" class="btn-edit-poll">Edit</a>
+ --> <?php endif; ?>
+                                    <a href="<?php echo URLROOT; ?>/polls/delete/<?php echo $poll->id; ?>"
+                                        class="btn-delete-poll"
+                                        onclick="return confirm('Are you sure you want to delete this poll?');">Delete</a>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <p>No polls have been created yet.</p>
+                <?php endif; ?>
             </div>
         </main>
     </div>

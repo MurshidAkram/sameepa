@@ -91,6 +91,7 @@ $userModel = new M_Users();
     .navbar-logo img {
         height: 80px;
     }
+
     .navdiv {
         display: flex;
         align-items: center;
@@ -186,8 +187,8 @@ $userModel = new M_Users();
         }
 
     }
-        .profile-link {
-            justify-content: center;
-        }
+
+    .profile-link {
+        justify-content: center;
     }
 </style>

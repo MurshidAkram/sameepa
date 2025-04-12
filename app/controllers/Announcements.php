@@ -12,7 +12,6 @@ class Announcements extends Controller
 
         // Check if user has appropriate role
         if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
-            //flash('error', 'Unauthorized access');
             redirect('users/login');
         }
 
@@ -50,22 +49,22 @@ class Announcements extends Controller
                 'content_err' => ''
             ];
 
-            // Validate title
+            // Validating the title
             if (empty($data['title'])) {
                 $data['title_err'] = 'Please enter title';
             }
 
-            // Validate content
+            // Validating the content
             if (empty($data['content'])) {
                 $data['content_err'] = 'Please enter content';
             }
 
-            // Make sure no errors
+            // Made sure no errors
             if (empty($data['title_err']) && empty($data['content_err'])) {
                 // Validated
                 if ($this->announcementModel->createAnnouncement($data)) {
                     //flash('announcement_message', 'Announcement Added');
-                    redirect('announcements/admin_dashboard');
+                    redirect('announcements/index');
                 } else {
                     die('Something went wrong');
                 }
@@ -119,7 +118,7 @@ class Announcements extends Controller
                 // Validated
                 if ($this->announcementModel->updateAnnouncement($data)) {
                     //flash('announcement_message', 'Announcement Updated');
-                    redirect('announcements');
+                    redirect('announcements/index');
                 } else {
                     die('Something went wrong');
                 }
@@ -146,18 +145,17 @@ class Announcements extends Controller
     public function delete($id)
     {
         if (!in_array($_SESSION['user_role_id'], [2, 3])) {
-            redirect('announcements');
+            redirect('announcements/index');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($this->announcementModel->deleteAnnouncement($id)) {
-                //flash('announcement_message', 'Announcement Removed');
-                redirect('announcements/admin_dashboard');
+                redirect('announcements/index');
             } else {
                 die('Something went wrong');
             }
         } else {
-            redirect('announcements/admin_dashboard');
+            redirect('announcements/index');
         }
     }
 
@@ -203,22 +201,23 @@ class Announcements extends Controller
 
         $this->view('announcements/viewannouncement', $data);
     }
-    public function admin_dashboard()
-    {
-        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
-            redirect('announcements');
-        }
-    
-        $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-        $announcements = $this->announcementModel->getAllAnnouncements2($searchTerm);
-        $stats = $this->announcementModel->getAnnouncementStats();
-    
-        $data = [
-            'announcements' => $announcements,
-            'stats' => $stats
-        ];
-    
-        $this->view('announcements/admin_dashboard', $data);
-    }
-    
+
+
+    // public function admin_dashboard()
+    // {
+    //     if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+    //         redirect('announcements');
+    //     }
+
+    //     $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+    //     $announcements = $this->announcementModel->getAllAnnouncements2($searchTerm);
+    //     $stats = $this->announcementModel->getAnnouncementStats();
+
+    //     $data = [
+    //         'announcements' => $announcements,
+    //         'stats' => $stats
+    //     ];
+
+    //     $this->view('announcements/admin_dashboard', $data);
+    // }
 }
