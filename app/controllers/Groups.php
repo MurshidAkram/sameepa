@@ -83,7 +83,7 @@ class Groups extends Controller
             if (empty($data['errors'])) {
                 try {
                     if ($this->groupsModel->createGroup($data)) {
-                        if ($_SESSION['user_role_id'] == 2) {
+                        if (in_array($_SESSION['user_role_id'], [2, 3])) {
                             redirect('groups/admin_dashboard');
                         } else {
                             redirect('groups/index');
@@ -243,7 +243,7 @@ class Groups extends Controller
             if (empty($data['errors'])) {
                 try {
                     if ($this->groupsModel->updateGroup($data)) {
-                        if ($_SESSION['user_role_id'] == 2) {
+                        if (in_array($_SESSION['user_role_id'], [2, 3])) {
                             redirect('groups/admin_dashboard');
                         } else {
                             redirect('groups/my_groups');
@@ -295,33 +295,37 @@ class Groups extends Controller
         
         $this->view('groups/chat', $data);
     }
-    
+
     public function sendMessage() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $groupId = $_POST['group_id'];
-            $message = trim($_POST['message']);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $groupId = $_POST['group_id'];
+        $message = trim($_POST['message']);
+        
+        if (!empty($message)) {
+            $messageId = $this->groupsModel->saveMessage($groupId, $_SESSION['user_id'], $message);
             
-            if (!empty($message)) {
-                // Save the message and get the new message ID
-                $messageId = $this->groupsModel->saveMessage($groupId, $_SESSION['user_id'], $message);
-                if ($messageId) {
-                    $user = $this->userModel->getUserById($_SESSION['user_id']);
-                    $response = [
-                        'success' => true,
-                        'message' => $message,
-                        'message_id' => $messageId, // Include the message ID
-                        'sender' => $_SESSION['name'],
-                        'timestamp' => date('Y-m-d H:i:s'),
-                        'profile_image' => $user->profile_picture ? base64_encode($user->profile_picture) : null
-                    ];
-                } else {
-                    $response = ['success' => false];
-                }
+            if ($messageId) {
+                $response = [
+                    'success' => true,
+                    'message' => $message,
+                    'message_id' => $messageId,
+                    'timestamp' => date('Y-m-d H:i:s')
+                ];
+                header('Content-Type: application/json');
                 echo json_encode($response);
+                exit;
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Failed to save message']);
                 exit;
             }
         }
-    }    
+        
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Empty message']);
+        exit;
+    }
+}   
     
     public function admin_dashboard()
     {
@@ -342,7 +346,7 @@ class Groups extends Controller
           if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               if ($this->groupsModel->deleteGroup($id)) {
                   flash('group_message', 'Group Removed');
-                  if ($_SESSION['user_role_id'] == 2) {
+                  if (in_array($_SESSION['user_role_id'], [2, 3])) {
                       redirect('groups/admin_dashboard');
                   } else {
                       redirect('groups/my_groups');

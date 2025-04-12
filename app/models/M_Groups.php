@@ -197,6 +197,7 @@ class M_Groups
         $this->db->bind(':id', $reportId);
         return $this->db->execute();
     }
+    
     public function saveMessage($groupId, $userId, $message) {
         $this->db->query('INSERT INTO group_chats (group_id, user_id, message) VALUES (:group_id, :user_id, :message)');
         $this->db->bind(':group_id', $groupId);
@@ -204,11 +205,10 @@ class M_Groups
         $this->db->bind(':message', $message);
         
         if ($this->db->execute()) {
-            return $this->db->lastInsertId(); // Return the new message ID
+            return $this->db->lastInsertId();
         }
         return false;
     }
-    
     
     public function getGroupMessages($groupId) {
         $this->db->query('SELECT gc.*, u.name as sender_name, u.profile_picture 

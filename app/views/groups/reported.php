@@ -31,15 +31,9 @@
 
         <main class="reported-main">
             <div class="top-page">
-                <?php if ($_SESSION['user_role_id'] == 2): ?>
                     <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="back-button">
                         <i class="fas fa-arrow-left"></i> Back to Dashboard
                     </a>
-                <?php else: ?>
-                    <a href="<?php echo URLROOT; ?>/groups" class="back-button">
-                        <i class="fas fa-arrow-left"></i> Back to Groups
-                    </a>
-                <?php endif; ?>
             </div>
 
             <h1>Reported Groups</h1>
