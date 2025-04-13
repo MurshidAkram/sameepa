@@ -34,6 +34,13 @@
             padding: 20px;
         }
 
+        .dashboard-container1{
+            
+           padding-left: 300px;
+           display: flex;
+
+        }
+
         main {
             flex: 1;
             padding-left: 20px;
@@ -239,7 +246,8 @@ h2{
     text-align: center;
     color: #800080;
     font-size:34px;
-    font-family: Arial, sans-serif
+    font-family: Arial, sans-serif;
+    padding-bottom: 50px;
 
 }
 
@@ -364,7 +372,7 @@ input:focus, textarea:focus {
                         <th>Resident Address</th>
                         <th>Phone Number</th>
                         <th>Email Address</th>
-                        <th>Action</th>
+                        <!-- <th>Action</th> -->
                     </tr>
                 </thead>
                 <tbody id="results-body">
@@ -376,7 +384,7 @@ input:focus, textarea:focus {
 </div>
 
     <!-- *********************************visitor pass management part *************************************************************visitor pass management part **************************** -->
-    <div class="dashboard-container">
+    <div class="dashboard-container1">
         
 
         <main>
@@ -389,7 +397,7 @@ input:focus, textarea:focus {
 <!-- Modal for Creating Visitor Pass -->
 <div class="modal" id="visitorPassModal">
     <div class="modal-header">
-        <h2>Create New Visitor Pass</h2>
+        <h3>Create New Visitor Pass</h3>
         <span class="close btn cancel-btn" id="closeVisitorModal">&times;</span>
     </div>
     <form class="modal-form" id="visitorPassForm" action="<?php echo URLROOT; ?>/security/Add_Visitor_Pass" method="POST">
@@ -412,7 +420,7 @@ input:focus, textarea:focus {
         <input type="number" id="duration" name="duration" min="1" max="24" required>
 
         <label for="purpose">Purpose of Visit:</label>
-        <textarea id="purpose" name="purpose" rows="3" required></textarea>
+        <input id="purpose" name="purpose" rows="3" required></input>
 
         <!-- Hidden field for resident ID -->
         <input type="hidden" id="resident_id" name="resident_id">
