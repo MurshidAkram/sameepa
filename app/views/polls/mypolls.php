@@ -40,20 +40,9 @@
             </div>
 
             <?php
-            $sampleMyPolls = [
-                (object)[
-                    'id' => 3,
-                    'title' => 'Playground Renovation',
-                    'description' => 'We want to improve our community playground. Share your thoughts on what upgrades are needed most.',
-                    'total_votes' => 42,
-                    'end_date' => date('Y-m-d', strtotime('+3 weeks'))
-                ]
-            ];
-            $data['polls'] = $sampleMyPolls;
-
             if (empty($data['polls'])) : ?>
                 <div class="no-polls-message">
-                    <p>You haven't created any polls yet. <a href="<?php echo URLROOT; ?>/polls/create">Create your first poll!</a></p>
+                    <p>You haven't created any polls yet. <a href="<?php echo URLROOT; ?>/polls/create">Create a poll!</a></p>
                 </div>
             <?php else : ?>
                 <div class="polls-list">
@@ -66,8 +55,10 @@
                                 <span class="poll-end-date">Ends: <?php echo date('M d, Y', strtotime($poll->end_date)); ?></span>
                             </div>
                             <div class="poll-actions">
-                                <a href="<?php echo URLROOT; ?>/polls/viewpoll" class="btn-view-poll">View Results</a>
-                                <a href="<?php echo URLROOT; ?>/polls/delete/<?php echo $poll->id; ?>" class="btn-delete-poll">Delete</a>
+                                <a href="<?php echo URLROOT; ?>/polls/viewpoll/<?php echo $poll->id; ?>" class="btn-view-poll">View Results</a>
+                                <a href="<?php echo URLROOT; ?>/polls/delete/<?php echo $poll->id; ?>"
+                                    class="btn-delete-poll"
+                                    onclick="return confirm('Are you sure you want to delete this poll?');">Delete</a>
                             </div>
                         </div>
                     <?php endforeach; ?>

@@ -238,10 +238,8 @@ class Forums extends Controller
         if ($forum && $forum['created_by'] == $_SESSION['user_id']) {
             try {
                 if ($this->forumsModel->deleteForum($id)) {
-                    //flash('forum_message', 'Forum deleted successfully.');
                     redirect('forums/myforums');
                 } else {
-                    //flash('error', 'Unable to delete forum. Please try again.');
                     redirect('forums/myforums');
                 }
             } catch (Exception $e) {
@@ -266,10 +264,11 @@ class Forums extends Controller
             'forums' => $forums,
             'title' => 'Forums Management'
         ];
-        
+
         $this->view('forums/admin_dashboard', $data);
     }
-    public function getForumIdByCommentId($commentId) {
+    public function getForumIdByCommentId($commentId)
+    {
         $comment = $this->forumsModel->getCommentById($commentId);
         if ($comment) {
             redirect('forums/view_forum/' . $comment['forum_id']);
@@ -277,14 +276,13 @@ class Forums extends Controller
         redirect('forums');
     }
     public function searchForums()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $searchTerm = trim($_POST['search']);
-        $forums = $this->forumsModel->searchForums($searchTerm);
-        
-        header('Content-Type: application/json');
-        echo json_encode($forums);
-    }
-}
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $searchTerm = trim($_POST['search']);
+            $forums = $this->forumsModel->searchForums($searchTerm);
 
+            header('Content-Type: application/json');
+            echo json_encode($forums);
+        }
+    }
 }

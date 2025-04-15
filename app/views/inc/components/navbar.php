@@ -1,10 +1,9 @@
 <?php
-// At the top of navbar.php, instantiate the user model
+// i have added this the top of navbar.php, to instantiate the user model
 require_once APPROOT . '/models/M_Users.php';
 $userModel = new M_Users();
 ?>
 
-<!-- navbar.php -->
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/navbar.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <nav class="navbar">
@@ -16,16 +15,10 @@ $userModel = new M_Users();
 
 
         <ul class="navbar-menu">
-            <li class="notification-dropdown">
-                <a href="<?php echo URLROOT; ?>/notifications" class="notification-link">
-                    <i class="fas fa-bell"></i>
-                </a>
-            </li>
             <li><a href="<?php echo URLROOT; ?>">Home</a></li>
 
 
             <?php if (isset($_SESSION['user_id'])) : ?>
-                <!-- Show different navigation based on user role -->
                 <?php switch ($_SESSION['user_role_id']):
                     case 1: // Resident 
                 ?>
@@ -36,6 +29,7 @@ $userModel = new M_Users();
                     <?php break;
                     case 3: // SuperAdmin 
                     ?>
+                        <li><a href="<?php echo URLROOT; ?>/superadmin/dashboard">Dashboard</a></li>
                     <?php break;
                     case 4: // Maintenance 
                     ?>
@@ -43,13 +37,14 @@ $userModel = new M_Users();
                     <?php break;
                     case 5: // Security 
                     ?>
-                    <?php break;
-                    case 6: // External Service Provider 
-                    ?>
-                        <li><a href="<?php echo URLROOT; ?>/external/dashboard">Dashboard</a></li>
+                        <li><a href="<?php echo URLROOT; ?>/security/dashboard">Dashboard</a></li>
                 <?php break;
                 endswitch; ?>
-
+                <li class="notification-dropdown">
+                    <a href="<?php echo URLROOT; ?>/notifications" class="notification-link">
+                        <i class="fas fa-bell"></i>
+                    </a>
+                </li>
                 <!-- Profile dropdown -->
                 <li class="profile-dropdown">
                     <a href="<?php echo URLROOT; ?>/users/profile" class="profile-link">
@@ -80,7 +75,6 @@ $userModel = new M_Users();
 </nav>
 
 <style>
-    /* Add these styles to your navbar.css or include them here */
     .navbar {
         background: rgb(239, 245, 245);
         padding-right: 15px;
