@@ -39,6 +39,18 @@ class Chat extends Controller
 
         $this->view('chat/search', ['users' => $users]);
     }
+    public function image($id) {
+        $user = $this->chatModel->getProfileById($id); // ✅ use correct method
+    
+        if ($user && !empty($user->profile_picture)) {
+            header("Content-Type: image/jpeg"); // or image/png depending on your data
+            echo $user->profile_picture;
+        } else {
+            header("Location: " . URLROOT . "/img/default-user.png");
+            exit;
+        }
+    }
+    
 
     public function requests()
     {

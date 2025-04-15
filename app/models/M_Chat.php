@@ -59,7 +59,7 @@ class M_Chat
     public function getRecommendedUsers($current_user_id)
     {
         $this->db->query('
-            SELECT id, name, role_id 
+            SELECT id, name, role_id
             FROM users 
             WHERE id != :current_user_id 
             LIMIT 10
@@ -67,6 +67,13 @@ class M_Chat
         $this->db->bind(':current_user_id', $current_user_id);
         return $this->db->resultSet();
     }
+    public function getProfileById($id)
+{
+    $this->db->query('SELECT id, name, profile_picture FROM users WHERE id = :id');
+    $this->db->bind(':id', $id);
+    return $this->db->single(); // ✅ returns a single user object
+}
+
     // Get pending chat requests
     public function getPendingChatRequests($user_id)
     {

@@ -67,9 +67,10 @@
                         <div class="listing-contact">
     <h3>Contact Information</h3>
     <div class="listing-contact">
-    <button class="btn-primary contact-seller" onclick="window.location.href='<?php echo URLROOT; ?>/exchange/contact_seller/<?php echo $listing['id']; ?>'">
-        Contact Seller
-    </button>
+    <div class="listing-metadata">
+                            <p><strong>Name:</strong> <?php echo isset($listing['posted_by_name']) ? htmlspecialchars($listing['posted_by_name']) : 'Unknown'; ?></p>
+                            <p><strong>Phone Number:</strong> <?php echo isset($listing['number']) ? htmlspecialchars($listing['number']) : 'Unknown'; ?></p>
+                        </div>
 </div>
                     </div>
                 </div>

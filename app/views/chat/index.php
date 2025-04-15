@@ -58,9 +58,11 @@
                     <?php if (!empty($data['users'])): ?>
                         <?php foreach ($data['users'] as $user): ?>
                             <div class="group-card">
-                                <div class="group-image">
-                                    <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="<?php echo $user->name; ?>">
-                                </div>
+                            <?php if (!empty($user->profile_picture)) : ?>
+                                <img src="<?php echo URLROOT; ?>/Chat/image/<?php echo $user->id; ?>" alt="<?php echo $user->name; ?>" class="group-image">
+                            <?php else : ?>
+                                <img src="<?php echo URLROOT; ?>/img/default.png" alt="No image available" class="group-image">
+                            <?php endif; ?>
                                 <div class="group-details">
                                     <h3 class="group-title"><?php echo $user->name; ?></h3>
                                     <div class="group-actions">
