@@ -6,6 +6,8 @@ class Resident extends Controller
     private $listingModel;
 
 
+
+
     public function __construct()
     {
         $this->checkResidentAuth();
@@ -14,20 +16,25 @@ class Resident extends Controller
         // $this->residentModel = $this->model('M_Resident');
     }
 
-    private function checkResidentAuth()
-    {
-        // Check if user is logged in
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . URLROOT . '/users/login');
-            exit();
-        }
+    // private function checkResidentAuth()
+    // {
+    //     // Check if user is logged in
+    //     if (!isset($_SESSION['user_id'])) {
+    //         header('Location: ' . URLROOT . '/users/login');
+    //         exit();
+    //     }
 
-        // Check if user is a resident (role_id = 1)
-        if ($_SESSION['user_role_id'] != 1) {
-            // Redirect to unauthorized page
-            header('Location: ' . URLROOT . '/pages/unauthorized');
-            exit();
-        }
+    //     // Check if user is a resident (role_id = 1)
+    //     if ($_SESSION['user_role_id'] != 1) {
+    //         // Redirect to unauthorized page
+    //         header('Location: ' . URLROOT . '/pages/unauthorized');
+    //         exit();
+    //     }
+    // }
+
+    public function index()
+    {
+        $this->dashboard(); // Show the dashboard by default
     }
 
     public function dashboard()

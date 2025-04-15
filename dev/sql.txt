@@ -346,6 +346,18 @@ CREATE TABLE groups_report (
     FOREIGN KEY (reported_by) REFERENCES users(id)
 );
 
+CREATE TABLE listings (
+  id int(11) NOT NULL,
+  title varchar(255) NOT NULL,
+  type enum('service','sale','exchange','lost') NOT NULL,
+  description text NOT NULL,
+  posted_by int(11) NOT NULL,
+  date_posted timestamp NOT NULL DEFAULT current_timestamp(),
+  image_data longblob DEFAULT NULL,
+  image_type varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 CREATE TABLE group_chats (
     id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each message
     group_id INT NOT NULL,             -- Links the message to a specific group
@@ -370,6 +382,7 @@ CREATE TABLE reported_group_message (
 ALTER TABLE facilities 
 ADD COLUMN image_data LONGBLOB COMMENT 'Facility image data' AFTER status,
 ADD COLUMN image_type VARCHAR(50) COMMENT 'Facility image MIME type' AFTER image_data;
+
 
 
 

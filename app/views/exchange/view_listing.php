@@ -10,67 +10,78 @@
     <title>View Listing | <?php echo SITENAME; ?></title>
 </head>
 <body>
-    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+<?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="dashboard-container">
-        <?php 
-        // Load appropriate side panel based on user role
-        switch($_SESSION['user_role_id']) {
-            case 1:
-                require APPROOT . '/views/inc/components/side_panel_resident.php';
-                break;
-            case 2:
-                require APPROOT . '/views/inc/components/side_panel_admin.php';
-                break;
-            case 3:
-                require APPROOT . '/views/inc/components/side_panel_superadmin.php';
-                break;
-        }
-        ?>
-
-        <main class="exchange-main">
-            <div class="listing-details-container">
-                <a href="<?php echo ($_SESSION['user_role_id'] == 2) ? URLROOT . '/exchange/admin_dashboard' : URLROOT . '/exchange/index'; ?>" class="back-button">
-                    <i class="fas fa-arrow-left"></i> Back to <?php echo ($_SESSION['user_role_id'] == 2) ? 'Admin Dashboard' : 'My Listings'; ?>
-                </a>
-             
+<div class="dashboard-container">
+    <?php 
+    switch ($_SESSION['user_role_id']) {
+        case 1:
+            require APPROOT . '/views/inc/components/side_panel_resident.php';
+            break;
+        case 2:
+            require APPROOT . '/views/inc/components/side_panel_admin.php';
+            break;
+        case 3:
+            require APPROOT . '/views/inc/components/side_panel_superadmin.php';
+            break;
+    }
+    ?>
+    
+    <main class="exchange-main">
+        <div class="listing-details-container">
+            <a href="<?php echo ($_SESSION['user_role_id'] == 2) ? URLROOT . '/exchange/admin_dashboard' : URLROOT . '/exchange/index'; ?>" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to <?php echo ($_SESSION['user_role_id'] == 2) ? 'Admin Dashboard' : 'Listings'; ?>
+            </a>
+            
+            <?php if (!empty($data['listing'])) :
+                $listing = $data['listing'];
+                // Remove the var_dump from the controller as it's causing output issues
+            ?>
                 <div class="listing-full-view">
                     <div class="listing-header">
-                        <h1>Lawn Mowing Service</h1>
+                        <h1 class="listing-title"><?php echo htmlspecialchars($listing['title']); ?></h1>
                         <div class="service-box">
-                            <span class="listing-type">Service</span>
+                            <span class="listing-type"><?php echo ucfirst($listing['type']); ?></span>
                         </div>
                     </div>
-
+                    
                     <div class="listing-image-container">
-                        <img src="<?php echo URLROOT; ?>/img/lawn-mower.jpg" 
-                             alt="Lawn Mowing Service" 
-                             class="listing-full-image">
+                        <?php if (isset($listing['image_data']) && !empty($listing['image_data'])) : ?>
+                            <img src="<?php echo URLROOT; ?>/exchange/image/<?php echo $listing['id']; ?>" alt="<?php echo htmlspecialchars($listing['title']); ?>" class="listing-full-image">
+                        <?php else : ?>
+                            <img src="<?php echo URLROOT; ?>/img/default.png" alt="No image available" class="listing-full-image">
+                        <?php endif; ?>
                     </div>
-
+                    
                     <div class="listing-info">
                         <div class="listing-description">
                             <h3>Description</h3>
-                            <p>Professional lawn mowing service available on weekends. Please contact.</p>
+                            <p><?php echo nl2br(htmlspecialchars($listing['description'])); ?></p>
                         </div>
-
+                        
                         <div class="listing-metadata">
-                            <p><strong>Posted by:</strong> John Doe</p>
-                            <p><strong>Posted on:</strong> 2023-07-10</p>
+                            <p><strong>Posted by:</strong> <?php echo isset($listing['posted_by_name']) ? htmlspecialchars($listing['posted_by_name']) : 'Unknown'; ?></p>
+                            <p><strong>Posted on:</strong> <?php echo date('F j, Y', strtotime($listing['date_posted'])); ?></p>
                         </div>
-
+                        
                         <div class="listing-contact">
-                            <h3>Contact Information</h3>
-                            <button class="btn-primary contact-seller" onclick="window.location.href='<?php echo URLROOT; ?>/exchange/contact_seller'">
-                                Contact Seller
-                            </button>
-                        </div>
+    <h3>Contact Information</h3>
+    <div class="listing-contact">
+    <button class="btn-primary contact-seller" onclick="window.location.href='<?php echo URLROOT; ?>/exchange/contact_seller/<?php echo $listing['id']; ?>'">
+        Contact Seller
+    </button>
+</div>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
+            <?php else : ?>
+                <div class="no-listings">
+                    <p>No listing found.</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </main>
+</div>
 
-    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+<?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
 </html>
