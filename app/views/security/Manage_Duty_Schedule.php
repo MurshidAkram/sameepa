@@ -132,7 +132,7 @@ body {
     background-color: var(--modal-bg);
     border-radius: 10px;
     width: 60%;
-    max-width: 400px;
+    max-width: 700px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
@@ -171,7 +171,7 @@ body {
 }
 
 .modal-body {
-    padding: 20px;
+    padding: 35px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -492,7 +492,7 @@ tr:hover {
         max-width: 100%;
     }
 }
-
+ 
 @media (max-width: 480px) {
     .modal-content {
         width: 95%;
@@ -622,6 +622,7 @@ tr:hover {
                 <h3>Add Duty Schedule</h3>
                 <button class="close" onclick="closeModal('addDutyModal')">&times;</button>
             </div>
+            
             <div class="modal-body">
                 <form id="addDutyForm">
                     <input type="hidden" id="addOfficerId">
@@ -925,11 +926,26 @@ function editDuty(officerId, dutyDate, currentShiftId) {
         window.location.reload();
     });
 }
+
 function deleteDuty(officerId, dutyDate) {
-    if (!confirm('Are you sure you want to remove this duty assignment?')) {
+    // First validate the date is in the future (not today or past)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day
+    
+    const dutyDateObj = new Date(dutyDate);
+    
+    // Check if date is today or in the past
+    if (dutyDateObj <= today) {
+        alert('Cannot delete duties for past dates.');
+        return;
+    }
+
+    // Confirm deletion with user
+    if (!confirm('Are you sure you want to delete this future duty assignment?')) {
         return;
     }
     
+    // Send request to server
     fetch('<?php echo URLROOT; ?>/security/deleteDuty', {
         method: 'POST',
         headers: {
@@ -940,26 +956,16 @@ function deleteDuty(officerId, dutyDate) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update the calendar display
-            const dayCell = document.querySelector(`.calendar-day[data-date="${dutyDate}"]`);
-            if (dayCell) {
-                updateCalendarDayDuties(dutyDate, dayCell);
-            }
-            
-            // Update today's schedule if deleting today's duty
-            if (isToday(new Date(dutyDate))) {
-                window.location.reload();
-            } else {
-                viewOfficerDuties(officerId); // Refresh the duties list
-                showSuccessMessage('Duty removed successfully!');
-            }
+            alert('Duty deleted successfully!');
+            window.location.reload(); // Refresh the page
         } else {
-            alert(data.message || 'Error removing duty');
+            alert(data.message || 'Failed to delete duty');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error removing duty');
+        alert('Error deleting duty');
+        window.location.reload();
     });
 }
 

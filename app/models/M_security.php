@@ -10,105 +10,7 @@ class M_security
     }
 //**************************************Dash board************************************************* */
 
-public function countActivePasses() {
-    $this->db->query('SELECT COUNT(*) as count FROM visitor_passes WHERE visit_date = CURDATE()');
-    $result = $this->db->single();
-    return $result->count;
-}
 
-public function countOnDutySecurity() {
-    $this->db->query('SELECT COUNT(*) as count FROM security_personnel WHERE status = "on_duty"');
-    $result = $this->db->single();
-    return $result->count;
-}
-
-public function getRecentEmergency() {
-    $this->db->query('SELECT type, date, time FROM incident_reports WHERE type LIKE "%Emergency%" ORDER BY date DESC, time DESC LIMIT 1');
-    $result = $this->db->single();
-    
-    if ($result) {
-        $date = new DateTime($result->date);
-        $time = new DateTime($result->time);
-        return $result->type . ' at ' . $time->format('h:i A') . ' on ' . $date->format('M j');
-    }
-    return 'No recent emergencies';
-}
-
-public function getDashboardChartData() {
-    $data = [];
-    
-    // Access Logs Data (last 7 days)
-    $this->db->query("
-        SELECT 
-            DATE(visit_date) as day, 
-            COUNT(*) as count 
-        FROM visitor_passes 
-        WHERE visit_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE()
-        GROUP BY DATE(visit_date)
-        ORDER BY day ASC
-    ");
-    $accessLogs = $this->db->resultSet();
-    
-    $accessLabels = [];
-    $accessData = [];
-    foreach ($accessLogs as $log) {
-        $accessLabels[] = date('D', strtotime($log->day));
-        $accessData[] = $log->count;
-    }
-    $data['accessLogs'] = [
-        'labels' => $accessLabels,
-        'data' => $accessData
-    ];
-    
-    // Incident Trends Data (last 30 days)
-    $this->db->query("
-        SELECT 
-            type, 
-            COUNT(*) as count 
-        FROM incident_reports 
-        WHERE date BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()
-        GROUP BY type
-        ORDER BY count DESC
-        LIMIT 5
-    ");
-    $incidentTrends = $this->db->resultSet();
-    
-    $incidentLabels = [];
-    $incidentData = [];
-    foreach ($incidentTrends as $trend) {
-        $incidentLabels[] = $trend->type;
-        $incidentData[] = $trend->count;
-    }
-    $data['incidentTrends'] = [
-        'labels' => $incidentLabels,
-        'data' => $incidentData
-    ];
-    
-    // Visitor Flow Data (last 7 days)
-    $this->db->query("
-        SELECT 
-            DATE(visit_date) as day, 
-            SUM(visitor_count) as total 
-        FROM visitor_passes 
-        WHERE visit_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE()
-        GROUP BY DATE(visit_date)
-        ORDER BY day ASC
-    ");
-    $visitorFlow = $this->db->resultSet();
-    
-    $flowLabels = [];
-    $flowData = [];
-    foreach ($visitorFlow as $flow) {
-        $flowLabels[] = date('D', strtotime($flow->day));
-        $flowData[] = $flow->total;
-    }
-    $data['visitorFlow'] = [
-        'labels' => $flowLabels,
-        'data' => $flowData
-    ];
-    
-    return $data;
-}
 
 //****************************************************** Emergency contact******************************************************************* */
 
@@ -193,7 +95,64 @@ public function getVisitorPasses() {
         'status' => 'success'
     ];
 }
+public function getTodayPasses()
+{
+    $today = date('Y-m-d');
+    $this->db->query('SELECT * FROM Visitor_Passes WHERE visit_date = :today');
+    $this->db->bind(':today', $today);
+    return $this->db->resultSet();
+}
 
+public function getWeeklyVisitorFlow()
+{
+    $endDate = date('Y-m-d');
+    $startDate = date('Y-m-d', strtotime('-6 days'));
+    
+    $this->db->query('
+        SELECT 
+            visit_date as date, 
+            COUNT(*) as count,
+            DAYNAME(visit_date) as day_name
+        FROM Visitor_Passes 
+        WHERE visit_date BETWEEN :start_date AND :end_date
+        GROUP BY visit_date
+        ORDER BY visit_date
+    ');
+    
+    $this->db->bind(':start_date', $startDate);
+    $this->db->bind(':end_date', $endDate);
+    $results = $this->db->resultSet();
+    
+    // Format for chart
+    $labels = [];
+    $data = [];
+    
+    // Fill all 7 days (even if no data)
+    for ($i = 6; $i >= 0; $i--) {
+        $date = date('Y-m-d', strtotime("-$i days"));
+        $dayName = date('D', strtotime($date));
+        
+        $found = false;
+        foreach ($results as $row) {
+            if ($row->date == $date) {
+                $labels[] = $dayName;
+                $data[] = $row->count;
+                $found = true;
+                break;
+            }
+        }
+        
+        if (!$found) {
+            $labels[] = $dayName;
+            $data[] = 0;
+        }
+    }
+    
+    return [
+        'labels' => $labels,
+        'data' => $data
+    ];
+}
 
 
 public function addVisitorPass($data) {
@@ -215,6 +174,61 @@ public function addVisitorPass($data) {
     } else {
         return false;
     }
+}
+
+public function getMonthlyIncidentTrends()
+{
+    $startDate = date('Y-m-01'); // First day of current month
+    $endDate = date('Y-m-t');   // Last day of current month
+    
+    $this->db->query('
+        SELECT 
+            type,
+            COUNT(*) as count
+        FROM incident_reports
+        WHERE date BETWEEN :start_date AND :end_date
+        GROUP BY type
+        ORDER BY count DESC
+    ');
+    
+    $this->db->bind(':start_date', $startDate);
+    $this->db->bind(':end_date', $endDate);
+    $results = $this->db->resultSet();
+    
+    $labels = [];
+    $data = [];
+    
+    foreach ($results as $row) {
+        $labels[] = $row->type;
+        $data[] = $row->count;
+    }
+    
+    return [
+        'labels' => $labels,
+        'data' => $data
+    ];
+}
+
+public function getTodayDutyOfficers()
+{
+    $today = date('Y-m-d');
+    
+    $this->db->query('
+        SELECT 
+            u.id, 
+            u.name, 
+            ds.name as shift_name,
+            ds.start_time,
+            ds.end_time
+        FROM duty_schedule d
+        JOIN users u ON d.user_id = u.id
+        JOIN duty_shifts ds ON d.shift_id = ds.id
+        WHERE d.duty_date = :today
+        ORDER BY ds.start_time
+    ');
+    
+    $this->db->bind(':today', $today);
+    return $this->db->resultSet();
 }
 
 //***************************************************resident contact*********************************** */

@@ -13,7 +13,7 @@ class Security extends Controller
         $this->securityModel = $this->model('M_security');
         
     }
-
+  
     private function checkSecurityAuth()
     {
         // Check if user is logged in
@@ -31,54 +31,40 @@ class Security extends Controller
     }
 
 //**************************************************dash board********************************************************* */
-public function dashboard() {
-    // Get user session data
-    $sessionData = [
+public function dashboard()
+{
+    // Get data for dashboard using securityModel instead of separate models
+    $data = [
         'user_id' => $_SESSION['user_id'],
         'email' => $_SESSION['user_email'],
         'name' => $_SESSION['user_name'] ?? '',
         'role' => $_SESSION['user_role'],
-        'title' => 'Security Dashboard'
+        'todayPasses' => $this->securityModel->getTodayPasses(),
+        'onDutyOfficers' => $this->securityModel->getTodayDutyOfficers(),
+        'incidentTrends' => $this->securityModel->getMonthlyIncidentTrends(),
+        'visitorFlow' => $this->securityModel->getWeeklyVisitorFlow()
     ];
-    
-    // Get security dashboard data
-    $dashboardData = [
-        'activePassesCount' => $this->securityModel->countActivePasses(),
-        'onDutyCount' => $this->securityModel->countOnDutySecurity(),
-        'recentEmergency' => $this->securityModel->getRecentEmergency(),
-        'chartData' => $this->securityModel->getDashboardChartData()
-    ];
-    
-    // Merge all data
-    $data = array_merge($sessionData, $dashboardData);
-    
+
     // Load the dashboard view
     $this->view('security/dashboard', $data);
 }
 
-public function getChartData() {
-    // For AJAX requests
-    header('Content-Type: application/json');
+public function getChartData()
+{
+    // Get updated data for AJAX requests using securityModel
+    $data = [
+        'success' => true,
+        'activePasses' => count($this->securityModel->getTodayPasses()),
+        'onDuty' => count($this->securityModel->getTodayDutyOfficers()),
+        'data' => [
+            'accessLogs' => $this->securityModel->getWeeklyVisitorFlow(),
+            'incidentTrends' => $this->securityModel->getMonthlyIncidentTrends(),
+            'visitorFlow' => $this->securityModel->getWeeklyVisitorFlow()
+        ]
+    ];
     
-    try {
-        $chartData = $this->securityModel->getDashboardChartData();
-        echo json_encode([
-            'success' => true,
-            'data' => $chartData,
-            'activePasses' => $this->securityModel->countActivePasses(),
-            'onDuty' => $this->securityModel->countOnDutySecurity(),
-            'recentEmergency' => $this->securityModel->getRecentEmergency()
-        ]);
-    } catch (Exception $e) {
-        http_response_code(500);
-        echo json_encode([
-            'success' => false,
-            'message' => 'Error fetching chart data: ' . $e->getMessage()
-        ]);
-    }
-    exit;
+    echo json_encode($data);
 }
-
 //*************************************visitor passes******************************************************** */
 
 public function Manage_Visitor_Passes() {
