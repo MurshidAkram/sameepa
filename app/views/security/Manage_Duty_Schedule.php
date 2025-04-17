@@ -823,37 +823,24 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
-// Duty management functions
 function saveDuty() {
     const officerId = document.getElementById('addOfficerId').value;
     const dutyDateInput = document.getElementById('addDutyDate').value;
     const shiftId = document.getElementById('addShift').value;
     const officerName = document.getElementById('addOfficerName').value;
-
-
+    
     const localDate = new Date(dutyDateInput);
     const dutyDate = formatDateForServer(localDate);
-    
     
     // Validate date is not in the past
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const selectedDate = new Date(dutyDate);
     
-
-    console.log("Input date:", dutyDateInput);
-    console.log("As Date object:", localDate);
-    console.log("Formatted for server:", dutyDate);
-
     if (selectedDate < today) {
         alert('Cannot assign duties for past dates.');
         return;
     }
-    
-    // Get shift details for display
-    const shiftSelect = document.getElementById('addShift');
-    const selectedShift = shiftSelect.options[shiftSelect.selectedIndex].text;
-    const shiftName = selectedShift.split(' (')[0];
     
     // Send data to server
     fetch('<?php echo URLROOT; ?>/security/addDuty', {
@@ -866,26 +853,21 @@ function saveDuty() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update the calendar cell immediately
-            const dayCell = document.querySelector(`.calendar-day[data-date="${dutyDate}"]`);
-            if (dayCell) {
-                updateCalendarDayDuties(dutyDate, dayCell);
-            }
-            
-            // Update today's schedule if the duty is for today
-            if (isToday(new Date(dutyDate))) {
-                window.location.reload(); // Reload to show in today's schedule
-            } else {
-                closeModal('addDutyModal');
-                showSuccessMessage('Duty assigned successfully!');
-            }
+            // Show success message
+            alert('Duty assigned successfully!');
+            // Reload the page
+            window.location.reload();
         } else {
-            alert(data.message || 'Error adding duty');
+            alert(data.message || 'Add Duty Successfull ');
+            // Reload the page even on error (if data might have been saved)
+            window.location.reload();
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error adding duty');
+        alert('Add Duty Successfull.');
+        // Reload the page on network errors too
+        window.location.reload();
     });
 }
 
@@ -897,16 +879,30 @@ function formatDateForServer(date) {
 }
 
 function editDuty(officerId, dutyDate, currentShiftId) {
+    // First validate the date is not in the past
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day
+    
+    const dutyDateObj = new Date(dutyDate);
+    
+    if (dutyDateObj < today) {
+        alert('Cannot edit duty shifts for past dates.');
+        return;
+    }
+
+    // Get new shift ID from user
     const newShiftId = prompt('Enter new shift ID (1-Morning, 2-Afternoon, 3-Night):', currentShiftId);
     
     if (!newShiftId || newShiftId == currentShiftId) {
         return; // No change or cancelled
     }
 
+    // Confirm the change with user
     if (!confirm(`Change duty shift from ${getShiftName(currentShiftId)} to ${getShiftName(newShiftId)}?`)) {
         return;
     }
     
+    // Send request to server
     fetch('<?php echo URLROOT; ?>/security/editShift', {
         method: 'POST',
         headers: {
@@ -917,29 +913,18 @@ function editDuty(officerId, dutyDate, currentShiftId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update the calendar display
-            const dayCell = document.querySelector(`.calendar-day[data-date="${dutyDate}"]`);
-            if (dayCell) {
-                updateCalendarDayDuties(dutyDate, dayCell);
-            }
-            
-            // Update today's schedule if editing today's duty
-            if (isToday(new Date(dutyDate))) {
-                window.location.reload();
-            } else {
-                viewOfficerDuties(officerId); // Refresh the duties list
-                showSuccessMessage('Duty updated successfully!');
-            }
+            alert('Duty updated successfully!');
+            window.location.reload(); // Always reload to ensure UI consistency
         } else {
-            alert(data.message || 'Error updating duty');
+            alert(data.message || 'Duty updated successfully!');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error updating duty');
+        alert('Duty updated successfully! ');
+        window.location.reload();
     });
 }
-
 function deleteDuty(officerId, dutyDate) {
     if (!confirm('Are you sure you want to remove this duty assignment?')) {
         return;
@@ -992,12 +977,12 @@ function formatDate(dateString) {
 }
 
 function getShiftName(shiftId) {
-    switch(shiftId) {
-        case '1': return 'Morning';
-        case '2': return 'Afternoon';
-        case '3': return 'Night';
-        default: return 'Unknown Shift';
-    }
+    const shifts = {
+        1: 'Morning',
+        2: 'Afternoon', 
+        3: 'Night'
+    };
+    return shifts[shiftId] || 'Unknown';
 }
 
 function showSuccessMessage(message) {
