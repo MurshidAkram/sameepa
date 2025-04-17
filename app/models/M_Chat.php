@@ -16,6 +16,7 @@ class M_Chat {
         
         return $this->db->resultSet();
     }
+    
     public function getAllUsersExcept($userId) {
         $this->db->query('SELECT * FROM users WHERE id != :user_id');
         $this->db->bind(':user_id', $userId);
@@ -28,8 +29,6 @@ class M_Chat {
         $this->db->bind(':search', '%' . $search . '%');
         return $this->db->resultSet();
     }
-    
-    
     
     // Get the last message in a chat
     public function getLastMessageByChatId($chatId) {
@@ -52,17 +51,14 @@ class M_Chat {
         $this->db->bind(':chat_id', $chatId);
         $this->db->bind(':user_id', $userId);
         $result = $this->db->single();
-        // your database is returning the result as an array.
-        // Check if $result is an object or array and access accordingly
         if (is_object($result)) {
             return $result->count;
         } elseif (is_array($result)) {
             return $result['count'];
         } else {
-            return 0; // Default fallback value if $result is null or another type
+            return 0;
         }
     }
-    
     
     // Create a new chat request
     public function createChatRequest($senderId, $recipientId) {
@@ -112,16 +108,69 @@ class M_Chat {
     
     // Update a request status (accepted/declined)
     public function updateRequestStatus($id, $status) {
-        $this->db->query('UPDATE chat_requests SET status = :status WHERE id = :id');
-        $this->db->bind(':id', $id);
-        $this->db->bind(':status', $status);
+        // Validate status
+        if (!in_array($status, ['pending', 'accepted', 'declined'])) {
+            error_log("Invalid status: $status for request ID: $id");
+            return false;
+        }
         
-        return $this->db->execute();
+        // Log the attempt
+        error_log("Attempting to update request $id to status: $status");
+        
+        try {
+            // Prepare and execute the update
+            $this->db->query('UPDATE chat_requests SET status = :status WHERE id = :id');
+            $this->db->bind(':id', $id);
+            $this->db->bind(':status', $status);
+            
+            $result = $this->db->execute();
+            
+            if ($result) {
+                // Verify the update
+                $verified = $this->verifyRequestStatus($id, $status);
+                if ($verified) {
+                    error_log("Successfully updated request $id to status: $status");
+                    return true;
+                } else {
+                    error_log("Verification failed for request $id: Status did not update to $status");
+                    // Fallback: Attempt a direct update without transaction
+                    $this->db->query('UPDATE chat_requests SET status = :status WHERE id = :id');
+                    $this->db->bind(':id', $id);
+                    $this->db->bind(':status', $status);
+                    $fallbackResult = $this->db->execute();
+                    if ($fallbackResult && $this->verifyRequestStatus($id, $status)) {
+                        error_log("Fallback update successful for request $id to status: $status");
+                        return true;
+                    } else {
+                        error_log("Fallback update failed for request $id");
+                        return false;
+                    }
+                }
+            } else {
+                error_log("Failed to execute update query for request $id");
+                return false;
+            }
+        } catch (Exception $e) {
+            error_log("Exception during status update for request $id: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    // Verify database update
+    public function verifyRequestStatus($id, $expectedStatus) {
+        $this->db->query('SELECT status FROM chat_requests WHERE id = :id');
+        $this->db->bind(':id', $id);
+        
+        $result = $this->db->single();
+        $actualStatus = is_object($result) ? $result->status : (is_array($result) ? $result['status'] : null);
+        
+        error_log("Verifying status for request $id: Expected $expectedStatus, Actual $actualStatus");
+        
+        return $actualStatus === $expectedStatus;
     }
     
     // Create a new chat between two users
     public function createChat($user1Id, $user2Id) {
-        // First check if a chat already exists
         $existingChat = $this->getChatByUsers($user1Id, $user2Id);
         if ($existingChat) {
             return is_object($existingChat) ? $existingChat->id : $existingChat['id'];
@@ -201,6 +250,57 @@ class M_Chat {
     
         return false;
     }
+
+    // Update a message
+public function updateMessage($messageId, $newMessage, $userId) {
+    // First verify the user owns this message
+    $this->db->query('SELECT * FROM messages WHERE id = :id AND sender_id = :sender_id');
+    $this->db->bind(':id', $messageId);
+    $this->db->bind(':sender_id', $userId);
+    $message = $this->db->single();
     
+    if (!$message) {
+        return false; // Message not found or user doesn't own it
+    }
     
+    // Update the message
+    $this->db->query('UPDATE messages SET message = :message WHERE id = :id');
+    $this->db->bind(':id', $messageId);
+    $this->db->bind(':message', $newMessage);
+    
+    return $this->db->execute();
+}
+
+public function deleteMessage($messageId, $userId) {
+    // First verify the user owns this message
+    $this->db->query('SELECT * FROM messages WHERE id = :id AND sender_id = :sender_id');
+    $this->db->bind(':id', $messageId);
+    $this->db->bind(':sender_id', $userId);
+    $message = $this->db->single();
+    
+    if (!$message) {
+        error_log('DeleteMessage: Message ID ' . $messageId . ' not found or not owned by user ' . $userId);
+        return false;
+    }
+    
+    // Delete the message
+    $this->db->query('DELETE FROM messages WHERE id = :id');
+    $this->db->bind(':id', $messageId);
+    
+    if ($this->db->execute()) {
+        error_log('DeleteMessage: Successfully deleted message ID ' . $messageId);
+        return true;
+    } else {
+        error_log('DeleteMessage: Failed to delete message ID ' . $messageId);
+        return false;
+    }
+}
+
+// Get a specific message by ID
+public function getMessageById($messageId) {
+    $this->db->query('SELECT * FROM messages WHERE id = :id');
+    $this->db->bind(':id', $messageId);
+    
+    return $this->db->single();
+}
 }

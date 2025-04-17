@@ -4,7 +4,6 @@ class Chat extends Controller {
     private $userModel;
     
     public function __construct() {
-        // Ensure user is logged in
         if (!isLoggedIn()) {
             redirect('users/login');
         }
@@ -13,29 +12,17 @@ class Chat extends Controller {
         $this->userModel = $this->model('M_Users');
     }
     
-    // Display all active chats for the logged-in user
     public function index() {
-        // Get all chats for the current user
         $chats = $this->chatModel->getChatsByUserId($_SESSION['user_id']);
-        
-        // Format data for the view
         $chatData = [];
         
         if ($chats) {
             foreach ($chats as $chat) {
-                // Get the ID of the other user in the chat
                 $otherUserId = ($chat->user1_id == $_SESSION['user_id']) ? $chat->user2_id : $chat->user1_id;
-                
-                // Get the other user's details
                 $otherUser = $this->userModel->getUserById($otherUserId);
-                
-                // Get the last message in this chat
                 $lastMessage = $this->chatModel->getLastMessageByChatId($chat->id);
-                
-                // Get unread message count
                 $unreadCount = $this->chatModel->getUnreadMessageCount($chat->id, $_SESSION['user_id']);
                 
-                // Add to chat data array
                 $chatData[] = [
                     'chat' => $chat,
                     'otherUser' => $otherUser,
@@ -53,90 +40,76 @@ class Chat extends Controller {
         $this->view('chat/index', $data);
     }
     
-    // Search users to chat with
-public function search() {
-    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-    
-    if ($search !== '') {
-        $users = $this->userModel->searchUsers($search, $_SESSION['user_id']);
-    } else {
-        // Use the method from chatModel instead of userModel
-        $users = $this->chatModel->getAllUsersExcept($_SESSION['user_id']);
-    }
-    
-    // Rest of your code...
-    $existingRequests = [];
-    if ($users) {
-        foreach ($users as $user) {
-            $userId = is_object($user) ? $user->id : $user['id'];
-            
-            // Check for pending request
-            $request = $this->chatModel->getRequestByUsers($_SESSION['user_id'], $userId);
-            if ($request) {
-                $existingRequests[$userId] = 'pending';
-                continue;
-            }
-            
-            // Check for existing chat
-            $chat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);
-            if ($chat) {
-                $existingRequests[$userId] = 'exists';
+    public function search() {
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        
+        if ($search !== '') {
+            $users = $this->userModel->searchUsers($search, $_SESSION['user_id']);
+        } else {
+            $users = $this->chatModel->getAllUsersExcept($_SESSION['user_id']);
+        }
+        
+        $existingRequests = [];
+        if ($users) {
+            foreach ($users as $user) {
+                $userId = is_object($user) ? $user->id : $user['id'];
+                $request = $this->chatModel->getRequestByUsers($_SESSION['user_id'], $userId);
+                if ($request) {
+                    $existingRequests[$userId] = 'pending';
+                    continue;
+                }
+                $chat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);
+                if ($chat) {
+                    $existingRequests[$userId] = 'exists';
+                }
             }
         }
+        
+        $data = [
+            'title' => 'Search Users',
+            'users' => $users,
+            'existingRequests' => $existingRequests
+        ];
+        
+        $this->view('chat/search', $data);
     }
     
-    $data = [
-        'title' => 'Search Users',
-        'users' => $users,
-        'existingRequests' => $existingRequests
-    ];
-    
-    $this->view('chat/search', $data);
-}
-    // Send a chat request to another user
-    // Send a chat request to another user
-public function sendRequest() {
-    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    public function sendRequest() {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            redirect('chat/search');
+            return;
+        }
+        
+        $userId = isset($_POST['recipient_id']) ? $_POST['recipient_id'] : null;
+        
+        if (!$userId) {
+            flash('chat_message', 'Invalid user', 'alert alert-danger');
+            redirect('chat/search');
+            return;
+        }
+        
+        $existingRequest = $this->chatModel->getRequestByUsers($_SESSION['user_id'], $userId);
+        if ($existingRequest) {
+            flash('chat_message', 'You have already sent a request to this user', 'alert alert-warning');
+            redirect('chat/search');
+            return;
+        }
+        
+        $existingChat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);
+        if ($existingChat) {
+            redirect('chat/viewChat/' . $userId);
+            return;
+        }
+        
+        if ($this->chatModel->createChatRequest($_SESSION['user_id'], $userId)) {
+            flash('chat_message', 'Chat request sent successfully', 'alert alert-success');
+        } else {
+            flash('chat_message', 'Failed to send chat request', 'alert alert-danger');
+        }
+        
         redirect('chat/search');
-        return;
     }
     
-    $userId = isset($_POST['recipient_id']) ? $_POST['recipient_id'] : null;
-    
-    if (!$userId) {
-        flash('chat_message', 'Invalid user', 'alert alert-danger');
-        redirect('chat/search');
-        return;
-    }
-    
-    // Check if request already exists
-    $existingRequest = $this->chatModel->getRequestByUsers($_SESSION['user_id'], $userId);
-    
-    if ($existingRequest) {
-        flash('chat_message', 'You have already sent a request to this user', 'alert alert-warning');
-        redirect('chat/search');
-        return;
-    }
-    
-    // Check if chat already exists
-    $existingChat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);
-    
-    if ($existingChat) {
-        // Redirect to existing chat
-        redirect('chat/viewChat/' . $userId);
-        return;
-    }
-    
-    // Create new request
-    if ($this->chatModel->createChatRequest($_SESSION['user_id'], $userId)) {
-        flash('chat_message', 'Chat request sent successfully', 'alert alert-success');
-    } else {
-        flash('chat_message', 'Failed to send chat request', 'alert alert-danger');
-    }
-    
-    redirect('chat/search');
-}
-    // Display chat requests
     public function requests() {
         $requests = $this->chatModel->getChatRequests($_SESSION['user_id']);
         
@@ -148,94 +121,106 @@ public function sendRequest() {
         $this->view('chat/requests', $data);
     }
     
-    // Accept a chat request
     public function acceptRequest($id) {
+        error_log("Accept request called for ID: $id");
+        
         $request = $this->chatModel->getRequestById($id);
+        
         if (!$request) {
-            $this->jsonResponse(['success' => false, 'message' => 'Request not found']);
+            error_log("Request not found: $id");
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Request not found']);
             return;
         }
+        
         if ($request->recipient_id != $_SESSION['user_id']) {
-            $this->jsonResponse(['success' => false, 'message' => 'Unauthorized']);
+            error_log("Unauthorized: User {$_SESSION['user_id']} trying to accept request for {$request->recipient_id}");
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
             return;
         }
-        $chatId = $this->chatModel->createChat($request->sender_id, $_SESSION['user_id']);
-        if ($chatId) {
-            $this->chatModel->updateRequestStatus($id, 'accepted');
-            $this->jsonResponse(['success' => true, 'chat_id' => $chatId, 'user_id' => $request->sender_id]);
-        } else {
-            $this->jsonResponse(['success' => false, 'message' => 'Could not create chat']);
+        
+        try {
+            // Create a new chat
+            $chatId = $this->chatModel->createChat($request->sender_id, $_SESSION['user_id']);
+            
+            if (!$chatId) {
+                error_log("Failed to create chat for request $id");
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Could not create chat']);
+                return;
+            }
+            
+            // Update the request status to 'accepted'
+            $updateSuccess = $this->chatModel->updateRequestStatus($id, 'accepted');
+            
+            if ($updateSuccess) {
+                error_log("Successfully accepted request $id, chat ID: $chatId");
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'chat_id' => $chatId, 'user_id' => $request->sender_id]);
+            } else {
+                error_log("Failed to update status to 'accepted' for request $id");
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Could not update request status']);
+            }
+        } catch (Exception $e) {
+            error_log("Exception in acceptRequest for request $id: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'An error occurred']);
         }
-    }
-    
-    private function jsonResponse($data) {
-        header('Content-Type: application/json');
-        echo json_encode($data);
         exit;
     }
     
-    // Decline a chat request
     public function declineRequest($id) {
-        // Get the request details
+        error_log("Decline request called for ID: $id");
+        
         $request = $this->chatModel->getRequestById($id);
         
         if (!$request) {
-            $response = [
-                'success' => false,
-                'message' => 'Request not found'
-            ];
+            error_log("Request not found: $id");
             header('Content-Type: application/json');
-            echo json_encode($response);
+            echo json_encode(['success' => false, 'message' => 'Request not found']);
             return;
         }
         
-        // Check if request is object or array
-        $recipient_id = is_object($request) ? $request->recipient_id : $request['recipient_id'];
-        
-        if ($recipient_id != $_SESSION['user_id']) {
-            $response = [
-                'success' => false,
-                'message' => 'Unauthorized'
-            ];
-        } else {
-            // Mark the request as declined
-            if ($this->chatModel->updateRequestStatus($id, 'declined')) {
-                $response = [
-                    'success' => true
-                ];
-            } else {
-                $response = [
-                    'success' => false,
-                    'message' => 'Could not decline request'
-                ];
-            }
+        if ($request->recipient_id != $_SESSION['user_id']) {
+            error_log("Unauthorized: User {$_SESSION['user_id']} trying to decline request for {$request->recipient_id}");
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
         }
         
-        header('Content-Type: application/json');
-        echo json_encode($response);
+        try {
+            $updateSuccess = $this->chatModel->updateRequestStatus($id, 'declined');
+            
+            if ($updateSuccess) {
+                error_log("Successfully declined request $id");
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'message' => 'Request declined successfully']);
+            } else {
+                error_log("Failed to update status to 'declined' for request $id");
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Could not decline request']);
+            }
+        } catch (Exception $e) {
+            error_log("Exception in declineRequest for request $id: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'An error occurred']);
+        }
+        exit;
     }
     
-    // View chat with a specific user
     public function viewChat($userId) {
-        // Check if a chat already exists between these users
         $chat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);
         
         if (!$chat) {
-            // If no chat exists, create one
             $chatId = $this->chatModel->createChat($_SESSION['user_id'], $userId);
             $chat = $this->chatModel->getChatById($chatId);
         }
         
-        // Get the other user's details
         $otherUser = $this->userModel->getUserById($userId);
-        
-        // Check if $chat is object or array and get chat ID
         $chat_id = is_object($chat) ? $chat->id : $chat['id'];
-        
-        // Get messages for this chat
         $messages = $this->chatModel->getMessagesByChatId($chat_id);
-        
-        // Mark all messages from the other user as read
         $this->chatModel->markMessagesAsRead($chat_id, $_SESSION['user_id']);
         
         $data = [
@@ -248,7 +233,6 @@ public function sendRequest() {
         $this->view('chat/viewChat', $data);
     }
     
-    // Send a message
     public function sendMessage() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -277,27 +261,106 @@ public function sendRequest() {
         }
     }
     
-    // Display image for a user
     public function image($userId) {
         $user = $this->userModel->getUserById($userId);
         
         if ($user && !empty($user->profile_picture)) {
-            // Output the image
-            header('Content-Type: image/jpeg'); // Adjust based on your image type
+            header('Content-Type: image/jpeg');
             echo $user->profile_picture;
         } else {
-            // Redirect to default image
             redirect('img/default.png');
         }
     }
     
-    // Report page/functionality
-    public function report() {
-        $data = [
-            'title' => 'Report a Chat'
-            // Add more data as needed
-        ];
-        
-        $this->view('chat/report', $data);
+
+    // Update message
+public function updateMessage() {
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+        return;
     }
+    
+    // Get JSON data from request
+    $data = json_decode(file_get_contents('php://input'));
+    
+    if (!$data || !isset($data->messageId) || !isset($data->newMessage)) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Missing required data']);
+        return;
+    }
+    
+    // Sanitize data
+    $messageId = filter_var($data->messageId, FILTER_SANITIZE_NUMBER_INT);
+    $newMessage = filter_var($data->newMessage, FILTER_SANITIZE_STRING);
+    
+    if (empty($newMessage)) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Message cannot be empty']);
+        return;
+    }
+    
+    // Update the message
+    if ($this->chatModel->updateMessage($messageId, $newMessage, $_SESSION['user_id'])) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Message updated successfully']);
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Failed to update message']);
+    }
+}
+public function deleteMessage() {
+    // Ensure JSON response, even if errors occur
+    header('Content-Type: application/json');
+    
+    // Log the raw POST data for debugging
+    $rawPostData = file_get_contents('php://input');
+    error_log('DeleteMessage: Raw POST data: ' . $rawPostData);
+    error_log('DeleteMessage: POST array: ' . print_r($_POST, true));
+    
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+        return;
+    }
+    
+    try {
+        // Get data from POST (FormData)
+        $messageId = isset($_POST['message_id']) ? filter_var($_POST['message_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+        
+        if (!$messageId) {
+            error_log('DeleteMessage: Missing message_id in POST data');
+            echo json_encode(['success' => false, 'message' => 'Missing message ID']);
+            return;
+        }
+        
+        error_log('DeleteMessage: Attempting to delete message ID: ' . $messageId . ' by user: ' . $_SESSION['user_id']);
+        
+        // Get message to verify it exists and belongs to the user
+        $message = $this->chatModel->getMessageById($messageId);
+        
+        if (!$message) {
+            error_log('DeleteMessage: Message not found for ID: ' . $messageId);
+            echo json_encode(['success' => false, 'message' => 'Message not found']);
+            return;
+        }
+        
+        if ($message->sender_id != $_SESSION['user_id']) {
+            error_log('DeleteMessage: Unauthorized deletion attempt by user ' . $_SESSION['user_id'] . ' for message ' . $messageId);
+            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+            return;
+        }
+        
+        // Attempt to delete the message
+        if ($this->chatModel->deleteMessage($messageId, $_SESSION['user_id'])) {
+            error_log('DeleteMessage: Successfully deleted message ID: ' . $messageId);
+            echo json_encode(['success' => true, 'message' => 'Message deleted successfully']);
+        } else {
+            error_log('DeleteMessage: Failed to delete message ID: ' . $messageId);
+            echo json_encode(['success' => false, 'message' => 'Failed to delete message']);
+        }
+    } catch (Exception $e) {
+        error_log('DeleteMessage: Exception occurred: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
+    }
+}
 }
