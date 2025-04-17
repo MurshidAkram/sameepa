@@ -43,7 +43,7 @@
     position: relative;
 }
 
-/* Message Bubbles */
+/* Message Bubble80s */
 .message {
     max-width: 70%;
     padding: 10px 15px;
@@ -51,6 +51,7 @@
     font-size: 14px;
     word-wrap: break-word;
     display: inline-block;
+    
 }
 
 /* Sent Messages */
@@ -154,4 +155,42 @@
     font-weight: bold;
     color: #333;
     margin: 0;
+}
+.chat-message {
+    max-width: 60%;
+    padding: 10px 16px;
+    border-radius: 16px;
+    margin: 8px 0;
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-sent {
+    align-self: flex-end;
+    background: #6a5acd;
+    color: #fff;
+    text-align: right;
+    border-bottom-right-radius: 4px;
+}
+
+.message-received {
+    align-self: flex-start;
+    background: #f1f0f0;
+    color: #222;
+    text-align: left;
+    border-bottom-left-radius: 4px;
+}
+
+.timestamp {
+    font-size: 0.75em;
+    color: #bbb;
+    margin-top: 4px;
+    align-self: flex-end;
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
