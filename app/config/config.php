@@ -25,9 +25,9 @@ define('SITENAME', 'sameepa');
 require_once APPROOT . '/helpers/url_helper.php';
 require_once APPROOT . '/helpers/session_helper.php';
 
-// Braintree Configuration
-define('BRAINTREE_ENVIRONMENT', 'sandbox');
-define('BRAINTREE_MERCHANT_ID', '8q8zbkh595vfzgqq');
-define('BRAINTREE_PUBLIC_KEY', 'jsrdsxmpq8pg5m44');
-define('BRAINTREE_PRIVATE_KEY', '5cda79eb03e45b9b4d2f8b5f8bf6f818');
+
+// Stripe API Keys (Test Mode)
+define('STRIPE_PUBLISHABLE_KEY', 'pk_test_51RF9PVPCGEt7iiUpUiGDX3HVHxngrFTG7nBhVQ21qNyR0dRF4FPT1pSX0MMIZwrmDeW8bpng1YgDiuYhXuvsox7l00FGOXvxvo');
+define('STRIPE_SECRET_KEY', 'sk_test_51RF9PVPCGEt7iiUpgFaWRy8w90zmG9Jn9SwMUaooiHqL4h4fCx2j9mVTGiVrL6gLdIkYFHX2olIUU3yyKoF5URen00VJDj2f08');
+define('STRIPE_WEBHOOK_SECRET', 'whsec_your_webhook_secret');
 
