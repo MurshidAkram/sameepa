@@ -324,8 +324,12 @@ public function deleteMessage() {
     }
     
     try {
-        // Get data from POST (FormData)
-        $messageId = isset($_POST['message_id']) ? filter_var($_POST['message_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $input = $_POST;
+if (empty($input)) {
+    parse_str(file_get_contents("php://input"), $input);
+}
+$messageId = isset($input['message_id']) ? filter_var($input['message_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+
         
         if (!$messageId) {
             error_log('DeleteMessage: Missing message_id in POST data');
@@ -343,8 +347,7 @@ public function deleteMessage() {
             echo json_encode(['success' => false, 'message' => 'Message not found']);
             return;
         }
-        
-        if ($message->sender_id != $_SESSION['user_id']) {
+        if ($message['sender_id'] != $_SESSION['user_id']) {
             error_log('DeleteMessage: Unauthorized deletion attempt by user ' . $_SESSION['user_id'] . ' for message ' . $messageId);
             echo json_encode(['success' => false, 'message' => 'Unauthorized']);
             return;

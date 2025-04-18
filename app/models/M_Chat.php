@@ -301,6 +301,10 @@ public function getMessageById($messageId) {
     $this->db->query('SELECT * FROM messages WHERE id = :id');
     $this->db->bind(':id', $messageId);
     
-    return $this->db->single();
+    $result = $this->db->single();
+    error_log('Message fetched from DB: ' . print_r($result, true));
+    
+    return $result;
 }
+
 }
