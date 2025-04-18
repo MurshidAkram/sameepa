@@ -31,9 +31,9 @@ class Security extends Controller
     }
 
 //**************************************************dash board********************************************************* */
-public function dashboard()
-{
-    // Get data for dashboard using securityModel instead of separate models
+
+public function dashboard() {
+    // Get data for dashboard
     $data = [
         'user_id' => $_SESSION['user_id'],
         'email' => $_SESSION['user_email'],
@@ -42,16 +42,16 @@ public function dashboard()
         'todayPasses' => $this->securityModel->getTodayPasses(),
         'onDutyOfficers' => $this->securityModel->getTodayDutyOfficers(),
         'incidentTrends' => $this->securityModel->getMonthlyIncidentTrends(),
-        'visitorFlow' => $this->securityModel->getWeeklyVisitorFlow()
+        'visitorFlow' => $this->securityModel->getWeeklyVisitorFlow(),
+        'miniOfficer' => $this->getMiniOfficerData() // Helper method for mini chart
     ];
 
     // Load the dashboard view
     $this->view('security/dashboard', $data);
 }
 
-public function getChartData()
-{
-    // Get updated data for AJAX requests using securityModel
+public function getChartData() {
+    // Get updated data for AJAX requests
     $data = [
         'success' => true,
         'activePasses' => count($this->securityModel->getTodayPasses()),
@@ -65,6 +65,25 @@ public function getChartData()
     
     echo json_encode($data);
 }
+
+private function getMiniOfficerData() {
+    // Simple data for mini officer chart
+    $officers = $this->securityModel->getTodayDutyOfficers();
+    $labels = [];
+    $data = [];
+    
+    foreach ($officers as $officer) {
+        $labels[] = $officer->name;
+        $data[] = 1; // Just showing presence
+    }
+    
+    return [
+        'labels' => $labels,
+        'data' => $data
+    ];
+}
+
+
 //*************************************visitor passes******************************************************** */
 
 public function Manage_Visitor_Passes() {
@@ -164,7 +183,7 @@ public function Add_Contact() {
             'phone' => trim($_POST['phone']),
           
         ];
-
+ 
         // Add to database
         if ($this->securityModel->addContact($data)) {
             header('Location: ' . URLROOT . 'security/Emergency_Contacts');

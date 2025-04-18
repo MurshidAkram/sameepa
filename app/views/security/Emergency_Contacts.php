@@ -11,250 +11,20 @@
     <title>Manage Emergency Contacts | <?php echo SITENAME; ?></title>
 </head>
 
-<body>
-    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="dashboard-container">
-        <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
-
-        <div class="main-content">
-            <h1>Emergency Contacts</h1>
-
-            <!-- Create New Contact Button
-<button class="btn create-btn" onclick="openAddContactModal()">Create New Contact</button> -->
-
-            <div class="contacts-list">
-                <?php foreach ($data['contacts'] as $contacts) : ?>
-                    <div class="contact-card" id="contact-<?php echo $contacts->id; ?>">
-                        <h4><?php echo htmlspecialchars($contacts->name); ?></h4>
-                        <p><strong>Phone:</strong> <?php echo htmlspecialchars($contacts->phone); ?></p>
-                        <div class="button-group">
-                            <a href="tel:<?php echo htmlspecialchars($contacts->phone); ?>" class="btn call-btn">Call</a>
-                            <button class="btn edit-btn" onclick="openEditModal(
-                                '<?php echo htmlspecialchars($contacts->name); ?>', 
-                                '<?php echo htmlspecialchars($contacts->phone); ?>', 
-                                '<?php echo $contacts->id; ?>'
-                            )">Edit</button>
-                            <!-- <button class="btn delete-btn" onclick="deleteContact('<?php echo $contacts->id; ?>')">Delete</button> -->
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add New Contact Modal
-<div id="addContactModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('addContactModal')">&times;</span>
-        <h2>Create New Emergency Contact</h2>
-        <form id="addContactForm" onsubmit="addContact(event)">
-            <label for="addContactName">Name:</label>
-            <input type="text" id="addContactName" required>
-
-            <label for="addContactPhone">Phone:</label>
-            <input type="text" id="addContactPhone" required>
-
-            <div class="button-group">
-                <button type="button" class="btn save-btn" onclick="addContact(event)">Save</button>
-                <button type="button" class="btn cancel-btn" onclick="closeModal('addContactModal')">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div> -->
-
-
-    <!-- Edit Contact Modal -->
-    <div id="editContactModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('editContactModal')">&times;</span>
-            <h2>Edit Emergency Contact</h2>
-            <form id="editContactForm" onsubmit="saveContactEdits(event)">
-                <label for="editContactName">Name:</label>
-                <input type="text" id="editContactName" required>
-
-                <label for="editContactPhone">Phone:</label>
-                <input type="text" id="editContactPhone" required>
-
-                <input type="hidden" id="editContactId">
-
-                <div class="button-group">
-                    
-                <button type="button" class="btn save-btn" onclick="saveContactEdits(event)">Save</button>
-                    <button type="button" class="btn cancel-btn" onclick="closeModal('editContactModal')">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
-    <script>
-
-//******************************************ADD PART**************************************************** */
-
-// // Open the modal for adding a new contact
-// function openAddContactModal() {
-//     openModal('addContactModal'); // Open the modal
-// }
-
-// // Add a new contact function
-// function addContact(event) {
-//     event.preventDefault(); // Prevent the default form submission
-
-//     // Get the form data
-//     const name = document.getElementById('addContactName').value.trim();
-//     const phone = document.getElementById('addContactPhone').value.trim();
-
-//     // Validate inputs
-//     if (!name || !phone) {
-//         alert('Please fill out both Name and Phone fields.');
-//         return;
-//     }
-
-//     // Prepare the data to be sent in the POST request
-//     const data = {
-//         name: name,
-//         phone: phone
-//     };
-
-//     // Send the data using a POST request
-//     fetch('<?php echo URLROOT; ?>/security/Add_Contact', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(data) // Send the data as JSON
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error(`Server error: ${response.status}`);
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         if (data.success) {
-//             alert('Contact added successfully!');
-
-//             // Refresh the page after a successful add
-//             window.location.reload();
-//         } else {
-//             alert(data.message || 'Failed to add contact.');
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//         alert('An error occurred while adding the contact. Please try again.');
-//     });
-// }
-
-//*****************************************EDIT PART ***************************************************** */
-    // Open the modal
-    function openModal(modalId) {
-        document.getElementById(modalId).classList.add('active');
-    }
-
-    // Close the modal
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('active');
-    }
-
-    // Open the edit modal with contact details
-    function openEditModal(name, phone, id) {
-        document.getElementById('editContactName').value = name;
-        document.getElementById('editContactPhone').value = phone;
-        document.getElementById('editContactId').value = id;
-        openModal('editContactModal');
-    }
-
-    // Save edited contact
-    function saveContactEdits(event) {
-        event.preventDefault();
-        const id = document.getElementById('editContactId').value;
-        const name = document.getElementById('editContactName').value;
-        const phone = document.getElementById('editContactPhone').value;
-
-        // Prepare the data to send in the fetch request
-        const data = {
-            id: id,
-            name: name,
-            phone: phone
-        };
-
-        fetch(`<?php echo URLROOT; ?>/security/Edit_Contact/${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data) // Send the data as JSON
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update the contact information in the UI
-                document.getElementById(`contact-${id}`).innerHTML = `
-                    <h4>${data.name}</h4>
-                    <p><strong>Phone:</strong> ${data.phone}</p>
-                    <div class="button-group">
-                        <a href="tel:${data.phone}" class="btn call-btn">Call</a>
-                        <button class="btn edit-btn" onclick="openEditModal('${data.name}', '${data.phone}', '${id}')">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteContact('${id}')">Delete</button> <!-- Keep the delete button -->
-                    </div>
-                `;
-                closeModal('editContactModal');
-            } else {
-                alert('Failed to update contact');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while updating the contact.');
-        });
-    }
-//****************************************************DELETE PART******************************************* */
-                  
-// Delete a contact
-// function deleteContact(id) {
-//         // Confirm deletion
-//         if (confirm('Are you sure you want to delete this contact?')) {
-//             fetch(`<?php echo URLROOT; ?>/security/Delete_Contact/${id}`, {
-//                 method: 'DELETE',
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 }
-//             })
-//             .then(response => response.json())
-//             .then(data => {
-//                 if (data.success) {
-//                     // Remove the contact from the UI
-//                     document.getElementById(`contact-${id}`).remove();
-//                 } else {
-//                     alert('Failed to delete contact');
-//                 }
-//             })
-//             .catch(error => {
-//                 console.error('Error:', error);
-//                 alert('An error occurred while deleting the contact.');
-//             });
-//         }
-//     }
-
-</script>
-
-
-    <style>
+<style>
 /* --- Dashboard Container Styles --- */
 .dashboard-container {
     display: flex;
-    gap: 20px; /* Space between side panel and main content */
+    gap: 20px;
     padding: 20px;
-    background-color: #f9fafc; /* Light background for the dashboard */
+    background-color: #f9fafc;
 }
 
 /* --- Side Panel Styles --- */
 .side-panel {
-    width: 250px; /* Fixed width for the side panel */
-    background: #2c3e50; /* Dark background for contrast */
+    width: 250px;
+    background: #2c3e50;
     border-radius: 10px;
     padding: 20px;
     color: white;
@@ -263,7 +33,7 @@
 
 /* --- Main Content Styles --- */
 .main-content {
-    flex: 1; /* Takes up the remaining space */
+    flex: 1;
     background: #ffffff;
     border-radius: 12px;
     padding: 20px;
@@ -274,14 +44,14 @@
 /* --- General Contact List Styles --- */
 .contacts-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns for the cards */
-    gap: 20px; /* Space between cards */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     margin-top: 20px;
 }
 
 /* --- Contact Card Styles --- */
 .contact-card, .contact-item {
-    background:#820882; /* Gradient background */
+    background:rgb(170, 84, 204); /* Updated to #9b59b6 */
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -291,7 +61,7 @@
 }
 
 .contact-card:hover, .contact-item:hover {
-    transform: scale(1.03); /* Slight scale effect on hover */
+    transform: scale(1.03);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
@@ -359,7 +129,7 @@
 }
 
 .modal-content {
-    background:#820882;;
+    background:rgb(186, 57, 237); /* Updated to #9b59b6 */
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -409,13 +179,12 @@
 }
 
 .button-group .cancel-btn {  
-    background-color:rgb(244, 65, 45);
+    background-color: rgb(244, 65, 45);
     margin-left: 250px;
     color: white;
 }
 .button-group .cancel-btn:hover {
-    background-color:rgb(100, 31, 23);
-    
+    background-color: rgb(100, 31, 23);
     transform: translateY(-2px);
 }
 
@@ -431,7 +200,162 @@
     }
 }
 
-    </style>
+/* --- Additional Card Styling --- */
+.contact-card h3, .contact-item h3 {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.contact-card p, .contact-item p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .contacts-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 90%;
+    }
+    
+    .button-group .cancel-btn {
+        margin-left: 0;
+    }
+}
+</style>
+
+<body>
+    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+
+    <div class="dashboard-container">
+        <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
+
+        <div class="main-content">
+            <h1>Emergency Contacts</h1>
+
+            <!-- Create New Contact Button
+<button class="btn create-btn" onclick="openAddContactModal()">Create New Contact</button> -->
+
+            <div class="contacts-list">
+                <?php foreach ($data['contacts'] as $contacts) : ?>
+                    <div class="contact-card" id="contact-<?php echo $contacts->id; ?>">
+                        <h4><?php echo htmlspecialchars($contacts->name); ?></h4>
+                        <p><strong>Phone:</strong> <?php echo htmlspecialchars($contacts->phone); ?></p>
+                        <div class="button-group">
+                            <a href="tel:<?php echo htmlspecialchars($contacts->phone); ?>" class="btn call-btn">Call</a>
+                            <button class="btn edit-btn" onclick="openEditModal(
+                                '<?php echo htmlspecialchars($contacts->name); ?>', 
+                                '<?php echo htmlspecialchars($contacts->phone); ?>', 
+                                '<?php echo $contacts->id; ?>'
+                            )">Edit</button>
+                          
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Contact Modal -->
+    <div id="editContactModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('editContactModal')">&times;</span>
+            <h2>Edit Emergency Contact</h2>
+            <form id="editContactForm" onsubmit="saveContactEdits(event)">
+                <label for="editContactName">Name:</label>
+                <input type="text" id="editContactName" required>
+
+                <label for="editContactPhone">Phone:</label>
+                <input type="text" id="editContactPhone" required>
+
+                <input type="hidden" id="editContactId">
+
+                <div class="button-group">
+                    
+                <button type="button" class="btn save-btn" onclick="saveContactEdits(event)">Save</button>
+                    <button type="button" class="btn cancel-btn" onclick="closeModal('editContactModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+
+    <script>
+
+
+//*****************************************EDIT PART ***************************************************** */
+    // Open the modal
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.add('active');
+    }
+
+    // Close the modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Open the edit modal with contact details
+    function openEditModal(name, phone, id) {
+        document.getElementById('editContactName').value = name;
+        document.getElementById('editContactPhone').value = phone;
+        document.getElementById('editContactId').value = id;
+        openModal('editContactModal');
+    }
+
+    // Save edited contact
+    function saveContactEdits(event) {
+        event.preventDefault();
+        const id = document.getElementById('editContactId').value;
+        const name = document.getElementById('editContactName').value;
+        const phone = document.getElementById('editContactPhone').value;
+
+        // Prepare the data to send in the fetch request
+        const data = {
+            id: id,
+            name: name,
+            phone: phone
+        };
+
+        fetch(`<?php echo URLROOT; ?>/security/Edit_Contact/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data) // Send the data as JSON
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the contact information in the UI
+                document.getElementById(`contact-${id}`).innerHTML = `
+                    <h4>${data.name}</h4>
+                    <p><strong>Phone:</strong> ${data.phone}</p>
+                    <div class="button-group">
+                        <a href="tel:${data.phone}" class="btn call-btn">Call</a>
+                        <button class="btn edit-btn" onclick="openEditModal('${data.name}', '${data.phone}', '${id}')">Edit</button>
+                     
+                    </div>
+                `;
+                closeModal('editContactModal');
+            } else {
+                alert('Failed to update contact');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the contact.');
+        });
+    }
+
+</script>
+
+
 </body>
 
 </html>
