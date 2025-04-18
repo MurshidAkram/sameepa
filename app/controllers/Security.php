@@ -112,7 +112,6 @@ private function isAjaxRequest() {
 }
 
 
-
 public function Add_Visitor_Pass() {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Sanitize POST data
@@ -129,6 +128,19 @@ public function Add_Visitor_Pass() {
             'purpose' => trim($_POST['purpose'])
         ];
 
+        // Validate date and time
+        $currentDateTime = new DateTime();
+        $visitDateTime = new DateTime($data['visit_date'] . ' ' . $data['visit_time']);
+        
+        // Check if visit date is in the past
+        if ($visitDateTime < $currentDateTime) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Cannot create visitor pass for past date/time'
+            ]);
+            exit();
+        }
+
         // Add visitor pass to the database
         $newPassId = $this->securityModel->addVisitorPass($data);
 
@@ -136,7 +148,7 @@ public function Add_Visitor_Pass() {
             // Success JSON Response
             echo json_encode([
                 'success' => true,
-                'id' => $newPassId, // The unique ID from the database
+                'id' => $newPassId,
                 'visitor_name' => $data['visitor_name'],
                 'visitor_count' => $data['visitor_count'],
                 'resident_name' => $data['resident_name'],
@@ -159,8 +171,6 @@ public function Add_Visitor_Pass() {
     // If not a POST request, load the form view
     $this->view('security/Manage_Visitor_Passes');
 }
-
-
 
 
 //*******************************************Emergency_Contacts*************************************************************************************************** */

@@ -206,6 +206,14 @@ public function getVisitorPasses() {
 
 
 public function addVisitorPass($data) {
+    // Additional validation at model level
+    $currentDateTime = new DateTime();
+    $visitDateTime = new DateTime($data['visit_date'] . ' ' . $data['visit_time']);
+    
+    if ($visitDateTime < $currentDateTime) {
+        return false;
+    }
+
     $this->db->query("INSERT INTO Visitor_Passes (visitor_name, visitor_count, resident_name, visit_date, visit_time, duration, purpose) 
                       VALUES (:visitor_name, :visitor_count, :resident_name, :visit_date, :visit_time, :duration, :purpose)");
 
@@ -220,7 +228,7 @@ public function addVisitorPass($data) {
 
     // Execute the query
     if ($this->db->execute()) {
-        return $this->db->lastInsertId(); // Return the unique ID
+        return $this->db->lastInsertId();
     } else {
         return false;
     }

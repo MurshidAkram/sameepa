@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Security Dashboard | <?php echo SITENAME; ?></title>
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css" />
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css" />
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
   .dashboard-container {
   display: flex;
-  background-color: #f8f9fa;
+  
   padding: 15px;
   gap: 15px;
-  min-height: calc(100vh - 100px);
+  
 }
 
 .main-content {

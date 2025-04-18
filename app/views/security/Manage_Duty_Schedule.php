@@ -26,7 +26,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
     background-color: #f5f5f5;
     margin: 0;
     padding: 0;
@@ -39,15 +39,11 @@ body {
 }
 
 .side-panel {
-    width: 280px;
+   
     position: fixed;
-    height: 100vh;
-    background-color: white;
-    color: var(--dark-color);
+  
     padding: 20px 10px;
-    overflow-y: auto;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    z-index: 100;
+   
 }
 
 .container {

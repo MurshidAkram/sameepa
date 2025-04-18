@@ -36,7 +36,7 @@
 
         .dashboard-container1{
             
-           padding-left: 300px;
+           padding-left: 320px;
            display: flex;
 
         }
@@ -534,6 +534,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openModalBtn) {
         openModalBtn.addEventListener('click', () => {
             modal.style.display = 'block';
+            // Set minimum date/time for the form
+            setMinDateTime();
         });
     }
 
@@ -551,6 +553,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Set minimum date/time for the form inputs
+    function setMinDateTime() {
+        const now = new Date();
+        const dateInput = document.getElementById('visit_date');
+        const timeInput = document.getElementById('visit_time');
+        
+        // Format date as YYYY-MM-DD
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        dateInput.min = `${year}-${month}-${day}`;
+        
+        // Format time as HH:MM
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        timeInput.min = `${hours}:${minutes}`;
+    }
+
     // Fetch and populate data for today and history passes
     fetchVisitorPassData();
 
@@ -559,6 +579,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (visitorPassForm) {
         visitorPassForm.addEventListener('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
+
+            // Get form values
+            const visitDate = document.getElementById('visit_date').value;
+            const visitTime = document.getElementById('visit_time').value;
+            
+            // Create Date objects for comparison
+            const currentDateTime = new Date();
+            const visitDateTime = new Date(`${visitDate}T${visitTime}`);
+            
+            // Validate date and time
+            if (visitDateTime < currentDateTime) {
+                alert('Cannot create visitor pass for past date/time');
+                return;
+            }
 
             let formData = new FormData(this);
 
@@ -570,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Visitor Pass Added Successfully! ' );
+                    alert('Visitor Pass Added Successfully!');
                     // Refresh the tables after successful addition
                     fetchVisitorPassData();
                     // Close the modal
@@ -578,11 +612,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Reset the form
                     visitorPassForm.reset();
                 } else {
-                    alert('Error: ' + data.message);  // Show error message if any
+                    alert('Error: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);  // Log any fetch errors
+                console.error('Error:', error);
             });
         });
     }
@@ -635,7 +669,6 @@ const populateTable = (tableBodyId, data) => {
         // Map through the data and create the table rows dynamically
         tableBody.innerHTML = data.map(pass => `
             <tr>
-                
                 <td>${pass.visitor_name}</td>
                 <td>${pass.visitor_count}</td>
                 <td>${pass.resident_name}</td>
@@ -700,57 +733,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// **********************************js code of create visitor passes*******************************
 
-// function searchResidentContact(event) {
-//     event.preventDefault();
-//     const query = document.getElementById('search_query').value;
-    
-//     // This would typically be an AJAX call to your backend
-//     fetch(`/searchResidentContacts?q=${encodeURIComponent(query)}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             const resultsBody = document.getElementById('results-body');
-//             resultsBody.innerHTML = '';
-            
-//             if (data.length > 0) {
-//                 document.getElementById('search-results').style.display = 'table';
-                
-//                 data.forEach(resident => {
-//                     const row = document.createElement('tr');
-//                     row.innerHTML = `
-//                         <td>${resident.name || 'N/A'}</td>
-//                         <td>${resident.address || 'N/A'}</td>
-//                         <td>${resident.phonenumber || 'N/A'}</td>
-//                         <td>${resident.fixedline || 'N/A'}</td>
-//                         <td>${resident.email || 'N/A'}</td>
-//                         <td>
-//                             <button class="btn-create-pass" 
-//                                     onclick="createVisitorPass('${resident.id}', '${resident.name}')">
-//                                 Create Pass
-//                             </button>
-//                         </td>
-//                     `;
-//                     resultsBody.appendChild(row);
-//                 });
-//             } else {
-//                 document.getElementById('search-results').style.display = 'none';
-//                 alert('No residents found matching your search');
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//         });
-// }
-
-// function createVisitorPass(residentId, residentName) {
-//     // Here you would implement the logic to create a visitor pass
-//     // This could redirect to a form or open a modal
-//     window.location.href = `/createVisitorPass?residentId=${residentId}&residentName=${encodeURIComponent(residentName)}`;
-    
-//     // Alternatively, you could open a modal:
-//     // openVisitorPassModal(residentId, residentName);
-// }
 
 </script>
 

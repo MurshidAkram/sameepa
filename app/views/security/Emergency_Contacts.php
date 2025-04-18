@@ -13,35 +13,39 @@
 
 
 <style>
-/* --- Dashboard Container Styles --- */
+ /* --- Dashboard Container Styles --- */
 .dashboard-container {
     display: flex;
     gap: 20px;
     padding: 20px;
-    background-color: #f9fafc;
+   
 }
 
 /* --- Side Panel Styles --- */
 .side-panel {
     width: 250px;
+    position: fixed;
+    height: 100vh;
     background: #2c3e50;
-    border-radius: 10px;
-    padding: 20px;
     color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    overflow-y: auto;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 100;
 }
 
 /* --- Main Content Styles --- */
 .main-content {
     flex: 1;
+    
     background: #ffffff;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
+   
 }
 
-/* --- General Contact List Styles --- */
+/* --- Contact List & Cards --- */
 .contacts-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -49,15 +53,14 @@
     margin-top: 20px;
 }
 
-/* --- Contact Card Styles --- */
 .contact-card, .contact-item {
-    background:rgb(170, 84, 204); /* Updated to #9b59b6 */
+    background: rgb(170, 84, 204);
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: left;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .contact-card:hover, .contact-item:hover {
@@ -65,7 +68,19 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* --- Button Group Styles --- */
+.contact-card h3, .contact-item h3 {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.contact-card p, .contact-item p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 10px;
+}
+
+/* --- Button Group --- */
 .button-group {
     margin-top: 15px;
     display: flex;
@@ -73,37 +88,28 @@
 }
 
 .button-group .btn {
-    border: none;
     padding: 8px 15px;
     border-radius: 8px;
     font-size: 0.9rem;
+    border: none;
     cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: 0.3s ease;
 }
 
-.button-group .call-btn {
+.call-btn {
     background-color: #4caf50;
     color: white;
 }
-.button-group .call-btn:hover {
+.call-btn:hover {
     background-color: #388e3c;
 }
 
-.button-group .edit-btn {
+.edit-btn {
     background-color: #2196f3;
     color: white;
 }
-.button-group .edit-btn:hover {
+.edit-btn:hover {
     background-color: #1976d2;
-}
-
-.button-group .delete-btn {
-    background-color: #f44336;
-    color: white;
-}
-.button-group .delete-btn:hover {
-    background-color: #d32f2f;
 }
 
 /* --- Modal Styles --- */
@@ -114,61 +120,98 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
+    display: none;
     align-items: center;
+    justify-content: center;
     z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .modal.active {
-    opacity: 1;
-    visibility: visible;
+    display: flex;
 }
 
+/* --- Modal Content --- */
 .modal-content {
-    background:rgb(186, 57, 237); /* Updated to #9b59b6 */
+    background: rgb(186, 57, 237);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    width: 400px;
-    text-align: center;
+   
+    width: 90%;
+    max-width: 500px;
     color: #fff;
-    animation: slide-in 0.4s ease;
+    
 }
 
-.modal-content h2 {
+.modal-content h3, .modal-content h2 {
     margin-bottom: 20px;
     font-size: 1.8rem;
     font-weight: bold;
+    text-align: center;
 }
 
-.modal-content label {
-    font-size: 1rem;
-    margin-bottom: 10px;
-    display: block;
-    text-align: left;
-    font-weight: 500;
+.modal-content .close {
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    float: right;
+    line-height: 1;
+    margin-top: -10px;
+    transition: color 0.3s ease;
+}
+.modal-content .close:hover {
+    color: #6c5ce7;
 }
 
-.modal-content input {
-    width: 100%;
-    padding: 12px;
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+.modal-content .form-group {
     margin-bottom: 15px;
+}
+.modal-content label {
+    
+    margin-bottom: 5px;
+    color: white;
+    text-align: left;
+}
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 14px;
+    background-color: #f6e4f7;
+    color: #333;
+}
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
     outline: none;
-    transition: border 0.3s ease;
+    border-color: #e8c8e3;
+    box-shadow: 0 0 5px rgba(232, 200, 227, 0.5);
+}
+.modal-content input:disabled,
+.modal-content select:disabled,
+.modal-content textarea:disabled {
+    background-color: #e9e9e9;
+    color: #666;
+}
+.modal-content textarea {
+    resize: vertical;
+    min-height: 100px;
 }
 
-.modal-content input:focus {
-    border-color: #4caf50;
+/* --- Modal Button Group --- */
+.modal-content .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
-
-/* --- Modal Buttons --- */
 .button-group .save-btn {
     background-color: blue;
     color: white;
@@ -177,11 +220,10 @@
     background-color: #45a049;
     transform: translateY(-2px);
 }
-
-.button-group .cancel-btn {  
+.button-group .cancel-btn {
     background-color: rgb(244, 65, 45);
-    margin-left: 250px;
     color: white;
+    
 }
 .button-group .cancel-btn:hover {
     background-color: rgb(100, 31, 23);
@@ -200,33 +242,32 @@
     }
 }
 
-/* --- Additional Card Styling --- */
-.contact-card h3, .contact-item h3 {
-    color: white;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-}
-
-.contact-card p, .contact-item p {
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-}
-
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
     .contacts-list {
         grid-template-columns: 1fr;
     }
-    
     .modal-content {
         width: 90%;
     }
-    
-    .button-group .cancel-btn {
-        margin-left: 0;
-    }
+   
 }
+.btn.save-btn {
+    background-color: #450d8f; /* Medium Violet */
+    color: #fff;
+    border: none;
+    padding: 12px;
+    width: 95%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn.save-btn:hover {
+    background-color:rgb(96, 17, 85); /* Slightly darker shade on hover */
+}
+
+
 </style>
 
 <body>
@@ -261,28 +302,31 @@
         </div>
     </div>
 
-    <!-- Edit Contact Modal -->
-    <div id="editContactModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('editContactModal')">&times;</span>
-            <h2>Edit Emergency Contact</h2>
-            <form id="editContactForm" onsubmit="saveContactEdits(event)">
+   <!-- Edit Contact Modal -->
+<div id="editContactModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editContactModal')">&times;</span>
+        <h3>Edit Emergency Contact</h3>
+        <form id="editContactForm" onsubmit="saveContactEdits(event)">
+            <div class="form-group">
                 <label for="editContactName">Name:</label>
                 <input type="text" id="editContactName" required>
-
+            </div>
+            
+            <div class="form-group">
                 <label for="editContactPhone">Phone:</label>
                 <input type="text" id="editContactPhone" required>
-
-                <input type="hidden" id="editContactId">
-
-                <div class="button-group">
-                    
-                <button type="button" class="btn save-btn" onclick="saveContactEdits(event)">Save</button>
-                    <button type="button" class="btn cancel-btn" onclick="closeModal('editContactModal')">Cancel</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            
+            <input type="hidden" id="editContactId">
+            
+            <div class="form-actions">
+               
+                <button type="submit" class="btn save-btn" onclick="saveContactEdits(event)">Save</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 

@@ -286,7 +286,7 @@
         .modal-content select,
         .modal-content textarea {
             width: 100%;
-            padding: 10px;
+            padding: 5px;
             border: 1px solid black;
             border-radius: 5px;
             background-color: #f6e4f7;
