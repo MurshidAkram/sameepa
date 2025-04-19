@@ -176,8 +176,8 @@ class M_Chat {
             return is_object($existingChat) ? $existingChat->id : $existingChat['id'];
         }
         
-        $this->db->query('INSERT INTO chats (user1_id, user2_id, created_at, updated_at) 
-                         VALUES (:user1_id, :user2_id, NOW(), NOW())');
+        $this->db->query('INSERT INTO chats (user1_id, user2_id, created_at) 
+                         VALUES (:user1_id, :user2_id, NOW())');
         $this->db->bind(':user1_id', $user1Id);
         $this->db->bind(':user2_id', $user2Id);
         
@@ -305,6 +305,20 @@ public function getMessageById($messageId) {
     error_log('Message fetched from DB: ' . print_r($result, true));
     
     return $result;
+}
+// models/Chat.php
+public function acceptChatRequest($requestId)
+{
+    $this->db->query("UPDATE chat_requests SET status = 'accepted' WHERE id = :id");
+    $this->db->bind(':id', $requestId);
+    return $this->db->execute();
+}
+// models/Chat.php
+public function declineChatRequest($requestId)
+{
+    $this->db->query("UPDATE chat_requests SET status = 'declined' WHERE id = :id");
+    $this->db->bind(':id', $requestId);
+    return $this->db->execute();
 }
 
 }

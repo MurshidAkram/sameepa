@@ -121,94 +121,39 @@ class Chat extends Controller {
         $this->view('chat/requests', $data);
     }
     
-    public function acceptRequest($id) {
-        error_log("Accept request called for ID: $id");
-        
-        $request = $this->chatModel->getRequestById($id);
-        
-        if (!$request) {
-            error_log("Request not found: $id");
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Request not found']);
-            return;
+    // controllers/Chat.php
+public function acceptRequest()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $requestId = $_POST['request_id'];
+        $senderId = $_POST['sender_id'];
+
+        if ($this->chatModel->acceptChatRequest($requestId)) {
+            echo json_encode([
+                'success' => true,
+                'start_chat_url' => URLROOT . "/chat/viewchat/$senderId"
+            ]);
+        } else {
+            echo json_encode(['success' => false]);
         }
-        
-        if ($request->recipient_id != $_SESSION['user_id']) {
-            error_log("Unauthorized: User {$_SESSION['user_id']} trying to accept request for {$request->recipient_id}");
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
-            return;
-        }
-        
-        try {
-            // Create a new chat
-            $chatId = $this->chatModel->createChat($request->sender_id, $_SESSION['user_id']);
-            
-            if (!$chatId) {
-                error_log("Failed to create chat for request $id");
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => 'Could not create chat']);
-                return;
-            }
-            
-            // Update the request status to 'accepted'
-            $updateSuccess = $this->chatModel->updateRequestStatus($id, 'accepted');
-            
-            if ($updateSuccess) {
-                error_log("Successfully accepted request $id, chat ID: $chatId");
-                header('Content-Type: application/json');
-                echo json_encode(['success' => true, 'chat_id' => $chatId, 'user_id' => $request->sender_id]);
-            } else {
-                error_log("Failed to update status to 'accepted' for request $id");
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => 'Could not update request status']);
-            }
-        } catch (Exception $e) {
-            error_log("Exception in acceptRequest for request $id: " . $e->getMessage());
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'An error occurred']);
-        }
-        exit;
     }
+}
+
     
-    public function declineRequest($id) {
-        error_log("Decline request called for ID: $id");
-        
-        $request = $this->chatModel->getRequestById($id);
-        
-        if (!$request) {
-            error_log("Request not found: $id");
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Request not found']);
-            return;
+   // controllers/Chat.php
+public function declineRequest()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $requestId = $_POST['request_id'];
+
+        if ($this->chatModel->declineChatRequest($requestId)) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false]);
         }
-        
-        if ($request->recipient_id != $_SESSION['user_id']) {
-            error_log("Unauthorized: User {$_SESSION['user_id']} trying to decline request for {$request->recipient_id}");
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
-            return;
-        }
-        
-        try {
-            $updateSuccess = $this->chatModel->updateRequestStatus($id, 'declined');
-            
-            if ($updateSuccess) {
-                error_log("Successfully declined request $id");
-                header('Content-Type: application/json');
-                echo json_encode(['success' => true, 'message' => 'Request declined successfully']);
-            } else {
-                error_log("Failed to update status to 'declined' for request $id");
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => 'Could not decline request']);
-            }
-        } catch (Exception $e) {
-            error_log("Exception in declineRequest for request $id: " . $e->getMessage());
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'An error occurred']);
-        }
-        exit;
     }
+}
+
     
     public function viewChat($userId) {
         $chat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);

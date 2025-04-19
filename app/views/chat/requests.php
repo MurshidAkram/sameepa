@@ -166,120 +166,58 @@
         }
     </style>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const links = document.querySelectorAll(".groups-nav a");
-
-            links.forEach(link => {
-                link.addEventListener("click", function() {
-                    links.forEach(l => l.classList.remove("active"));
-                    this.classList.add("active");
-                });
-            });
-        });
-
-        function acceptRequest(requestId, userId) {
-            // Log the parameters
-            console.log('Accept request called with ID:', requestId, 'User ID:', userId);
-            
-            // Create the URL for the request
-            const url = `<?php echo URLROOT; ?>/chat/acceptRequest/${requestId}`;
-            console.log('Sending request to:', url);
-            
-            // Send the request to accept the chat request
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.text();
-            })
-            .then(text => {
-                console.log('Raw response:', text);
-                let data;
-                try {
-                    // Try to parse as JSON if possible
-                    data = JSON.parse(text);
-                    console.log('Parsed JSON data:', data);
-                } catch (e) {
-                    // If not JSON, create a default success response
-                    console.log('Not JSON, defaulting to success');
-                    data = { success: true };
-                }
-                
-                // Replace the buttons with a start chat link
-                const actionsDiv = document.getElementById('actions-' + requestId);
-                if (actionsDiv) {
-                    const chatUrl = `<?php echo URLROOT; ?>/chat/viewChat/${userId}`;
-                    console.log('Setting Start Chat link to:', chatUrl);
-                    
-                    actionsDiv.innerHTML = `
-                        <a href="${chatUrl}" class="btn-start-chat">Start Chat</a>
-                    `;
-                    console.log('Buttons replaced with Start Chat link');
-                } else {
-                    console.error('Could not find actions div for request ID:', requestId);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred: ' + error.message);
-            });
+<script>
+function acceptRequest(requestId, senderId) {
+    fetch("<?php echo URLROOT; ?>/chat/acceptRequest", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `request_id=${requestId}&sender_id=${senderId}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const actionsDiv = document.getElementById("actions-" + requestId);
+            actionsDiv.innerHTML = `<a href="${data.start_chat_url}" class="btn-start-chat">Start Chat</a>`;
+        } else {
+            alert("Failed to accept request.");
         }
+    });
+}
 
-        function declineRequest(requestId) {
-            if (!confirm('Are you sure you want to decline this chat request?')) {
-                return;
+function declineRequest(requestId) {
+    fetch("<?php echo URLROOT; ?>/chat/declineRequest", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `request_id=${requestId}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const requestCard = document.getElementById("request-" + requestId);
+            if (requestCard) {
+                requestCard.remove();
             }
 
-            const url = `<?php echo URLROOT; ?>/chat/declineRequest/${requestId}`;
-            console.log('Sending decline request to:', url);
-            
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.text())
-            .then(text => {
-                console.log('Decline response:', text);
-                let data;
-                try {
-                    data = JSON.parse(text);
-                } catch (e) {
-                    data = { success: true };
-                }
-                
-                if (data.success) {
-                    const requestCard = document.getElementById('request-' + requestId);
-                    if (requestCard) {
-                        requestCard.remove();
-                        
-                        // Check if all requests are gone
-                        const cards = document.querySelectorAll('.group-card');
-                        if (cards.length === 0) {
-                            document.querySelector('.groups-grid').innerHTML = `
-                                <div class="no-groups">
-                                    <p>No pending chat requests.</p>
-                                    <a href="<?php echo URLROOT; ?>/chat/search" 
-                                       class="btn-view-group">Find Users to Chat</a>
-                                </div>
-                            `;
-                        }
-                    }
-                } else {
-                    alert(data.message || 'Failed to decline request');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while declining the request');
-            });
+            // Optional: check if no more requests are left
+            if (document.querySelectorAll('.group-card').length === 0) {
+                const contentDiv = document.querySelector('.groups-content .groups-grid');
+                contentDiv.innerHTML = `
+                    <div class="no-groups">
+                        <p>No pending chat requests.</p>
+                        <a href="<?php echo URLROOT; ?>/chat/search" class="btn-view-group">Find Users to Chat</a>
+                    </div>
+                `;
+            }
+        } else {
+            alert("Failed to decline request.");
         }
-    </script>
+    });
+}
+</script>
+
 </body>
 </html>

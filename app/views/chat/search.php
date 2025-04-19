@@ -54,6 +54,18 @@
                 <p>Find and connect with other users in the community.</p>
                 
                 <div class="users-grid">
+                    <?php
+                    // Define role name mapping
+                    $roleNames = [
+                        1 => 'Resident',
+                        2 => 'Admin',
+                        3 => 'Super Admin',
+                        4 =>'Maintenance',
+                        5 =>'Security',
+                        6=>'External Service Provider'
+                    ];
+                    ?>
+
                     <?php if (!empty($data['users'])): ?>
                         <?php foreach ($data['users'] as $user): ?>
                             <div class="user-card">
@@ -67,9 +79,9 @@
                                 
                                 <div class="user-details">
                                     <h3 class="user-name"><?php echo htmlspecialchars($user->name); ?></h3>
-                                    <?php if (isset($user->role)): ?>
-                                        <span class="user-role"><?php echo htmlspecialchars($user->role); ?></span>
-                                    <?php endif; ?>
+                                    <span class="user-role">
+                                        <?php echo isset($roleNames[$user->role_id]) ? $roleNames[$user->role_id] : 'Unknown'; ?>
+                                    </span>
                                 </div>
                                 
                                 <div class="user-actions">
@@ -180,13 +192,13 @@
 }
 
 .btn-view {
-    background: #4a90e2;
+    background: rgb(123, 123, 123);
     color: #fff;
     text-decoration: none;
 }
 
 .btn-view:hover {
-    background: #3a80d2;
+    background: rgb(92, 92, 93);
 }
 
 .btn-disabled {
@@ -231,10 +243,7 @@
 
         links.forEach(link => {
             link.addEventListener("click", function() {
-                // Remove active class from all links
                 links.forEach(l => l.classList.remove("active"));
-
-                // Add active class to the clicked link
                 this.classList.add("active");
             });
         });
