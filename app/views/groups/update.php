@@ -81,7 +81,7 @@
 
                           <div class="form-buttons">
                               <button type="submit" class="btn-submit">Update Group</button>
-                              <?php if ($_SESSION['user_role_id'] == 2): ?>
+                              <?php if (in_array($_SESSION['user_role_id'], [2, 3])): ?>
                                 <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="btn-cancel">Cancel</a>
                             <?php else: ?>
                                 <a href="<?php echo URLROOT; ?>/groups/index" class="btn-cancel">Cancel</a>

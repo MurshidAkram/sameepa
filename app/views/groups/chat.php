@@ -54,7 +54,7 @@
             <div class="message-content">
                 <div class="message-info">
                     <?php if($message->user_id != $_SESSION['user_id']): ?>
-                        <span class="message-sender"><?php echo $message->sender_name; ?></span>
+                        <span class="message-sender"><?php echo $message->sender_name; ?></span> &nbsp;
                     <?php endif; ?>
                     <span class="message-time"><?php echo date('h:i A', strtotime($message->sent_at)); ?></span>
                 </div>
@@ -97,12 +97,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script>
 document.getElementById('sendMessage').addEventListener('click', sendMessage);
+document.getElementById('messageInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
 
 function sendMessage() {
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value.trim();
     
     if (message) {
+        console.log('Sending message:', message);
         fetch('<?php echo URLROOT; ?>/groups/sendMessage', {
             method: 'POST',
             headers: {
@@ -110,34 +116,42 @@ function sendMessage() {
             },
             body: `group_id=<?php echo $data['group']['group_id']; ?>&message=${encodeURIComponent(message)}`
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Pass the message ID to the appendMessage function
-                appendMessage(data.message, data.timestamp, data.sender, data.message_id);
-                messageInput.value = '';
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                const chatMessages = document.getElementById('chatMessages');
+                const messageHTML = `
+                    <div class="chat-message sent" data-id="${data.message_id}">
+                        <div class="message-content">
+                            <div class="message-info">
+                                <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            </div>
+                            <p>${data.message}</p>
+                            <button class="delete-message-btn" onclick="deleteMessage(${data.message_id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                messageInput.value = '';
+            } else {
+                console.error('Failed to send message:', data);
+                alert(data.message || 'Failed to send message');
+            }
+        })
+        .catch(error => {
+            console.error('Error sending message:', error);
+            alert('An error occurred while sending the message.');
         });
     }
-}
-
-function appendMessage(message, timestamp, senderName, messageId) {
-    const chatMessages = document.getElementById('chatMessages');
-    const messageHTML = `
-        <div class="chat-message sent" data-id="${messageId}">
-            <div class="message-content">
-                <div class="message-info">
-                    <span class="message-time">${new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                </div>
-                <p>${message}</p>
-                <button class="delete-message-btn" onclick="deleteMessage(${messageId})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
-    chatMessages.insertAdjacentHTML('beforeend', messageHTML);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function showReportForm(messageId) {
@@ -156,23 +170,57 @@ function deleteMessage(messageId) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `messageId=${messageId}`
+            }
         })
-        .then(response => response.json())
+        .then(response => {
+            // First check if the response is OK
+            if (!response.ok) {
+                throw new Error('Server returned status ' + response.status);
+            }
+            
+            // Get the content type
+            const contentType = response.headers.get('content-type');
+            
+            // If it's JSON, parse it
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            }
+            
+            // Otherwise, get the text and try to parse it as JSON
+            return response.text().then(text => {
+                try {
+                    // Try to extract JSON from the response if it contains HTML
+                    const jsonMatch = text.match(/\{.*\}/);
+                    if (jsonMatch) {
+                        return JSON.parse(jsonMatch[0]);
+                    }
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse response as JSON:', text);
+                    throw new Error('Invalid response format');
+                }
+            });
+        })
         .then(data => {
             if (data.success) {
-                const messageElement = document.querySelector(`.chat-message[data-id="${data.messageId}"]`);
+                const messageElement = document.querySelector(`.chat-message[data-id="${messageId}"]`);
                 if (messageElement) {
                     messageElement.remove();
                 }
             } else {
                 alert(data.message || 'Failed to delete message');
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the message');
         });
     }
 }
+
+
 </script>
+
 </body>
 
 </html>
