@@ -10,9 +10,8 @@
         <li><a href="<?php echo URLROOT; ?>/facilities/admin_dashboard">Manage Facilities</a></li>
         <li><a href="<?php echo URLROOT; ?>/events/index">Manage Events</a></li>
         <li><a href="<?php echo URLROOT; ?>/groups/admin_dashboard">Manage Groups</a></li>
-
+        <li><a href="<?php echo URLROOT; ?>/payments/admin_dashboard">Manage Payments</a></li>
         <li><a href="<?php echo URLROOT; ?>/forums/index">Manage Forums</a></li>
-        <li><a href="<?php echo URLROOT; ?>/superadmin/payments">Payment Management</a></li>
         <li><a href="<?php echo URLROOT; ?>/chat/index">Chats</a></li>
         <li><a href="<?php echo URLROOT; ?>/polls/index">Polls</a></li>
         <li><a href="<?php echo URLROOT; ?>/exchange/index">Manage Exchange Center</a></li>

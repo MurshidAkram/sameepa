@@ -48,6 +48,16 @@
             <section class="checkout-form-container">
                 <form action="<?php echo URLROOT; ?>/payments/checkout" method="POST" class="checkout-form">
                     <div class="form-group">
+                        <label for="home_address">Home Address:</label>
+                        <?php if(empty($data['home_address'])): ?>
+                            <input type="text" id="home_address" name="home_address" value="No address found."  readonly class="readonly-field no-address-field" required>
+                        <?php else: ?>
+                            <input type="text" id="home_address" name="home_address" value="<?php echo $data['home_address']; ?>" readonly class="readonly-field">
+                        <?php endif; ?>
+                        <span class="invalid-feedback"><?php echo $data['home_address_err']; ?></span>
+                    </div>
+
+                    <div class="form-group">
                         <label for="amount">Amount ($):</label>
                         <input type="number" step="0.01" min="0.01" id="amount" name="amount" value="<?php echo $data['amount']; ?>" required>
                         <span class="invalid-feedback"><?php echo $data['amount_err']; ?></span>
@@ -68,4 +78,4 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
 
-</html>
+</html></html>

@@ -9,7 +9,6 @@ class Payments extends Controller {
         }
         
         $this->paymentModel = $this->model('M_Payments');
-
         $this->userModel = $this->model('M_Users');
         
         // Load Stripe PHP SDK
@@ -35,11 +34,17 @@ class Payments extends Controller {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             
             $data = [
+                'home_address' => trim($_POST['home_address']),
                 'amount' => trim($_POST['amount']),
                 'description' => trim($_POST['description']),
+                'home_address_err' => '',
                 'amount_err' => '',
                 'description_err' => ''
             ];
+
+            if (($data['home_address'])== 'No address found.') {
+                $data['home_address_err'] = ' ';
+            }
             
             // Validate amount
             if (empty($data['amount']) || !is_numeric($data['amount']) || $data['amount'] <= 0) {
@@ -52,7 +57,7 @@ class Payments extends Controller {
             }
             
             // Make sure no errors
-            if (empty($data['amount_err']) && empty($data['description_err'])) {
+            if (empty($data['home_address_err']) && empty($data['amount_err']) && empty($data['description_err'])) {
                 try {
                     // Create a PaymentIntent with the order amount and currency
                     $paymentIntent = \Stripe\PaymentIntent::create([
@@ -60,7 +65,8 @@ class Payments extends Controller {
                         'currency' => 'usd',
                         'description' => $data['description'],
                         'metadata' => [
-                            'user_id' => $_SESSION['user_id']
+                            'user_id' => $_SESSION['user_id'],
+                            'home_address' => $data['home_address']
                         ]
                     ]);
                     
@@ -76,15 +82,33 @@ class Payments extends Controller {
                 $this->view('payments/checkout_form', $data);
             }
         } else {
-            $data = [
-                'amount' => '',
-                'description' => '',
-                'amount_err' => '',
-                'description_err' => ''
-            ];
-            
-            $this->view('payments/checkout_form', $data);
+            $this->checkout_form();
         }
+    }
+
+    public function checkout_form()
+    {
+        // Initialize data
+        $data = [
+            'home_address' => '',
+            'home_address_err' => '',
+            'amount' => '',
+            'amount_err' => '',
+            'description' => '',
+            'description_err' => ''
+        ];
+        
+        // Get the resident's address from the database
+        $userModel = $this->model('M_Users');
+        $resident = $userModel->getResidentIDByUserId($_SESSION['user_id']);
+        
+        if ($resident && isset($resident['address']) && !empty($resident['address'])) {
+            $data['home_address'] = $resident['address'];
+        } else {
+            $data['home_address'] = '';
+        }
+        
+        $this->view('payments/checkout_form', $data);
     }
     
     public function success() {
@@ -98,6 +122,7 @@ class Payments extends Controller {
                     // Record payment in database
                     $paymentData = [
                         'user_id' => $_SESSION['user_id'],
+                        'home_address' => $paymentIntent->metadata->home_address,
                         'amount' => $paymentIntent->amount / 100, // Convert from cents
                         'description' => $paymentIntent->description,
                         'transaction_id' => $paymentIntent->id,

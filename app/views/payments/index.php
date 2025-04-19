@@ -30,47 +30,49 @@
         }
         ?>
 
-        <main class="payments-main">
-            <h1>Payment History</h1>
-            
-            <?php flash('payment_success'); ?>
-            <?php flash('payment_error'); ?>
-            
-            <div class="payment-actions">
-                <a href="<?php echo URLROOT; ?>/payments/checkout" class="btn-create">
-                    <i class="fas fa-plus"></i> &nbsp; Make New Payment
-                </a>
-            </div>
-            
-            <div class="payments-table-container">
-                <?php if (!empty($data['payments'])) : ?>
-                    <table class="payments-table">
-                        <thead>
+<main class="payments-main">
+        <h1>Payment History</h1>
+        
+        <?php flash('payment_success'); ?>
+        <?php flash('payment_error'); ?>
+        
+        <div class="payment-actions">
+            <a href="<?php echo URLROOT; ?>/payments/checkout" class="btn-create">
+                <i class="fas fa-plus"></i> &nbsp; Make New Payment
+            </a>
+        </div>
+        
+        <div class="payments-table-container">
+            <?php if (!empty($data['payments'])) : ?>
+                <table class="payments-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Home Address</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Transaction ID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($data['payments'] as $payment) : ?>
                             <tr>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                                <th>Transaction ID</th>
-                                <th>Status</th>
+                                <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
+                                <td><?php echo $payment->home_address; ?></td>
+                                <td><?php echo $payment->description; ?></td>
+                                <td>$<?php echo number_format($payment->amount, 2); ?></td>
+                                <td><?php echo $payment->transaction_id; ?></td>
+                                <td>
+                                    <span class="status-badge status-<?php echo strtolower($payment->status); ?>">
+                                        <?php echo ucfirst($payment->status); ?>
+                                    </span>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($data['payments'] as $payment) : ?>
-                                <tr>
-                                    <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
-                                    <td><?php echo $payment->description; ?></td>
-                                    <td>$<?php echo number_format($payment->amount, 2); ?></td>
-                                    <td><?php echo $payment->transaction_id; ?></td>
-                                    <td>
-                                        <span class="status-badge status-<?php echo strtolower($payment->status); ?>">
-                                            <?php echo ucfirst($payment->status); ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else : ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else : ?>
                     <div class="no-records">
                         <p>No payment records found.</p>
                     </div>

@@ -167,6 +167,15 @@ class M_Users
         }
     }
 
+    public function getResidentIDByUserId($userId)
+{
+    $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $userId);
+    
+    return $this->db->single();
+}
+
+
     public function getResidentByUserId($userId)
     {
         $this->db->query('SELECT r.*, u.name, u.email 
@@ -434,4 +443,6 @@ class M_Users
             return 0; // Return 0 on failure
         }
     }
+
+    
 }

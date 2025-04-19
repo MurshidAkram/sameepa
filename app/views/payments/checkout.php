@@ -43,6 +43,10 @@
                 <div class="payment-summary">
                     <h2>Payment Summary</h2>
                     <div class="summary-item">
+                        <span>Home Address:</span>
+                        <span><?php echo $data['home_address']; ?></span>
+                    </div>
+                    <div class="summary-item">
                         <span>Description:</span>
                         <span><?php echo $data['description']; ?></span>
                     </div>
