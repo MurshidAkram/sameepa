@@ -199,7 +199,11 @@ class Announcements extends Controller
             'user_reaction' => $userReaction ? (array)$userReaction : []
         ];
 
-        $this->view('announcements/viewannouncement', $data);
+        if (!$announcement) {
+            redirect('announcements/index');
+        } else {
+            $this->view('announcements/viewannouncement', $data);
+        }
     }
 
 
