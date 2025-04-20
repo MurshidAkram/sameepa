@@ -1,18 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/payments/admin_dashboard.css">
     <title>Payment Management | <?php echo SITENAME; ?></title>
 </head>
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="dashboard-container">
+    <div class="dashboard-container side-panel-open">
         <?php 
         switch($_SESSION['user_role_id']) {
             case 2:
@@ -46,53 +47,40 @@
             <div class="payments-stats">
                 <div class="stat-card">                  
                     <div class="stat-info">
-                        <h3><i class="fas fa-money-bill-wave"></i> Total Payments</h3>
-                        <p><?php echo isset($data['total_payments']) ? $data['total_payments'] : 0; ?></p>
+                        <h3><i class="fas fa-calendar-day"></i> Most Active Day</h3>
+                        <p><?php echo isset($data['most_active_day']) ? $data['most_active_day'] : 'N/A'; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">                   
                     <div class="stat-info">
-                        <h3><i class="fas fa-dollar-sign"></i> Total Amount</h3>
-                        <p>$<?php echo isset($data['total_amount']) ? number_format($data['total_amount'], 2) : '0.00'; ?></p>
+                        <h3><i class="fas fa-money-bill-wave"></i> Payments This Month</h3>
+                        <p><?php echo isset($data['payments_this_month']) ? $data['payments_this_month'] : 0; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-info">
-                        <h3><i class="fas fa-check-circle"></i> Completed Payments</h3>
-                        <p><?php echo isset($data['completed_payments']) ? $data['completed_payments'] : 0; ?></p>
+                        <h3><i class="fas fa-dollar-sign"></i> Total This Month</h3>
+                        <p>$<?php echo isset($data['total_amount_this_month']) ? number_format($data['total_amount_this_month'], 2) : '0.00'; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-info">
-                        <h3><i class="fas fa-home"></i> Unique Addresses</h3>
-                        <p><?php echo isset($data['unique_addresses']) ? $data['unique_addresses'] : 0; ?></p>
+                        <h3><i class="fas fa-bolt"></i> Recent Activity</h3>
+                        <p><?php echo isset($data['recent_activity']) ? $data['recent_activity'] : 0; ?></p>
                     </div>
                 </div>
             </div>
-
-            <div class="chart-container">
-                <div class="chart-card">
-                    <h2>Monthly Payment Trends</h2>
-                    <canvas id="monthlyPaymentsChart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h2>Payment Status Distribution</h2>
-                    <canvas id="paymentStatusChart"></canvas>
-                </div>
-            </div>
-
+              <div class="single-chart-container">
+                  <div class="chart-card">
+                      <h2>Monthly Payments</h2>
+                      <div class="chart-container-inner">
+                          <canvas id="monthlyPaymentsChart"></canvas>
+                      </div>
+                  </div>
+              </div>
             <div class="payments-table-container">
                 <div class="table-header">
                     <h2>Recent Payments</h2>
-                    <div class="filter-container">
-                        <span class="filter-label">Status:</span>
-                        <select class="filter-select" id="statusFilter">
-                            <option value="all">All Status</option>
-                            <option value="completed">Completed</option>
-                            <option value="pending">Pending</option>
-                            <option value="failed">Failed</option>
-                        </select>
-                    </div>
                 </div>
 
                 <table class="payments-table">
@@ -104,7 +92,6 @@
                             <th>Amount</th>
                             <th>Description</th>
                             <th>Date</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -118,23 +105,18 @@
                                 <td>$<?php echo number_format($payment->amount, 2); ?></td>
                                 <td><?php echo substr($payment->description, 0, 30) . (strlen($payment->description) > 30 ? '...' : ''); ?></td>
                                 <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
-                                <td>
-                                    <span class="status-badge <?php echo strtolower($payment->status); ?>">
-                                        <?php echo ucfirst($payment->status); ?>
-                                    </span>
-                                </td>
                                 <td class="action-buttons">
-                                    <a href="<?php echo URLROOT; ?>/payments/view/<?php echo $payment->id; ?>" class="btn-view">
+                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $payment->id; ?>" class="btn-view-p">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <?php if($payment->status !== 'completed'): ?>
-                                    <a href="<?php echo URLROOT; ?>/payments/updateStatus/<?php echo $payment->id; ?>/completed" class="btn-complete" onclick="return confirm('Mark this payment as completed?')">
-                                        <i class="fas fa-check"></i>
-                                    </a>
-                                    <?php endif; ?>
                                     <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $payment->id; ?>" class="btn-receipt">
                                         <i class="fas fa-file-invoice"></i>
                                     </a>
+                                    <form action="<?php echo URLROOT; ?>/payments/delete/<?php echo $payment->id; ?>" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this payment record? This action cannot be undone.')" title="Delete Payment">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -183,6 +165,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false, // This allows the chart to use the container's height
                 scales: {
                     y: {
                         beginAtZero: true
@@ -190,32 +173,6 @@
                 }
             }
         });
-
-        // Payment Status Chart
-        const statusCtx = document.getElementById('paymentStatusChart').getContext('2d');
-        new Chart(statusCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Completed', 'Pending', 'Failed'],
-                datasets: [{
-                    data: <?php echo isset($data['status_data']) ? json_encode($data['status_data']) : '[0, 0, 0]'; ?>,
-                    backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `${context.label}: ${context.raw}`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
         // Filter functionality
         document.getElementById('statusFilter').addEventListener('change', function() {
             const status = this.value;

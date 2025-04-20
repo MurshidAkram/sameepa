@@ -1,0 +1,163 @@
+.payment-view-main {
+    flex: 1;
+    padding: 2rem;
+}
+
+.view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-back,
+.btn-receipt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-back {
+    background: #666;
+    color: white;
+}
+
+.btn-receipt {
+    background: #800080;
+    color: white;
+}
+
+.btn-back:hover,
+.btn-receipt:hover {
+    transform: translateY(-2px);
+}
+
+.btn-receipt:hover {
+    background: #9a009a;
+}
+
+/* Payment Details Card */
+.payment-details-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.payment-id h2 {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.payment-id p {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-badge.completed {
+    background-color: #e6f7e6;
+    color: #2ecc71;
+}
+
+.status-badge.pending {
+    background-color: #fff8e6;
+    color: #f39c12;
+}
+
+.status-badge.failed {
+    background-color: #ffe6e6;
+    color: #e74c3c;
+}
+
+/* Payment Info Grid */
+.payment-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.info-group h3 {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.info-group p {
+    font-size: 1.125rem;
+    color: #333;
+}
+
+/* User Details */
+.user-details h2 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.user-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.no-data {
+    color: #888;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .view-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .btn-back,
+    .btn-receipt {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .payment-info-grid,
+    .user-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
