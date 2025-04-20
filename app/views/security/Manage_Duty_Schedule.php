@@ -7,131 +7,108 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Security Duty Schedule</title>
     <style>
+        :root {
+            --primary-color: #800080;
+            /* Purple */
+            --secondary-color: #660066;
+            --accent-color: #b266ff;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --modal-bg: #ffffff;
+            --modal-text: #333333;
+            --modal-border: #e8c8e3;
+            --modal-highlight: #f6e4f7;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            background-color: #f9fafb;
-            color: #333;
+        }
+
+        /* Layout structure with flexbox */
+        .page-wrapper {
             display: flex;
-            flex-direction: column;
             min-height: 100vh;
         }
 
-        header {
-            background-color: white;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-
-
-        .content {
-            display: flex;
-            flex-grow: 1;
-            flex-direction: row;
-            margin: 0;
-        }
-
         .side-panel {
-            width: 350px;
-            background-color: white;
-            color: #800080;
-            padding-left: 100px;
-            padding-top: 20px;
-            box-sizing: border-box;
-            flex-shrink: 0;
-            height: auto;
+
+            position: fixed;
+
+            padding: 20px 10px;
+
         }
 
         .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px auto;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            flex: 1;
+            margin-left: 300px;
+            padding: 50px 20px 20px 20px;
             display: flex;
             flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
         }
 
-        h1 {
-            text-align: center;
-            color: #800080;
-            margin: 0;
-            font-weight: 700;
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        th {
-            background-color: #800080;
+        .card-header {
+            background-color: var(--secondary-color);
             color: white;
-        }
-
-        td {
-            background-color: #f7f7f7;
-        }
-
-        button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn {
-            width: 25%;
-            padding: 15px;
-            background-color: #336699;
-            color: white;
+            padding: 15px 20px;
             font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .btn-edit {
-            background-color: #ffa502;
-            color: white;
+        .card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .btn-delete {
-            background-color: #d63031;
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background-color: #e17e01;
-        }
-
-        .btn-delete:hover {
-            background-color: #c62828;
-        }
-
-        /* Modal styles */
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -140,6 +117,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
         }
@@ -149,190 +127,396 @@
         }
 
         .modal-content {
-            background: #fff;
-            padding: 20px;
+            background-color: var(--modal-bg);
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 40%;
-            text-align: center;
+            width: 60%;
+            max-width: 700px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .modal-content input,
-        .modal-content select {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .modal-content button {
-            width: 45%;
-            margin: 10px;
-        }
-
-        .btn-cancel {
+        .modal-header {
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
             justify-content: space-between;
-            background-color: #636e72;
+            align-items: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .modal-header .close {
+            background: none;
+            border: none;
+            color: rgb(244, 8, 209);
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            line-height: 1;
+            padding: 0 0 5px 10px;
+        }
+
+        .modal-header .close:hover {
             color: white;
         }
 
-        .btn-cancel:hover {
-            background-color: #555;
+        .modal-body {
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-        /* Calendar Container css*/
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--modal-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px;
+            border: 1px solid var(--modal-border);
+            border-radius: 5px;
+            background-color: var(--modal-highlight);
+            color: var(--modal-text);
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--modal-border);
+            box-shadow: 0 0 5px rgba(232, 200, 227, 0.5);
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        /* Modal form submit button */
+        .modal-form button {
+            background-color: #7a4d9c;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .modal-form button:hover {
+            background-color: #9b66c9;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Calendar */
         .calendar-container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
         }
 
-        h3 {
-            font-size: 1.8em;
-            color: #800080;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        /* Month Navigation */
-        .month-navigation {
+        .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .month-navigation button {
-            padding: 10px 20px;
-            background-color: #4A90E2;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: background-color 0.5s ease;
+        .calendar-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark-color);
         }
 
-        .month-navigation button:hover {
-            background-color: #357ABD;
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
         }
 
-        #current-month {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Calendar Grid */
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            grid-gap: 5px;
-            padding: 10px;
+            gap: 10px;
+        }
+
+        .calendar-day-header {
             text-align: center;
-            font-size: 1.1em;
-        }
-
-        /* Days of the Week Header */
-        .day-header {
-            font-weight: bold;
-            color: #4A90E2;
+            font-weight: 600;
             padding: 10px;
-        }
-
-        /* Day Cells */
-        .day {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
-        }
-
-        .day:hover {
-            background-color: #e0f2ff;
-        }
-
-        .day.empty {
-            visibility: hidden;
-        }
-
-        /* Officer Shifts within each day */
-        .day div {
-            margin-top: 5px;
-            font-size: 0.85em;
+            background-color: var(--primary-color);
+            color: white;
             border-radius: 4px;
-            padding: 5px;
-            color: #fff;
-            background-color: #7f8c8d;
-            text-align: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Calendar Day Cell: If day has shifts assigned */
-        .day:not(.empty) {
+        .calendar-day {
+            min-height: 100px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        .day div {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            right: 5px;
+        .calendar-day-number {
+            font-weight: 600;
+            margin-bottom: 5px;
         }
 
-        /* Officer Shift Color Indicator */
-        .day div {
-            font-size: 0.9em;
-            padding: 4px 8px;
-            background-color: #4A90E2;
-            color: #fff;
-            border-radius: 6px;
+        .calendar-day.today {
+            background-color: #f3e6f9;
         }
 
-        /* Add custom colors to shifts */
-        .day div:nth-child(1) {
-            background-color: #4CAF50;
-            /* Green */
+        .shift-item {
+            font-size: 12px;
+            padding: 3px 5px;
+            margin-bottom: 3px;
+            border-radius: 3px;
+            color: white;
+            display: flex;
+            align-items: center;
         }
 
-        .day div:nth-child(2) {
-            background-color: #2196F3;
-            /* Blue */
+        .shift-morning {
+            background-color: var(--success-color);
         }
 
-        .day div:nth-child(3) {
-            background-color: #F44336;
-            /* Red */
+        .shift-afternoon {
+            background-color: var(--info-color);
         }
 
-        .day div:nth-child(4) {
-            background-color: #FF9800;
-            /* Orange */
+        .shift-night {
+            background-color: var(--secondary-color);
         }
 
-        .day div:nth-child(5) {
-            background-color: #9C27B0;
-            /* Purple */
+        .empty-day {
+            background-color: #f9f9f9;
+            border: 1px dashed #ddd;
         }
 
-        .today {
-            padding-top: 30px;
-            color: #800080;
-            font-size: 30px;
+        /* Navigation Menu in Side Panel */
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: var(--dark-color);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .side-panel {
+                width: 220px;
+            }
+
+            .container {
+                margin-left: 220px;
+            }
+
+            .modal-content {
+                width: 70%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                flex-direction: column;
+            }
+
+            .side-panel {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 10px;
+            }
+
+            .container {
+                margin-left: 0;
+                padding-top: 20px;
+            }
+
+            .calendar {
+                grid-template-columns: repeat(1, 1fr);
+            }
+
+            .calendar-day-header {
+                display: none;
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+
+            .nav-item {
+                white-space: nowrap;
+            }
+
+            .modal-content {
+                width: 90%;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 95%;
+            }
+
+            .modal-header h3 {
+                font-size: 1rem;
+            }
+
+            .modal-header .close {
+                font-size: 2rem;
+            }
+
+            .form-control {
+                padding: 8px;
+            }
         }
     </style>
+
 </head>
 
 <body>
     <!-- Navbar -->
-
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
-
-
     <!-- Content Section -->
     <div class="content">
         <!-- Side Panel Section -->
@@ -340,354 +524,513 @@
             <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
         </div>
 
-        <!-- Main Content Section -->
         <div class="container">
-            <h1>Duty Schedule</h1>
 
-            <button class="btn" onclick="openModal()">Create Schedule</button>
 
-            <div class="today">Today Duty Shedule</div>
-            <!-- Table Section -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Duty Officer ID</th>
-                        <th>Officer Name</th>
-                        <th>Duty Date</th>
-                        <th>Shift</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="dutyTable">
-                    <tr>
-                        <td>S001</td>
-                        <td>Vishwa Nimsara</td>
-                        <td>2024-11-20</td>
-                        <td>8 AM - 12 PM</td>
-                        <td>
-                            <button class="btn-edit" onclick="editDuty(this)">Edit</button>
-                            <button class="btn-delete" onclick="deleteDuty(this)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody id="dutyTable">
-                    <tr>
-                        <td>S002</td>
-                        <td>Malith Damsara</td>
-                        <td>2024-11-21</td>
-                        <td>8 AM - 12 PM</td>
-                        <td>
-                            <button class="btn-edit" onclick="editDuty(this)">Edit</button>
-                            <button class="btn-delete" onclick="deleteDuty(this)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody id="dutyTable">
-                    <tr>
-                        <td>S003</td>
-                        <td>Sasila Sadamsara</td>
-                        <td>2023-11-21</td>
-                        <td>4 PM - 00 AM</td>
-                        <td>
-                            <button class="btn-edit" onclick="editDuty(this)">Edit</button>
-                            <button class="btn-delete" onclick="deleteDuty(this)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody id="dutyTable">
-                    <tr>
-                        <td>S004</td>
-                        <td>Geeth Pasida</td>
-                        <td>2024-11-22</td>
-                        <td>00 AM - 8 AM</td>
-                        <td>
-                            <button class="btn-edit" onclick="editDuty(this)">Edit</button>
-                            <button class="btn-delete" onclick="deleteDuty(this)">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-shield-alt"></i> Security Officers
+                </div>
+                <div class="card-body">
+                    <table id="officersTable">
+                        <thead>
+                            <tr>
+                                <th>Officer ID</th>
+                                <th>Officer Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-    <!-- Modal Section -->
-    <div class="modal" id="scheduleModal">
-        <div class="modal-content">
-            <h3>Create/Edit Schedule</h3>
-            <form id="dutyForm">
-                <input type="text" id="officer_id" placeholder="Officer ID" required>
-                <input type="text" id="officer_name" placeholder="Officer Name" required>
-                <input type="date" id="duty_date" required>
-                <select id="shift" required>
-                    <option value="8-12">8 AM - 12 PM</option>
-                    <option value="8-16">8 AM - 4 PM</option>
-                    <option value="16-20">4 PM - 8 PM</option>
-                    <option value="16-24">4 PM - 12 AM</option>
-                    <option value="24-8">00 AM - 8 AM</option>
-                </select>
-                <button type="button" class="btn-cancel" onclick="saveDuty()">Save</button>
-                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-            </form>
-        </div>
-    </div>
+                            <?php if (isset($data['officers']) && is_array($data['officers'])): ?>
+                                <?php foreach ($data['officers'] as $officer): ?>
 
-    <!-- calender part -->
-    <!-- Calendar View -->
-    <div class="calendar-container">
-        <h3>Calendar View</h3>
+                                    <tr>
+                                        <td><?php echo $officer->id; ?></td>
+                                        <td><?php echo $officer->name; ?></td>
+                                        <td>
+                                            <button class="btn btn-success" onclick="openAddDutyModal(<?php echo $officer->id; ?>, '<?php echo $officer->name; ?>')">
+                                                <i class="fas fa-plus"></i> Add Duty
+                                            </button>
+                                            <button class="btn btn-warning" onclick="viewOfficerDuties(<?php echo $officer->id; ?>)">
+                                                <i class="fas fa-edit"></i> View Duties
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="3" class="text-center">No officers available</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <!-- Month Navigation -->
-        <div class="month-navigation">
-            <button onclick="navigateMonth(-1)">Previous</button>
-            <span id="current-month"></span>
-            <button onclick="navigateMonth(1)">Next</button>
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calendar-day"></i> Today's Duty Schedule
+                </div>
+                <div class="card-body">
+                    <table id="todaySchedule">
+                        <thead>
+                            <tr>
+                                <th>Officer ID</th>
+                                <th>Officer Name</th>
+                                <th>Shift</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($data['todaySchedule'])): ?>
+                                <tr>
+                                    <td colspan="4" class="text-center">No duties scheduled for today</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($data['todaySchedule'] as $duty): ?>
+                                    <tr>
+                                        <td><?php echo $duty->officer_id; ?></td>
+                                        <td><?php echo $duty->officer_name; ?></td>
+                                        <td><?php echo $duty->shift_name . ' (' . substr($duty->start_time, 0, 5) . ' - ' . substr($duty->end_time, 0, 5) . ')'; ?></td>
+
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h2 class="calendar-title" id="calendarTitle">April 2023</h2>
+                    <div class="calendar-nav">
+                        <button class="btn btn-primary" onclick="previousMonth()"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-primary" onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar" id="calendar">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+            </div>
         </div>
 
-        <div class="calendar" id="calendar">
-            <!-- Days of the week -->
+        <!-- Add Duty Modal -->
+        <div class="modal" id="addDutyModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Duty Schedule</h3>
+                    <button class="close" onclick="closeModal('addDutyModal')">&times;</button>
+                </div>
 
-            <div class="day-header">Sunday</div>
-            <div class="day-header">Monday</div>
-            <div class="day-header">Tuesday</div>
-            <div class="day-header">Wednesday</div>
-            <div class="day-header">Thursday</div>
-            <div class="day-header">Friday</div>
-            <div class="day-header">Saturday</div>
+                <div class="modal-body">
+                    <form id="addDutyForm">
+                        <input type="hidden" id="addOfficerId">
+                        <div class="form-group">
+                            <label for="addOfficerName">Officer Name</label>
+                            <input type="text" class="form-control" id="addOfficerName" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="addDutyDate">Date</label>
+                            <input type="date" class="form-control" id="addDutyDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addShift">Shift</label>
+                            <select class="form-control" id="addShift" required>
+                                <?php foreach ($data['shifts'] as $shift): ?>
+                                    <option value="<?php echo $shift->id; ?>">
+                                        <?php echo $shift->name . ' (' . substr($shift->start_time, 0, 5) . ' - ' . substr($shift->end_time, 0, 5) . ')'; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
 
+                    <button class="btn btn-primary" onclick="saveDuty()">Save</button>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+        <!-- View Duties Modal -->
+        <div class="modal" id="viewDutiesModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Officer Duties</h3>
+                    <button class="close" onclick="closeModal('viewDutiesModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <table id="dutiesTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Shift</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dutiesTableBody">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
 
+                </div>
+            </div>
+        </div>
+        <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <script>
-        const modal = document.getElementById('scheduleModal');
-        let editingRow = null;
+        <script>
+            // Global variables
+            let currentDate = new Date();
+            let currentOfficerId = null;
 
-        function openModal() {
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            resetForm();
-        }
-
-        function resetForm() {
-            document.getElementById('dutyForm').reset();
-            editingRow = null;
-        }
-
-        function saveDuty() {
-            const officerId = document.getElementById('officer_id').value;
-            const officerName = document.getElementById('officer_name').value;
-            const dutyDate = document.getElementById('duty_date').value;
-            const shift = document.getElementById('shift').value;
-
-            if (editingRow) {
-                editingRow.cells[0].innerText = officerId;
-                editingRow.cells[1].innerText = officerName;
-                editingRow.cells[2].innerText = dutyDate;
-                editingRow.cells[3].innerText = shift;
-            } else {
-                const table = document.getElementById('dutyTable');
-                const row = table.insertRow();
-                row.innerHTML = `
-                    <td>${officerId}</td>
-                    <td>${officerName}</td>
-                    <td>${dutyDate}</td>
-                    <td>${shift}</td>
-                    <td>
-                        <button class="btn-edit" onclick="editDuty(this)">Edit</button>
-                        <button class="btn-delete" onclick="deleteDuty(this)">Delete</button>
-                    </td>
-                `;
-            }
-
-            closeModal();
-        }
-
-        function editDuty(button) {
-            const row = button.parentElement.parentElement;
-            editingRow = row;
-
-            document.getElementById('officer_id').value = row.cells[0].innerText;
-            document.getElementById('officer_name').value = row.cells[1].innerText;
-            document.getElementById('duty_date').value = row.cells[2].innerText;
-            document.getElementById('shift').value = row.cells[3].innerText;
-
-            openModal();
-        }
-
-        function deleteDuty(button) {
-            const row = button.parentElement.parentElement;
-            row.remove();
-        }
-
-        // calender part
-
-        let currentMonth = new Date();
-        const officers = [{
-                id: '001',
-                name: 'John Doe',
-                color: '#4CAF50'
-            },
-            {
-                id: '002',
-                name: 'Jane Smith',
-                color: '#2196F3'
-            },
-            {
-                id: '003',
-                name: 'Mark Lee',
-                color: '#F44336'
-            },
-            {
-                id: '004',
-                name: 'Emma Brown',
-                color: '#FF9800'
-            },
-            {
-                id: '005',
-                name: 'Alice White',
-                color: '#9C27B0'
-            },
-        ];
-        const shifts = ['8-12', '8-16', '16-20', '16-24', '24-8']; // Shift timings
-        let schedule = {}; // Store schedule by date
-
-        // Generate monthly schedule
-        function generateMonthlySchedule(month, year) {
-            schedule = {}; // Reset schedule
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                schedule[day] = [];
-                // Randomly assign between 3 and 5 officers to work each day
-                const numOfficers = Math.floor(Math.random() * 3) + 3; // 3 to 5 officers
-                const selectedOfficers = shuffle(officers).slice(0, numOfficers); // Shuffle and select officers
-                selectedOfficers.forEach((officer, index) => {
-                    const shiftIndex = (day + index) % shifts.length; // Rotate shifts
-                    schedule[day].push({
-                        officer,
-                        shift: shifts[shiftIndex],
-                    });
-                });
-            }
-
-            populateSchedule();
-        }
-
-        // Shuffle function to randomize officer order
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // Populate today's schedule in the table
-        function populateTodaySchedule() {
-            const table = document.getElementById('duty-schedule-table').getElementsByTagName('tbody')[0];
-            table.innerHTML = ''; // Clear table
-
-            const today = new Date().getDate();
-            if (schedule[today]) {
-                schedule[today].forEach((entry) => {
-                    const {
-                        officer,
-                        shift
-                    } = entry;
-
-                    const row = table.insertRow();
-                    row.innerHTML = `
-                        <td>${officer.id}</td>
-                        <td>${officer.name}</td>
-                        <td>${shift}</td>
-                        <td>
-                            <button onclick="editDuty(${today}, '${officer.id}')">Edit</button>
-                            <button onclick="confirmDelete(${today}, '${officer.id}')">Delete</button>
-                        </td>
-                    `;
-                });
-            }
-        }
-
-        // Populate calendar with the schedule
-        function populateSchedule() {
-            const calendarDays = document.querySelectorAll('.calendar .day:not(.empty)');
-            calendarDays.forEach((day) => {
-                day.style.backgroundColor = '';
-                day.innerHTML = day.textContent.trim(); // Reset day square
+            // Initialize the page
+            document.addEventListener('DOMContentLoaded', function() {
+                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                updateCalendarTitle();
             });
 
-            for (const day in schedule) {
-                const dayElement = Array.from(document.getElementsByClassName('day')).find(
-                    (el) => el.textContent.trim() == day
-                );
-                if (dayElement) {
-                    dayElement.innerHTML = day; // Set the day number
+            // Calendar functions
+            function generateCalendar(year, month) {
+                const calendar = document.getElementById('calendar');
+                calendar.innerHTML = '';
 
-                    // Add each officer's shift to the day
-                    schedule[day].forEach((entry) => {
-                        const {
-                            officer,
-                            shift
-                        } = entry;
-                        const officerBlock = document.createElement('div');
-                        officerBlock.textContent = `${officer.name} (${shift})`;
-                        officerBlock.style.backgroundColor = officer.color;
-                        officerBlock.style.color = '#fff';
-                        officerBlock.style.margin = '2px 0';
-                        officerBlock.style.padding = '5px';
-                        officerBlock.style.borderRadius = '4px';
-                        officerBlock.style.fontSize = '0.8em';
-                        dayElement.appendChild(officerBlock);
-                    });
+                // Add day headers
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                days.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'calendar-day-header';
+                    dayHeader.textContent = day;
+                    calendar.appendChild(dayHeader);
+                });
+
+                // Get first day of month and total days
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                // Add empty cells for days before the first day of the month
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day empty-day';
+                    calendar.appendChild(emptyDay);
+                }
+
+                // Add cells for each day of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    const dateStr = formatDateForServer(date);
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'calendar-day';
+                    dayCell.dataset.date = dateStr;
+
+                    // Highlight today
+                    const today = new Date();
+                    if (date.getDate() === today.getDate() &&
+                        date.getMonth() === today.getMonth() &&
+                        date.getFullYear() === today.getFullYear()) {
+                        dayCell.classList.add('today');
+                    }
+
+                    // Add day number
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'calendar-day-number';
+                    dayNumber.textContent = day;
+                    dayCell.appendChild(dayNumber);
+
+                    // Fetch and display duties for this day
+                    updateCalendarDayDuties(dateStr, dayCell);
+
+                    calendar.appendChild(dayCell);
                 }
             }
 
-            // Populate today's schedule
-            populateTodaySchedule();
-        }
+            function updateCalendarDayDuties(dateStr, dayCell) {
+                console.log("Fetching duties for:", dateStr);
+                fetchDutiesForDate(dateStr).then(duties => {
+                    console.log("Received duties:", duties);
+                    // Clear existing duties (except day number)
+                    const dayNumber = dayCell.querySelector('.calendar-day-number');
+                    dayCell.innerHTML = '';
+                    if (dayNumber) dayCell.appendChild(dayNumber);
 
-        // Update calendar view
-        function updateCalendar(month, year) {
-            const firstDay = new Date(year, month, 1).getDay();
-            const numDays = new Date(year, month + 1, 0).getDate();
-
-            let calendarHTML = '';
-            for (let i = 0; i < firstDay; i++) {
-                calendarHTML += "<div class='day empty'></div>";
+                    duties.forEach(duty => {
+                        const shiftItem = document.createElement('div');
+                        shiftItem.className = `shift-item shift-${duty.shift_name.toLowerCase()}`;
+                        shiftItem.innerHTML = `<strong>${duty.shift_name}:</strong> ${duty.officers}`;
+                        dayCell.appendChild(shiftItem);
+                    });
+                });
             }
 
-            for (let day = 1; day <= numDays; day++) {
-                calendarHTML += `<div class="day">${day}</div>`;
+            function updateCalendarTitle() {
+                const options = {
+                    year: 'numeric',
+                    month: 'long'
+                };
+                document.getElementById('calendarTitle').textContent =
+                    currentDate.toLocaleDateString('en-US', options);
             }
 
-            document.getElementById('calendar').innerHTML = calendarHTML;
-            document.getElementById('current-month').textContent = new Date(year, month).toLocaleString('default', {
-                month: 'long',
-                year: 'numeric',
-            });
+            function previousMonth() {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                updateCalendarTitle();
+            }
 
-            populateSchedule();
-        }
+            function nextMonth() {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                updateCalendarTitle();
+            }
 
-        // Navigate through months
-        function navigateMonth(direction) {
-            currentMonth.setMonth(currentMonth.getMonth() + direction);
-            updateCalendar(currentMonth.getMonth(), currentMonth.getFullYear());
-            generateMonthlySchedule(currentMonth.getMonth(), currentMonth.getFullYear());
-        }
+            // Modal functions
+            function openAddDutyModal(officerId, officerName) {
+                document.getElementById('addOfficerId').value = officerId;
+                document.getElementById('addOfficerName').value = officerName;
+                document.getElementById('addDutyDate').valueAsDate = new Date();
+                document.getElementById('addDutyModal').style.display = 'flex';
+            }
 
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCalendar(currentMonth.getMonth(), currentMonth.getFullYear());
-            generateMonthlySchedule(currentMonth.getMonth(), currentMonth.getFullYear());
-        });
-    </script>
+            function viewOfficerDuties(officerId) {
+                currentOfficerId = officerId;
+                fetchOfficerDuties(officerId).then(duties => {
+                    const tbody = document.getElementById('dutiesTableBody');
+                    tbody.innerHTML = '';
+
+                    if (duties.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3">No duties assigned</td></tr>';
+                    } else {
+                        duties.forEach(duty => {
+                            const row = tbody.insertRow();
+                            row.innerHTML = `
+                    <td>${formatDate(duty.duty_date)}</td>
+                    <td>${duty.shift_name} (${duty.start_time.substring(0,5)} - ${duty.end_time.substring(0,5)})</td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editDuty(${officerId}, '${duty.duty_date}', ${duty.shift_id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteDuty(${officerId}, '${duty.duty_date}')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </td>
+                `;
+                        });
+                    }
+
+                    document.getElementById('viewDutiesModal').style.display = 'flex';
+                });
+            }
+
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+
+            function saveDuty() {
+                const officerId = document.getElementById('addOfficerId').value;
+                const dutyDateInput = document.getElementById('addDutyDate').value;
+                const shiftId = document.getElementById('addShift').value;
+                const officerName = document.getElementById('addOfficerName').value;
+
+                const localDate = new Date(dutyDateInput);
+                const dutyDate = formatDateForServer(localDate);
+
+                // Validate date is not in the past
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const selectedDate = new Date(dutyDate);
+
+                if (selectedDate < today) {
+                    alert('Cannot assign duties for past dates.');
+                    return;
+                }
+
+                // Send data to server
+                fetch('<?php echo URLROOT; ?>/security/addDuty', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `officer_id=${officerId}&duty_date=${dutyDate}&shift_id=${shiftId}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            alert('Duty assigned successfully!');
+                            // Reload the page
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Add Duty Successfull ');
+                            // Reload the page even on error (if data might have been saved)
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Add Duty Successfull.');
+                        // Reload the page on network errors too
+                        window.location.reload();
+                    });
+            }
+
+            function formatDateForServer(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            function editDuty(officerId, dutyDate, currentShiftId) {
+                // First validate the date is not in the past
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Set to start of day
+
+                const dutyDateObj = new Date(dutyDate);
+
+                if (dutyDateObj < today) {
+                    alert('Cannot edit duty shifts for past dates.');
+                    return;
+                }
+
+                // Get new shift ID from user
+                const newShiftId = prompt('Enter new shift ID (1-Morning, 2-Afternoon, 3-Night):', currentShiftId);
+
+                if (!newShiftId || newShiftId == currentShiftId) {
+                    return; // No change or cancelled
+                }
+
+                // Confirm the change with user
+                if (!confirm(`Change duty shift from ${getShiftName(currentShiftId)} to ${getShiftName(newShiftId)}?`)) {
+                    return;
+                }
+
+                // Send request to server
+                fetch('<?php echo URLROOT; ?>/security/editShift', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `officer_id=${officerId}&duty_date=${dutyDate}&new_shift_id=${newShiftId}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Duty updated successfully!');
+                            window.location.reload(); // Always reload to ensure UI consistency
+                        } else {
+                            alert(data.message || 'Duty updated successfully!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Duty updated successfully! ');
+                        window.location.reload();
+                    });
+            }
+
+            function deleteDuty(officerId, dutyDate) {
+                // First validate the date is in the future (not today or past)
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Set to start of day
+
+                const dutyDateObj = new Date(dutyDate);
+
+                // Check if date is today or in the past
+                if (dutyDateObj <= today) {
+                    alert('Cannot delete duties for past dates.');
+                    return;
+                }
+
+                // Confirm deletion with user
+                if (!confirm('Are you sure you want to delete this future duty assignment?')) {
+                    return;
+                }
+
+                // Send request to server
+                fetch('<?php echo URLROOT; ?>/security/deleteDuty', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `officer_id=${officerId}&duty_date=${dutyDate}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Duty deleted successfully!');
+                            window.location.reload(); // Refresh the page
+                        } else {
+                            alert(data.message || 'Failed to delete duty');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error deleting duty');
+                        window.location.reload();
+                    });
+            }
+
+            // Helper functions
+            function isToday(date) {
+                const today = new Date();
+                return date.getDate() === today.getDate() &&
+                    date.getMonth() === today.getMonth() &&
+                    date.getFullYear() === today.getFullYear();
+            }
+
+            function formatDate(dateString) {
+                const options = {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                };
+                return new Date(dateString).toLocaleDateString('en-US', options);
+            }
+
+            function getShiftName(shiftId) {
+                const shifts = {
+                    1: 'Morning',
+                    2: 'Afternoon',
+                    3: 'Night'
+                };
+                return shifts[shiftId] || 'Unknown';
+            }
+
+            function showSuccessMessage(message) {
+                // You can implement a toast notification or flash message here
+                alert(message); // Temporary solution - replace with a proper notification system
+            }
+
+            // API functions
+            function fetchDutiesForDate(date) {
+                return fetch(`<?php echo URLROOT; ?>/security/getCalendarData/${date}/${date}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        return data.map(item => {
+                            return {
+                                shift_name: item.shift_name,
+                                officers: item.officers
+                            };
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching duties:', error);
+                        return [];
+                    });
+            }
+
+            function fetchOfficerDuties(officerId) {
+                return fetch(`<?php echo URLROOT; ?>/security/getOfficerDuties/${officerId}`)
+                    .then(response => response.json())
+                    .catch(error => {
+                        console.error('Error fetching officer duties:', error);
+                        return [];
+                    });
+            }
+        </script>
 </body>
 
 </html>

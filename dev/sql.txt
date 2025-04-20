@@ -385,4 +385,268 @@ ADD COLUMN image_type VARCHAR(50) COMMENT 'Facility image MIME type' AFTER image
 
 
 
+//**********************************************Security Part*******************************************
 
+
+//emergency Contacts
+
+CREATE TABLE emergency_contacts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+//visitor passes
+
+CREATE TABLE Visitor_Passes (
+    pass_id INT AUTO_INCREMENT PRIMARY KEY,
+    visitor_name VARCHAR(100) NOT NULL,
+    visitor_count INT NOT NULL CHECK (visitor_count > 0),
+    resident_name VARCHAR(100) NOT NULL,
+    visit_date DATE NOT NULL,
+    visit_time TIME NOT NULL,
+    duration INT NOT NULL CHECK (duration BETWEEN 1 AND 24),
+    purpose TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+//incident reports
+
+CREATE TABLE incident_reports (
+    report_id INT PRIMARY KEY AUTO_INCREMENT,
+    type VARCHAR(50) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    status VARCHAR(30) NOT NULL CHECK (status IN ('Open', 'In Progress', 'Closed', 'Resolved', 'Pending')),
+    location VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+// manage security shedule
+
+-- Duty shifts table
+CREATE TABLE duty_shifts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    description VARCHAR(255)
+);
+
+-- Insert default shifts
+INSERT INTO duty_shifts (name, start_time, end_time, description) VALUES
+('Morning', '08:00:00', '16:00:00', 'Morning shift (8 AM - 4 PM)'),
+('Afternoon', '16:00:00', '00:00:00', 'Afternoon shift (4 PM - 12 AM)'),
+('Night', '00:00:00', '08:00:00', 'Night shift (12 AM - 8 AM)');
+
+-- Duty schedule table
+CREATE TABLE duty_schedule (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    shift_id INT NOT NULL,
+    duty_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (shift_id) REFERENCES duty_shifts(id),
+    CONSTRAINT unique_officer_date UNIQUE (user_id, duty_date)
+);
+
+-- Trigger to enforce maximum 3 officers per shift
+DELIMITER //
+CREATE TRIGGER check_max_officers_per_shift
+BEFORE INSERT ON duty_schedule
+FOR EACH ROW
+BEGIN
+    DECLARE officer_count INT;
+    
+    SELECT COUNT(*) INTO officer_count 
+    FROM duty_schedule 
+    WHERE duty_date = NEW.duty_date 
+    AND shift_id = NEW.shift_id;
+    
+    IF officer_count >= 3 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Maximum of 3 officers per shift reached';
+    END IF;
+END//
+DELIMITER ;
+
+-- Trigger to ensure only security officers can be assigned
+DELIMITER //
+CREATE TRIGGER check_security_officer_insert
+BEFORE INSERT ON duty_schedule
+FOR EACH ROW
+BEGIN
+    DECLARE is_security_officer INT;
+    
+    SELECT COUNT(*) INTO is_security_officer 
+    FROM users 
+    WHERE users.id = NEW.user_id AND users.role_id = 5;
+    
+    IF is_security_officer = 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Only security officers (role_id=5) can be assigned to duty shifts';
+    END IF;
+END//
+DELIMITER ;
+
+-- Trigger for updates
+DELIMITER //
+CREATE TRIGGER check_security_officer_update
+BEFORE UPDATE ON duty_schedule
+FOR EACH ROW
+BEGIN
+    DECLARE is_security_officer INT;
+    
+    SELECT COUNT(*) INTO is_security_officer 
+    FROM users 
+    WHERE users.id = NEW.user_id AND users.role_id = 5;
+    
+    IF is_security_officer = 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Only security officers (role_id=5) can be assigned to duty shifts';
+    END IF;
+END//
+DELIMITER ;
+
+-- Trigger for updates to enforce maximum officers per shift
+DELIMITER //
+CREATE TRIGGER check_max_officers_per_shift_update
+BEFORE UPDATE ON duty_schedule
+FOR EACH ROW
+BEGIN
+    DECLARE officer_count INT;
+    
+    -- Only check if the shift or date is being changed
+    IF NEW.shift_id != OLD.shift_id OR NEW.duty_date != OLD.duty_date THEN
+        SELECT COUNT(*) INTO officer_count 
+        FROM duty_schedule 
+        WHERE duty_date = NEW.duty_date 
+        AND shift_id = NEW.shift_id
+        AND id != NEW.id; -- Exclude the current record being updated
+        
+        IF officer_count >= 3 THEN
+            SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'Maximum of 3 officers per shift reached';
+        END IF;
+    END IF;
+END//
+DELIMITER ;
+
+
+//*************************maintenance requests***************************
+
+
+CREATE TABLE maintenance_types (
+    type_id INT AUTO_INCREMENT PRIMARY KEY,
+    type_name VARCHAR(50) NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE request_statuses (
+    status_id INT AUTO_INCREMENT PRIMARY KEY,
+    status_name VARCHAR(30) NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE maintenance_requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    resident_id INT NOT NULL,
+    type_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    urgency_level ENUM('low', 'medium', 'high') NOT NULL,
+    status_id INT DEFAULT 1, -- Default to "Pending"
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (resident_id) REFERENCES residents(id),
+    FOREIGN KEY (type_id) REFERENCES maintenance_types(type_id),
+    FOREIGN KEY (status_id) REFERENCES request_statuses(status_id)
+);
+
+-- Request assignments table
+CREATE TABLE request_assignments (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    request_id INT NOT NULL,
+    staff_id INT NOT NULL,
+    assigned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    due_date DATE,
+    completion_date DATE,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    notes TEXT,
+    FOREIGN KEY (request_id) REFERENCES maintenance_requests(request_id),
+    FOREIGN KEY (staff_id) REFERENCES maintenance_members(id)
+);
+
+
+SELECT 
+    mr.request_id,
+    mr.title,
+    mr.description,
+    mr.urgency_level,
+    rs.status_name,
+    mt.type_name,
+    u.name as resident_name,
+    r.address,
+    r.phonenumber
+FROM 
+    maintenance_requests mr
+JOIN residents r ON mr.resident_id = r.id
+JOIN users u ON r.user_id = u.id
+JOIN maintenance_types mt ON mr.type_id = mt.type_id
+JOIN request_statuses rs ON mr.status_id = rs.status_id
+WHERE 
+    u.role_id = 1;
+
+-- Query to get assignment details with staff information
+SELECT 
+    mr.request_id,
+    mr.title,
+    rs.status_name as request_status,
+    u_resident.name as resident_name,
+    r.address as resident_address,
+    u_staff.name as assigned_staff,
+    ra.assigned_date,
+    ra.due_date,
+    ra.completion_date,
+    ra.rating
+FROM 
+    maintenance_requests mr
+JOIN request_assignments ra ON mr.request_id = ra.request_id
+JOIN residents r ON mr.resident_id = r.id
+JOIN users u_resident ON r.user_id = u_resident.id AND u_resident.role_id = 1
+JOIN maintenance_members mm ON ra.staff_id = mm.id
+JOIN users u_staff ON mm.id = u_staff.id
+JOIN request_statuses rs ON mr.status_id = rs.status_id;
+
+
+-- Insert maintenance types
+INSERT INTO maintenance_types (type_name, description) VALUES
+('Repair', 'General repair work'),
+('Installation', 'Installation of new equipment'),
+('Plumbing', 'Plumbing related issues'),
+('Electrical', 'Electrical system issues'),
+('HVAC', 'Heating, ventilation, and air conditioning');
+
+-- Insert request statuses
+INSERT INTO request_statuses (status_name, description) VALUES
+('Pending', 'Request submitted but not yet assigned'),
+('Assigned', 'Request assigned to maintenance staff'),
+('In Progress', 'Work has begun on the request'),
+('Completed', 'Request has been completed'),
+('Cancelled', 'Request was cancelled');
+
+
+-- Insert sample maintenance requests
+INSERT INTO maintenance_requests (resident_id, type_id, title, description, urgency_level) VALUES
+(1, 1, 'Leaky faucet', 'Kitchen faucet is leaking continuously', 'medium'),
+(2, 3, 'Clogged drain', 'Bathroom sink drain is completely clogged', 'high'),
+(3, 4, 'Broken light switch', 'Living room light switch not working', 'low');
+
+-- Insert sample assignments
+INSERT INTO request_assignments (request_id, staff_id, due_date) VALUES
+(1, 2, '2024-09-18'),
+(2, 1, '2024-09-20');

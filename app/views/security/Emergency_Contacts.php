@@ -11,441 +11,226 @@
     <title>Manage Emergency Contacts | <?php echo SITENAME; ?></title>
 </head>
 
-<body>
-    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="dashboard-container">
-        <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
-
-        <main>
-
-        
-       
-            <div class="contacts-list-container">
-
-            
-
-              <!-- Emergency Contact Cards -->
-                  <div>
-                  <div class="contact-item" id="contact-1">
-                        <h4>Police Emergency Hotline</h4>
-                        <p>Phone: 119</p>
-                        <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
-                        <button class="btn edit-btn" onclick="openEditModal('Police Emergency Hotline', '119', 'National Emergency Center', 'contact-1')">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
-                    </div>
-                    <div class="contact-item" id="contact-1">
-                        <h4>Ambulance Service</h4>
-                        <p>Phone: 1990</p>
-                        <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
-                        <button class="btn edit-btn" onclick="openEditModal('Ambulance Service', '1990', 'National Emergency Center', 'contact-1')">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
-                    </div>
-                          
-                    <div class="contact-item" id="contact-1">
-                        <h4>Fire Brigade</h4>
-                        <p>Phone: 110</p>
-                        <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
-                        <button class="btn edit-btn" onclick="openEditModal('Fire Brigade', '110', 'National Emergency Center', 'contact-1')">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
-                    </div>
-                  </div>
-                    
-
-                  <div>
-                  <div class="contact-item" id="contact-1">
-                        <h4>Child Protection Authority</h4>
-                        <p>Phone: 1929</p>
-                        <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
-                        <button class="btn edit-btn" onclick="openEditModal('Child Protection Authority', '1929', 'National Emergency Center', 'contact-1')">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
-                    </div>
-
-                    <div class="contact-item" id="contact-1">
-                        <h4>Tourist Police</h4>
-                        <p>Phone: 1912</p>
-                        <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
-                        <button class="btn edit-btn" onclick="openEditModal('Tourist Police', '1912', 'National Emergency Center', 'contact-1')">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
-                    </div>
-                    <div class="contact-item" id="contact-1">
-                        <h4>Electricity Breakdown Service</h4>
-                        <p>Phone: 1987</p>
-                        <button class="btn call-btn">Hotline</button>
-                        <button class="btn message-btn">Message</button>
-                        <button class="btn edit-btn" onclick="openEditModal('Electricity Breakdown Service', '1987', 'National Emergency Center', 'contact-1')">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
-                    </div>
-                    
-                  </div>
-                   
-                </div>
-            </div>
-        </main>
-    </div>
-
-    
-<!-- Edit Contact Modal -->
-<div id="editContactModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('editContactModal')">&times;</span>
-        <h2>Edit Emergency Contact</h2>
-        <form id="editContactForm" onsubmit="saveContactEdits(event)">
-            <label for="editContactName">Name:</label>
-            <input type="text" id="editContactName" required>
-
-            <label for="editContactPhone">Phone:</label>
-            <input type="text" id="editContactPhone" required>
-
-            <input type="hidden" id="editContactId">
-
-            <div class="button-group">
-                <button type="submit" class="btn save-btn">Save</button>
-                <button type="button" class="btn cancel-btn" onclick="closeModal('editContactModal')">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-
-    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-    <script>
-    // Open the modal
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.add('active');   // Show the modal
-    }
-
-    // Close the modal
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.remove('active'); // Hide the modal
-    }
-
-    // Submit the incident form
-    function submitIncidentForm() {
-        // Collect the form data
-        var type = document.getElementById("incident_type").value;
-        var date = document.getElementById("incident_date").value;
-        var time = document.getElementById("incident_time").value;
-        var description = document.getElementById("incident_description").value;
-
-        // Assuming you'd handle the submission to the backend here
-
-        alert("Incident Report Submitted!");
-        cancelIncidentForm(); // Close the form after submission
-    }
-
-    // Cancel the incident form
-    function cancelIncidentForm() {
-        document.getElementById("incidentForm").style.display = "none";
-    }
-
-    // Create a new contact
-    function createContact(event) {
-        event.preventDefault();
-        const name = document.getElementById('newContactName').value;
-        const phone = document.getElementById('newContactPhone').value;
-
-        const id = `contact-${Date.now()}`;
-        const contactList = document.querySelector('.contacts-list');
-        const newContactHTML = `
-            <div class="contact-item" id="${id}">
-                <h4>${name}</h4>
-                <p>Phone: ${phone}</p>
-                <button class="btn call-btn">Hotline</button>
-                <button class="btn message-btn">Message</button>
-                <button class="btn edit-btn" onclick="openEditModal('${name}', '${phone}', '${id}')">Edit</button>
-                <button class="btn delete-btn" onclick="deleteContact('${id}')">Delete</button>
-            </div>
-        `;
-        contactList.insertAdjacentHTML('beforeend', newContactHTML);
-        closeModal('newContactModal');
-    }
-
-    // Open the edit modal with the contact details
-    function openEditModal(name, phone, id) {
-        document.getElementById('editContactName').value = name;
-        document.getElementById('editContactPhone').value = phone;
-        document.getElementById('editContactId').value = id;
-        openModal('editContactModal');
-    }
-
-    // Save the contact edits
-    function saveContactEdits(event) {
-        event.preventDefault();  // Prevent form from submitting
-
-        const id = document.getElementById('editContactId').value;
-        const name = document.getElementById('editContactName').value;
-        const phone = document.getElementById('editContactPhone').value;
-       
-
-        const contact = document.getElementById(id);
-        contact.innerHTML = `
-            <h4>${name}</h4>
-            <p>Phone: ${phone}</p>
-            <button class="btn call-btn">Hotline</button>
-            <button class="btn message-btn">Message</button>
-            <button class="btn edit-btn" onclick="openEditModal('${name}', '${phone}', '${id}')">Edit</button>
-            <button class="btn delete-btn" onclick="deleteContact('${id}')">Delete</button>
-        `;
-        closeModal('editContactModal');
-    }
-
-    // Delete a contact
-    function deleteContact(id) {
-        const contact = document.getElementById(id);
-        contact.remove();
-    }
-
-    // Optional: Open the modal with an "Edit Contact" button
-    document.getElementById('openModalButton').addEventListener('click', () => {
-        openModal('editContactModal');
-    });
-</script>
-
-    <style>
-
-
-        /* Styles for modals */
-.contact-item {
+<style>
+ /* --- Dashboard Container Styles --- */
+.dashboard-container {
+    display: flex;
+    gap: 20px;
     padding: 20px;
-    margin: 15px;
-    border-radius: 12px;
+   
+}
+
+/* --- Side Panel Styles --- */
+.side-panel {
+    width: 250px;
+    position: fixed;
+    height: 100vh;
+    background: #2c3e50;
     color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    overflow-y: auto;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+/* --- Main Content Styles --- */
+.main-content {
+    flex: 1;
+    
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+   
+}
+
+/* --- Contact List & Cards --- */
+.contacts-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.contact-card, .contact-item {
+    background: rgb(170, 84, 204);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    color: white;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.contact-item h4 {
-    margin: 0 0 10px;
-    font-size: 1.5rem;
+.contact-card:hover, .contact-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.contact-item p {
-    margin: 5px 0;
-    font-size: 1rem;
-}
-
-/* Specific Styles for Each Card */
-#contact-1 {
-    background: linear-gradient(135deg, #8e44ad, #9b59b6); /* Dark Violet to Light Violet */
-}
-
-#contact-2 {
-    background: linear-gradient(135deg, #bb8fce, #8e44ad); /* Light Violet to Dark Violet */
-}
-
-#contact-3 {
-    background: linear-gradient(135deg, #8e44ad, #3498db); /* Violet to Blue */
-}
-
-#contact-4 {
-    background: linear-gradient(135deg, #f1c40f, #e67e22); /* Yellow to Orange */
-}
-
-
-/* Button Styles */
-.contact-item .btn {
-    margin: 5px;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
+.contact-card h3, .contact-item h3 {
     color: white;
-    transition: background-color 0.3s ease;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
 }
 
-.contact-item .call-btn {
-    background-color: #27ae60;
+.contact-card p, .contact-item p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 10px;
 }
 
-.contact-item .call-btn:hover {
-    background-color: #2ecc71;
+/* --- Button Group --- */
+.button-group {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
 }
 
-.contact-item .message-btn {
-    background-color: #2980b9;
+.button-group .btn {
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
 }
 
-.contact-item .message-btn:hover {
-    background-color: #3498db;
+.call-btn {
+    background-color: #4caf50;
+    color: white;
+}
+.call-btn:hover {
+    background-color: #388e3c;
 }
 
-.contact-item .edit-btn {
-    background-color: #f39c12;
+.edit-btn {
+    background-color: #2196f3;
+    color: white;
+}
+.edit-btn:hover {
+    background-color: #1976d2;
 }
 
-.contact-item .edit-btn:hover {
-    background-color: #e67e22;
-}
-
-.contact-item .delete-btn {
-    background-color: #e74c3c;
-}
-
-.contact-item .delete-btn:hover {
-    background-color: #c0392b;
-}
-
-/* Hover Effect for Cards */
-.contact-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
-}
-
-        .dashboard-container{
-                  display:flex;
-                  
-
-        }
-        .contacts-list-container {
-
-            justify-content: space-between;
-            display:flex;
-    padding: 20px;
-    background-color: #ffffff; /* White background for a clean look */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    border-radius: 12px; /* Rounded corners for a modern feel */
-    margin-left:20px; /* Adds space around the container */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
-    width: 100%;
-}
-
-
-        .delete-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-btn:hover {
-            background-color: #c0392b;
-        }
-        .modal {
+/* --- Modal Styles --- */
+.modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Dark overlay for background */
-    display: flex;
-    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
     align-items: center;
+    justify-content: center;
     z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .modal.active {
-    opacity: 1;
-    visibility: visible;
+    display: flex;
 }
 
+/* --- Modal Content --- */
 .modal-content {
-    background: linear-gradient(135deg, #8e44ad, #bb8fce);/* Gradient background */
+    background: rgb(186, 57, 237);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Elevated shadow */
-    width: 400px;
-    text-align: center;
-    color: #fff; /* White text for contrast */
-    animation: slide-in 0.4s ease; /* Subtle entry animation */
+   
+    width: 90%;
+    max-width: 500px;
+    color: #fff;
+    
 }
 
-.modal-content h2 {
+.modal-content h3, .modal-content h2 {
     margin-bottom: 20px;
     font-size: 1.8rem;
     font-weight: bold;
-    color: #fff;
-}                                             
-
-.modal-content label {
-    font-size: 1rem;
-    margin-bottom: 10px;
-    display: block;
-    text-align: left;
-    font-weight: 500;
+    text-align: center;
 }
 
-.modal-content input {
-    width: 100%;
-    padding: 12px;
+.modal-content .close {
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    float: right;
+    line-height: 1;
+    margin-top: -10px;
+    transition: color 0.3s ease;
+}
+.modal-content .close:hover {
+    color: #6c5ce7;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+.modal-content .form-group {
     margin-bottom: 15px;
+}
+.modal-content label {
+    
+    margin-bottom: 5px;
+    color: white;
+    text-align: left;
+}
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 14px;
+    background-color: #f6e4f7;
+    color: #333;
+}
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
     outline: none;
-    transition: border 0.3s ease;
+    border-color: #e8c8e3;
+    box-shadow: 0 0 5px rgba(232, 200, 227, 0.5);
+}
+.modal-content input:disabled,
+.modal-content select:disabled,
+.modal-content textarea:disabled {
+    background-color: #e9e9e9;
+    color: #666;
+}
+.modal-content textarea {
+    resize: vertical;
+    min-height: 100px;
 }
 
-.modal-content input:focus {
-    border-color: #4caf50; /* Highlight border on focus */
-}
-
-.button-group {
+/* --- Modal Button Group --- */
+.modal-content .form-actions {
     display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
-
-.modal-content .btn {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.save-btn {
+.button-group .save-btn {
     background-color: blue;
     color: white;
 }
-
-.save-btn:hover {
+.button-group .save-btn:hover {
     background-color: #45a049;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
-.cancel-btn {
-    background-color: #e74c3c;
+.button-group .cancel-btn {
+    background-color: rgb(244, 65, 45);
     color: white;
+    
 }
-
-.cancel-btn:hover {
-    background-color: #c0392b;
+.button-group .cancel-btn:hover {
+    background-color: rgb(100, 31, 23);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: blue;
-    transition: transform 0.3s ease;
-}
-
-.close-btn:hover {
-    transform: scale(1.2);
-}
-
-/* Keyframe animation for modal slide-in effect */
+/* --- Modal Animation --- */
 @keyframes slide-in {
     from {
         transform: translateY(-30%);
@@ -457,9 +242,164 @@
     }
 }
 
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .contacts-list {
+        grid-template-columns: 1fr;
+    }
+    .modal-content {
+        width: 90%;
+    }
+   
+}
+.btn.save-btn {
+    background-color: #450d8f; /* Medium Violet */
+    color: #fff;
+    border: none;
+    padding: 12px;
+    width: 95%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn.save-btn:hover {
+    background-color:rgb(96, 17, 85); /* Slightly darker shade on hover */
+}
 
 
-    </style>
+</style>
+
+<body>
+    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+
+    <div class="dashboard-container">
+        <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
+
+        <div class="main-content">
+            <h1>Emergency Contacts</h1>
+
+            <!-- Create New Contact Button
+<button class="btn create-btn" onclick="openAddContactModal()">Create New Contact</button> -->
+
+            <div class="contacts-list">
+                <?php foreach ($data['contacts'] as $contacts) : ?>
+                    <div class="contact-card" id="contact-<?php echo $contacts->id; ?>">
+                        <h4><?php echo htmlspecialchars($contacts->name); ?></h4>
+                        <p><strong>Phone:</strong> <?php echo htmlspecialchars($contacts->phone); ?></p>
+                        <div class="button-group">
+                            <a href="tel:<?php echo htmlspecialchars($contacts->phone); ?>" class="btn call-btn">Call</a>
+                            <button class="btn edit-btn" onclick="openEditModal(
+                                '<?php echo htmlspecialchars($contacts->name); ?>', 
+                                '<?php echo htmlspecialchars($contacts->phone); ?>', 
+                                '<?php echo $contacts->id; ?>'
+                            )">Edit</button>
+                          
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+   <!-- Edit Contact Modal -->
+<div id="editContactModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editContactModal')">&times;</span>
+        <h3>Edit Emergency Contact</h3>
+        <form id="editContactForm" onsubmit="saveContactEdits(event)">
+            <div class="form-group">
+                <label for="editContactName">Name:</label>
+                <input type="text" id="editContactName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="editContactPhone">Phone:</label>
+                <input type="text" id="editContactPhone" required>
+            </div>
+            
+            <input type="hidden" id="editContactId">
+            
+            <div class="form-actions">
+               
+                <button type="submit" class="btn save-btn" onclick="saveContactEdits(event)">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+
+    <script>
+
+
+//*****************************************EDIT PART ***************************************************** */
+    // Open the modal
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.add('active');
+    }
+
+    // Close the modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Open the edit modal with contact details
+    function openEditModal(name, phone, id) {
+        document.getElementById('editContactName').value = name;
+        document.getElementById('editContactPhone').value = phone;
+        document.getElementById('editContactId').value = id;
+        openModal('editContactModal');
+    }
+
+    // Save edited contact
+    function saveContactEdits(event) {
+        event.preventDefault();
+        const id = document.getElementById('editContactId').value;
+        const name = document.getElementById('editContactName').value;
+        const phone = document.getElementById('editContactPhone').value;
+
+        // Prepare the data to send in the fetch request
+        const data = {
+            id: id,
+            name: name,
+            phone: phone
+        };
+
+        fetch(`<?php echo URLROOT; ?>/security/Edit_Contact/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data) // Send the data as JSON
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the contact information in the UI
+                document.getElementById(`contact-${id}`).innerHTML = `
+                    <h4>${data.name}</h4>
+                    <p><strong>Phone:</strong> ${data.phone}</p>
+                    <div class="button-group">
+                        <a href="tel:${data.phone}" class="btn call-btn">Call</a>
+                        <button class="btn edit-btn" onclick="openEditModal('${data.name}', '${data.phone}', '${id}')">Edit</button>
+                     
+                    </div>
+                `;
+                closeModal('editContactModal');
+            } else {
+                alert('Failed to update contact');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the contact.');
+        });
+    }
+
+</script>
+
+
 </body>
 
 </html>

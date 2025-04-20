@@ -159,21 +159,7 @@
             background: linear-gradient(135deg, #e74c3c, #c0392b);
         }
 
-        .card-hvac .profile-img {
-            border-color: #2ecc71;
-        }
 
-        .card-electrical .profile-img {
-            border-color: #e67e22;
-        }
-
-        .card-plumbing .profile-img {
-            border-color: #9b59b6;
-        }
-
-        .card-general .profile-img {
-            border-color: #c0392b;
-        }
 
         /* Button Styling */
         .btn {
@@ -273,11 +259,22 @@
         }
 
         .profile-img img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            border-radius: 200%;
+            /* Makes the image perfectly circular */
             border: 3px solid #3498db;
             object-fit: cover;
+            /* Ensures the image fills the circle */
+            object-position: center;
+            /* Centers the content */
+            display: block;
+            /* Removes whitespace below image */
+            background-color: #f5f5f5;
+            /* Fallback background */
+            box-sizing: border-box;
+            /* Includes border in sizing */
+
         }
 
         .profile-details {
@@ -573,9 +570,7 @@
     </div>
 
     <!-- Placeholder for success message -->
-    <div id="successMessage" class="success-message" style="display: none;">
-        Member has been saved successfully!
-    </div>
+
 
 
     <!-- Footer -->
@@ -622,6 +617,23 @@
                 }
             });
 
+            // Handle form submission
+            memberForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Validate phone number
+                if (!phoneRegex.test(phoneInput.value)) {
+                    alert('Please enter a valid 10-digit phone number');
+                    return;
+                }
+
+                // Here you would typically send the data to your server
+                // For demonstration, we'll just refresh the page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500); // Small delay to allow user to see the success state if needed
+            });
+
             // Close modal
             closeModal.addEventListener('click', () => {
                 memberModal.classList.remove('active');
@@ -661,24 +673,22 @@
                     .then(data => {
                         if (data.success) {
                             if (editingMemberId) {
-                                // Update the existing card
+                                // Update the existing card dynamically
                                 const card = document.querySelector(`.team-profile-card[data-id="${editingMemberId}"]`);
                                 card.querySelector('.member-name').textContent = data.name;
                                 card.querySelector('.member-specialization').textContent = `Specialization: ${data.specialization}`;
                                 card.querySelector('.member-experience').textContent = `Experience: ${data.experience} years`;
                                 card.querySelector('.member-phone_number').textContent = `Phone Number: ${data.phone_number}`;
 
-                                // Update profile image if provided
                                 if (data.profile_image) {
                                     card.querySelector('.profile-img img').src = data.profile_image;
                                 }
-
                             } else {
-                                // Add a new card
+                                // Add a new card dynamically
                                 const newCard = `
                             <div class="team-profile-card" data-id="${data.id}">
                                 <div class="profile-img">
-                                    <img src="${data.profile_image}" alt="${data.specialization}">
+                                    <img src="${data.profile_image || 'default.jpg'}" alt="${data.specialization}">
                                 </div>
                                 <div class="profile-details">
                                     <h3 class="member-name">${data.name}</h3>
@@ -691,10 +701,12 @@
                                     <button class="delete-btn">Delete</button>
                                 </div>
                             </div>`;
-                                teamProfileSection.innerHTML += newCard;
+                                teamProfileSection.insertAdjacentHTML('beforeend', newCard);
                             }
-                            // Close the modal after success
+
+                            // Close the modal and reset the form
                             memberModal.classList.remove('active');
+                            memberForm.reset();
                         } else {
                             alert(data.message || 'Error saving member');
                         }
@@ -724,18 +736,27 @@
                     }
                 }
             });
-        });
 
-        document.getElementById('searchBtn').addEventListener('click', function() {
-            const query = document.getElementById('searchBar').value.trim().toLowerCase();
+            // Search functionality
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                const query = document.getElementById('searchBar').value.trim().toLowerCase();
 
-            if (query) {
-                // Add your search functionality here (e.g., filtering members)
-                console.log(`Searching for: ${query}`);
-                // For example, you could filter a list of team members based on this search term
-            } else {
-                alert('Please enter a search term');
-            }
+                if (query) {
+                    const cards = document.querySelectorAll('.team-profile-card');
+                    cards.forEach(card => {
+                        const name = card.querySelector('.member-name').textContent.toLowerCase();
+                        const specialization = card.querySelector('.member-specialization').textContent.toLowerCase();
+
+                        if (name.includes(query) || specialization.includes(query)) {
+                            card.style.display = ''; // Show matching cards
+                        } else {
+                            card.style.display = 'none'; // Hide non-matching cards
+                        }
+                    });
+                } else {
+                    alert('Please enter a search term');
+                }
+            });
         });
     </script>
 </body>
