@@ -259,7 +259,7 @@ class Exchange extends Controller
         }
         redirect('exchange/my_listings');
     }
-    public function deleteid($id)
+    public function adminDeletion($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SESSION['user_role_id'] == 3) {
             if ($this->ExchangeModel->deleteListing($id)) {

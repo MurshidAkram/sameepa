@@ -58,9 +58,9 @@
                             <div class="listing-actions">
                                 <a href="<?php echo URLROOT; ?>/exchange/view_listing/<?php echo $listing->id; ?>" class="btn-view-listing">View Listing</a>
 
-                                <?php if ($_SESSION['user_role_id'] == 3): ?>
-                                    <form action="<?php echo URLROOT; ?>/exchange/delete/<?php echo $listing->id; ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');">
-                                        <button type="submit" class="btn-delete-listing"><i class="fas fa-trash"></i></button>
+                                <?php if (in_array($_SESSION['user_role_id'], [2, 3])):  ?>
+                                    <form action="<?php echo URLROOT; ?>/exchange/adminDeletion/<?php echo $listing->id; ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');" style="display: inline;">
+                                        <button type="submit" class="btn-delete-listing"><i class="fas fa-trash-alt"></i></button>
                                     </form>
                                 <?php endif; ?>
                             </div>

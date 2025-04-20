@@ -1,5 +1,5 @@
  /* app/public/css/resident/groups.css */
-.dashboard-container {
+ .dashboard-container {
     display: flex;
 }
 
@@ -95,7 +95,7 @@
     background-color: #9a009a;
 }
 
-.group-card {
+/* .group-card {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -153,7 +153,7 @@
 .btnviewgroup:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-}
+} */
 
 .btn-reports-group, .btn-update-group, .btndeletegroup, .btnviewgroup {
       display: inline-flex;
