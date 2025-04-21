@@ -1,25 +1,27 @@
 <?php
-class Announcements extends Controller {
+class Announcements extends Controller
+{
     protected $announcementModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
         }
 
         // Check if user has appropriate role
-        if(!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
-            //flash('error', 'Unauthorized access');
+        if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
             redirect('users/login');
         }
 
         $this->announcementModel = $this->model('M_Announcements');
     }
 
-    public function index() {
+    public function index()
+    {
         $announcements = $this->announcementModel->getAllAnnouncements();
-        
+
         $data = [
             'announcements' => $announcements,
             'is_admin' => in_array($_SESSION['user_role_id'], [2, 3])
@@ -28,13 +30,14 @@ class Announcements extends Controller {
         $this->view('announcements/index', $data);
     }
 
-    public function create() {
+    public function create()
+    {
         // Only admin and superadmin can access this
-        if(!in_array($_SESSION['user_role_id'], [2, 3])) {
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('announcements/index');
         }
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
@@ -46,20 +49,20 @@ class Announcements extends Controller {
                 'content_err' => ''
             ];
 
-            // Validate title
-            if(empty($data['title'])) {
+            // Validating the title
+            if (empty($data['title'])) {
                 $data['title_err'] = 'Please enter title';
             }
 
-            // Validate content
-            if(empty($data['content'])) {
+            // Validating the content
+            if (empty($data['content'])) {
                 $data['content_err'] = 'Please enter content';
             }
 
-            // Make sure no errors
-            if(empty($data['title_err']) && empty($data['content_err'])) {
+            // Made sure no errors
+            if (empty($data['title_err']) && empty($data['content_err'])) {
                 // Validated
-                if($this->announcementModel->createAnnouncement($data)) {
+                if ($this->announcementModel->createAnnouncement($data)) {
                     //flash('announcement_message', 'Announcement Added');
                     redirect('announcements/index');
                 } else {
@@ -81,13 +84,14 @@ class Announcements extends Controller {
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         // Only admin and superadmin can access this
-        if(!in_array($_SESSION['user_role_id'], [2, 3])) {
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('announcements/index');
         }
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
@@ -100,21 +104,21 @@ class Announcements extends Controller {
             ];
 
             // Validate title
-            if(empty($data['title'])) {
+            if (empty($data['title'])) {
                 $data['title_err'] = 'Please enter title';
             }
 
             // Validate content
-            if(empty($data['content'])) {
+            if (empty($data['content'])) {
                 $data['content_err'] = 'Please enter content';
             }
 
             // Make sure no errors
-            if(empty($data['title_err']) && empty($data['content_err'])) {
+            if (empty($data['title_err']) && empty($data['content_err'])) {
                 // Validated
-                if($this->announcementModel->updateAnnouncement($data)) {
+                if ($this->announcementModel->updateAnnouncement($data)) {
                     //flash('announcement_message', 'Announcement Updated');
-                    redirect('announcements');
+                    redirect('announcements/index');
                 } else {
                     die('Something went wrong');
                 }
@@ -138,14 +142,14 @@ class Announcements extends Controller {
         }
     }
 
-    public function delete($id) {
-        if(!in_array($_SESSION['user_role_id'], [2, 3])) {
-            redirect('announcements');
+    public function delete($id)
+    {
+        if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('announcements/index');
         }
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if($this->announcementModel->deleteAnnouncement($id)) {
-                //flash('announcement_message', 'Announcement Removed');
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->announcementModel->deleteAnnouncement($id)) {
                 redirect('announcements/index');
             } else {
                 die('Something went wrong');
@@ -155,15 +159,16 @@ class Announcements extends Controller {
         }
     }
 
-    public function react($id) {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    public function react($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
                 'announcement_id' => $id,
                 'user_id' => $_SESSION['user_id'],
                 'reaction_type' => $_POST['reaction_type']
             ];
 
-            if($this->announcementModel->addReaction($data)) {
+            if ($this->announcementModel->addReaction($data)) {
                 // Return JSON response for AJAX
                 header('Content-Type: application/json');
                 echo json_encode(['success' => true]);
@@ -173,10 +178,11 @@ class Announcements extends Controller {
         }
     }
 
-    public function viewannouncement($id) {
+    public function viewannouncement($id)
+    {
         $announcement = $this->announcementModel->getAnnouncementById($id);
         $userReaction = $this->announcementModel->getUserReaction($id, $_SESSION['user_id']);
-        
+
         // Convert the object to array if needed
         $announcementArray = [
             'id' => $announcement['id'],
@@ -187,12 +193,35 @@ class Announcements extends Controller {
             'likes' => $announcement['likes'],
             'dislikes' => $announcement['dislikes']
         ];
-        
+
         $data = [
             'announcement' => $announcementArray,
             'user_reaction' => $userReaction ? (array)$userReaction : []
         ];
-    
-        $this->view('announcements/viewannouncement', $data);
+
+        if (!$announcement) {
+            redirect('announcements/index');
+        } else {
+            $this->view('announcements/viewannouncement', $data);
+        }
     }
+
+
+    // public function admin_dashboard()
+    // {
+    //     if (!in_array($_SESSION['user_role_id'], [2, 3])) {
+    //         redirect('announcements');
+    //     }
+
+    //     $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+    //     $announcements = $this->announcementModel->getAllAnnouncements2($searchTerm);
+    //     $stats = $this->announcementModel->getAnnouncementStats();
+
+    //     $data = [
+    //         'announcements' => $announcements,
+    //         'stats' => $stats
+    //     ];
+
+    //     $this->view('announcements/admin_dashboard', $data);
+    // }
 }

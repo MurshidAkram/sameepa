@@ -38,12 +38,13 @@ h1, h2 {
     text-align: center;
     border-radius: 5px;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     border: 2px solid #000000;
 }
 
 .btn-history:hover {
     background-color: #5542d1;
+    transform: translateY(-2px);
 }
 
   .stats-container {
@@ -58,6 +59,7 @@ h1, h2 {
       border-radius: 8px;
       width: 300px;
       height: 150px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
   }
 
   .total-complaints {
@@ -83,8 +85,10 @@ h1, h2 {
     width: 30%;
 }
 
+
   .pie-chart-container {
       background-color: #f0f0f0;
+      transition: background-color 0.3s ease, transform 0.3s ease;
   }
 
     /* Table */
@@ -96,6 +100,7 @@ h1, h2 {
         height: 300px; /* Match the height of other containers */
         display: flex;
         flex-direction: column;
+        transition: background-color 0.3s ease, transform 0.3s ease;
     }
     
     .table-container {
@@ -141,4 +146,10 @@ h1, h2 {
 .chart-container,
 .pending-complaints-container {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.total-complaints:hover,
+.chart-container:hover,
+.pending-complaints-container:hover {
+    transform: translateY(-5px);
 }

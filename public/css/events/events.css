@@ -38,6 +38,7 @@
     font-weight: 500;
 }
 
+
 .events-nav a:hover {
     background: #f5f5f5;
     color: #800080;
@@ -221,6 +222,82 @@
     margin-top: 0.25rem;
 }
 
+.btn-view-participants{
+    width: 40%;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #800080;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-view-participants:hover {
+    background-color: #9a009a;
+    transform: translateY(-2px);
+    cursor:pointer;
+}
+
+.btn-update-event{
+    width: 30%;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #076c18;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-update-event:hover {
+    background-color: #0ad14d;
+    transform: translateY(-2px);
+    cursor:pointer;
+}
+
+.btn-delete-event{
+    width: 40%;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #ed0909;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-delete-event:hover {
+    background-color: #ef3535;
+    transform: translateY(-2px);
+    cursor:pointer;
+}
+
+.btn-create-event{
+    width: 25%;
+    display: inline-flex;
+    align-items: stretch;
+    padding: 8px 16px;
+    background-color: #076c18;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-create-event:hover {
+    background-color: #099237;
+    transform: translateY(-2px);
+    cursor:pointer;
+}
+
 /* Form Buttons */
 .form-buttons {
     display: flex;
@@ -283,6 +360,184 @@
     margin-bottom: 1rem;
 }
 
+
+/* Event View Container Styles */
+.event-view-container {
+    max-width: 1200px;
+    flex: 1;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Back Button Styling */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 24px;
+    background-color: #757575;
+    color: #fff;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 100;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 2rem;
+    width: 200px;
+}
+
+.back-button:hover {
+    background-color: #616161;
+    transform: translateY(-2px);
+}
+
+.back-button i {
+    font-size: 1.1rem;
+}
+
+/* Event Content Layout */
+.event-view-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+/* Image Section Styling */
+.event-image-section {
+    position: relative;
+}
+
+.event-main-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-creator-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.event-creator-info i {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.event-creator-info span {
+    font-size: 1.1rem;
+    color: #444;
+}
+
+/* Event Details Section */
+.event-details-section {
+    padding: 1rem;
+}
+
+.event-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.event-meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.meta-item i {
+    font-size: 1.25rem;
+    color: #800080;
+}
+
+.event-description {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.event-description h2 {
+    font-size: 1.75rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.event-description p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* Join Button Styling */
+#joinButton {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 25px;
+    width: 200px;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#joinButton.joined {
+    background-color: #dc3545;
+}
+
+#joinButton.joined:hover {
+    background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .event-view-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .event-main-image {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .event-view-container {
+        padding: 1rem;
+    }
+    
+    .event-title {
+        font-size: 2rem;
+    }
+    
+    .event-meta {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .back-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .events-main {
@@ -328,4 +583,33 @@
     .events-search button {
         width: 100%;
     }
+}
+
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.adminremoveeve {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 24px;
+    background-color: #dc3545;
+    color: #fff;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 100;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 170px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.adminremoveeve:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
 }

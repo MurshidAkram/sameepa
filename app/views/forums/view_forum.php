@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/forums.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/forums.css">
     <title><?php echo $data['forum']['title']; ?> | <?php echo SITENAME; ?></title>
 </head>
 
@@ -32,6 +32,15 @@
         ?>
 
         <main class="forums-main">
+            <?php if ($_SESSION['user_role_id'] == 2): ?>
+                <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="back-to-forums">
+                    <i class="fas fa-arrow-left"></i> Back to Forums
+                </a>
+            <?php else: ?>
+                <a href="<?php echo URLROOT; ?>/forums" class="back-to-forums">
+                    <i class="fas fa-arrow-left"></i> Back to Forums
+                </a>
+            <?php endif; ?>            
             <h1><?php echo $data['forum']['title']; ?></h1>
             <p><?php echo $data['forum']['description']; ?></p>
 

@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin/users.css">
@@ -19,7 +20,7 @@
         <main>
             <div class="header-container">
                 <h1>Manage Users</h1>
-                <a href="#" class="btn-create">Create New User</a>
+                <a href="<?php echo URLROOT; ?>/admin/create_new_user" class="btn-create">Create New User</a>
             </div>
             <div class="user-stats">
                 <div class="stat-box">

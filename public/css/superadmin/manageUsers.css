@@ -1,0 +1,224 @@
+/* General Typography */
+/* Body and General Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Header Styling for Section Titles (h2) */
+h2 {
+    color: #800080; /* Purple color for headers */
+    font-size: 22px; /* Increased font size */
+    font-weight: 700; /* Bold font */
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 1px;
+    gap: 8px; 
+}
+
+/* Section Styling */
+.settings-section {
+    margin-bottom: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the "No Pending Requests" message */
+.empty-state {
+    text-align: center;
+    font-size: 18px;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px dashed #dee2e6;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+/* Table Styling */
+.user-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.user-list th, .user-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 14px;
+}
+
+.user-list th {
+    background-color: #f1f1f1;
+    color: #495057;
+    font-weight: bold;
+}
+
+.user-list tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.user-list tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Button Styles */
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    font-size: 20px;
+    color: #555; /* Default icon color */
+}
+
+/* Button Hover Effect */
+button:hover, .btn-create:hover {
+    color:white;
+}
+
+/* Icons Inside Buttons */
+button i, .btn-create i {
+    font-size: 18px; /* Icon size */
+}
+
+.btn-create {
+    color: #ffffff; /* Green icon */
+    background-color:#800080;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    font-size: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    gap: 8px; 
+}
+.btn-accept,.btn-activate{
+    color: #28a745; /* Green icon for accept */
+}
+
+.btn-reject,.btn-deactivate, .btn-delete {
+    color: #f00336; /* Yellow icon */
+}
+
+.btn-view {
+    color: #007bff; /* Blue icon for view */
+}
+.btn-accept:hover,.btn-activate:hover{
+    color: #28a745; /* Green icon for accept */
+    transform: scale(1.05); 
+}
+
+
+.btn-view:hover {
+    color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05); 
+}
+.btn-reject:hover,.btn-deactivate:hover, .btn-delete:hover {
+    color: #f00336;
+    transform: scale(1.05); 
+}
+
+
+/* Status Badge */
+.status-badge {
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 15px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.status-active {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-inactive {
+    background-color: #f00336;
+    color: white;
+}
+
+/* Modal Styling */
+.user-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+    padding-top: 60px; /* Adjust for the top spacing */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
+}
+
+/* Modal content */
+.user-modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* You can adjust the width */
+    max-width: 600px; /* Max width */
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease-out;
+    text-align: center; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close Button Styling */
+.close-btn {
+    float: right;
+    font-size: 25px;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+.user-modal h2 {
+    text-align: center;
+    margin-top: 0;
+    font-size: 24px; /* Optional: adjust the font size */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

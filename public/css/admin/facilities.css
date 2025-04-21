@@ -32,6 +32,11 @@ main {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     border: 2px solid #800080; /* Add this line for the border */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.time-card:hover{
+    transform: translateY(-2px);
 }
 
 .time-card .time {
@@ -55,7 +60,7 @@ h1, h2 {
 
 p {
     margin-bottom: 15px;
-    color: #555;
+
 }
 
 /* Facility Bookings Table */
@@ -107,12 +112,13 @@ p {
     text-align: center;
     border-radius: 5px;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     border: 2px solid #000000;
 }
 
 .btn-create:hover {
     background-color: #d94848;
+    transform: translateY(-2px);
 }
 
 .btn-history {
@@ -123,12 +129,13 @@ p {
     text-align: center;
     border-radius: 5px;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     border: 2px solid #000000;
 }
 
 .btn-history:hover {
     background-color: #5542d1;
+    transform: translateY(-2px);
 }
 
 .button-container {

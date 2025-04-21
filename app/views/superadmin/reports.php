@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
@@ -18,7 +19,7 @@
         <?php require APPROOT . '/views/inc/components/side_panel_superadmin.php'; ?>
 
         <main>
-            <h1>Reports</h1>
+            <h1 style="color:#800080">Reports</h1>
             <section class="dashboard-overview">
                 <div class="reports-section">
 

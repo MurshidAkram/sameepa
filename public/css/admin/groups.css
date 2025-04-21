@@ -1,0 +1,98 @@
+/* events.css */
+
+/* General styling for body and main container */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    display: flex;
+}
+
+main {
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    color: #4d4d4d;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styles */
+h1, h2 {
+    color: #800080;
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+/* Events Table */
+.events-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.events-table th, .events-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.events-table th {
+    background-color: #800080;
+    color: white;
+}
+
+.events-table td a {
+    color: #800080;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.events-table td a:hover {
+    text-decoration: underline;
+}
+
+/* Table row hover effect */
+.events-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.btn-history:hover {
+    background-color: #5542d1;
+}
+
+/* create */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-create {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color:#e22d2d;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: 2px solid #000000;
+}
+
+.btn-create:hover {
+    background-color: #ee5151;
+    transform: translateY(-2px);
+}

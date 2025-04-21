@@ -1,0 +1,219 @@
+/* Main Layout */
+.facilities-main {
+    padding: 2rem;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.facilities-main h1 {
+    color: #800080;
+    margin-bottom: 2rem;
+}
+
+/* Facilities Grid */
+.facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+    max-width: 1200px;
+}
+
+/* Facility Card */
+.facility-card {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; 
+}
+
+.facility-card:hover {
+    transform: translateY(-5px);
+}
+
+.facility-card h3 {
+    color: #800080;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.facility-card p {
+    color: #555555;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    height: 3em;
+    overflow: hidden;
+    position: relative;
+}
+
+.facility-card p:after {
+    content: '...';
+    position: absolute;
+    display: inline;
+    padding-left: 3px;
+}
+
+.facility-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.facility-actions {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #800080;
+    padding-top: 1rem;
+}
+
+/* Action Buttons */
+.fac-btn-view, .fac-btn-book{
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: opacity 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.fac-btn-view {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #28a745;
+    color: white;
+}
+
+.fac-btn-book {
+    width: 100%;
+    background-color: #800080;
+    color: white;
+    padding: 18px 16px;
+    border-radius: 100px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: opacity 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.fac-btn-book.unavailable {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
+    padding: 20px 18px;
+}
+
+.fac-btn-view:hover, .fac-btn-book:hover{
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+
+/* Status Indicators */
+.status-available {
+    color: #27ae60;
+    font-weight: 500;
+}
+
+.status-unavailable {
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .facilities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .facility-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-view, .btn-edit, .btn-delete {
+        text-align: center;
+    }
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.fac-btn-bookings {
+    background-color: #2196F3;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.fac-btn-bookings:hover {
+    background-color: #1976D2;
+    transform: translateY(-3px);
+}
+
+.fac-btn-admin-bookings {
+    background-color: #673AB7;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.fac-btn-admin-bookings:hover {
+    background-color: #5E35B1;
+    transform: translateY(-3px);
+}

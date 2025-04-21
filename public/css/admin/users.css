@@ -38,12 +38,13 @@ h1 {
     text-align: center;
     border-radius: 5px;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     border: 2px solid #000000;
 }
 
 .btn-create:hover {
     background-color: #ee5151;
+    transform: translateY(-2px);
 }
 
 .user-stats {
@@ -58,6 +59,11 @@ h1 {
     border-radius: 5px;
     text-align: center;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.stat-box:hover{
+    transform: translateY(-5px);
 }
 
 .stat-box h3 {

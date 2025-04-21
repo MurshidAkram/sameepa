@@ -7,6 +7,46 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <title>About Us | <?php echo SITENAME; ?></title>
     <style>
+        /* Combined background for title and mission section */
+        .about-section {
+            background: url('<?php echo URLROOT; ?>/public/img/aboutus.jpg') no-repeat center center/cover;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Add a semi-transparent layer */
+            background-blend-mode: darken;
+            /* Darken the background image */
+            color: #fff;
+            padding: 150px 100px;
+            text-align: right;
+            /* Align text to the right */
+        }
+
+        .mission-section {
+            margin-top: 30px;
+        }
+
+        .about-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            color: #fff;
+            text-align: right;
+            /* Ensure the heading is aligned to the right */
+        }
+
+        .about-section p {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin: 30px 0 0 auto;
+            /* Adjust margin for right alignment */
+            max-width: 1000px;
+            color: #f3f3f3;
+            text-align: right;
+            /* Ensure the paragraph is aligned to the right */
+        }
+
+        .mission-section {
+            margin-top: 30px;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -30,14 +70,6 @@
             font-size: 18px;
         }
 
-        .mission-section {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        }
 
         .team-section {
             margin-top: 50px;
@@ -83,9 +115,13 @@
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <main>
-        <h1>About Us</h1>
-        <section class="mission-section">
-            <p>Welcome to our community management system. Our goal is to enhance the living experience within housing schemes and apartment complexes. Our system provides event management, facility booking, maintenance requests, and more, making it easier to manage your living community.</p>
+        <section class="about-section">
+            <h1>About Us</h1>
+            <div class="mission-section">
+                <p>
+                    Welcome to our community connectivity platform. Our goal is to enhance the living experience within your closed community. Our system provides event management, facility booking, maintenance requests, and more, making it easier to manage your living community.
+                </p>
+            </div>
         </section>
 
         <section class="team-section">

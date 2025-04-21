@@ -1,0 +1,98 @@
+/* Styles for the Create Listing Page */
+
+.create-listing-main {
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.create-listing-main h1 {
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.create-listing-main p {
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.create-listing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #34495e;
+}
+
+.form-control {
+    padding: 12px;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 15px;
+    color: #2c3e50;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.btn-submit {
+    background-color: #800080;
+    color: #ffffff;
+    border: none;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center;
+    width: 50%;
+}
+
+.btn-submit:hover {
+    background-color: #800080;
+    transform: translateY(-2px);
+}
+
+.btn-submit:focus {
+    outline: none;
+  
+}
+
+@media (max-width: 768px) {
+    .create-listing-main {
+        padding: 20px;
+    }
+
+    .btn-submit {
+        width: 100%;
+    }
+}
