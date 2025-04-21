@@ -27,7 +27,6 @@ class Payments extends Controller {
         
         $this->view('payments/index', $data);
     }
-    
     // Admin dashboard method
     public function admin_dashboard($page = 1) {
         // Check if user is admin or superadmin
@@ -35,13 +34,7 @@ class Payments extends Controller {
             redirect('pages/index');
         }
         
-        $perPage = 10; // Number of payments per page
-        $offset = ($page - 1) * $perPage;
-        
-        // Get paginated payments with user information
-        $payments = $this->paymentModel->getAllPaymentsPaginated($offset, $perPage);
-        $totalPayments = $this->paymentModel->getTotalPaymentsCount();
-        $totalPages = ceil($totalPayments / $perPage);
+        $payments = $this->paymentModel->getRecentPayments(5);
         
         // Get statistics for dashboard
         $monthlyData = $this->paymentModel->getMonthlyPaymentData();
@@ -59,10 +52,6 @@ class Payments extends Controller {
             'payments_this_month' => $paymentsThisMonth,
             'total_amount_this_month' => $totalAmountThisMonth,
             'recent_activity' => $recentActivity,
-            'pagination' => [
-                'current_page' => $page,
-                'total_pages' => $totalPages
-            ]
         ];
         
         $this->view('payments/admin_dashboard', $data);
@@ -361,6 +350,21 @@ class Payments extends Controller {
         } else {
             redirect('payments/admin_dashboard');
         }
+    }
+    public function all() {
+        // Check if user is admin or superadmin
+        if ($_SESSION['user_role_id'] != 2 && $_SESSION['user_role_id'] != 3) {
+            redirect('pages/index');
+        }
+        
+        // Get all payments with user information
+        $payments = $this->paymentModel->getAllPaymentsWithUserInfo();
+        
+        $data = [
+            'payments' => $payments
+        ];
+        
+        $this->view('payments/all', $data);
     }
     
 }

@@ -75,29 +75,6 @@
     color: #333;
 }
 
-.status-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-transform: capitalize;
-}
-
-.status-badge.completed {
-    background-color: #e6f7e6;
-    color: #2ecc71;
-}
-
-.status-badge.pending {
-    background-color: #fff8e6;
-    color: #f39c12;
-}
-
-.status-badge.failed {
-    background-color: #ffe6e6;
-    color: #e74c3c;
-}
-
 /* Payment Info Grid */
 .payment-info-grid {
     display: grid;

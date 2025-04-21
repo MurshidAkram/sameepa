@@ -69,15 +69,14 @@ class M_Payments {
         return $result->total ?? 0;
     }
     
-    // Get all payments with pagination and user information
-    public function getAllPaymentsPaginated($offset, $limit) {
+    // Get most recent payments with user information
+    public function getRecentPayments($limit = 5) {
         $this->db->query('SELECT p.*, u.name as user_name 
-                          FROM payments p 
-                          LEFT JOIN users u ON p.user_id = u.id 
-                          ORDER BY p.created_at DESC 
-                          LIMIT :offset, :limit');
+                        FROM payments p 
+                        LEFT JOIN users u ON p.user_id = u.id 
+                        ORDER BY p.created_at DESC 
+                        LIMIT :limit');
         
-        $this->db->bind(':offset', $offset);
         $this->db->bind(':limit', $limit);
         
         return $this->db->resultSet();
@@ -265,6 +264,16 @@ class M_Payments {
         $this->db->bind(':id', $id);
         
         return $this->db->execute();
+    }
+
+    // Get all payments with user information
+    public function getAllPaymentsWithUserInfo() {
+        $this->db->query('SELECT p.*, u.name as user_name 
+                        FROM payments p 
+                        LEFT JOIN users u ON p.user_id = u.id 
+                        ORDER BY p.created_at DESC');
+        
+        return $this->db->resultSet();
     }
 
 }

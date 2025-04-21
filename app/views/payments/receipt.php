@@ -30,10 +30,6 @@
                         <td>Date:</td>
                         <td><?php echo date('F d, Y h:i A', strtotime(is_array($data['payment']) ? $data['payment']['created_at'] : $data['payment']->created_at)); ?></td>
                     </tr>
-                    <tr>
-                        <td>Status:</td>
-                        <td><span class="status <?php echo strtolower(is_array($data['payment']) ? $data['payment']['status'] : $data['payment']->status); ?>"><?php echo ucfirst(is_array($data['payment']) ? $data['payment']['status'] : $data['payment']->status); ?></span></td>
-                    </tr>
                 </table>
             </div>
 

@@ -76,29 +76,6 @@ body {
     color: #666;
 }
 
-.status {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.status.completed {
-    background-color: #e6f7e6;
-    color: #2ecc71;
-}
-
-.status.pending {
-    background-color: #fff8e6;
-    color: #f39c12;
-}
-
-.status.failed {
-    background-color: #ffe6e6;
-    color: #e74c3c;
-}
-
 .payment-details {
     margin-top: 10px;
 }

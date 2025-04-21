@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/payments/admin_dashboard.css">
-    <title>Payment Management | <?php echo SITENAME; ?></title>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/payments/all.css">
+    <title>All Payments | <?php echo SITENAME; ?></title>
 </head>
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
-    <div class="dashboard-container side-panel-open">
+    <div class="dashboard-container">
         <?php 
         switch($_SESSION['user_role_id']) {
             case 2:
@@ -24,54 +24,29 @@
                 break;
         }
         ?>
-        <main class="admin-payments-main">
-            <div class="admin-header">
-                <h1>Payment Management Dashboard</h1>
-            </div>
-              <div class="admin-actions">
-                  <a href="<?php echo URLROOT; ?>/payments/all" class="btn-view-all">
-                      <i class="fas fa-list"></i> View All Payments
-                  </a>
-              </div>
-            <div class="payments-stats">
-                <div class="stat-card">                  
-                    <div class="stat-info">
-                        <h3><i class="fas fa-calendar-day"></i> Most Active Day</h3>
-                        <p><?php echo isset($data['most_active_day']) ? $data['most_active_day'] : 'N/A'; ?></p>
-                    </div>
-                </div>
-                <div class="stat-card">                   
-                    <div class="stat-info">
-                        <h3><i class="fas fa-money-bill-wave"></i> Payments This Month</h3>
-                        <p><?php echo isset($data['payments_this_month']) ? $data['payments_this_month'] : 0; ?></p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h3><i class="fas fa-dollar-sign"></i> Total This Month</h3>
-                        <p>$<?php echo isset($data['total_amount_this_month']) ? number_format($data['total_amount_this_month'], 2) : '0.00'; ?></p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h3><i class="fas fa-bolt"></i> Recent Activity</h3>
-                        <p><?php echo isset($data['recent_activity']) ? $data['recent_activity'] : 0; ?></p>
-                    </div>
+        <main class="all-payments-main">
+            <div class="page-header">
+                <h1>All Payment Records</h1>
+                <div class="header-actions">
+                    <a href="<?php echo URLROOT; ?>/payments/admin_dashboard" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    <a href="<?php echo URLROOT; ?>/payments/export" class="btn-export">
+                        <i class="fas fa-file-export"></i> Export Data
+                    </a>
                 </div>
             </div>
-              <div class="single-chart-container">
-                  <div class="chart-card">
-                      <h2>Monthly Payments</h2>
-                      <div class="chart-container-inner">
-                          <canvas id="monthlyPaymentsChart"></canvas>
-                      </div>
-                  </div>
-              </div>
-            <div class="payments-table-container">
-                <div class="table-header">
-                    <h2>Recent Payments</h2>
-                </div>
 
+            <div class="filter-search-container">
+                <div class="search-container">
+                    <input type="search" id="searchPayment" placeholder="Search payments..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="payments-table-container">
                 <table class="payments-table">
                     <thead>
                         <tr>
@@ -95,10 +70,10 @@
                                 <td><?php echo substr($payment->description, 0, 30) . (strlen($payment->description) > 30 ? '...' : ''); ?></td>
                                 <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
                                 <td class="action-buttons">
-                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $payment->id; ?>" class="btn-view-p">
+                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $payment->id; ?>" class="btn-view-p" title="View Details">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $payment->id; ?>" class="btn-receipt">
+                                    <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $payment->id; ?>" class="btn-receipt" title="Generate Receipt">
                                         <i class="fas fa-file-invoice"></i>
                                     </a>
                                     <form action="<?php echo URLROOT; ?>/payments/delete/<?php echo $payment->id; ?>" method="POST" style="display: inline;">
@@ -119,31 +94,23 @@
             </div>
         </main>
     </div>
+
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Monthly Payments Chart
-        const monthlyCtx = document.getElementById('monthlyPaymentsChart').getContext('2d');
-        new Chart(monthlyCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Payment Amount ($)',
-                    data: <?php echo isset($data['monthly_data']) ? json_encode($data['monthly_data']) : '[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'; ?>,
-                    backgroundColor: '#3498db'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false, // This allows the chart to use the container's height
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        // Search functionality
+        document.getElementById('searchPayment').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.payments-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
                 }
-            }
+            });
         });
     </script>
 </body>

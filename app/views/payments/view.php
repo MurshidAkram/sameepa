@@ -16,6 +16,9 @@
     <div class="dashboard-container">
         <?php 
         switch($_SESSION['user_role_id']) {
+            case 1:
+                require APPROOT . '/views/inc/components/side_panel_resident.php';
+                break;
             case 2:
                 require APPROOT . '/views/inc/components/side_panel_admin.php';
                 break;
@@ -42,11 +45,6 @@
                     <div class="payment-id">
                         <h2>Transaction ID</h2>
                         <p><?php echo is_array($data['payment']) ? $data['payment']['transaction_id'] : $data['payment']->transaction_id; ?></p>
-                    </div>
-                    <div class="payment-status">
-                        <span class="status-badge <?php echo strtolower(is_array($data['payment']) ? $data['payment']['status'] : $data['payment']->status); ?>">
-                            <?php echo ucfirst(is_array($data['payment']) ? $data['payment']['status'] : $data['payment']->status); ?>
-                        </span>
                     </div>
                 </div>
 
@@ -80,14 +78,6 @@
                             <div class="info-group">
                                 <h3>Email</h3>
                                 <p><?php echo is_array($data['user']) ? $data['user']['email'] : $data['user']->email; ?></p>
-                            </div>
-                            <div class="info-group">
-                                <h3>Phone</h3>
-                                <p><?php echo is_array($data['user']) ? ($data['user']['phone'] ?? 'N/A') : ($data['user']->phone ?? 'N/A'); ?></p>
-                            </div>
-                            <div class="info-group">
-                                <h3>User ID</h3>
-                                <p><?php echo is_array($data['user']) ? $data['user']['id'] : $data['user']->id; ?></p>
                             </div>
                         </div>
                     <?php else: ?>

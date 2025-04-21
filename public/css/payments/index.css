@@ -103,30 +103,7 @@
       transform: translateY(-2px);
       opacity: 0.9;
   }
-
-  .status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 15px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      text-transform: capitalize;
-  }
-
-  .status-badge.status-completed {
-      background-color: #e6f7e6;
-      color: #2ecc71;
-  }
-
-  .status-badge.status-pending {
-      background-color: #fff8e6;
-      color: #f39c12;
-  }
-
-  .status-badge.status-failed {
-      background-color: #ffe6e6;
-      color: #e74c3c;
-  }
+  
 .no-records {
     padding: 3rem;
     text-align: center;
