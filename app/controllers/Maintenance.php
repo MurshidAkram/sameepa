@@ -3,6 +3,7 @@
 class Maintenance extends Controller
 {
     private $maintenanceModel;
+    private $userModel;
 
     public function __construct()
     {
@@ -10,6 +11,7 @@ class Maintenance extends Controller
 
         // Initialize the maintenance model
         $this->maintenanceModel = $this->model('M_maintenance'); // Make sure this matches your actual model class
+        $this->userModel = $this->model('M_user'); // Initialize user model
     }
 
     private function checkMaintenanceAuth()
@@ -161,73 +163,6 @@ public function deleteMember($id) {
 
    
 //*****************************************resident requests****************************************************************************************************************** */
-
-    
-public function Resident_Requests()
-{
-    // This will load the view to update or manage duty schedules
-    $this->view('maintenance/Resident_Requests');
-}
-
-
-
-// In your Maintenance controller
-public function requests() {
-    // Get all maintenance requests with related data
-    $requests = $this->maintenanceModel->getAllRequests();
-    
-    // Get maintenance types for filter
-    $types = $this->maintenanceModel->getMaintenanceTypes();
-    
-    // Get statuses for filter
-    $statuses = $this->maintenanceModel->getRequestStatuses();
-    
-    // Get maintenance staff for assignment
-    $staff = $this->maintenanceModel->getMaintenanceStaff();
-    
-    // Get request history stats
-    $history = $this->maintenanceModel->getRequestHistory();
-    
-    $data = [
-        'requests' => $requests,
-        'types' => $types,
-        'statuses' => $statuses,
-        'staff' => $staff,
-        'history' => $history
-    ];
-    
-    $this->view('maintenance/requests', $data);
-}
-
-public function updateDueDate() {
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        
-        if($this->maintenanceModel->updateDueDate($data['requestId'], $data['dueDate'])) {
-            echo json_encode(['success' => true]);
-        } else {
-            echo json_encode(['success' => false]);
-        }
-    }
-}
-
-public function assignMaintainer() {
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        
-        if($this->maintenanceModel->assignMaintainer(
-            $data['requestId'], 
-            $data['staffId'], 
-            $data['dueDate']
-        )) {
-            echo json_encode(['success' => true]);
-        } else {
-            echo json_encode(['success' => false]);
-        }
-    }
-}
 
 
 //************************************************************************************************************************************************** */

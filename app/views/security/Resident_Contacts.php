@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 // Your PHP logic here (e.g., initializing variables, handling requests, etc.)
 ?>
 
@@ -223,4 +223,4 @@
     </script>
 </body>
 
-</html>
+</html> -->

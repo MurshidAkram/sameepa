@@ -171,18 +171,21 @@ DELIMITER ;
 //*************************maintenance requests***************************
 
 
-CREATE TABLE maintenance_types (
+-- Request Types Table
+CREATE TABLE request_types (
     type_id INT AUTO_INCREMENT PRIMARY KEY,
     type_name VARCHAR(50) NOT NULL,
     description TEXT
 );
 
+-- Request Statuses Table
 CREATE TABLE request_statuses (
     status_id INT AUTO_INCREMENT PRIMARY KEY,
-    status_name VARCHAR(30) NOT NULL,
+    status_name VARCHAR(50) NOT NULL,
     description TEXT
 );
 
+-- Maintenance Requests Table
 CREATE TABLE maintenance_requests (
     request_id INT AUTO_INCREMENT PRIMARY KEY,
     resident_id INT NOT NULL,
@@ -190,94 +193,39 @@ CREATE TABLE maintenance_requests (
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     urgency_level ENUM('low', 'medium', 'high') NOT NULL,
-    status_id INT DEFAULT 1, -- Default to "Pending"
+    status_id INT DEFAULT 1,
+    Maintenance_Manager_id INT,
+    due_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (resident_id) REFERENCES residents(id),
-    FOREIGN KEY (type_id) REFERENCES maintenance_types(type_id),
-    FOREIGN KEY (status_id) REFERENCES request_statuses(status_id)
+    FOREIGN KEY (resident_id) REFERENCES residents(user_id),
+    FOREIGN KEY (type_id) REFERENCES request_types(type_id),
+    FOREIGN KEY (status_id) REFERENCES request_statuses(status_id),
+    FOREIGN KEY (Maintenance_Manager_id) REFERENCES maintenance(user_id)
 );
 
--- Request assignments table
-CREATE TABLE request_assignments (
-    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
-    request_id INT NOT NULL,
-    staff_id INT NOT NULL,
-    assigned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    due_date DATE,
-    completion_date DATE,
-    rating INT CHECK (rating BETWEEN 1 AND 5),
-    notes TEXT,
-    FOREIGN KEY (request_id) REFERENCES maintenance_requests(request_id),
-    FOREIGN KEY (staff_id) REFERENCES maintenance_members(id)
-);
+-- Insert default request types
+INSERT INTO request_types (type_name, description) VALUES 
+('Plumbing', 'Issues related to pipes, faucets, toilets, etc.'),
+('Electrical', 'Electrical wiring, outlets, lighting issues'),
+('Appliance Repair', 'Problems with provided appliances'),
+('Structural', 'Walls, floors, ceilings, doors, windows'),
+('Other', 'Any other maintenance requests');
 
-
-SELECT 
-    mr.request_id,
-    mr.title,
-    mr.description,
-    mr.urgency_level,
-    rs.status_name,
-    mt.type_name,
-    u.name as resident_name,
-    r.address,
-    r.phonenumber
-FROM 
-    maintenance_requests mr
-JOIN residents r ON mr.resident_id = r.id
-JOIN users u ON r.user_id = u.id
-JOIN maintenance_types mt ON mr.type_id = mt.type_id
-JOIN request_statuses rs ON mr.status_id = rs.status_id
-WHERE 
-    u.role_id = 1;
-
--- Query to get assignment details with staff information
-SELECT 
-    mr.request_id,
-    mr.title,
-    rs.status_name as request_status,
-    u_resident.name as resident_name,
-    r.address as resident_address,
-    u_staff.name as assigned_staff,
-    ra.assigned_date,
-    ra.due_date,
-    ra.completion_date,
-    ra.rating
-FROM 
-    maintenance_requests mr
-JOIN request_assignments ra ON mr.request_id = ra.request_id
-JOIN residents r ON mr.resident_id = r.id
-JOIN users u_resident ON r.user_id = u_resident.id AND u_resident.role_id = 1
-JOIN maintenance_members mm ON ra.staff_id = mm.id
-JOIN users u_staff ON mm.id = u_staff.id
-JOIN request_statuses rs ON mr.status_id = rs.status_id;
-
-
--- Insert maintenance types
-INSERT INTO maintenance_types (type_name, description) VALUES
-('Repair', 'General repair work'),
-('Installation', 'Installation of new equipment'),
-('Plumbing', 'Plumbing related issues'),
-('Electrical', 'Electrical system issues'),
-('HVAC', 'Heating, ventilation, and air conditioning');
-
--- Insert request statuses
-INSERT INTO request_statuses (status_name, description) VALUES
-('Pending', 'Request submitted but not yet assigned'),
-('Assigned', 'Request assigned to maintenance staff'),
-('In Progress', 'Work has begun on the request'),
-('Completed', 'Request has been completed'),
+-- Insert default statuses
+INSERT INTO request_statuses (status_name, description) VALUES 
+('Pending', 'Request has been submitted but not yet reviewed'),
+('Assigned', 'Request has been assigned to a maintenance staff'),
+('In Progress', 'Work on the request has begun'),
+('Completed', 'Request has been fulfilled'),
 ('Cancelled', 'Request was cancelled');
 
 
--- Insert sample maintenance requests
-INSERT INTO maintenance_requests (resident_id, type_id, title, description, urgency_level) VALUES
-(1, 1, 'Leaky faucet', 'Kitchen faucet is leaking continuously', 'medium'),
-(2, 3, 'Clogged drain', 'Bathroom sink drain is completely clogged', 'high'),
-(3, 4, 'Broken light switch', 'Living room light switch not working', 'low');
-
--- Insert sample assignments
-INSERT INTO request_assignments (request_id, staff_id, due_date) VALUES
-(1, 2, '2024-09-18'),
-(2, 1, '2024-09-20');
+INSERT INTO maintenance_requests (
+    resident_id, type_id, title, description, urgency_level, status_id, Maintenance_Manager_id, due_date
+) VALUES
+(1, 1, 'Leaking Faucet', 'The kitchen faucet is leaking continuously.', 'medium', 1, 15, '2025-04-25'),
+(13, 2, 'AC Not Working', 'Air conditioner in the living room is not cooling.', 'high', 2, 18, '2025-04-22'),
+(3, 1, 'Broken Window', 'The bedroom window won’t close completely.', 'medium', 1, 24, '2025-04-30'),
+(17, 3, 'Pest Control', 'There are ants in the pantry area.', 'low', 3, NULL, '2025-05-01'),
+(27, 2, 'Water Heater Issue', 'Water heater is not turning on.', 'high', 1, 42, '2025-04-28');
