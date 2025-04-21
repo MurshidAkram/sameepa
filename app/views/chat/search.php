@@ -46,7 +46,7 @@
                 <h1>Search Users</h1>
                 <?php flash('chat_message'); ?>
                 
-                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/search">
+                <form class="groups-search" method="POST" action="<?php echo URLROOT; ?>/chat/search">
                     <input type="text" name="search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" placeholder="Search users...">
                     <button type="submit">Search</button>
                 </form>

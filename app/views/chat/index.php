@@ -45,11 +45,14 @@
             <div class="groups-content">
                 <h1>My Chats</h1>
                 <?php flash('chat_message'); ?>
-                
-                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/index">
-                    <input type="text" name="search" placeholder="Search chats...">
-                    <button type="submit">Search</button>
-                </form>
+
+                <form class="groups-search" method="POST" action="<?php echo URLROOT; ?>/chat/index">
+    <input type="text" name="search" 
+           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" 
+           placeholder="Search chats...">
+    <button type="submit">Search</button>
+</form>
+
                 
                 <p>Connect and communicate with residents, admins, and community members!</p>
                 
@@ -94,13 +97,13 @@
                             <a href="<?php echo URLROOT; ?>/chat/viewChat/<?php echo $userId; ?>" class="chat-card-link">
                                 <div class="group-card">
                                     <?php if (!empty($profilePic)): ?>
-                                        <img src="<?php echo htmlspecialchars($profilePic); ?>" alt="Profile Picture" class="profile-image">
+                                        <img src="<?php echo URLROOT; ?>/chat/image/<?php echo $userId; ?>" alt="Chat with <?php echo htmlspecialchars($name); ?>">
                                     <?php else: ?>
                                         <div class="profile-image" style="background-color: #DDD; display: flex; align-items: center; justify-content: center;">
                                             <span style="font-size: 24px; color: #888;"><?php echo strtoupper(substr($name, 0, 1)); ?></span>
                                         </div>
                                     <?php endif; ?>
-                                    
+                                
                                     <div class="group-details">
                                         <div class="chat-header">
                                             <div class="name-role-container">

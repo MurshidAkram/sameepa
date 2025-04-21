@@ -13,16 +13,45 @@ class Chat extends Controller {
     }
     
     public function index() {
-        $chats = $this->chatModel->getChatsByUserId($_SESSION['user_id']);
+        $userId = $_SESSION['user_id'];
+        $search = '';
+    
+        // Handle POST request
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $search = isset($_POST['search']) ? trim($_POST['search']) : '';
+            $_SESSION['search_term'] = $search;
+    
+            // Redirect to clear POST and URL
+            header('Location: ' . URLROOT . '/chat/index');
+            exit;
+        }
+    
+        // If redirected, use session value
+        if (isset($_SESSION['search_term'])) {
+            $search = $_SESSION['search_term'];
+            unset($_SESSION['search_term']); // clear after using
+        }
+    
+        $chats = $this->chatModel->getChatsByUserId($userId);
         $chatData = [];
-        
+    
         if ($chats) {
             foreach ($chats as $chat) {
-                $otherUserId = ($chat->user1_id == $_SESSION['user_id']) ? $chat->user2_id : $chat->user1_id;
+                $otherUserId = ($chat->user1_id == $userId) ? $chat->user2_id : $chat->user1_id;
                 $otherUser = $this->userModel->getUserById($otherUserId);
+    
+                if (!$otherUser) {
+                    continue;
+                }
+    
+                // Filter if search term exists
+                if ($search !== '' && stripos($otherUser['name'], $search) === false) {
+                    continue;
+                }
+    
                 $lastMessage = $this->chatModel->getLastMessageByChatId($chat->id);
-                $unreadCount = $this->chatModel->getUnreadMessageCount($chat->id, $_SESSION['user_id']);
-                
+                $unreadCount = $this->chatModel->getUnreadMessageCount($chat->id, $userId);
+    
                 $chatData[] = [
                     'chat' => $chat,
                     'otherUser' => $otherUser,
@@ -31,24 +60,40 @@ class Chat extends Controller {
                 ];
             }
         }
-        
+    
         $data = [
             'title' => 'My Chats',
             'chats' => $chatData
         ];
-        
+    
         $this->view('chat/index', $data);
     }
     
+    
+    
     public function search() {
-        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-        
-        if ($search !== '') {
-            $users = $this->userModel->searchUsers($search, $_SESSION['user_id']);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Store search in session and redirect
+            $_SESSION['search_term'] = trim($_POST['search']);
+            header('Location: ' . URLROOT . '/chat/search');
+            exit;
+        }
+    
+        // GET request — Check if search_term is in session
+        if (isset($_SESSION['search_term']) && $_SESSION['search_term'] !== '') {
+            $search = $_SESSION['search_term'];
+    
+            // Get filtered users
+            $users = $this->chatModel->searchUsers($search, $_SESSION['user_id']);
+    
+            // Clear search term after showing results once
+            unset($_SESSION['search_term']);
         } else {
+            // No search, show all users
             $users = $this->chatModel->getAllUsersExcept($_SESSION['user_id']);
         }
-        
+    
+        // Build request/chat status
         $existingRequests = [];
         if ($users) {
             foreach ($users as $user) {
@@ -64,15 +109,16 @@ class Chat extends Controller {
                 }
             }
         }
-        
+    
         $data = [
             'title' => 'Search Users',
             'users' => $users,
             'existingRequests' => $existingRequests
         ];
-        
+    
         $this->view('chat/search', $data);
     }
+    
     
     public function sendRequest() {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -208,13 +254,35 @@ public function declineRequest()
     
     public function image($userId) {
         $user = $this->userModel->getUserById($userId);
-        
+
         if ($user && !empty($user->profile_picture)) {
-            header('Content-Type: image/jpeg');
-            echo $user->profile_picture;
-        } else {
-            redirect('img/default.png');
+            $filePath = APPROOT . '/public/' . $user->profile_picture;
+
+            if (file_exists($filePath)) {
+                $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
+                $contentType = 'image/jpeg'; // Default
+
+                switch (strtolower($fileExtension)) {
+                    case 'png':
+                        $contentType = 'image/png';
+                        break;
+                    case 'gif':
+                        $contentType = 'image/gif';
+                        break;
+                    // Add other image types if needed
+                }
+
+                header('Content-Type: ' . $contentType);
+                readfile($filePath);
+                exit(); // Stop further execution
+            } else {
+                // Log the missing file path for debugging
+                error_log("Profile picture file not found at path: " . $filePath);
+            }
         }
+
+        // If user or profile picture is empty, or file doesn't exist, redirect to default
+        redirect('img/default.png');
     }
     
 

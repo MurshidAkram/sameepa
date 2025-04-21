@@ -40,7 +40,7 @@
                     </a>
                     <div class="name-card">
                         <div class="name-image">
-                            <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="Chat with <?php echo htmlspecialchars(is_object($data['otherUser']) ? $data['otherUser']->name : $data['otherUser']['name']); ?>">
+                            <img src="<?php echo URLROOT; ?>/chat/image/<?php echo is_object($data['otherUser']) ? $data['otherUser']->id : $data['otherUser']['id']; ?>" alt="Chat with <?php echo htmlspecialchars(is_object($data['otherUser']) ? $data['otherUser']->name : $data['otherUser']['name']); ?>">
                         </div>
                         <h3 class="title"><?php echo htmlspecialchars(is_object($data['otherUser']) ? $data['otherUser']->name : $data['otherUser']['name']); ?></h3>
                     </div>

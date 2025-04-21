@@ -1,5 +1,3 @@
-
-
 /* Chat Main Container */
 .chat-main {
     flex: 1;
@@ -97,6 +95,38 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    min-height: 70vh; /* Increased from 300px to 70vh */
+}
+
+/* Empty state styling */
+.chat-messages:empty::before {
+    content: "No messages yet. Start a conversation!";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #888;
+    font-style: italic;
+    font-size: 16px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 40px auto;
+    max-width: 300px;
+}
+
+/* Fix for overall layout */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust based on navbar height */
+    overflow: hidden;
 }
 
 /* Message Row and Bubble Styling */
@@ -211,14 +241,13 @@
     border-top: 1px solid #e0e0e0;
     position: sticky;
     bottom: 0;
-    width: 100%;
     z-index: 5;
 }
 
 .chat-input-container {
+    flex: 1;
     display: flex;
     align-items: center;
-    width: 100%;
     background: #f5f5f5;
     border-radius: 24px;
     padding: 4px;
