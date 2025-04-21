@@ -3,6 +3,8 @@
 class Resident extends Controller
 {
     private $residentModel;
+    private $listingModel;
+
 
     public function __construct()
     {
@@ -63,22 +65,6 @@ class Resident extends Controller
         $this->view('resident/facilities');
     }
 
-    public function groups()
-    {
-        $this->view('resident/groups');
-    }
-
-    public function exchange()
-    {
-        $this->view('resident/exchange');
-    }
-
-    /*public function forums()
-    {
-        $this->view('resident/forums');
-    }
-        */
-
     public function maintenance()
     {
         $this->view('resident/maintenance');
@@ -101,8 +87,13 @@ class Resident extends Controller
 
 
 
-    public function complaints()
+    /*  public function complaints()
     {
         $this->view('resident/complaints');
+    } */
+
+    public function incident()
+    {
+        $this->view('resident/incident');
     }
 }

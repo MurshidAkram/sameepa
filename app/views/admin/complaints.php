@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require_once APPROOT . '/views/inc/components/header.php'; ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/admin/complaints.css">
@@ -20,7 +21,7 @@
         <main>
             <div class="header-container">
                 <h1>Complaints Dashboard</h1>
-                <a href="#" class="btn-history">View Complaints History</a>
+                <a href="<?php echo URLROOT; ?>/admin/view_complaint_history" class="btn-history">View Complaints History</a>
             </div>
               <div class="stats-container">
                     <div class="total-complaints">
@@ -42,7 +43,7 @@
                                     <tr>
                                         <td>Noise Complaint</td>
                                         <td>2023-05-15</td>
-                                        <td><a href="#">View</a></td>
+                                        <td><a href="<?php echo URLROOT; ?>/admin/view_complaint/1">View</a></td>
                                     </tr>
                                     <tr>
                                         <td>Maintenance Issue</td>

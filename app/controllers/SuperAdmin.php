@@ -9,7 +9,6 @@ class SuperAdmin extends Controller
         $this->checkSuperAdminAuth();
 
         // Initialize any resident-specific models if needed
-        // $this->residentModel = $this->model('M_Resident');
     }
 
     private function checkSuperAdminAuth()
@@ -41,22 +40,9 @@ class SuperAdmin extends Controller
         $this->view('superadmin/dashboard', $data);
     }
 
-    public function users()
-    {
-        // Load the Users management view
-        $this->view('superadmin/users');
-    }
 
-    public function settings()
-    {
-        // Load the Settings view
-        $this->view('superadmin/settings');
-    }
-    public function reports()
-    {
-        // Load the Settings view
-        $this->view('superadmin/reports');
-    }
+
+
     /*public function announcements()
     {
         // Load the Settings view
@@ -67,4 +53,44 @@ class SuperAdmin extends Controller
 
 
     // Add more methods as needed
+
+
+
+    // public function index() {
+    //     // Fetch all users from the model
+    //     $users = $this->superAdminModel->getAllUsers();
+
+    //     // Prepare data to pass to the view
+    //     $data = [
+    //         'users' => $users,
+    //         'is_admin' => in_array($_SESSION['user_role_id'], [2, 3]) // Adjust roles as necessary
+    //     ];
+
+    //     // Load the view with the data
+    //     $this->view('superadmin/users', $data);
+    // }
+
+
+
+    public function payments()
+    {
+        // Load the Settings view
+        $this->view('superadmin/payments');
+    }
+
+    public function create_payment()
+    {
+        $this->view('superadmin/create_payment');
+    }
+
+    public function reports()
+    {
+        // Load the Settings view
+        $this->view('superadmin/reports');
+    }
+    // public function announcements()
+    // {
+    //     // Load the Settings view
+    //     $this->view('superadmin/announcements');
+    // }
 }

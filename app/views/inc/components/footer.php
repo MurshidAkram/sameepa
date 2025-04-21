@@ -17,9 +17,9 @@
         </div>
         <div class="footer-section contact">
             <h3>Contact Us</h3>
-            <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
-            <p><i class="fas fa-envelope"></i> info@sameepa.com</p>
-            <p><i class="fas fa-map-marker-alt"></i> 123 Community St, City, State 12345</p>
+            <p><i class="fas fa-phone"></i> +94 77 807 0245</p>
+            <p><i class="fas fa-envelope"></i> sameepa </p>
+            <p><i class="fas fa-map-marker-alt"></i> UCSC Building Complex, Reid Avenue</p>
         </div>
         <div class="footer-section social">
             <h3>Follow Us</h3>
@@ -34,6 +34,5 @@
     </div>
 </footer>
 
-<!-- Closing tags -->
 <script src="<?php echo URLROOT; ?>/js/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>

@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/events/events.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/events/events.css">
     <title>Community Events | <?php echo SITENAME; ?></title>
 </head>
+
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -45,6 +46,7 @@
                 <h1>Community Events</h1>
                 <!-- In index.php view, add this after the <h1> tag -->
                 <form class="events-search" method="GET" action="<?php echo URLROOT; ?>/events">
+
                     <input
                         type="text"
                         name="search"
@@ -88,6 +90,10 @@
                                     </span>
                                     <a href="<?php echo URLROOT; ?>/events/viewevent/<?php echo $event->id; ?>"
                                         class="btn-view-event">View Event</a>
+                                    <?php if (in_array($_SESSION['user_role_id'], [2, 3])): ?>
+                                        <button class="btn-delete-event" onclick="deleteEvent(<?php echo $event->id; ?>)"> Delete Event
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -107,6 +113,28 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        function deleteEvent(eventId) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                fetch(`<?php echo URLROOT; ?>/events/admindelete/${eventId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Failed to delete event');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the event');
+                    });
+            }
+        }
+    </script>
 </body>
+
 
 </html>

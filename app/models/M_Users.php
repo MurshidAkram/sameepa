@@ -11,12 +11,20 @@ class M_Users
 
     public function registerUser($userData)
     {
-        // Insert user data into the `users` table
-        $this->db->query('INSERT INTO users (name, email, password, role_id) VALUES (:name, :email, :password, :role_id)');
+        $isActive = ($userData['role_id'] == 3) ? 1 : 0; // SuperAdmins are active by default
+
+        $verificationDocument = isset($userData['verification_document']) ? $userData['verification_document'] : null;
+        $verificationFilename = isset($userData['verification_filename']) ? $userData['verification_filename'] : null;
+
+        $this->db->query('INSERT INTO users (name, email, password, role_id, is_active, role_verification_document, role_verification_filename) VALUES (:name, :email, :password, :role_id, :is_active, :verification_document, :verification_filename)');
         $this->db->bind(':name', $userData['name']);
         $this->db->bind(':email', $userData['email']);
         $this->db->bind(':password', $userData['password']);
         $this->db->bind(':role_id', $userData['role_id']);
+        $this->db->bind(':is_active', $isActive);
+        $this->db->bind(':verification_document', $verificationDocument);
+        $this->db->bind(':verification_filename', $verificationFilename);
+
 
         if ($this->db->execute()) {
             $userId = $this->db->lastInsertId();
@@ -62,6 +70,8 @@ class M_Users
             return false;
         }
     }
+
+
 
     private function registerResident($residentData)
     {
@@ -157,6 +167,15 @@ class M_Users
         }
     }
 
+    public function getResidentIDByUserId($userId)
+{
+    $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
+    $this->db->bind(':user_id', $userId);
+    
+    return $this->db->single();
+}
+
+
     public function getResidentByUserId($userId)
     {
         $this->db->query('SELECT r.*, u.name, u.email 
@@ -180,90 +199,250 @@ class M_Users
 
     // Add these methods to your existing M_Users model class
 
-public function getUserById($userId)
-{
-    $this->db->query('SELECT * FROM users WHERE id = :id');
-    $this->db->bind(':id', $userId);
-    return $this->db->single();
-}
-
-public function updateUser($data)
-{
-    $this->db->beginTransaction();
-
-    try {
-        // Update basic user information
-        $sql = 'UPDATE users SET name = :name, email = :email';
-        if (!empty($data['new_password'])) {
-            $sql .= ', password = :password';
-        }
-        $sql .= ' WHERE id = :id';
-
-        $this->db->query($sql);
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':email', $data['email']);
-        $this->db->bind(':id', $data['user_id']);
-        
-        if (!empty($data['new_password'])) {
-            $this->db->bind(':password', password_hash($data['new_password'], PASSWORD_DEFAULT));
-        }
-
-        $this->db->execute();
-
-        // Update role-specific information if user is a resident
-        if ($_SESSION['user_role_id'] == 1 && isset($data['address']) && isset($data['phonenumber'])) {
-            $this->db->query('UPDATE residents SET address = :address, phonenumber = :phonenumber WHERE user_id = :user_id');
-            $this->db->bind(':address', $data['address']);
-            $this->db->bind(':phonenumber', $data['phonenumber']);
-            $this->db->bind(':user_id', $data['user_id']);
-            $this->db->execute();
-        }
-
-        $this->db->commit();
-        return true;
-    } catch (Exception $e) {
-        $this->db->rollBack();
-        return false;
-    }
-}
-
-public function updateProfilePicture($userId, $imageData)
-{
-    $this->db->query('UPDATE users SET profile_picture = :profile_picture WHERE id = :id');
-    $this->db->bind(':profile_picture', $imageData);
-    $this->db->bind(':id', $userId);
-    return $this->db->execute();
-}
-
-public function deleteUser($userId)
-{
-    $this->db->beginTransaction();
-
-    try {
-        // Delete role-specific data first
-        $roleId = $_SESSION['user_role_id'];
-        switch ($roleId) {
-            case 1:
-                $this->db->query('DELETE FROM residents WHERE user_id = :user_id');
-                break;
-            case 2:
-                $this->db->query('DELETE FROM admins WHERE user_id = :user_id');
-                break;
-            // Add other roles as needed
-        }
-        $this->db->bind(':user_id', $userId);
-        $this->db->execute();
-
-        // Delete user record
-        $this->db->query('DELETE FROM users WHERE id = :id');
+    public function getUserById($userId)
+    {
+        $this->db->query('SELECT * FROM users WHERE id = :id');
         $this->db->bind(':id', $userId);
-        $this->db->execute();
-
-        $this->db->commit();
-        return true;
-    } catch (Exception $e) {
-        $this->db->rollBack();
-        return false;
+        return $this->db->single();
     }
-}
+
+    public function updateUser($data)
+    {
+        $this->db->beginTransaction();
+
+        try {
+            // Update basic user information
+            $sql = 'UPDATE users SET name = :name, email = :email';
+            if (!empty($data['new_password'])) {
+                $sql .= ', password = :password';
+            }
+            $sql .= ' WHERE id = :id';
+
+            $this->db->query($sql);
+            $this->db->bind(':name', $data['name']);
+            $this->db->bind(':email', $data['email']);
+            $this->db->bind(':id', $data['user_id']);
+
+            if (!empty($data['new_password'])) {
+                $this->db->bind(':password', password_hash($data['new_password'], PASSWORD_DEFAULT));
+            }
+
+            $this->db->execute();
+
+            // Update role-specific information if user is a resident
+            if ($_SESSION['user_role_id'] == 1 && isset($data['address']) && isset($data['phonenumber'])) {
+                $this->db->query('UPDATE residents SET address = :address, phonenumber = :phonenumber WHERE user_id = :user_id');
+                $this->db->bind(':address', $data['address']);
+                $this->db->bind(':phonenumber', $data['phonenumber']);
+                $this->db->bind(':user_id', $data['user_id']);
+                $this->db->execute();
+            }
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+
+
+    public function updateProfilePicture($userId, $imageData)
+    {
+        $this->db->query('UPDATE users SET profile_picture = :profile_picture WHERE id = :id');
+        $this->db->bind(':profile_picture', $imageData);
+        $this->db->bind(':id', $userId);
+        return $this->db->execute();
+    }
+
+    public function deleteUser($userId)
+    {
+        $this->db->beginTransaction();
+
+        try {
+            // Delete role-specific data first
+            $roleId = $_SESSION['user_role_id'];
+            switch ($roleId) {
+                case 1:
+                    $this->db->query('DELETE FROM residents WHERE user_id = :user_id');
+                    break;
+                case 2:
+                    $this->db->query('DELETE FROM admins WHERE user_id = :user_id');
+                    break;
+                    // Add other roles as needed
+            }
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            // Delete user record
+            $this->db->query('DELETE FROM users WHERE id = :id');
+            $this->db->bind(':id', $userId);
+            $this->db->execute();
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+
+    public function getPendingUsers()
+    {
+        $this->db->query('SELECT u.*, r.name as role_name 
+                      FROM users u 
+                      JOIN roles r ON u.role_id = r.id 
+                      WHERE u.is_active = 0 
+                      ORDER BY u.registration_date DESC');
+        return $this->db->resultSet();
+    }
+
+    public function activateUser($userId)
+    {
+        $this->db->query('UPDATE users SET is_active = 1 WHERE id = :user_id');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->execute();
+    }
+
+    public function deactivateUser($userId)
+    {
+        $this->db->query('UPDATE users SET is_active = 0 WHERE id = :user_id');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->execute();
+    }
+
+    public function getUsersByRole($roleId)
+    {
+        $this->db->query('SELECT u.*, r.name as role_name 
+                      FROM users u 
+                      JOIN roles r ON u.role_id = r.id 
+                      WHERE u.role_id = :role_id');
+        $this->db->bind(':role_id', $roleId);
+        return $this->db->resultSet();
+    }
+
+    public function deletePendingUser($userId)
+    {
+        try {
+            // Start transaction
+            $this->db->beginTransaction();
+
+            // Delete from child tables first
+            $this->db->query("DELETE FROM security WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            $this->db->query("DELETE FROM residents WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            $this->db->query("DELETE FROM admins WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+            $this->db->query("DELETE FROM maintenance WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+            $this->db->query("DELETE FROM external_service_providers WHERE user_id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+            // Finally, delete from users table
+            $this->db->query("DELETE FROM users WHERE id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            // Commit transaction
+            $this->db->commit();
+
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->rollBack();
+            return false;
+        }
+    }
+
+    public function getUserVerificationDocument($userId)
+    {
+        $this->db->query('SELECT role_verification_document, role_verification_filename FROM users WHERE id = :user_id');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->single();
+    }
+
+    public function deleteActivatedUser($userId)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            // First, check which role tables to delete from
+            $this->db->query("SELECT role_id FROM users WHERE id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $userRole = $this->db->single();
+
+            // Delete from corresponding role table based on role_id
+            switch ($userRole['role_id']) {
+                case 1: // Resident
+                    $this->db->query("DELETE FROM residents WHERE user_id = :user_id");
+                    break;
+                case 2: // Admin
+                    $this->db->query("DELETE FROM admins WHERE user_id = :user_id");
+                    break;
+                case 4: // Maintenance
+                    $this->db->query("DELETE FROM maintenance WHERE user_id = :user_id");
+                    break;
+                case 5: // Security
+                    $this->db->query("DELETE FROM security WHERE user_id = :user_id");
+                    break;
+                case 6: // External Service Provider
+                    $this->db->query("DELETE FROM external_service_providers WHERE user_id = :user_id");
+                    break;
+            }
+
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            // Then delete from users table
+            $this->db->query("DELETE FROM users WHERE id = :user_id");
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            // Log the actual error
+            error_log("User deletion error: " . $e->getMessage());
+            $this->db->rollBack();
+            return false;
+        }
+    }
+
+
+    public function getResidentAddressAndPhone($userId)
+    {
+        $this->db->query('SELECT address, phonenumber FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $userId);
+        return $this->db->single();
+    }
+
+    //DONE BY SANKAVI TO GET THE ACTIVE USERS FOR THE SUPER ADMIN DASHBOARD
+    public function getActiveUsers()
+    {
+        try {
+            $this->db->query('SELECT COUNT(*) AS activeUsersCount FROM users WHERE is_active = 1');
+            $result = $this->db->single(); // Fetch a single row
+
+            if (!$result) {
+                error_log("Database query failed or returned empty result.");
+                return 0; // Default to 0 in case of failure
+            }
+
+            error_log("Fetched Active Users: " . print_r($result, true)); // Debugging output
+
+            return (int) $result['activeUsersCount']; // Ensure returning an integer
+        } catch (Exception $e) {
+            error_log("Error fetching active users: " . $e->getMessage());
+            return 0; // Return 0 on failure
+        }
+    }
+
+    
 }
