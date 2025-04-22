@@ -60,16 +60,11 @@
                             <th>Amount</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><?php echo is_array($data['payment']) ? $data['payment']['description'] : $data['payment']->description; ?></td>
-                            <td>$<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></td>
-                        </tr>
-                    </tbody>
+
                     <tfoot>
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>$<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></strong></td>
+                            <td><strong>Rs.<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></strong></td>
                         </tr>
                     </tfoot>
                 </table>

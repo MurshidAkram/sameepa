@@ -49,7 +49,7 @@
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3><i class="fas fa-dollar-sign"></i> Total This Month</h3>
-                        <p>$<?php echo isset($data['total_amount_this_month']) ? number_format($data['total_amount_this_month'], 2) : '0.00'; ?></p>
+                        <p>Rs.<?php echo isset($data['total_amount_this_month']) ? number_format($data['total_amount_this_month'], 2) : '0.00'; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -91,7 +91,7 @@
                                 <td><?php echo substr($payment->transaction_id, 0, 10) . '...'; ?></td>
                                 <td><?php echo $payment->user_name ?? 'Unknown'; ?></td>
                                 <td><?php echo $payment->home_address; ?></td>
-                                <td>$<?php echo number_format($payment->amount, 2); ?></td>
+                                <td>Rs.<?php echo number_format($payment->amount, 2); ?></td>
                                 <td><?php echo substr($payment->description, 0, 30) . (strlen($payment->description) > 30 ? '...' : ''); ?></td>
                                 <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
                                 <td class="action-buttons">
@@ -130,7 +130,7 @@
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
-                    label: 'Payment Amount ($)',
+                    label: 'Payment Amount (Rs.)',
                     data: <?php echo isset($data['monthly_data']) ? json_encode($data['monthly_data']) : '[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'; ?>,
                     backgroundColor: '#3498db'
                 }]

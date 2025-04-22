@@ -51,7 +51,7 @@
                 <div class="payment-info-grid">
                     <div class="info-group">
                         <h3>Amount</h3>
-                        <p>$<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></p>
+                        <p>Rs.<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></p>
                     </div>
                     <div class="info-group">
                         <h3>Date</h3>

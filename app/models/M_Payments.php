@@ -16,23 +16,15 @@ class M_Payments {
 
     // Add a new payment record
     public function addPayment($data) {
-        $this->db->query('INSERT INTO payments (user_id, home_address, amount, description, transaction_id, status, created_at) 
-                          VALUES (:user_id, :home_address, :amount, :description, :transaction_id, :status, NOW())');
+        $this->db->query('INSERT INTO payments (user_id, amount, description, transaction_id, status) VALUES (:user_id, :amount, :description, :transaction_id, :status)');
         
-        // Bind values
         $this->db->bind(':user_id', $data['user_id']);
-        $this->db->bind(':home_address', $data['home_address']);
         $this->db->bind(':amount', $data['amount']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':transaction_id', $data['transaction_id']);
         $this->db->bind(':status', $data['status']);
-
-        // Execute
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            return false;
-        }
+        
+        return $this->db->execute();
     }
 
     // Get a specific payment by ID
@@ -272,6 +264,104 @@ class M_Payments {
                         FROM payments p 
                         LEFT JOIN users u ON p.user_id = u.id 
                         ORDER BY p.created_at DESC');
+        
+        return $this->db->resultSet();
+    }
+
+    // Create a new payment request
+    public function createPaymentRequest($data) {
+        $this->db->query('INSERT INTO payment_requests (user_id, amount, description, due_date, created_by) VALUES (:user_id, :amount, :description, :due_date, :created_by)');
+        
+        // Bind values
+        $this->db->bind(':user_id', $data['user_id']);
+        $this->db->bind(':amount', $data['amount']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':due_date', $data['due_date']);
+        $this->db->bind(':created_by', $data['created_by']);
+        
+        // Execute
+        return $this->db->execute();
+    }
+
+    // Get all payment requests
+    public function getAllPaymentRequests() {
+        $this->db->query('SELECT pr.*, u.name as user_name, cb.name as created_by_name 
+                         FROM payment_requests pr 
+                         LEFT JOIN users u ON pr.user_id = u.id 
+                         LEFT JOIN users cb ON pr.created_by = cb.id 
+                         ORDER BY pr.created_at DESC');
+        
+        return $this->db->resultSet();
+    }
+
+    // Get payment requests for a specific user
+    public function getPaymentRequestsByUserId($user_id) {
+        $this->db->query('
+            SELECT pr.*, 
+                   u.name as resident_name,
+                   cb.name as created_by_name
+            FROM payment_requests pr
+            JOIN users u ON pr.user_id = u.id
+            JOIN users cb ON pr.created_by = cb.id
+            WHERE pr.user_id = :user_id
+            ORDER BY pr.created_at DESC
+        ');
+        
+        $this->db->bind(':user_id', $user_id);
+        return $this->db->resultSet();
+    }
+
+    // Get a specific payment request by ID
+    public function getPaymentRequestById($id) {
+        $this->db->query('
+            SELECT pr.*, 
+                   u.name as resident_name,
+                   cb.name as created_by_name
+            FROM payment_requests pr
+            JOIN users u ON pr.user_id = u.id
+            JOIN users cb ON pr.created_by = cb.id
+            WHERE pr.id = :id
+        ');
+        
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    // Update payment request status
+    public function updatePaymentRequestStatus($id, $status, $payment_id = null) {
+        $this->db->query('UPDATE payment_requests SET status = :status, paid_at = CURRENT_TIMESTAMP, payment_id = :payment_id WHERE id = :id');
+        
+        $this->db->bind(':id', $id);
+        $this->db->bind(':status', $status);
+        $this->db->bind(':payment_id', $payment_id);
+        
+        return $this->db->execute();
+    }
+
+    // Get payment by transaction ID
+    public function getPaymentByTransactionId($transaction_id) {
+        $this->db->query('SELECT * FROM payments WHERE transaction_id = :transaction_id');
+        $this->db->bind(':transaction_id', $transaction_id);
+        return $this->db->single();
+    }
+
+    public function deletePaymentRequest($id) {
+        $this->db->query('DELETE FROM payment_requests WHERE id = :id');
+        $this->db->bind(':id', $id);
+        
+        return $this->db->execute();
+    }
+
+    public function getAllPaymentRequestsWithResidentNames() {
+        $this->db->query('
+            SELECT pr.*, 
+                   u.name as resident_name,
+                   cb.name as created_by_name
+            FROM payment_requests pr
+            JOIN users u ON pr.user_id = u.id
+            JOIN users cb ON pr.created_by = cb.id
+            ORDER BY pr.created_at DESC
+        ');
         
         return $this->db->resultSet();
     }

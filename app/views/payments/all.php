@@ -66,7 +66,7 @@
                                 <td><?php echo substr($payment->transaction_id, 0, 10) . '...'; ?></td>
                                 <td><?php echo $payment->user_name ?? 'Unknown'; ?></td>
                                 <td><?php echo $payment->home_address; ?></td>
-                                <td>$<?php echo number_format($payment->amount, 2); ?></td>
+                                <td>Rs.<?php echo number_format($payment->amount, 2); ?></td>
                                 <td><?php echo substr($payment->description, 0, 30) . (strlen($payment->description) > 30 ? '...' : ''); ?></td>
                                 <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
                                 <td class="action-buttons">

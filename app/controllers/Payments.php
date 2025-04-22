@@ -56,89 +56,58 @@ class Payments extends Controller {
         
         $this->view('payments/admin_dashboard', $data);
     }
-        public function checkout() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            
+        public function checkout($id) {
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            redirect('users/login');
+        }
+
+        // Get payment request data
+        $request = $this->paymentModel->getPaymentRequestById($id);
+        
+        if (!$request) {
+            flash('payment_error', 'Payment request not found', 'alert alert-danger');
+            redirect('payments/requests');
+        }
+
+        // Check if request is already paid
+        if ($request->status == 'paid') {
+            flash('payment_error', 'This request has already been paid', 'alert alert-warning');
+            redirect('payments/requests');
+        }
+
+        // Check if user is the intended recipient
+        if ($request->user_id != $_SESSION['user_id']) {
+            flash('payment_error', 'You are not authorized to pay this request', 'alert alert-danger');
+            redirect('payments/requests');
+        }
+
+        // Create payment intent
+        try {
+            $paymentIntent = \Stripe\PaymentIntent::create([
+                'amount' => $request->amount * 100, // Convert to cents
+                'currency' => 'lkr',
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
+                'metadata' => [
+                    'request_id' => $request->id,
+                    'user_id' => $request->user_id
+                ]
+            ]);
+
             $data = [
-                'home_address' => trim($_POST['home_address']),
-                'amount' => trim($_POST['amount']),
-                'description' => trim($_POST['description']),
-                'home_address_err' => '',
-                'amount_err' => '',
-                'description_err' => ''
+                'request' => $request,
+                'client_secret' => $paymentIntent->client_secret,
             ];
 
-            if (($data['home_address'])== 'No address found.') {
-                $data['home_address_err'] = ' ';
-            }
-            
-            // Validate amount
-            if (empty($data['amount']) || !is_numeric($data['amount']) || $data['amount'] <= 0) {
-                $data['amount_err'] = 'Please enter a valid amount';
-            }
-            
-            // Validate description
-            if (empty($data['description'])) {
-                $data['description_err'] = 'Please enter a description';
-            }
-            
-            // Make sure no errors
-            if (empty($data['home_address_err']) && empty($data['amount_err']) && empty($data['description_err'])) {
-                try {
-                    // Create a PaymentIntent with the order amount and currency
-                    $paymentIntent = \Stripe\PaymentIntent::create([
-                        'amount' => $data['amount'] * 100, // Amount in cents
-                        'currency' => 'usd',
-                        'description' => $data['description'],
-                        'metadata' => [
-                            'user_id' => $_SESSION['user_id'],
-                            'home_address' => $data['home_address']
-                        ]
-                    ]);
-                    
-                    $data['client_secret'] = $paymentIntent->client_secret;
-                    
-                    $this->view('payments/checkout', $data);
-                } catch (\Stripe\Exception\ApiErrorException $e) {
-                    $data['error'] = $e->getMessage();
-                    $this->view('payments/checkout_form', $data);
-                }
-            } else {
-                // Load view with errors
-                $this->view('payments/checkout_form', $data);
-            }
-        } else {
-            $this->checkout_form();
+            $this->view('payments/checkout', $data);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            flash('payment_error', 'Error creating payment: ' . $e->getMessage(), 'alert alert-danger');
+            redirect('payments/requests');
         }
     }
 
-    public function checkout_form()
-    {
-        // Initialize data
-        $data = [
-            'home_address' => '',
-            'home_address_err' => '',
-            'amount' => '',
-            'amount_err' => '',
-            'description' => '',
-            'description_err' => ''
-        ];
-        
-        // Get the resident's address from the database
-        $userModel = $this->model('M_Users');
-        $resident = $userModel->getResidentIDByUserId($_SESSION['user_id']);
-        
-        if ($resident && isset($resident['address']) && !empty($resident['address'])) {
-            $data['home_address'] = $resident['address'];
-        } else {
-            $data['home_address'] = '';
-        }
-        
-        $this->view('payments/checkout_form', $data);
-    }
-    
     public function success() {
         if (isset($_GET['payment_intent'])) {
             $paymentIntentId = $_GET['payment_intent'];
@@ -276,12 +245,12 @@ class Payments extends Controller {
         $output = fopen('php://output', 'w');
         
         // Add CSV headers
-        fputcsv($output, ['ID', 'User ID', 'User Name', 'Home Address', 'Amount', 'Description', 'Transaction ID', 'Status', 'Date']);
+        fputcsv($output, ['ID', 'User ID', 'User Name', 'Home Address', 'Amount', 'Description', 'Transaction ID', 'Date & Time']);
         
         // Add data rows
         foreach ($payments as $payment) {
             $user = $this->userModel->getUserById($payment->user_id);
-            $userName = $user ? $user->name : 'Unknown';
+            $userName = is_array($user) ? $user['name'] : $user->name;            
             
             fputcsv($output, [
                 $payment->id,
@@ -291,7 +260,6 @@ class Payments extends Controller {
                 $payment->amount,
                 $payment->description,
                 $payment->transaction_id,
-                $payment->status,
                 $payment->created_at
             ]);
         }
@@ -367,4 +335,233 @@ class Payments extends Controller {
         $this->view('payments/all', $data);
     }
     
+    // Admin view to create payment requests
+    public function create_request() {
+        if ($_SESSION['user_role_id'] != 2) {
+            redirect('pages/index');
+        }
+        
+        // Get all residents for the dropdown
+        $residents = $this->userModel->getUsersByRole(1);
+        
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            
+            $data = [
+                'user_id' => trim($_POST['user_id']),
+                'amount' => trim($_POST['amount']),
+                'description' => trim($_POST['description']),
+                'due_date' => trim($_POST['due_date']),
+                'created_by' => $_SESSION['user_id'],
+                'residents' => $residents,
+                'user_id_err' => '',
+                'amount_err' => '',
+                'description_err' => '',
+                'due_date_err' => ''
+            ];
+            
+            // Validate data
+            if (empty($data['user_id'])) {
+                $data['user_id_err'] = 'Please select a resident';
+            }
+            
+            if (empty($data['amount']) || !is_numeric($data['amount']) || $data['amount'] <= 0) {
+                $data['amount_err'] = 'Please enter a valid amount';
+            }
+            
+            if (empty($data['description'])) {
+                $data['description_err'] = 'Please enter a description';
+            }
+            
+            if (empty($data['due_date'])) {
+                $data['due_date_err'] = 'Please select a due date';
+            }
+            
+            // Make sure no errors
+            if (empty($data['user_id_err']) && empty($data['amount_err']) && 
+                empty($data['description_err']) && empty($data['due_date_err'])) {
+                
+                if ($this->paymentModel->createPaymentRequest($data)) {
+                    flash('payment_request_message', 'Payment request created successfully', 'alert alert-success');
+                    redirect('payments/requests');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                // Load view with errors
+                $this->view('payments/create_request', $data);
+            }
+        } else {
+            // Initialize data for GET request
+            $data = [
+                'user_id' => '',
+                'amount' => '',
+                'description' => '',
+                'due_date' => '',
+                'residents' => $residents,
+                'user_id_err' => '',
+                'amount_err' => '',
+                'description_err' => '',
+                'due_date_err' => ''
+            ];
+            
+            $this->view('payments/create_request', $data);
+        }
+    }
+    
+    // View all payment requests
+    public function requests() {
+        if ($_SESSION['user_role_id'] == 2) {
+            // Admin view - show all requests with resident names
+            $requests = $this->paymentModel->getAllPaymentRequestsWithResidentNames();
+        } else {
+            // Resident view - show only their requests
+            $requests = $this->paymentModel->getPaymentRequestsByUserId($_SESSION['user_id']);
+        }
+        
+        $data = [
+            'requests' => $requests
+        ];
+        
+        $this->view('payments/requests', $data);
+    }
+    
+    // Process payment for a request
+    public function pay_request($id) {
+        // Get the payment request
+        $request = $this->paymentModel->getPaymentRequestById($id);
+        
+        if (!$request) {
+            redirect('payments/requests');
+        }
+        
+        // Check if user is the owner of the request
+        if ($request->user_id != $_SESSION['user_id']) {
+            redirect('payments/requests');
+        }
+        
+        // Check if request is already paid
+        if ($request->status == 'paid') {
+            flash('payment_message', 'This request has already been paid', 'alert alert-warning');
+            redirect('payments/requests');
+        }
+        
+        try {
+            // Create a PaymentIntent with the request amount
+            $paymentIntent = \Stripe\PaymentIntent::create([
+                'amount' => $request->amount * 100, // Amount in cents
+                'currency' => 'usd',
+                'description' => $request->description,
+                'metadata' => [
+                    'user_id' => $_SESSION['user_id'],
+                    'request_id' => $request->id
+                ]
+            ]);
+            
+            $data = [
+                'request' => $request,
+                'client_secret' => $paymentIntent->client_secret
+            ];
+            
+            $this->view('payments/pay_request', $data);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            flash('payment_error', $e->getMessage(), 'alert alert-danger');
+            redirect('payments/requests');
+        }
+    }
+    
+    // Handle successful payment for a request
+    public function request_success($id) {
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            redirect('users/login');
+        }
+
+        // Get payment request data
+        $request = $this->paymentModel->getPaymentRequestById($id);
+        
+        if (!$request) {
+            flash('payment_error', 'Payment request not found', 'alert alert-danger');
+            redirect('payments/requests');
+        }
+
+        // Check if user is the intended recipient
+        if ($request->user_id != $_SESSION['user_id']) {
+            flash('payment_error', 'You are not authorized to pay this request', 'alert alert-danger');
+            redirect('payments/requests');
+        }
+
+        // Get payment intent from Stripe
+        if (isset($_GET['payment_intent'])) {
+            try {
+                $paymentIntent = \Stripe\PaymentIntent::retrieve($_GET['payment_intent']);
+                
+                if ($paymentIntent->status === 'succeeded') {
+                    // Record payment in database
+                    $paymentData = [
+                        'user_id' => $request->user_id,
+                        'amount' => $request->amount,
+                        'description' => $request->description,
+                        'transaction_id' => $paymentIntent->id,
+                        'status' => 'completed'
+                    ];
+                    
+                    if ($this->paymentModel->addPayment($paymentData)) {
+                        // Get the payment ID
+                        $payment = $this->paymentModel->getPaymentByTransactionId($paymentIntent->id);
+                        
+                        // Update payment request status
+                        if ($this->paymentModel->updatePaymentRequestStatus($id, 'paid', $payment->id)) {
+                            flash('payment_success', 'Payment completed successfully!', 'alert alert-success');
+                        } else {
+                            flash('payment_error', 'Error updating payment status', 'alert alert-danger');
+                        }
+                    } else {
+                        flash('payment_error', 'Error recording payment', 'alert alert-danger');
+                    }
+                } else {
+                    flash('payment_error', 'Payment was not successful', 'alert alert-danger');
+                }
+            } catch (\Stripe\Exception\ApiErrorException $e) {
+                flash('payment_error', $e->getMessage(), 'alert alert-danger');
+            }
+        }
+
+        redirect('payments/requests');
+    }
+
+    public function delete_request($id) {
+        // Check if user is admin
+        if ($_SESSION['user_role_id'] != 2) {
+            redirect('pages/index');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get request before deletion to check if it exists
+            $request = $this->paymentModel->getPaymentRequestById($id);
+            
+            if (!$request) {
+                flash('payment_request_message', 'Payment request not found', 'alert alert-danger');
+                redirect('payments/requests');
+            }
+            
+            // Check if request is already paid
+            if ($request->status == 'paid') {
+                flash('payment_request_message', 'Cannot delete a paid request', 'alert alert-warning');
+                redirect('payments/requests');
+            }
+            
+            // Delete request
+            if ($this->paymentModel->deletePaymentRequest($id)) {
+                flash('payment_request_message', 'Payment request deleted successfully', 'alert alert-success');
+            } else {
+                flash('payment_request_message', 'Something went wrong while deleting the request', 'alert alert-danger');
+            }
+            
+            redirect('payments/requests');
+        } else {
+            redirect('payments/requests');
+        }
+    }
 }

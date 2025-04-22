@@ -55,6 +55,7 @@
     font-weight: bold;
   }
   
+  .form-group select,
   .form-group input,
   .form-group textarea {
     width: 100%;
@@ -65,15 +66,18 @@
     transition: border-color 0.3s;
   }
   
+  .form-group select:focus,
   .form-group input:focus,
   .form-group textarea:focus {
     outline: none;
     border-color: #800080;
   }
-
  
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
 
-  
   .form-submit {
     background-color: #800080;
     color: white;
@@ -170,40 +174,36 @@ color: #721c24;
 border: 1px solid #f5c6cb;
 }
 
-.btn.btn-primary{
-background-color: #800080;
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: #800080;
   color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 25px;
+  border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: all 0.3s ease;
 }
 
-.btn.btn-danger{
-background-color: #c81313;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  width: 100%;
+.btn-primary:hover {
+  background: #9a009a;
+  transform: translateY(-2px);
 }
 
-.btn.btn-cancel{
-  background-color: #c81313;
+.btn-cancel {
+  padding: 0.75rem 1.5rem;
+  background: #dc3545;
   color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  width: 100%;
+  border-radius: 4px;
   text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background: #c82333;
+  transform: translateY(-2px);
 }
 
 
