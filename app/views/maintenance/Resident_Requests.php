@@ -341,7 +341,6 @@
     </style>
 </head>
 
-
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
@@ -382,13 +381,14 @@
                     <thead>
                         <tr>
                             <th>Request ID</th>
-                            <th>Resident Details</th>
-                            <th>Type of Request</th>
-                            <th>Title</th>
+                            <th>Resident Name</th>
+                            <th>Resident Address</th>
+                            <th>Resident Phone</th>
+                            <th>Request Type</th>
+                            <th>Description</th>
                             <th>Urgency</th>
                             <th>Status</th>
                             <th>Assigned Maintainer</th>
-                            <th>Due Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -396,36 +396,19 @@
                         <?php foreach ($data['requests'] as $request): ?>
                             <tr>
                                 <td><?php echo $request->request_id; ?></td>
-                                <td>
-                                    <?php echo $request->resident_name; ?><br>
-                                    <?php echo $request->unit_number; ?>
-                                </td>
+                                <td><?php echo $request->resident_name; ?></td>
+                                <td><?php echo $request->resident_address; ?></td>
+                                <td><?php echo $request->resident_phone; ?></td>
                                 <td><?php echo $request->type_name; ?></td>
-                                <td><?php echo $request->title; ?></td>
-                                <td>
-                                    <span class="urgency-<?php echo $request->urgency_level; ?>">
-                                        <?php echo ucfirst($request->urgency_level); ?>
-                                    </span>
-                                </td>
-                                <td><?php echo $request->status_name; ?></td>
-                                <td>
-                                    <?php if ($request->staff_name): ?>
-                                        <?php echo $request->staff_name; ?>
-                                    <?php else: ?>
-                                        Not assigned
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($request->due_date): ?>
-                                        <?php echo date('Y-m-d', strtotime($request->due_date)); ?>
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </td>
+                                <td><?php echo $request->description; ?></td>
+                                <td><?php echo $request->urgency_level; ?></td>
+                                <td><?php echo $request->status_name; ?></td>  
+                                <td> <?php echo $request->maintainer_name ?? 'Not assigned'; ?> </td>
+                                
                                 <td class="action-buttons">
-                                    <?php if ($request->status_id == 1 || $request->status_id == 2): ?>
-                                        <button class="btn-edit" onclick="openEditModal(<?php echo $request->request_id; ?>, '<?php echo $request->due_date; ?>')">
-                                            Edit Date
+                                    <?php if ($request->status_id > 0): ?>
+                                        <button class="btn-edit" onclick="openStatusModal(<?php echo $request->request_id; ?>)">
+                                            Change Status
                                         </button>
                                         <button class="btn-urgent" onclick="openAssignModal(<?php echo $request->request_id; ?>)">
                                             Assign Maintainer
@@ -438,63 +421,77 @@
                 </table>
             </div>
 
-            <!-- Modals -->
-            <div id="editDateModal" class="modal">
+            <!-- Status Change Modal -->
+            <div id="statusModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
-                    <h2>Edit Due Date</h2>
-                    <form id="editDateForm">
-                        <input type="hidden" id="editRequestId">
-                        <label for="newDueDate">New Due Date:</label>
-                        <input type="date" id="newDueDate" required>
-                        <button type="submit" class="btn-edit">Update Date</button>
+                    <h2>Change Request Status</h2>
+                    <form id="statusForm">
+                        <input type="hidden" id="statusRequestId">
+                        <label for="newStatus">New Status:</label>
+                        <select id="newStatus" required>
+                            <?php foreach ($data['statuses'] as $status): ?>
+                                <?php if ($status->status_id == 3 || $status->status_id == 4): ?>
+                                    <option value="<?php echo $status->status_id; ?>">
+                                        <?php echo $status->status_name; ?>
+                                    </option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="submit" class="btn-edit">Update Status</button>
                     </form>
                 </div>
             </div>
 
+            <!-- Assign Maintainer Modal -->
             <div id="assignMaintainerModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <h2>Assign Maintenance Staff</h2>
                     <form id="assignMaintainerForm">
                         <input type="hidden" id="assignRequestId">
-                        <label for="maintenanceStaff">Select Staff:</label>
-                        <select id="maintenanceStaff" required>
-                            <option value="">Select a maintainer</option>
-                            <?php foreach ($data['staff'] as $staff): ?>
-                                <option value="<?php echo $staff->staff_id; ?>">
-                                    <?php echo $staff->staff_name; ?> (<?php echo $staff->specialization; ?>)
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <label for="assignmentDueDate">Due Date:</label>
-                        <input type="date" id="assignmentDueDate" required>
+                        
+                        <div class="form-group">
+                            <label for="specializationFilter">Specialization:</label>
+                            <select id="specializationFilter" required>
+                                <option value="">Select a specialization</option>
+                                <!-- Will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="maintenanceStaff">Select Staff:</label>
+                            <select id="maintenanceStaff" required disabled>
+                                <option value="">First select a specialization</option>
+                            </select>
+                        </div>
+                        
                         <button type="submit" class="btn-urgent">Assign</button>
                     </form>
                 </div>
             </div>
 
-            <!-- Request History -->
-            <h2>Request History</h2>
+            <!-- Maintenance Task List -->
+            <h2>Maintenance Task List</h2>
+            <div class="search-container">
+                <input type="text" id="task-search" placeholder="Search tasks..." onkeyup="filterTasks()">
+            </div>
             <div class="table-container">
                 <table class="dashboard-table">
                     <thead>
                         <tr>
-                            <th>Resident</th>
-                            <th>Past Requests</th>
-                            <th>Common Issues</th>
-                            <th>Average Completion Time</th>
+                            <th>Request ID</th>
+                            <th>Resident Name</th>
+                            <th>Resident Address</th>
+                            <th>Resident Phone</th>
+                            <th>Request Type</th>
+                            <th>Description</th>
+                            <th>Urgency</th>
+                            <th>Assigned Maintainer</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($data['history'] as $history): ?>
-                            <tr>
-                                <td><?php echo $history->resident_name; ?></td>
-                                <td><?php echo $history->total_requests; ?></td>
-                                <td><?php echo $history->common_issues; ?></td>
-                                <td><?php echo $history->avg_completion_time; ?> days</td>
-                            </tr>
-                        <?php endforeach; ?>
+                        <!-- This would be populated via JavaScript or additional PHP -->
                     </tbody>
                 </table>
             </div>
@@ -504,19 +501,75 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
     <script>
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const typeFilter = document.getElementById('typeFilter');
+        const urgencyFilter = document.getElementById('urgencyFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const statusModal = document.getElementById('statusModal');
+        const assignMaintainerModal = document.getElementById('assignMaintainerModal');
+        const statusForm = document.getElementById('statusForm');
+        const assignMaintainerForm = document.getElementById('assignMaintainerForm');
+
         // Modal functions
-        function openEditModal(requestId, currentDueDate) {
-            document.getElementById('editRequestId').value = requestId;
-            document.getElementById('newDueDate').value = currentDueDate || '';
-            document.getElementById('editDateModal').style.display = 'block';
+        function openStatusModal(requestId) {
+            document.getElementById('statusRequestId').value = requestId;
+            statusModal.style.display = 'block';
         }
 
+        // Load specializations when assign modal opens
         function openAssignModal(requestId) {
             document.getElementById('assignRequestId').value = requestId;
-            document.getElementById('assignmentDueDate').value = '';
             document.getElementById('maintenanceStaff').value = '';
-            document.getElementById('assignMaintainerModal').style.display = 'block';
+            document.getElementById('maintenanceStaff').disabled = true;
+            
+            // Load specializations
+            fetch('<?php echo URLROOT; ?>/maintenance/getSpecializations')
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('specializationFilter');
+                    select.innerHTML = '<option value="">Select a specialization</option>';
+                    data.forEach(spec => {
+                        const option = document.createElement('option');
+                        option.value = spec.specialization;
+                        option.textContent = spec.specialization;
+                        select.appendChild(option);
+                    });
+                });
+            
+            assignMaintainerModal.style.display = 'block';
         }
+
+        // When specialization is selected, load staff
+        document.getElementById('specializationFilter').addEventListener('change', function() {
+            const specialization = this.value;
+            const staffSelect = document.getElementById('maintenanceStaff');
+            
+            if (!specialization) {
+                staffSelect.innerHTML = '<option value="">First select a specialization</option>';
+                staffSelect.disabled = true;
+                return;
+            }
+            
+            fetch('<?php echo URLROOT; ?>/maintenance/getStaffBySpecialization', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ specialization: specialization })
+            })
+            .then(response => response.json())
+            .then(data => {
+                staffSelect.innerHTML = '<option value="">Select a maintainer</option>';
+                data.forEach(staff => {
+                    const option = document.createElement('option');
+                    option.value = staff.id;
+                    option.textContent = `${staff.name} (${staff.specialization})`;
+                    staffSelect.appendChild(option);
+                });
+                staffSelect.disabled = false;
+            });
+        });
 
         // Close modals when clicking X
         document.querySelectorAll('.close').forEach(closeBtn => {
@@ -527,66 +580,128 @@
 
         // Close modals when clicking outside
         window.addEventListener('click', function(event) {
-            if (event.target.className === 'modal') {
+            if (event.target.classList.contains('modal')) {
                 event.target.style.display = 'none';
             }
         });
 
-        // Form submissions
-        document.getElementById('editDateForm').addEventListener('submit', function(e) {
+        // Handle status change form submission
+        statusForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const requestId = document.getElementById('editRequestId').value;
-            const newDueDate = document.getElementById('newDueDate').value;
-
-            // AJAX call to update due date
-            fetch('<?php echo URLROOT; ?>/maintenance/updateDueDate', {
+            const requestId = document.getElementById('statusRequestId').value;
+            const statusId = document.getElementById('newStatus').value;
+            
+            try {
+                const response = await fetch('<?php echo URLROOT; ?>/maintenance/updateStatus', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         requestId: requestId,
-                        dueDate: newDueDate
+                        statusId: statusId
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Error updating due date');
-                    }
                 });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Status updated successfully', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast('Error updating status', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            }
         });
 
-        document.getElementById('assignMaintainerForm').addEventListener('submit', function(e) {
+        // Handle assign maintainer form submission
+        assignMaintainerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const requestId = document.getElementById('assignRequestId').value;
             const staffId = document.getElementById('maintenanceStaff').value;
-            const dueDate = document.getElementById('assignmentDueDate').value;
-
-            // AJAX call to assign maintainer
-            fetch('<?php echo URLROOT; ?>/maintenance/assignMaintainer', {
+            
+            if (!staffId) {
+                showToast('Please select a maintainer', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('<?php echo URLROOT; ?>/maintenance/assignMaintainer', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         requestId: requestId,
-                        staffId: staffId,
-                        dueDate: dueDate
+                        staffId: staffId
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Error assigning maintainer');
-                    }
                 });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Maintainer assigned successfully', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast('Error assigning maintainer', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            }
         });
+
+        // Table filtering functionality
+        function filterTable() {
+            const searchValue = searchInput.value.toLowerCase();
+            const typeValue = typeFilter.value;
+            const urgencyValue = urgencyFilter.value;
+            const statusValue = statusFilter.value;
+            
+            const rows = document.querySelectorAll('.dashboard-table tbody tr');
+            
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const typeMatch = typeValue === '' || cells[4].textContent === typeValue;
+                const urgencyMatch = urgencyValue === '' || cells[6].querySelector('span').classList.contains(`urgency-${urgencyValue}`);
+                const statusMatch = statusValue === '' || cells[7].textContent.toLowerCase() === statusValue.toLowerCase();
+                const searchMatch = Array.from(cells).some(cell => 
+                    cell.textContent.toLowerCase().includes(searchValue)
+                );
+                
+                if (typeMatch && urgencyMatch && statusMatch && searchMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Event listeners for filters
+        searchInput.addEventListener('input', filterTable);
+        typeFilter.addEventListener('change', filterTable);
+        urgencyFilter.addEventListener('change', filterTable);
+        statusFilter.addEventListener('change', filterTable);
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+    
     </script>
 </body>
-
 </html>

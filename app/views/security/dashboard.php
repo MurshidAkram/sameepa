@@ -10,10 +10,14 @@
   <style>
   .dashboard-container {
   display: flex;
-  
+  padding-bottom: 20px;
   padding: 15px;
   gap: 15px;
   
+}
+
+.padding{
+  padding-bottom: 40px;
 }
 
 .main-content {
@@ -252,7 +256,14 @@
     </div>
   </div>
 </div>
+
+<div class="padding">
+
+</div>
 <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+
+
+
 <script>
 // Initialize all charts
 function initializeCharts() {

@@ -146,41 +146,6 @@ INSERT INTO Users (name, age)VALUES('polly', 3);
 
 
 
-//inventory 
-
--- Create the 'available_store' table
-CREATE TABLE available_store (
-    item_id VARCHAR(20) PRIMARY KEY, -- Primary Key
-    item_name VARCHAR(100) NOT NULL,
-    purchase_date DATE NOT NULL,
-    available_quantity INT NOT NULL
-);
-
--- Create the 'inventory_usage_log' table
-CREATE TABLE inventory_usage_log (
-    log_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each log entry
-    item_id VARCHAR(20), -- Foreign Key referencing available_store(item_id)
-    item_name VARCHAR(100), -- Item name for logging purposes
-    usage_date DATE NOT NULL,
-    usage_time TIME NOT NULL,
-    quantity INT NOT NULL,
-    FOREIGN KEY (item_id) REFERENCES available_store(item_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-// Maintenance member
-
-CREATE TABLE maintenance_members (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    specialization VARCHAR(100) NOT NULL,
-    experience INT NOT NULL,
-    phone_number VARCHAR(15) NOT NULL,
-    profile_image VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-
 -- Table for polls
 CREATE TABLE polls (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -390,12 +355,73 @@ ADD COLUMN image_type VARCHAR(50) COMMENT 'Facility image MIME type' AFTER image
 
 //emergency Contacts
 
+CREATE TABLE emergency_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    icon VARCHAR(50) NOT NULL,
+    description TEXT
+);
+
 CREATE TABLE emergency_contacts (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    phone VARCHAR(15) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    phone VARCHAR(20) NOT NULL,
+    description TEXT,
+    priority INT DEFAULT 1,
+    FOREIGN KEY (category_id) REFERENCES emergency_categories(id)
 );
+
+INSERT INTO emergency_categories (name, icon, description) VALUES
+('Police', 'shield-alt', 'Police emergency and support services'),
+('Fire & Rescue', 'fire-extinguisher', 'Firefighting and rescue operations'),
+('Ambulance', 'ambulance', 'Medical emergency transportation'),
+('Electricity', 'bolt', 'Power outage and electrical emergencies'),
+('Water Supply', 'tint', 'Water service issues and emergencies'),
+('Gas Leak', 'burn', 'Emergency contact for gas leak or explosion risk');
+
+-- Police
+INSERT INTO emergency_contacts (category_id, name, phone, description, priority) VALUES
+(1, 'Police Emergency Hotline', '119', 'General police emergency number', 1),
+(1, 'Colombo Central Police', '011-2433333', 'Main police station in Colombo', 2),
+(1, 'Child & Women Bureau', '011-2444444', 'Support for women and children in distress', 3),
+(1, 'Tourist Police', '011-2421052', 'Assistance for foreign visitors', 4);
+
+-- Fire & Rescue
+INSERT INTO emergency_contacts (category_id, name, phone, description, priority) VALUES
+(2, 'Fire Emergency Hotline', '110', 'General fire emergency contact', 1),
+(2, 'Colombo Fire Brigade', '011-2422222', 'Fire station serving Colombo area', 2),
+(2, 'Kandy Fire Station', '081-2224444', 'Fire services in Kandy region', 3),
+(2, 'Dehiwala Fire Station', '011-2735533', 'Fire services in Dehiwala area', 4);
+
+-- Ambulance
+INSERT INTO emergency_contacts (category_id, name, phone, description, priority) VALUES
+(3, 'Suwaseriya Ambulance', '1990', 'Free ambulance service nationwide', 1),
+(3, 'Colombo General Hospital Ambulance', '011-2691111', 'Government hospital ambulance', 2),
+(3, 'Asiri Medical Ambulance', '011-4524400', 'Private hospital emergency service', 3),
+(3, 'Nawaloka Hospital Ambulance', '011-5577111', 'Private hospital ambulance support', 4);
+
+-- Electricity
+INSERT INTO emergency_contacts (category_id, name, phone, description, priority) VALUES
+(4, 'CEB Hotline', '1987', 'Report power outages or faults', 1),
+(4, 'Colombo Electricity Office', '011-2333333', 'Main city electricity issues', 2),
+(4, 'Kelaniya CEB Branch', '011-2911222', 'Regional power issues', 3),
+(4, 'Power Failure Emergency', '011-2302302', '24/7 emergency power support', 4);
+
+-- Water Supply
+INSERT INTO emergency_contacts (category_id, name, phone, description, priority) VALUES
+(5, 'Water Board Hotline', '1939', 'Report leaks or water issues', 1),
+(5, 'Colombo Water Board', '011-2689490', 'Urban water supply issues', 2),
+(5, 'Emergency Water Tankers', '011-5432100', 'Request water delivery in crisis', 3),
+(5, 'Water Quality Support', '011-2432432', 'Drinking water safety and complaints', 4);
+
+-- Gas Leak
+INSERT INTO emergency_contacts (category_id, name, phone, description, priority) VALUES
+(6, 'Litro Gas Emergency', '1311', 'Emergency gas leak reporting', 1),
+(6, 'Laugfs Gas Hotline', '011-5555055', 'Emergency support for Laugfs users', 2),
+(6, 'Fire Department - Gas Team', '011-2435555', 'Special unit for flammable gas risks', 3),
+(6, 'Emergency Gas Response', '077-6543210', 'Mobile gas leak inspection team', 4);
+
 
 //visitor passes
 
@@ -425,7 +451,7 @@ CREATE TABLE incident_reports (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-// manage security shedule
+// manage security shedule and admin parts
 
 -- Duty shifts table
 CREATE TABLE duty_shifts (
@@ -539,62 +565,91 @@ DELIMITER ;
 
 //*************************maintenance requests***************************
 
+// Maintenance member
 
--- Request Types Table
-CREATE TABLE request_types (
+CREATE TABLE maintenance_members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    specialization VARCHAR(100) NOT NULL,
+    experience INT NOT NULL,
+    phone_number VARCHAR(15) NOT NULL,
+    profile_image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+//******************************residents requests************************************
+
+CREATE TABLE maintenance_types (
     type_id INT AUTO_INCREMENT PRIMARY KEY,
     type_name VARCHAR(50) NOT NULL,
     description TEXT
 );
 
--- Request Statuses Table
-CREATE TABLE request_statuses (
+CREATE TABLE maintenance_statuses (
     status_id INT AUTO_INCREMENT PRIMARY KEY,
     status_name VARCHAR(50) NOT NULL,
     description TEXT
 );
 
--- Maintenance Requests Table
 CREATE TABLE maintenance_requests (
     request_id INT AUTO_INCREMENT PRIMARY KEY,
     resident_id INT NOT NULL,
     type_id INT NOT NULL,
-    title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     urgency_level ENUM('low', 'medium', 'high') NOT NULL,
-    status_id INT DEFAULT 1,
-    Maintenance_Manager_id INT,
-    due_date DATE,
+    status_id INT DEFAULT 1, 
+    maintainer_id INT, 
+    due_date DATE, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (resident_id) REFERENCES residents(user_id),
-    FOREIGN KEY (type_id) REFERENCES request_types(type_id),
-    FOREIGN KEY (status_id) REFERENCES request_statuses(status_id),
-    FOREIGN KEY (Maintenance_Manager_id) REFERENCES maintenance(user_id)
+    completed_at TIMESTAMP NULL,
+
+    FOREIGN KEY (resident_id) REFERENCES users(id),
+    FOREIGN KEY (type_id) REFERENCES maintenance_types(type_id),
+    FOREIGN KEY (status_id) REFERENCES maintenance_statuses(status_id),
+    FOREIGN KEY (maintainer_id) REFERENCES maintenance_members(id)
 );
 
--- Insert default request types
-INSERT INTO request_types (type_name, description) VALUES 
-('Plumbing', 'Issues related to pipes, faucets, toilets, etc.'),
-('Electrical', 'Electrical wiring, outlets, lighting issues'),
-('Appliance Repair', 'Problems with provided appliances'),
-('Structural', 'Walls, floors, ceilings, doors, windows'),
-('Other', 'Any other maintenance requests');
+
+DELIMITER $$
+
+CREATE TRIGGER check_resident_role BEFORE INSERT ON maintenance_requests
+FOR EACH ROW
+BEGIN
+    DECLARE role INT;
+    SELECT role_id INTO role FROM users WHERE id = NEW.resident_id;
+    IF role != 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'resident_id must reference a user with role_id = 1';
+    END IF;
+END$$
+
+DELIMITER ;
+
 
 -- Insert default statuses
-INSERT INTO request_statuses (status_name, description) VALUES 
+INSERT INTO maintenance_statuses (status_name, description) VALUES 
 ('Pending', 'Request has been submitted but not yet reviewed'),
-('Assigned', 'Request has been assigned to a maintenance staff'),
-('In Progress', 'Work on the request has begun'),
+('In Progress', 'Request has been assigned and work has begun'),
 ('Completed', 'Request has been fulfilled'),
 ('Cancelled', 'Request was cancelled');
 
+-- Insert common maintenance types
+INSERT INTO maintenance_types (type_name, description) VALUES 
+('Plumbing', 'Issues with pipes, faucets, toilets, etc.'),
+('Electrical', 'Problems with wiring, outlets, lighting, etc.'),
+('HVAC', 'Heating, ventilation, and air conditioning issues'),
+('Appliance Repair', 'Malfunctioning household appliances'),
+('Structural', 'Problems with walls, floors, ceilings, etc.'),
+('Other', 'Any other maintenance issue not listed');
 
 INSERT INTO maintenance_requests (
-    resident_id, type_id, title, description, urgency_level, status_id, Maintenance_Manager_id, due_date
+    resident_id, type_id, description, urgency_level, status_id, maintainer_id, completed_at
 ) VALUES
-(1, 1, 'Leaking Faucet', 'The kitchen faucet is leaking continuously.', 'medium', 1, 15, '2025-04-25'),
-(13, 2, 'AC Not Working', 'Air conditioner in the living room is not cooling.', 'high', 2, 18, '2025-04-22'),
-(3, 1, 'Broken Window', 'The bedroom window won’t close completely.', 'medium', 1, 24, '2025-04-30'),
-(17, 3, 'Pest Control', 'There are ants in the pantry area.', 'low', 3, NULL, '2025-05-01'),
-(27, 2, 'Water Heater Issue', 'Water heater is not turning on.', 'high', 1, 42, '2025-04-28');
+(1, 1, 'Leaking pipe under the kitchen sink.', 'medium', 1, 1, NULL),
+(3, 2, 'Living room light flickers when turned on.', 'high', 2, 4, NULL),
+(13, 3, 'Wardrobe door is off its hinge.', 'low', 1, NULL, NULL);
+
+
+
+

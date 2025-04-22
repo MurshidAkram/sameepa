@@ -232,42 +232,38 @@ footer {
         <main>
             <!-- Dashboard Header -->
             <header class="dashboard-header">
-                <div class="user-info">
+                <!-- <div class="user-info">
                     <p>Welcome, <strong><?php //echo $_SESSION['user_name']; ?></strong> (Maintenance Personnel)</p>
                     <p id="current-date-time"></p>
-                </div>
+                </div> -->
 
                 <div class="dashboard-controls">
-                    <input type="text" placeholder="Search..." class="search-bar">
+                    <!-- <input type="text" placeholder="Search..." class="search-bar"> -->
                     <div class="filter-options">
-                        <label for="filter-status">Filter by Status:</label>
+                        <!-- <label for="filter-status">Filter by Status:</label>
                         <select id="filter-status">
                             <option value="all">All</option>
                             <option value="completed">Completed</option>
                             <option value="in-progress">In Progress</option>
-                            <option value="pending">Pending</option>
+                            <option value="pending">Pending</option> -->
                         </select>
                     </div>
                     <div class="quick-links">
                         <a href="#">Notifications <span class="badge">3</span></a>
-                        <a href="#">Settings</a>
+                       
                     </div>
                 </div>
             </header>
 
             <h1>Maintenance Management</h1>
-            <p>Manage maintenance operations, including history, reporting, assistance requests, schedules, and updates.</p>
-
+           
             <!-- Overview Cards -->
             <section class="overview-cards">
                 <div class="card">
                     <h3>Scheme Maintenance</h3>
                     <p>Upcoming: 8 | Ongoing: 3 | Past: 15</p>
                 </div>
-                <!-- <div class="card">
-                    <h3>Inventory Stock</h3>
-                    <p>Low: 5 | Critical: 2</p>
-                </div> -->
+               
                 <div class="card">
                     <h3>Team Productivity</h3>
                     <p>Avg Tasks/Day: 7 | Completion Rate: 95%</p>
@@ -280,35 +276,13 @@ footer {
                     <h4>Repair Categories</h4>
                     <canvas id="repair-category-chart"></canvas>
                 </div>
-                <!-- <div class="chart-card">
-                    <h4>Response Time Metrics</h4>
-                    <canvas id="response-time-chart"></canvas>
-                </div> -->
+               
                 <div class="chart-card">
                     <h4>Resident Satisfaction</h4>
                     <canvas id="satisfaction-chart"></canvas>
                 </div>
             </section>
 
-            <!-- Task Reminders -->
-            <section class="reminders">
-                <h4>Upcoming Task Reminders</h4>
-                <ul>
-                    <li>High-priority Task 1 - Due Today</li>
-                    <li>High-priority Task 2 - Due in 3 Days</li>
-                    <li>High-priority Task 3 - Due This Week</li>
-                </ul>
-            </section>
-
-            <!-- Daily/Weekly Summary -->
-            <section class="summary">
-                <h4>Daily/Weekly Summary</h4>
-                <ul>
-                    <li>Total Requests Submitted: 15</li>
-                    <li>Total Tasks Completed: 12</li>
-                    <li>Major Issues Logged: 2</li>
-                </ul>
-            </section>
         </main>
     </div>
 

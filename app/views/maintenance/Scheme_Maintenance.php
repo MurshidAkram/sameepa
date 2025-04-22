@@ -219,35 +219,7 @@
                         <th>Specialization</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>MT-001</td>
-                        <td>Inspection</td>
-
-                        <td>High</td>
-                        <td>Monthly</td>
-                        <td>Team A</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>MT-002</td>
-                        <td>Repair</td>
-
-                        <td>Medium</td>
-                        <td>Quarterly</td>
-                        <td>Team B</td>
-                        <td>HVAC Inspection</td>
-                    </tr>
-                    <tr>
-                        <td>MT-003</td>
-                        <td>Replacement</td>
-
-                        <td>High</td>
-                        <td>Annually</td>
-                        <td>Team C</td>
-                        <td>Plumbing Inspection</td>
-                    </tr>
-                </tbody>
+            
             </table>
 
             <!-- Maintenance History -->

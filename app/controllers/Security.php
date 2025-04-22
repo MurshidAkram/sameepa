@@ -174,84 +174,72 @@ public function Add_Visitor_Pass() {
 
 
 //*******************************************Emergency_Contacts*************************************************************************************************** */
-
-    public function Emergency_Contacts() {
-        $contacts = $this->securityModel->getAllContacts();
-        $data = ['contacts' => $contacts];
-        $this->view('security/Emergency_Contacts', $data);
+public function Emergency_Contacts() {
+    $categories = $this->securityModel->getAllContactCategories();
+    $contactsByCategory = [];
+    
+    foreach ($categories as $category) {
+        $contactsByCategory[$category->id] = [
+            'category' => $category,
+            'contacts' => $this->securityModel->getContactsByCategory($category->id)
+        ];
     }
+    
+    $data = ['contactsByCategory' => $contactsByCategory];
+    $this->view('security/Emergency_Contacts', $data);
+}
 
-// Add a new Contact
+public function Edit_Contact($id) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        
+        $contactData = [
+            'id' => $id,
+            'name' => trim($data['name']),
+            'phone' => trim($data['phone']),
+            'description' => trim($data['description'] ?? '')
+        ];
+
+        if ($this->securityModel->updateContact($contactData)) {
+            echo json_encode([
+                'success' => true,
+                'name' => $contactData['name'],
+                'phone' => $contactData['phone'],
+                'description' => $contactData['description']
+            ]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
+    }
+}
 
 public function Add_Contact() {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Process form data
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
         $data = [
+            'category_id' => trim($_POST['category_id']),
             'name' => trim($_POST['name']),
             'phone' => trim($_POST['phone']),
-          
+            'description' => trim($_POST['description'] ?? '')
         ];
- 
-        // Add to database
-        if ($this->securityModel->addContact($data)) {
-            header('Location: ' . URLROOT . 'security/Emergency_Contacts');
-            exit();
-        } else {
-            die('Error adding contact');
-        }
 
         if ($this->securityModel->addContact($data)) {
             echo json_encode([
                 'success' => true,
-                'id' => $newContactId, // Ensure this is a unique database ID
-                'name' => $data['name'],
-                'phone' => $data['phone']
+                'contact' => [
+                    'id' => $this->securityModel->getLastInsertId(),
+                    'name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'description' => $data['description']
+                ]
             ]);
         } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Database error: Failed to insert contact.'
-            ]);
+            echo json_encode(['success' => false]);
         }
-        
-        
     }
 }
 
-    public function Edit_Contact($id) {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Make sure to handle raw POST data when it's JSON
-            $data = json_decode(file_get_contents("php://input"), true);  // Decode JSON to array
-    
-            // Sanitize and prepare the data
-            $name = trim($data['name']);
-            $phone = trim($data['phone']);
-    
-            $contactData = [
-                'id' => $id,
-                'name' => $name,
-                'phone' => $phone
-            ];
-    
-            // Call the model to update the contact
-            if ($this->securityModel->updateContact($contactData)) {
-                echo json_encode([
-                    'success' => true,
-                    'name' => $name,
-                    'phone' => $phone
-                ]);
-            } else {
-                echo json_encode(['success' => false]);
-            }
-        }
-    }
-    
-    // Delete a Contact
 public function Delete_Contact($id) {
     if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
-        // Call model to delete member
         if ($this->securityModel->deleteContact($id)) {
             echo json_encode(['success' => true]);
         } else {
@@ -259,7 +247,6 @@ public function Delete_Contact($id) {
         }
     }
 }
-
 
 //*****************************************Search Resident_Contacts in Manage_Visitor_Passes***************************************************************************************************** */
 public function Resident_Contacts()

@@ -121,44 +121,50 @@ public function getTodayDutyOfficers() {
 }
 
 //****************************************************** Emergency contact******************************************************************* */
-
-   // Fetch all contacts
-public function getAllContacts() {
-    $this->db->query("SELECT * FROM emergency_contacts");
+public function getAllContactCategories() {
+    $this->db->query("SELECT * FROM emergency_categories ORDER BY name");
     return $this->db->resultSet();
 }
 
-// Add new contact to the database
-public function addContact($data) {
-    $this->db->query("INSERT INTO emergency_contacts (name,phone) 
-                      VALUES (:name,:phone)");
+public function getContactsByCategory($category_id) {
+    $this->db->query("SELECT * FROM emergency_contacts 
+                     WHERE category_id = :category_id 
+                     ORDER BY priority, name");
+    $this->db->bind(':category_id', $category_id);
+    return $this->db->resultSet();
+}
 
-    // Bind values
+public function addContact($data) {
+    $this->db->query("INSERT INTO emergency_contacts 
+                     (category_id, name, phone, description) 
+                     VALUES (:category_id, :name, :phone, :description)");
+
+    $this->db->bind(':category_id', $data['category_id']);
     $this->db->bind(':name', $data['name']);
     $this->db->bind(':phone', $data['phone']);
+    $this->db->bind(':description', $data['description']);
 
-    // Execute query
     return $this->db->execute();
 }
 
-
 public function updateContact($data) {
-    $sql = "UPDATE emergency_contacts 
-            SET name = :name, phone = :phone";
-    $sql .= " WHERE id = :id";
+    $this->db->query("UPDATE emergency_contacts 
+                     SET name = :name, 
+                         phone = :phone,
+                         description = :description
+                     WHERE id = :id");
 
-    $this->db->query($sql);
     $this->db->bind(':id', $data['id']);
     $this->db->bind(':name', $data['name']);
     $this->db->bind(':phone', $data['phone']);
+    $this->db->bind(':description', $data['description']);
 
     return $this->db->execute();
 }
-// Delete a maintenance member from the database
+
 public function deleteContact($id) {
     $this->db->query("DELETE FROM emergency_contacts WHERE id = :id");
     $this->db->bind(':id', $id);
-
     return $this->db->execute();
 }
 

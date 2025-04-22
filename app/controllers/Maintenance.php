@@ -11,7 +11,7 @@ class Maintenance extends Controller
 
         // Initialize the maintenance model
         $this->maintenanceModel = $this->model('M_maintenance'); // Make sure this matches your actual model class
-        $this->userModel = $this->model('M_user'); // Initialize user model
+        $this->userModel = $this->model('M_Users'); // Initialize user model
     }
 
     private function checkMaintenanceAuth()
@@ -167,66 +167,136 @@ class Maintenance extends Controller
    
 //*****************************************resident requests****************************************************************************************************************** */
 
-    
-public function Resident_Requests()
-{
-    // This will load the view to update or manage duty schedules
-    $this->view('maintenance/Resident_Requests');
-}
-
-
-
-// In your Maintenance controller
-public function requests() {
-    // Get all maintenance requests with related data
-    $requests = $this->maintenanceModel->getAllRequests();
-    
-    // Get maintenance types for filter
-    $types = $this->maintenanceModel->getMaintenanceTypes();
-    
-    // Get statuses for filter
-    $statuses = $this->maintenanceModel->getRequestStatuses();
-    
-    // Get maintenance staff for assignment
-    $staff = $this->maintenanceModel->getMaintenanceStaff();
-    
-    // Get request history stats
-    $history = $this->maintenanceModel->getRequestHistory();
-    
-    $data = [
-        'requests' => $requests,
-        'types' => $types,
-        'statuses' => $statuses,
-        'staff' => $staff,
-        'history' => $history
-    ];
-    
-    $this->view('maintenance/requests', $data);
-}
-
-public function updateDueDate() {
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+public function Resident_Requests() {
+        // Get all maintenance requests
+        $requests = $this->maintenanceModel->getAllRequests();
         
-        if($this->maintenanceModel->updateDueDate($data['requestId'], $data['dueDate'])) {
-            echo json_encode(['success' => true]);
-        } else {
-            echo json_encode(['success' => false]);
+        // Get request history (completed/cancelled requests)
+        $history = $this->maintenanceModel->getRequestHistory();
+        
+        // Get maintenance types for filter dropdown
+        $types = $this->maintenanceModel->getMaintenanceTypes();
+        
+        // Get statuses for filter dropdown
+        $statuses = $this->maintenanceModel->getMaintenanceStatuses();
+        
+        // Get maintenance staff for assign dropdown
+        $staff = $this->maintenanceModel->getMaintenanceStaff();
+        
+        $data = [
+            'requests' => $requests,
+            'history' => $history,
+            'types' => $types,
+            'statuses' => $statuses,
+            'staff' => $staff
+        ];
+        
+        $this->view('maintenance/Resident_Requests', $data);
+    }
+
+    // public function submit_request() {
+    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         // Sanitize POST data
+    //         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            
+    //         $data = [
+    //             'resident_id' => $_SESSION['user_id'],
+    //             'requestType' => trim($_POST['requestType']),
+    //             'description' => trim($_POST['description']),
+    //             'urgency' => trim($_POST['urgency']),
+    //             'errors' => []
+    //         ];
+            
+    //         // Validate data
+    //         if (empty($data['requestType'])) {
+    //             $data['errors']['requestType'] = 'Please select a request type';
+    //         }
+            
+    //         if (empty($data['description'])) {
+    //             $data['errors']['description'] = 'Please enter a description';
+    //         }
+            
+    //         if (empty($data['urgency'])) {
+    //             $data['errors']['urgency'] = 'Please select an urgency level';
+    //         }
+            
+    //         // If no errors, submit request
+    //         if (empty($data['errors'])) {
+    //             if ($this->maintenanceModel->submitRequest($data)) {
+    //               //  flash('request_success', 'Maintenance request submitted successfully');
+    //                 redirect('residents/dashboard');
+    //             } else {
+    //                 die('Something went wrong');
+    //             }
+    //         } else {
+    //             // Load view with errors
+    //             $this->view('residents/submit_request', $data);
+    //         }
+    //     } else {
+    //         // Load the form
+    //         $types = $this->maintenanceModel->getMaintenanceTypes();
+            
+    //         $data = [
+    //             'requestType' => '',
+    //             'description' => '',
+    //             'urgency' => '',
+    //             'types' => $types
+    //         ];
+            
+    //         $this->view('residents/submit_request', $data);
+    //     }
+    // }
+
+    // public function updateDueDate() {
+    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         $requestId = $_POST['requestId'];
+    //         $dueDate = $_POST['dueDate'];
+            
+    //         if ($this->maintenanceModel->updateRequestDueDate($requestId, $dueDate)) {
+    //             echo json_encode(['success' => true]);
+    //         } else {
+    //             echo json_encode(['success' => false]);
+    //         }
+    //     }
+    // }
+
+    
+
+    public function updateStatus() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $requestId = $_POST['requestId'];
+            $statusId = $_POST['statusId'];
+            
+            if ($this->maintenanceModel->updateRequestStatus($requestId, $statusId)) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false]);
+            }
         }
+    }
+
+    // In your Maintenance controller
+
+public function getSpecializations() {
+    $specializations = $this->maintenanceModel->getMaintenanceSpecializations();
+    echo json_encode($specializations);
+}
+
+public function getStaffBySpecialization() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $specialization = $_POST['specialization'];
+        $staff = $this->maintenanceModel->getMaintenanceStaffBySpecialization($specialization);
+        echo json_encode($staff);
     }
 }
 
+// Updated assignMaintainer method
 public function assignMaintainer() {
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $requestId = $_POST['requestId'];
+        $staffId = $_POST['staffId'];
         
-        if($this->maintenanceModel->assignMaintainer(
-            $data['requestId'], 
-            $data['staffId'], 
-            $data['dueDate']
-        )) {
+        if ($this->maintenanceModel->assignMaintainerToRequest($requestId, $staffId)) {
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false]);
@@ -234,6 +304,29 @@ public function assignMaintainer() {
     }
 }
 
+//*************************************resident side maintainenace requests****************** */
 
-    //************************************************************************************************************************************************** */
+public function submit_request() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        $data = [
+            'resident_id' => $_SESSION['user_id'],
+            'type_id' => $_POST['type_id'],
+            'description' => $_POST['description'],
+            'urgency_level' => $_POST['urgency_level']
+        ];
+
+        // Call your model to insert into DB
+        if ($this->maintenanceModel->submitRequest($data)) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error']);
+        }
+    }
+}
+
+
+
+//************************************************************************************************************************************************** */
 }

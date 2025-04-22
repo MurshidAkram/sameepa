@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Security Duty Schedule</title>
@@ -40,17 +40,11 @@
             min-height: 100vh;
         }
 
-        .side-panel {
-
-            position: fixed;
-
-            padding: 20px 10px;
-
-        }
+       
 
         .container {
             flex: 1;
-            margin-left: 300px;
+            
             padding: 50px 20px 20px 20px;
             display: flex;
             flex-direction: column;
@@ -465,8 +459,11 @@
             }
 
             .container {
-                margin-left: 0;
-                padding-top: 20px;
+                flex: 1;
+    margin: 0 auto; /* Center the content */
+    padding: 50px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
             }
 
             .calendar {
@@ -519,10 +516,7 @@
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
     <!-- Content Section -->
     <div class="content">
-        <!-- Side Panel Section -->
-        <div class="side-panel">
-            <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
-        </div>
+        
 
         <div class="container">
 
@@ -549,9 +543,9 @@
                                         <td><?php echo $officer->id; ?></td>
                                         <td><?php echo $officer->name; ?></td>
                                         <td>
-                                            <!-- <button class="btn btn-success" onclick="openAddDutyModal(<?php echo $officer->id; ?>, '<?php echo $officer->name; ?>')">
+                                            <button class="btn btn-success" onclick="openAddDutyModal(<?php echo $officer->id; ?>, '<?php echo $officer->name; ?>')">
                                                 <i class="fas fa-plus"></i> Add Duty
-                                            </button> -->
+                                            </button>
                                             <button class="btn btn-warning" onclick="viewOfficerDuties(<?php echo $officer->id; ?>)">
                                                 <i class="fas fa-edit"></i> View Duties
                                             </button>
@@ -617,7 +611,7 @@
         </div>
 
         <!-- Add Duty Modal -->
-        <!-- <div class="modal" id="addDutyModal">
+        <div class="modal" id="addDutyModal">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>Add Duty Schedule</h3>
@@ -652,7 +646,7 @@
                     <button class="btn btn-primary" onclick="saveDuty()">Save</button>
                 </div>
             </div>
-        </div> -->
+        </div>
 
         <!-- View Duties Modal -->
         <div class="modal" id="viewDutiesModal">
@@ -667,7 +661,7 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Shift</th>
-                               
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="dutiesTableBody">
@@ -808,7 +802,14 @@
                             row.innerHTML = `
                     <td>${formatDate(duty.duty_date)}</td>
                     <td>${duty.shift_name} (${duty.start_time.substring(0,5)} - ${duty.end_time.substring(0,5)})</td>
-                    
+                    <td>
+                        <button class="btn btn-warning" onclick="editDuty(${officerId}, '${duty.duty_date}', ${duty.shift_id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteDuty(${officerId}, '${duty.duty_date}')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </td>
                 `;
                         });
                     }
@@ -841,7 +842,7 @@
                 }
 
                 // Send data to server
-                fetch('<?php echo URLROOT; ?>/security/addDuty', {
+                fetch('<?php echo URLROOT; ?>/admin/addDuty', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -901,7 +902,7 @@
                 }
 
                 // Send request to server
-                fetch('<?php echo URLROOT; ?>/security/editShift', {
+                fetch('<?php echo URLROOT; ?>/admin/editShift', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -943,7 +944,7 @@
                 }
 
                 // Send request to server
-                fetch('<?php echo URLROOT; ?>/security/deleteDuty', {
+                fetch('<?php echo URLROOT; ?>/admin/deleteDuty', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -999,7 +1000,7 @@
 
             // API functions
             function fetchDutiesForDate(date) {
-                return fetch(`<?php echo URLROOT; ?>/security/getCalendarData/${date}/${date}`)
+                return fetch(`<?php echo URLROOT; ?>/admin/getCalendarData/${date}/${date}`)
                     .then(response => response.json())
                     .then(data => {
                         return data.map(item => {
@@ -1016,7 +1017,7 @@
             }
 
             function fetchOfficerDuties(officerId) {
-                return fetch(`<?php echo URLROOT; ?>/security/getOfficerDuties/${officerId}`)
+                return fetch(`<?php echo URLROOT; ?>/admin/getOfficerDuties/${officerId}`)
                     .then(response => response.json())
                     .catch(error => {
                         console.error('Error fetching officer duties:', error);
