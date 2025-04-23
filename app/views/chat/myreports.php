@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
-    <title>Chat Reports | <?php echo SITENAME; ?></title>
+    <title>My Chat Reports | <?php echo SITENAME; ?></title>
 </head>
 
 <body>
@@ -39,19 +39,22 @@
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
                     <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>"
-   class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'report' : 'myreports')) ? 'active' : ''; ?>">
-    <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Reports'; ?>
+   class="<?php echo ($current_page == 'myreports' ? 'active' : ''); ?>">
+    <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
 </a>
                 </nav>
             </aside>
 
             <div class="groups-content">
-                <h1>Chat Reports</h1>
-                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/viewreport">
-                    <input type="text" name="search" placeholder="Search reports...">
-                    <button type="submit">Search</button>
-                </form>
-                <p>Review and manage chat-related reports and incidents.</p>
+                <h1>My Chat Reports</h1>
+                <p>Here are the chat reports you have submitted.</p>
+
+                <div class="groups-actions-header">
+                     <a href="<?php echo URLROOT; ?>/chat/createreport" class="btn-create-group">
+                        <i class="fas fa-plus-circle"></i> Create New Report
+                    </a>
+                </div>
+
 
                 <div class="groups-grid">
                     <?php if (!empty($data['reports'])) : ?>
@@ -71,10 +74,6 @@
         </div>
         <div class="group-actions">
             <a href="<?php echo URLROOT; ?>/chat/viewreport/<?php echo $report->id; ?>" class="btn-view-group">View Details</a>
-            <span class="member-count">
-                <i class="fas fa-user"></i>
-                Reported By: <?php echo htmlspecialchars($report->reporter_name); ?>
-            </span>
         </div>
     </div>
 </div>
@@ -82,7 +81,7 @@
                     <?php else : ?>
                         <!-- No Reports Placeholder -->
                         <div class="no-groups">
-                            <p>No chat reports at this time.</p>
+                            <p>You have not submitted any chat reports yet.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -98,50 +97,33 @@
     padding: 20px;
 }
 
-.groups-search {
-    display: flex;
-    gap: 10px;
+.groups-actions-header {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.groups-search input {
-    flex: 1;
-    padding: 10px;
-    font-size: 0.9rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-.groups-search input:focus {
-    outline: none;
-    border-color: #800080;
-    box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.1);
-}
-
-.groups-search button {
+.btn-create-group {
     background: linear-gradient(135deg, #800080, #6a006a);
     color: #ffffff;
     padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    font-size: 0.9rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.95rem;
     font-weight: 500;
-    text-transform: uppercase;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease, transform 0.1s ease;
 }
 
-.groups-search button:hover {
+.btn-create-group:hover {
     background: linear-gradient(135deg, #6a006a, #550055);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.groups-search button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.btn-create-group i {
+    font-size: 0.9rem;
 }
 
 .groups-grid {

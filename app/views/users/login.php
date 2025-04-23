@@ -296,7 +296,7 @@
                 </form>
             </div>
         </div>
-        <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/img/login3.jpg');" aria-hidden="true"></div>
+        <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/img/login4.jpg');" aria-hidden="true"></div>
     </div>
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
