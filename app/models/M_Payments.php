@@ -16,13 +16,14 @@ class M_Payments {
 
     // Add a new payment record
     public function addPayment($data) {
-        $this->db->query('INSERT INTO payments (user_id, amount, description, transaction_id, status) VALUES (:user_id, :amount, :description, :transaction_id, :status)');
+        $this->db->query('INSERT INTO payments (user_id, amount, description, transaction_id, status, created_at) VALUES (:user_id, :amount, :description, :transaction_id, :status, :created_at)');
         
         $this->db->bind(':user_id', $data['user_id']);
         $this->db->bind(':amount', $data['amount']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':transaction_id', $data['transaction_id']);
         $this->db->bind(':status', $data['status']);
+        $this->db->bind(':created_at', $data['created_at']);
         
         return $this->db->execute();
     }
@@ -270,17 +271,21 @@ class M_Payments {
 
     // Create a new payment request
     public function createPaymentRequest($data) {
-        $this->db->query('INSERT INTO payment_requests (user_id, amount, description, due_date, created_by) VALUES (:user_id, :amount, :description, :due_date, :created_by)');
+        $this->db->query('INSERT INTO payment_requests (address, amount, description, due_date, created_by) VALUES (:address, :amount, :description, :due_date, :created_by)');
         
         // Bind values
-        $this->db->bind(':user_id', $data['user_id']);
+        $this->db->bind(':address', $data['address']);
         $this->db->bind(':amount', $data['amount']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':due_date', $data['due_date']);
         $this->db->bind(':created_by', $data['created_by']);
         
         // Execute
-        return $this->db->execute();
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // Get all payment requests
@@ -315,16 +320,22 @@ class M_Payments {
     public function getPaymentRequestById($id) {
         $this->db->query('
             SELECT pr.*, 
-                   u.name as resident_name,
                    cb.name as created_by_name
             FROM payment_requests pr
-            JOIN users u ON pr.user_id = u.id
             JOIN users cb ON pr.created_by = cb.id
             WHERE pr.id = :id
+            AND pr.status != "paid"
         ');
         
         $this->db->bind(':id', $id);
-        return $this->db->single();
+        $result = $this->db->single();
+        
+        // Convert array to object if needed
+        if (is_array($result)) {
+            $result = (object)$result;
+        }
+        
+        return $result;
     }
 
     // Update payment request status
@@ -355,15 +366,31 @@ class M_Payments {
     public function getAllPaymentRequestsWithResidentNames() {
         $this->db->query('
             SELECT pr.*, 
-                   u.name as resident_name,
                    cb.name as created_by_name
             FROM payment_requests pr
-            JOIN users u ON pr.user_id = u.id
             JOIN users cb ON pr.created_by = cb.id
             ORDER BY pr.created_at DESC
         ');
         
         return $this->db->resultSet();
+    }
+
+    // Validate payment request
+    public function validatePaymentRequest($request_id, $address) {
+        $this->db->query('
+            SELECT COUNT(*) as count 
+            FROM payment_requests 
+            WHERE id = :request_id 
+            AND address = :address 
+            AND status != "paid"
+            AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+        ');
+        
+        $this->db->bind(':request_id', $request_id);
+        $this->db->bind(':address', $address);
+        
+        $result = $this->db->single();
+        return $result->count > 0;
     }
 
 }

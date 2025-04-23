@@ -36,16 +36,17 @@
 
                 <form action="<?php echo URLROOT; ?>/payments/create_request" method="post">
                     <div class="form-group">
-                        <label for="user_id">Resident: <sup>*</sup></label>
-                        <select name="user_id" class="form-control <?php echo (!empty($data['user_id_err'])) ? 'is-invalid' : ''; ?>">
-                            <option value="">Select Resident</option>
+                        <label for="address">Address: <sup>*</sup></label>
+                        <select name="address" id="address" class="form-control <?php echo (!empty($data['address_err'])) ? 'is-invalid' : ''; ?>">
+                            <option value="">Select Address</option>
                             <?php foreach($data['residents'] as $resident): ?>
-                                <option value="<?php echo $resident->id; ?>" <?php echo ($data['user_id'] == $resident->id) ? 'selected' : ''; ?>>
-                                    <?php echo $resident->name; ?>
+                                <option value="<?php echo htmlspecialchars($resident->address); ?>" 
+                                    <?php echo ($data['address'] == $resident->address) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($resident->address); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <span class="invalid-feedback"><?php echo $data['user_id_err']; ?></span>
+                        <span class="invalid-feedback"><?php echo $data['address_err']; ?></span>
                     </div>
                     
                     <div class="form-group">
@@ -55,13 +56,13 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="description">Description: <sup>*</sup></label>
+                        <label for="description">Description: </label>
                         <textarea name="description" class="form-control <?php echo (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>"><?php echo $data['description']; ?></textarea>
                         <span class="invalid-feedback"><?php echo $data['description_err']; ?></span>
                     </div>
                     
                     <div class="form-group">
-                        <label for="due_date">Due Date: <sup>*</sup></label>
+                        <label for="due_date">Due Date: </label>
                         <input type="date" name="due_date" class="form-control <?php echo (!empty($data['due_date_err'])) ? 'is-invalid' : ''; ?>" 
                                value="<?php echo $data['due_date']; ?>" 
                                min="<?php echo date('Y-m-d'); ?>">

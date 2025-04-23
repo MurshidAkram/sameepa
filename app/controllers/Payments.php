@@ -56,7 +56,8 @@ class Payments extends Controller {
         
         $this->view('payments/admin_dashboard', $data);
     }
-        public function checkout($id) {
+
+    public function checkout($id) {
         // Check if user is logged in
         if (!isLoggedIn()) {
             redirect('users/login');
@@ -79,6 +80,12 @@ class Payments extends Controller {
         // Check if user is the intended recipient
         if ($request->user_id != $_SESSION['user_id']) {
             flash('payment_error', 'You are not authorized to pay this request', 'alert alert-danger');
+            redirect('payments/requests');
+        }
+
+        // Check if amount meets minimum requirement (Rs.150)
+        if ($request->amount < 150) {
+            flash('payment_error', 'Payment amount must be at least Rs.150', 'alert alert-danger');
             redirect('payments/requests');
         }
 
@@ -107,6 +114,7 @@ class Payments extends Controller {
             redirect('payments/requests');
         }
     }
+    
 
     public function success() {
         if (isset($_GET['payment_intent'])) {
@@ -319,6 +327,7 @@ class Payments extends Controller {
             redirect('payments/admin_dashboard');
         }
     }
+
     public function all() {
         // Check if user is admin or superadmin
         if ($_SESSION['user_role_id'] != 2 && $_SESSION['user_role_id'] != 3) {
@@ -334,40 +343,39 @@ class Payments extends Controller {
         
         $this->view('payments/all', $data);
     }
-    
     // Admin view to create payment requests
     public function create_request() {
         if ($_SESSION['user_role_id'] != 2) {
             redirect('pages/index');
         }
         
-        // Get all residents for the dropdown
-        $residents = $this->userModel->getUsersByRole(1);
+        // Get all residents with their addresses
+        $residents = $this->userModel->getResidentsWithAddresses();
         
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             
             $data = [
-                'user_id' => trim($_POST['user_id']),
+                'address' => trim($_POST['address']),
                 'amount' => trim($_POST['amount']),
                 'description' => trim($_POST['description']),
                 'due_date' => trim($_POST['due_date']),
                 'created_by' => $_SESSION['user_id'],
                 'residents' => $residents,
-                'user_id_err' => '',
+                'address_err' => '',
                 'amount_err' => '',
                 'description_err' => '',
                 'due_date_err' => ''
             ];
             
             // Validate data
-            if (empty($data['user_id'])) {
-                $data['user_id_err'] = 'Please select a resident';
+            if (empty($data['address'])) {
+                $data['address_err'] = 'Please select an address';
             }
             
-            if (empty($data['amount']) || !is_numeric($data['amount']) || $data['amount'] <= 0) {
-                $data['amount_err'] = 'Please enter a valid amount';
+            if (empty($data['amount']) || !is_numeric($data['amount']) || $data['amount'] < 150) {
+                $data['amount_err'] = 'Please enter a valid amount (minimum Rs.150)';
             }
             
             if (empty($data['description'])) {
@@ -379,7 +387,7 @@ class Payments extends Controller {
             }
             
             // Make sure no errors
-            if (empty($data['user_id_err']) && empty($data['amount_err']) && 
+            if (empty($data['address_err']) && empty($data['amount_err']) && 
                 empty($data['description_err']) && empty($data['due_date_err'])) {
                 
                 if ($this->paymentModel->createPaymentRequest($data)) {
@@ -395,12 +403,12 @@ class Payments extends Controller {
         } else {
             // Initialize data for GET request
             $data = [
-                'user_id' => '',
+                'address' => '',
                 'amount' => '',
                 'description' => '',
                 'due_date' => '',
                 'residents' => $residents,
-                'user_id_err' => '',
+                'address_err' => '',
                 'amount_err' => '',
                 'description_err' => '',
                 'due_date_err' => ''
@@ -429,46 +437,31 @@ class Payments extends Controller {
     
     // Process payment for a request
     public function pay_request($id) {
-        // Get the payment request
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            redirect('users/login');
+        }
+
+        // Get payment request data
         $request = $this->paymentModel->getPaymentRequestById($id);
         
         if (!$request) {
+            flash('payment_error', 'Payment request not found', 'alert alert-danger');
             redirect('payments/requests');
         }
-        
-        // Check if user is the owner of the request
-        if ($request->user_id != $_SESSION['user_id']) {
-            redirect('payments/requests');
-        }
-        
+
         // Check if request is already paid
         if ($request->status == 'paid') {
-            flash('payment_message', 'This request has already been paid', 'alert alert-warning');
+            flash('payment_error', 'This request has already been paid', 'alert alert-warning');
             redirect('payments/requests');
         }
-        
-        try {
-            // Create a PaymentIntent with the request amount
-            $paymentIntent = \Stripe\PaymentIntent::create([
-                'amount' => $request->amount * 100, // Amount in cents
-                'currency' => 'usd',
-                'description' => $request->description,
-                'metadata' => [
-                    'user_id' => $_SESSION['user_id'],
-                    'request_id' => $request->id
-                ]
-            ]);
-            
-            $data = [
-                'request' => $request,
-                'client_secret' => $paymentIntent->client_secret
-            ];
-            
-            $this->view('payments/pay_request', $data);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
-            flash('payment_error', $e->getMessage(), 'alert alert-danger');
-            redirect('payments/requests');
-        }
+
+
+        $data = [
+            'request' => $request
+        ];
+
+        $this->view('payments/pay_request', $data);
     }
     
     // Handle successful payment for a request
@@ -504,7 +497,8 @@ class Payments extends Controller {
                         'amount' => $request->amount,
                         'description' => $request->description,
                         'transaction_id' => $paymentIntent->id,
-                        'status' => 'completed'
+                        'status' => 'completed',
+                        'created_at' => date('Y-m-d H:i:s') // Add current timestamp
                     ];
                     
                     if ($this->paymentModel->addPayment($paymentData)) {

@@ -48,7 +48,7 @@
                             <tr>
                                 <th>ID</th>
                                 <?php if ($_SESSION['user_role_id'] == 2): ?>
-                                    <th>Resident</th>
+                                    <th>Address</th>
                                 <?php endif; ?>
                                 <th>Amount</th>
                                 <th>Description</th>
@@ -64,7 +64,7 @@
                                 <tr>
                                     <td><?php echo $request->id; ?></td>
                                     <?php if ($_SESSION['user_role_id'] == 2): ?>
-                                        <td><?php echo $request->resident_name; ?></td>
+                                        <td><?php echo $request->address; ?></td>
                                     <?php endif; ?>
                                     <td>Rs.<?php echo number_format($request->amount, 2); ?></td>
                                     <td><?php echo $request->description; ?></td>
@@ -77,8 +77,8 @@
                                     <td><?php echo $request->created_by_name; ?></td>
                                     <td><?php echo date('M d, Y H:i', strtotime($request->created_at)); ?></td>
                                     <td class="action-buttons">
-                                        <?php if ($_SESSION['user_role_id'] == 1 && $request->status == 'pending' && $request->user_id == $_SESSION['user_id']): ?>
-                                            <a href="<?php echo URLROOT; ?>/payments/checkout/<?php echo $request->id; ?>" class="btn-pay">
+                                        <?php if ($_SESSION['user_role_id'] == 1 && $request->status == 'pending'): ?>
+                                            <a href="<?php echo URLROOT; ?>/payments/pay_request/<?php echo $request->id; ?>" class="btn-pay">
                                                 <i class="fas fa-credit-card"></i>
                                             </a>
                                         <?php endif; ?>
