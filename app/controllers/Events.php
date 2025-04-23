@@ -171,7 +171,7 @@ class Events extends Controller
             'participantCount' => $participantCount
         ];
 
-        $this->view('events/viewevent', $data);  // This calls the parent Controller::view() method
+        $this->view('events/viewevent', $data);
     }
 
     public function join($id)
@@ -284,9 +284,11 @@ class Events extends Controller
 
     public function update($id)
     {
-        // Modified check: Allow admin/superadmin to edit any event
-        if (!$this->eventModel->isEventCreator($id, $_SESSION['user_id']) && 
-            !in_array($_SESSION['user_role_id'], [2, 3])) {
+        //Allow admin/superadmin to edit any event
+        if (
+            !$this->eventModel->isEventCreator($id, $_SESSION['user_id']) &&
+            !in_array($_SESSION['user_role_id'], [2, 3])
+        ) {
             redirect('events/index');
         }
 
@@ -368,7 +370,7 @@ class Events extends Controller
         }
 
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-        
+
         // Get all events with search parameter
         $events = $this->eventModel->getAllEventsForAdmin($search);
 
@@ -384,7 +386,7 @@ class Events extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $searchTerm = trim($_POST['search']);
             $events = $this->eventModel->searchEvents($searchTerm);
-            
+
             header('Content-Type: application/json');
             echo json_encode($events);
         }
@@ -395,10 +397,9 @@ class Events extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $status = $_POST['status'];
             $events = $this->eventModel->filterEventsByStatus($status);
-            
+
             header('Content-Type: application/json');
             echo json_encode($events);
         }
     }
 }
-

@@ -21,6 +21,7 @@ class M_Announcements
         return $this->db->execute();
     }
 
+
     public function updateAnnouncement($data)
     {
         $this->db->query('UPDATE announcements SET title = :title, content = :content WHERE id = :id');

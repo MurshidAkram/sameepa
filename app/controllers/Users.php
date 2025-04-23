@@ -257,8 +257,7 @@ class Users extends Controller
         }
 
         $data = array_merge((array)$userData, (array)$additionalData);
-        //$data['message'] = flash('profile_message');
-        //$data['message_type'] = flash('message_type');
+
 
         $this->view('users/profile', $data);
     }
@@ -316,7 +315,6 @@ class Users extends Controller
         }
 
         if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK) {
-            //flash('profile_message', 'Please select a valid image file', 'error');
             redirect('users/profile');
         }
 
@@ -324,7 +322,6 @@ class Users extends Controller
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
         if (!in_array($file['type'], $allowedTypes)) {
-            //flash('profile_message', 'Only JPG, PNG, and GIF files are allowed', 'error');
             redirect('users/profile');
         }
 
@@ -346,7 +343,6 @@ class Users extends Controller
             session_destroy();
             redirect('users/login');
         } else {
-            //flash('profile_message', 'Failed to delete account', 'error');
             redirect('users/profile');
         }
     }

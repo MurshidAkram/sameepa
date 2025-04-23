@@ -8,7 +8,6 @@ $userModel = new M_Users();
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <nav class="navbar">
     <div class="navdiv">
-        <!-- Logo image with link to home page -->
         <a href="<?php echo URLROOT; ?>" class="navbar-logo">
             <img src="<?php echo URLROOT; ?>/public/img/sitelogo.svg" alt="Sameepa Logo">
         </a>

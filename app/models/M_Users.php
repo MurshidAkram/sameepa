@@ -58,7 +58,7 @@ class M_Users
                         'user_id' => $userId
                     ];
                     return $this->registerSecurity($securityData);
-                case '6': // External Service Provider
+                case '6':
                     $externalServiceProviderData = [
                         'user_id' => $userId
                     ];
@@ -168,12 +168,12 @@ class M_Users
     }
 
     public function getResidentIDByUserId($userId)
-{
-    $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
-    $this->db->bind(':user_id', $userId);
-    
-    return $this->db->single();
-}
+    {
+        $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $userId);
+
+        return $this->db->single();
+    }
 
 
     public function getResidentByUserId($userId)
@@ -197,7 +197,6 @@ class M_Users
         return $roleName;
     }
 
-    // Add these methods to your existing M_Users model class
 
     public function getUserById($userId)
     {
@@ -211,7 +210,7 @@ class M_Users
         $this->db->beginTransaction();
 
         try {
-            // Update basic user information
+            // Updating basic user information
             $sql = 'UPDATE users SET name = :name, email = :email';
             if (!empty($data['new_password'])) {
                 $sql .= ', password = :password';
@@ -269,12 +268,16 @@ class M_Users
                 case 2:
                     $this->db->query('DELETE FROM admins WHERE user_id = :user_id');
                     break;
-                    // Add other roles as needed
+                case 4:
+                    $this->db->query('DELETE FROM maintenance WHERE user_id = :user_id');
+                    break;
+                case 5:
+                    $this->db->query('DELETE FROM security WHERE user_id = :user_id');
+                    break;
             }
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
 
-            // Delete user record
             $this->db->query('DELETE FROM users WHERE id = :id');
             $this->db->bind(':id', $userId);
             $this->db->execute();
@@ -443,6 +446,4 @@ class M_Users
             return 0; // Return 0 on failure
         }
     }
-
-    
 }
