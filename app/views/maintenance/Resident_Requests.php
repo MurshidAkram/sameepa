@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <title>Resident Requests | <?php echo SITENAME; ?></title>
-    <style>
+   
+</head>
+ <style>
         /* General Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,7 +24,7 @@
             display: flex;
             min-height: 100vh;
             padding: 20px;
-            gap: 20px;
+            gap: 10px;
             background-color: #f8f9fa;
         }
 
@@ -32,7 +34,7 @@
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            
         }
 
         /* Content Header */
@@ -113,7 +115,7 @@
         }
 
         .dashboard-table td {
-            padding: 14px;
+            padding: 4px;
             text-align: center;
             border: 1px solid #e0e0e0;
             color: #555;
@@ -339,8 +341,6 @@
             border-top: 1px solid #eee;
         }
     </style>
-</head>
-
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 

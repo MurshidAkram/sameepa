@@ -1,110 +1,45 @@
 <?php
-class M_resident
-{
+class M_resident {
     private $db;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->db = new Database;
     }
 
-    public function getMaintenanceRequests($resident_id)
-    {
-        $this->db->query('
-            SELECT mr.*, mt.type_name as type, ms.status_name as status 
-            FROM maintenance_requests mr
-            JOIN maintenance_types mt ON mr.type_id = mt.type_id
-            JOIN maintenance_statuses ms ON mr.status_id = ms.status_id
-            WHERE mr.resident_id = :resident_id
-            ORDER BY mr.created_at DESC
-        ');
-        $this->db->bind(':resident_id', $resident_id);
-        return $this->db->resultSet();
-    }
-
-    public function getMaintenanceTypes()
-    {
-        $this->db->query('SELECT * FROM maintenance_types');
-        return $this->db->resultSet();
-    }
-
-    public function submitMaintenanceRequest($data)
-    {
-        $this->db->query('
-            INSERT INTO maintenance_requests 
-            (resident_id, type_id, description, urgency_level, status_id) 
-            VALUES (:resident_id, :type_id, :description, :urgency_level, 1)
-        ');
-        
-        $this->db->bind(':resident_id', $data['resident_id']);
-        $this->db->bind(':type_id', $data['type_id']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':urgency_level', $data['urgency_level']);
-
-        return $this->db->execute();
-    }
-
-    public function getMaintenanceRequestDetails($request_id, $resident_id)
-    {
-        $this->db->query('
-            SELECT mr.*, mt.type_name as type, ms.status_name as status 
-            FROM maintenance_requests mr
-            JOIN maintenance_types mt ON mr.type_id = mt.type_id
-            JOIN maintenance_statuses ms ON mr.status_id = ms.status_id
-            WHERE mr.request_id = :request_id AND mr.resident_id = :resident_id
-        ');
-        $this->db->bind(':request_id', $request_id);
-        $this->db->bind(':resident_id', $resident_id);
+    public function getResidentIdByUserId($userId) {
+        $this->db->query('SELECT id FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $userId);
         
         $row = $this->db->single();
-        return $row;
+
+        // Check if $row is an object or array and return the id accordingly
+        if (is_object($row)) {
+            return $row->id;
+        } elseif (is_array($row)) {
+            return $row['id'];
+        } else {
+            return false; // Return false if no result is found
+        }
     }
 
-    public function canEditRequest($request_id, $resident_id)
-    {
+    public function getResidentDetails($residentId) {
         $this->db->query('
-            SELECT created_at 
-            FROM maintenance_requests 
-            WHERE request_id = :request_id AND resident_id = :resident_id
-            AND status_id = 1
-            AND TIMESTAMPDIFF(HOUR, created_at, NOW()) <= 24
+            SELECT r.*, u.name, u.email 
+            FROM residents r 
+            JOIN users u ON r.user_id = u.id 
+            WHERE r.id = :resident_id
         ');
-        $this->db->bind(':request_id', $request_id);
-        $this->db->bind(':resident_id', $resident_id);
+        $this->db->bind(':resident_id', $residentId);
         
-        $row = $this->db->single();
-        return ($row) ? true : false;
+        return $this->db->single();
     }
 
-    public function updateMaintenanceRequest($data)
-    {
-        $this->db->query('
-            UPDATE maintenance_requests 
-            SET type_id = :type_id, 
-                description = :description, 
-                urgency_level = :urgency_level,
-                updated_at = NOW()
-            WHERE request_id = :request_id
-        ');
-        
-        $this->db->bind(':type_id', $data['type_id']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':urgency_level', $data['urgency_level']);
-        $this->db->bind(':request_id', $data['request_id']);
+    public function getResidentById($userId) {
+        $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $userId);
 
-        return $this->db->execute();
-    }
-
-    public function deleteMaintenanceRequest($request_id, $resident_id)
-    {
-        $this->db->query('
-            DELETE FROM maintenance_requests 
-            WHERE request_id = :request_id AND resident_id = :resident_id
-        ');
-        
-        $this->db->bind(':request_id', $request_id);
-        $this->db->bind(':resident_id', $resident_id);
-
-        return $this->db->execute();
+        // Fetch a single result as an object
+        return $this->db->single();
     }
 }
+?>

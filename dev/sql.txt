@@ -580,76 +580,56 @@ CREATE TABLE maintenance_members (
 
 //******************************residents requests************************************
 
+
 CREATE TABLE maintenance_types (
     type_id INT AUTO_INCREMENT PRIMARY KEY,
-    type_name VARCHAR(50) NOT NULL,
-    description TEXT
+    type_name VARCHAR(100) NOT NULL UNIQUE
 );
 
-CREATE TABLE maintenance_statuses (
+CREATE TABLE maintenance_status (
     status_id INT AUTO_INCREMENT PRIMARY KEY,
-    status_name VARCHAR(50) NOT NULL,
-    description TEXT
+    status_name VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE maintenance_requests (
+CREATE TABLE requests (
     request_id INT AUTO_INCREMENT PRIMARY KEY,
     resident_id INT NOT NULL,
     type_id INT NOT NULL,
     description TEXT NOT NULL,
     urgency_level ENUM('low', 'medium', 'high') NOT NULL,
-    status_id INT DEFAULT 1, 
-    maintainer_id INT, 
-    due_date DATE, 
+    status_id INT DEFAULT 1, -- Default to 'Pending'
+    assigned_maintainer_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    completed_at TIMESTAMP NULL,
-
-    FOREIGN KEY (resident_id) REFERENCES users(id),
+    FOREIGN KEY (resident_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (type_id) REFERENCES maintenance_types(type_id),
-    FOREIGN KEY (status_id) REFERENCES maintenance_statuses(status_id),
-    FOREIGN KEY (maintainer_id) REFERENCES maintenance_members(id)
+    FOREIGN KEY (status_id) REFERENCES maintenance_status(status_id),
+    FOREIGN KEY (assigned_maintainer_id) REFERENCES maintenance_members(id)
 );
 
+-- Request 1: Plumbing issue, high urgency
+INSERT INTO requests (resident_id, type_id, description, urgency_level, status_id, assigned_maintainer_id)
+VALUES (1, 1, 'Bathroom faucet is leaking continuously.', 'high', 1, 4);
 
-DELIMITER $$
+-- Request 2: Electrical issue, low urgency
+INSERT INTO requests (resident_id, type_id, description, urgency_level, status_id, assigned_maintainer_id)
+VALUES (3, 2, 'Light switch is loose in the kitchen.', 'low', 1, 5);
 
-CREATE TRIGGER check_resident_role BEFORE INSERT ON maintenance_requests
-FOR EACH ROW
-BEGIN
-    DECLARE role INT;
-    SELECT role_id INTO role FROM users WHERE id = NEW.resident_id;
-    IF role != 1 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'resident_id must reference a user with role_id = 1';
-    END IF;
-END$$
-
-DELIMITER ;
+-- Request 3: Structural issue, medium urgency, already in progress
+INSERT INTO requests (resident_id, type_id, description, urgency_level, status_id, assigned_maintainer_id)
+VALUES (13, 3, 'Crack in the wall above the window.', 'medium', 2, 6);
 
 
--- Insert default statuses
-INSERT INTO maintenance_statuses (status_name, description) VALUES 
-('Pending', 'Request has been submitted but not yet reviewed'),
-('In Progress', 'Request has been assigned and work has begun'),
-('Completed', 'Request has been fulfilled'),
-('Cancelled', 'Request was cancelled');
+INSERT INTO maintenance_status (status_name) VALUES 
+('Pending'), 
+('In Progress'), 
+('Completed'), 
+('Cancelled');
 
--- Insert common maintenance types
-INSERT INTO maintenance_types (type_name, description) VALUES 
-('Plumbing', 'Issues with pipes, faucets, toilets, etc.'),
-('Electrical', 'Problems with wiring, outlets, lighting, etc.'),
-('HVAC', 'Heating, ventilation, and air conditioning issues'),
-('Appliance Repair', 'Malfunctioning household appliances'),
-('Structural', 'Problems with walls, floors, ceilings, etc.'),
-('Other', 'Any other maintenance issue not listed');
-
-INSERT INTO maintenance_requests (
-    resident_id, type_id, description, urgency_level, status_id, maintainer_id, completed_at
-) VALUES
-(1, 1, 'Leaking pipe under the kitchen sink.', 'medium', 1, 1, NULL),
-(3, 2, 'Living room light flickers when turned on.', 'high', 2, 4, NULL),
-(13, 3, 'Wardrobe door is off its hinge.', 'low', 1, NULL, NULL);
-
-
-
-
+INSERT INTO maintenance_types (type_name) VALUES 
+('Plumbing'), 
+('Electrical'), 
+('HVAC'), 
+('Structural'), 
+('Appliance'), 
+('General Maintenance');
