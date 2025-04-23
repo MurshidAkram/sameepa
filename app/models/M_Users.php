@@ -167,6 +167,20 @@ class M_Users
         }
     }
 
+    public function findUserByPhone($phone)
+    {
+        $this->db->query('SELECT * FROM residents r  WHERE phonenumber = :phonenumber');
+        $this->db->bind(':phonenumber', $phone);
+
+        $row = $this->db->single();
+
+        if ($this->db->rowCount() > 0) {
+            return $row;
+        } else {
+            return false;
+        }
+    }
+
     public function getResidentIDByUserId($userId)
     {
         $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');

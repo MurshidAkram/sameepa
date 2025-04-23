@@ -39,11 +39,11 @@ $userModel = new M_Users();
                         <li><a href="<?php echo URLROOT; ?>/security/dashboard">Dashboard</a></li>
                 <?php break;
                 endswitch; ?>
-                <li class="notification-dropdown">
+                <!-- <li class="notification-dropdown">
                     <a href="<?php echo URLROOT; ?>/notifications" class="notification-link">
                         <i class="fas fa-bell"></i>
                     </a>
-                </li>
+                </li> -->
                 <!-- Profile dropdown -->
                 <li class="profile-dropdown">
                     <a href="<?php echo URLROOT; ?>/users/profile" class="profile-link">

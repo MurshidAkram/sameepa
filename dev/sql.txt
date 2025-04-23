@@ -1,4 +1,7 @@
 -- Events table to store event information
+
+
+
 CREATE TABLE events (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -347,16 +350,28 @@ CREATE TABLE groups_report (
     FOREIGN KEY (reported_by) REFERENCES users(id)
 );
 
-CREATE TABLE listings (
-  id int(11) NOT NULL,
-  title varchar(255) NOT NULL,
-  type enum('service','sale','exchange','lost') NOT NULL,
-  description text NOT NULL,
-  posted_by int(11) NOT NULL,
-  date_posted timestamp NOT NULL DEFAULT current_timestamp(),
-  image_data longblob DEFAULT NULL,
-  image_type varchar(50) DEFAULT NULL
+CREATE TABLE `listings` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `type` enum('service','sale','exchange','lost') NOT NULL,
+  `description` text NOT NULL,
+  `posted_by` int(11) NOT NULL,
+  `date_posted` timestamp NOT NULL DEFAULT current_timestamp(),
+  `image_data` longblob DEFAULT NULL,
+  `image_type` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+ALTER TABLE `listings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `posted_by` (`posted_by`),
+  ADD KEY `date_posted` (`date_posted`);
+
+ALTER TABLE `listings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+ALTER TABLE `listings`
+  ADD CONSTRAINT `listings_ibfk_1` FOREIGN KEY (`posted_by`) REFERENCES `users` (`id`);
 
 
 CREATE TABLE group_chats (

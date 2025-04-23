@@ -56,7 +56,7 @@ class Complaints extends Controller
     {
         // Check if user is allowed to create complaints
         if (!in_array($_SESSION['user_role_id'], [1, 2, 4, 5])) {
-            redirect('complaints/mycomplaints');
+            redirect('complaints/dashboard');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

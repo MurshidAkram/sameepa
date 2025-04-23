@@ -78,7 +78,7 @@ class Events extends Controller
             if (empty($data['errors'])) {
                 if ($this->eventModel->createEvent($data)) {
                     if ($_SESSION['user_role_id'] == 2) {
-                        redirect('events/admin_dashboard');
+                        redirect('events/index');
                     } else {
                         redirect('events/index');
                     }
@@ -254,7 +254,6 @@ class Events extends Controller
     public function admindelete($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Verify that the current user is the event creator
             if (!in_array($_SESSION['user_role_id'], [2, 3])) {
                 echo json_encode(['success' => false, 'message' => 'Unauthorized']);
                 return;
@@ -262,10 +261,8 @@ class Events extends Controller
 
             if ($this->eventModel->deleteEvent($id)) {
                 echo json_encode(['success' => true]);
-                redirect('events/admin_dashboard');
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to delete event']);
-                redirect('events/admin_dashboard');
             }
         }
     }
@@ -284,7 +281,6 @@ class Events extends Controller
 
     public function update($id)
     {
-        //Allow admin/superadmin to edit any event
         if (
             !$this->eventModel->isEventCreator($id, $_SESSION['user_id']) &&
             !in_array($_SESSION['user_role_id'], [2, 3])
@@ -362,7 +358,7 @@ class Events extends Controller
             $this->view('events/update', $data);
         }
     }
-    public function admin_dashboard()
+    /* public function admin_dashboard()
     {
         // Check if user is admin or superadmin
         if (!in_array($_SESSION['user_role_id'], [2, 3])) {
@@ -379,7 +375,7 @@ class Events extends Controller
             'search' => $search
         ];
 
-        $this->view('events/admin_dashboard', $data);
+        $this->view('events/index', $data);
     }
     public function searchEvents()
     {
@@ -401,5 +397,5 @@ class Events extends Controller
             header('Content-Type: application/json');
             echo json_encode($events);
         }
-    }
+    } */
 }

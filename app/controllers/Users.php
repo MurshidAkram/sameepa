@@ -184,9 +184,20 @@ class Users extends Controller
     {
         if (empty($data['address'])) {
             $data['errors'][] = 'Address is required';
+        } else {
+            if ($data['address'] < 1 || $data['address'] > 100) {
+                $data['errors'][] = 'Please pick your address unit between 1 and 100!';
+            }
         }
         if (empty($data['phonenumber'])) {
             $data['errors'][] = 'Phone number is required';
+        } else {
+            if ($this->userModel->findUserByPhone($data['phonenumber'])) {
+                $data['errors'][] = 'Phone number already exists';
+            }
+            if (!preg_match('/^\d{10}$/', $data['phonenumber'])) {
+                $data['errors'][] = 'Phone number must be exactly 10 digits';
+            }
         }
     }
 
@@ -569,8 +580,8 @@ class Users extends Controller
                     } else {
                         // If manually installed
                         require_once dirname(__DIR__) . '/libraries/PHPMailer/src/Exception.php';
-require_once dirname(__DIR__) . '/libraries/PHPMailer/src/PHPMailer.php';
-require_once dirname(__DIR__) . '/libraries/PHPMailer/src/SMTP.php';
+                        require_once dirname(__DIR__) . '/libraries/PHPMailer/src/PHPMailer.php';
+                        require_once dirname(__DIR__) . '/libraries/PHPMailer/src/SMTP.php';
                     }
 
                     require_once APPROOT . '/helpers/Email.php';
@@ -597,7 +608,7 @@ require_once dirname(__DIR__) . '/libraries/PHPMailer/src/SMTP.php';
         // If no token is provided in the URL, check POST data
         if (empty($token) && isset($_POST['token'])) {
             $token = $_POST['token'];
-             error_log("Token found in POST data: " . $token);
+            error_log("Token found in POST data: " . $token);
         }
 
         // If still no token, redirect to forgot password page
@@ -648,4 +659,3 @@ require_once dirname(__DIR__) . '/libraries/PHPMailer/src/SMTP.php';
         $this->view('users/resetpassword', $data);
     }
 }
-
