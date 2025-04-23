@@ -384,7 +384,16 @@ ALTER TABLE facilities
 ADD COLUMN image_data LONGBLOB COMMENT 'Facility image data' AFTER status,
 ADD COLUMN image_type VARCHAR(50) COMMENT 'Facility image MIME type' AFTER image_data;
 
-
+CREATE TABLE password_resets (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    KEY user_id (user_id),
+    KEY token (token),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 //**********************************************Security Part*******************************************
 

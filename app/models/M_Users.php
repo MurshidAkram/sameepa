@@ -446,4 +446,80 @@ class M_Users
             return 0; // Return 0 on failure
         }
     }
+
+    public function createPasswordResetToken($email)
+    {
+        // Check if the user exists
+        $user = $this->findUserByEmail($email);
+        if (!$user) {
+            return false;
+        }
+
+        // Generate a token
+        $token = bin2hex(random_bytes(32));
+        // Generate a token
+        $token = bin2hex(random_bytes(32));
+
+        // Check if a token already exists for this user
+        $this->db->query('SELECT * FROM password_resets WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $user['id']);
+        $existingToken = $this->db->single();
+
+        if ($existingToken) {
+            // Update existing token, setting expires_at using SQL function
+            $this->db->query('UPDATE password_resets SET token = :token, expires_at = NOW() + INTERVAL 1 HOUR WHERE user_id = :user_id');
+        } else {
+            // Create new token, setting expires_at using SQL function
+            $this->db->query('INSERT INTO password_resets (user_id, token, expires_at) VALUES (:user_id, :token, NOW() + INTERVAL 1 HOUR)');
+        }
+
+        $this->db->bind(':user_id', $user['id']);
+        $this->db->bind(':token', $token);
+        // No need to bind expires_at here as it's set by SQL function
+
+        if ($this->db->execute()) {
+            return [
+                'token' => $token,
+                'user' => $user
+            ];
+        } else {
+            return false;
+        }
+    }
+
+    public function verifyPasswordResetToken($token)
+    {
+        $this->db->query('SELECT pr.*, u.email, u.id as user_id
+                         FROM password_resets pr
+                         JOIN users u ON pr.user_id = u.id
+                         WHERE pr.token = :token AND pr.expires_at > NOW()');
+        $this->db->bind(':token', $token);
+
+        $result = $this->db->single();
+
+        if ($this->db->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function resetPassword($userId, $newPassword)
+    {
+        // Update the user's password
+        $this->db->query('UPDATE users SET password = :password WHERE id = :id');
+        $this->db->bind(':password', password_hash($newPassword, PASSWORD_DEFAULT));
+        $this->db->bind(':id', $userId);
+
+        $success = $this->db->execute();
+
+        if ($success) {
+            // Delete the reset token
+            $this->db->query('DELETE FROM password_resets WHERE user_id = :user_id');
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+        }
+
+        return $success;
+    }
 }
