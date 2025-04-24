@@ -56,6 +56,9 @@ class M_maintenance
     
     //***************************************maintenance members**********************************************************************************************************
 
+
+
+
     // Fetch all maintenance members
     public function getAllMembers()
     {
@@ -114,24 +117,15 @@ class M_maintenance
         return $this->db->execute();
     }
 
-//**********************************************resident requests of resident side******************************************************** */
+//********************************************************************************resident requests of resident side******************************************************** */
 
-public function getResidentRequests($residentId) {
-    $this->db->query('
-        SELECT r.*, mt.type_name as type, ms.status_name as status 
-        FROM requests r
-        JOIN maintenance_types mt ON r.type_id = mt.type_id
-        JOIN maintenance_status ms ON r.status_id = ms.status_id
-        WHERE r.resident_id = :resident_id
-        ORDER BY r.created_at DESC
-    ');
-    $this->db->bind(':resident_id', $residentId);
-    return $this->db->resultSet();
-}
 
-public function getMaintenanceTypes() {
-    $this->db->query('SELECT * FROM maintenance_types');
-    return $this->db->resultSet();
+
+
+//*******************************************************************************create request*********************************************************************** */
+
+public function getLastInsertId() {
+    return $this->db->lastInsertId();
 }
 
 public function submitRequest($data) {
@@ -159,13 +153,21 @@ public function submitRequest($data) {
     }
 }
 
-public function getLastInsertId() {
-    return $this->db->lastInsertId();
-}
+
+
+
+
+//******************************************************************************************edit request ********************************************************************** */
+
 
 public function getRequestDetails($requestId, $residentId) {
     $this->db->query('
-        SELECT r.*, mt.type_name as type, ms.status_name as status 
+        SELECT 
+        r.type_id,
+        r.description,
+        r.urgency_level,
+        mt.type_name as type, 
+        ms.status_name as status 
         FROM requests r
         JOIN maintenance_types mt ON r.type_id = mt.type_id
         JOIN maintenance_status ms ON r.status_id = ms.status_id
@@ -175,6 +177,7 @@ public function getRequestDetails($requestId, $residentId) {
     $this->db->bind(':resident_id', $residentId);
     return $this->db->single();
 }
+
 
 public function isRequestEditable($requestId, $residentId) {
     $this->db->query('
@@ -186,6 +189,67 @@ public function isRequestEditable($requestId, $residentId) {
     
     $result = $this->db->single();
     return ($result && $result->status_id == 1); // Only editable if status is "Pending"
+}
+
+
+public function updateRequestStatus($requestId, $statusId) {
+
+    $this->db->query('
+        UPDATE requests 
+        SET status_id = :status_id 
+        WHERE request_id = :request_id
+    ');
+    $this->db->bind(':status_id', $statusId);
+    $this->db->bind(':request_id', $requestId);
+    
+    return $this->db->execute();
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+//**************************************************************************************delete request************************************************************************ */
+
+
+
+
+public function deleteRequest($requestId) {
+    $this->db->query('DELETE FROM requests WHERE request_id = :request_id');
+    $this->db->bind(':request_id', $requestId);
+    return $this->db->execute();
+}
+
+
+
+
+//************************************************************************************************************************************************************************************* */
+
+
+
+public function getResidentRequests($residentId) {
+    $this->db->query('
+        SELECT r.*, mt.type_name as type, ms.status_name as status 
+        FROM requests r
+        JOIN maintenance_types mt ON r.type_id = mt.type_id
+        JOIN maintenance_status ms ON r.status_id = ms.status_id
+        WHERE r.resident_id = :resident_id
+        ORDER BY r.created_at DESC
+    ');
+    $this->db->bind(':resident_id', $residentId);
+    return $this->db->resultSet();
+}
+
+public function getMaintenanceTypes() {
+    $this->db->query('SELECT * FROM maintenance_types');
+    return $this->db->resultSet();
 }
 
 public function updateRequest($data) {
@@ -205,15 +269,12 @@ public function updateRequest($data) {
     return $this->db->execute();
 }
 
-public function deleteRequest($requestId) {
-    $this->db->query('DELETE FROM requests WHERE request_id = :request_id');
-    $this->db->bind(':request_id', $requestId);
-    return $this->db->execute();
-}
 
 
 
 //**********************************************resident requests of maintenance side****************************************************************************************************************************** */
+
+
 
 // Methods used by maintenance side
 public function getAllRequests() {
@@ -246,17 +307,18 @@ public function getStatuses() {
     return $this->db->resultSet();
 }
 
-public function updateRequestStatus($requestId, $statusId) {
-    $this->db->query('
-        UPDATE requests 
-        SET status_id = :status_id 
-        WHERE request_id = :request_id
-    ');
-    $this->db->bind(':status_id', $statusId);
-    $this->db->bind(':request_id', $requestId);
+// public function updateRequestStatus($requestId, $statusId) {
+//     $this->db->query('
+//         UPDATE requests 
+//         SET status_id = :status_id 
+//         WHERE request_id = :request_id
+//     ');
+//     $this->db->bind(':status_id', $statusId);
+//     $this->db->bind(':request_id', $requestId);
     
-    return $this->db->execute();
-}
+//     return $this->db->execute();
+// }
+
 
 public function assignMaintainer($requestId, $maintainerId) {
     $this->db->query('
@@ -286,7 +348,9 @@ public function getStaffBySpecialization($specialization) {
     
     return $this->db->resultSet();
 }
-    //*************************************************************************************************************************************************
+
+
+//***********************************************************************************************************************************************************************************
 
 
 }

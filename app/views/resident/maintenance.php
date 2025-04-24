@@ -33,6 +33,12 @@
             margin-bottom: 15px;
             width: 100%;
             box-sizing: border-box;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .request-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
         
         .request-header {
@@ -56,7 +62,7 @@
         
         .status-in-progress {
             background-color: #cce5ff;
-            color:rgb(15, 116, 223);
+            color: rgb(15, 116, 223);
         }
         
         .status-completed {
@@ -66,7 +72,7 @@
         
         .status-cancelled {
             background-color: #f8d7da;
-            color:rgb(215, 23, 42);
+            color: rgb(215, 23, 42);
         }
         
         .request-actions {
@@ -147,11 +153,17 @@
         .modal-content {
             background-color: #fefefe;
             margin: 10% auto;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            width: 80%;
+            width: 90%;
             max-width: 600px;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .close-modal {
@@ -160,6 +172,7 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.2s;
         }
         
         .close-modal:hover {
@@ -178,44 +191,113 @@
         
         .form-group select, .form-group textarea {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        
+        .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #6a3093;
+            box-shadow: 0 0 0 2px rgba(106, 48, 147, 0.2);
         }
         
         .form-group textarea {
             min-height: 100px;
+            resize: vertical;
         }
         
         .btn-submit {
             background: #6a3093;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
+            width: 100%;
+            margin-top: 10px;
         }
         
         .btn-submit:hover {
             background: #8e44ad;
+            transform: translateY(-1px);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0);
         }
         
         /* Loading spinner */
         .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
+            border: 3px solid rgba(0, 0, 0, 0.1);
             border-radius: 50%;
-            border-top: 4px solid #3498db;
-            width: 30px;
-            height: 30px;
+            border-top: 3px solid #3498db;
+            width: 20px;
+            height: 20px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* Toast notification */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1100;
+            right: 30px;
+            bottom: 30px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .toast.show {
+            visibility: visible;
+            animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 20% auto;
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .request-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .request-status {
+                align-self: flex-end;
+            }
         }
     </style>
 </head>
@@ -241,12 +323,11 @@
                                     <div class="request-header">
                                         <h3><?php echo htmlspecialchars($request->type); ?></h3>
                                         <div>
-                                            <span class="request-status status-<?php echo strtolower($request->status); ?>">
+                                            <span class="request-status status-<?php echo strtolower(str_replace(' ', '-', $request->status)); ?>">
                                                 <?php echo htmlspecialchars($request->status); ?>
                                             </span>
-                                            <span class="request-status status-<?php echo strtolower($request->status); ?>">
-                                                <?php echo htmlspecialchars($request->urgency_level); ?>
-                                            </span>
+                                            <span class="urgency-indicator urgency-<?php echo strtolower($request->urgency_level); ?>"></span>
+                                            <span><?php echo htmlspecialchars(ucfirst($request->urgency_level)); ?></span>
                                         </div>
                                     </div>
                                     <p><?php echo htmlspecialchars($request->description); ?></p>
@@ -345,7 +426,7 @@
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h2>Confirm Deletion</h2>
-            <p>Are you sure you want to delete this maintenance request?</p>
+            <p>Are you sure you want to delete this maintenance request? This action cannot be undone.</p>
             <input type="hidden" id="deleteRequestId">
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button id="confirmDeleteBtn" class="btn-submit" style="background-color: #e74c3c;">Delete</button>
@@ -355,369 +436,285 @@
     </div>
 
     <!-- Success/Error Toast Notification -->
-    <div id="toast" class="toast" style="display: none;"></div>
+    <div id="toast" class="toast"></div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Modal elements
-        const newRequestModal = document.getElementById('newRequestModal');
-        const editRequestModal = document.getElementById('editRequestModal');
-        const deleteConfirmModal = document.getElementById('deleteConfirmModal');
-        
-        // Buttons
-        const newRequestBtn = document.getElementById('newRequestBtn');
-        const closeModalBtns = document.querySelectorAll('.close-modal');
-        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-        
-        // Forms
-        const maintenanceForm = document.getElementById('maintenanceRequestForm');
-        const editRequestForm = document.getElementById('editRequestForm');
-        
-        // Modal functions
-        function openModal(modal) {
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeModal(modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-
-        // Show toast notification
-        function showToast(message, isSuccess = true) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.style.backgroundColor = isSuccess ? '#4CAF50' : '#f44336';
-            toast.style.display = 'block';
-            
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-
-        // Event listeners
-        newRequestBtn.addEventListener('click', () => {
-            maintenanceForm.reset();
-            openModal(newRequestModal);
-        });
-
-        closeModalBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const modal = this.closest('.modal');
-                closeModal(modal);
-            });
-        });
-
-        cancelDeleteBtn.addEventListener('click', () => {
-            closeModal(deleteConfirmModal);
-        });
-
-        window.addEventListener('click', function(event) {
-            if (event.target.classList.contains('modal')) {
-                closeModal(event.target);
-            }
-        });
-
-        // CREATE NEW REQUEST
-        maintenanceForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Clear errors
-            document.querySelectorAll('#newRequestModal .error-message').forEach(el => el.textContent = '');
-            
-            // Validate
-            let isValid = true;
-            const requestType = document.getElementById('requestType').value;
-            const description = document.getElementById('description').value.trim();
-            const urgency = document.getElementById('urgency').value;
-            
-            if (!requestType) {
-                document.getElementById('requestType-error').textContent = 'Please select a request type';
-                isValid = false;
-            }
-            if (!description) {
-                document.getElementById('description-error').textContent = 'Please enter a description';
-                isValid = false;
-            }
-            if (!urgency) {
-                document.getElementById('urgency-error').textContent = 'Please select an urgency level';
-                isValid = false;
-            }
-            if (!isValid) return;
-            
-            // Prepare data
-            const formData = new FormData(this);
-            
-            // Loading state
-            const submitBtn = maintenanceForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px;"></div>';
-            submitBtn.disabled = true;
-            
-            try {
-                // Submit request
-                location.reload();
-                const response = await fetch('<?php echo URLROOT; ?>/resident/submit_request', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showToast('Request submitted successfully!');
-                    maintenanceForm.reset();
-                    closeModal(newRequestModal);
-                    
-                    // Refresh the requests list
-                    loadRequests();
-                } else {
-                    // Show validation errors
-                    if (data.errors) {
-                        for (const [field, message] of Object.entries(data.errors)) {
-                            const errorElement = document.getElementById(`${field}-error`);
-                            if (errorElement) errorElement.textContent = message;
-                        }
-                    }
-                    throw new Error(data.message || 'Submission failed');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast(error.message || 'Failed to submit request', false);
-            } finally {
-                submitBtn.textContent = originalBtnText;
-                submitBtn.disabled = false;
-            }
-        });
-
-        // EDIT REQUEST - Event delegation for dynamically loaded edit buttons
-        document.addEventListener('click', async function(e) {
-            if (e.target.classList.contains('btn-edit-request')) {
-                const requestId = e.target.getAttribute('data-request-id');
-                
-                // Loading state
-                e.target.textContent = 'Loading...';
-                e.target.disabled = true;
-                
-                try {
-                    // Fetch request details
-                    const response = await fetch(`<?php echo URLROOT; ?>/resident/request_details/${requestId}`);
-                    const data = await response.json();
-                    
-                    if (data.success && data.request) {
-                        const request = data.request;
-                        
-                        // Populate form
-                        document.getElementById('editRequestId').value = request.request_id;
-                        document.getElementById('editRequestType').value = request.type_id;
-                        document.getElementById('editDescription').value = request.description;
-                        document.getElementById('editUrgency').value = request.urgency_level;
-                        
-                        // Clear errors
-                        document.querySelectorAll('#editRequestModal .error-message').forEach(el => {
-                            el.textContent = '';
-                        });
-                        
-                        // Show modal
-                        openModal(editRequestModal);
-                    } else {
-                        throw new Error(data.message || 'Failed to load request');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showToast(error.message || 'Failed to load request details', false);
-                } finally {
-                    e.target.textContent = 'Edit';
-                    e.target.disabled = false;
-                }
-            }
-        });
-
-        // EDIT FORM SUBMISSION
-        editRequestForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Clear errors
-            document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
-            
-            // Validate
-            let isValid = true;
-            const requestType = document.getElementById('editRequestType').value;
-            const description = document.getElementById('editDescription').value.trim();
-            const urgency = document.getElementById('editUrgency').value;
-
-            if (!requestType) {
-                document.getElementById('editRequestType-error').textContent = 'Please select a request type';
-                isValid = false;
-            }
-            if (!description) {
-                document.getElementById('editDescription-error').textContent = 'Please enter a description';
-                isValid = false;
-            }
-            if (!urgency) {
-                document.getElementById('editUrgency-error').textContent = 'Please select an urgency level';
-                isValid = false;
-            }
-            if (!isValid) return;
-            
-            // Prepare data
-            const formData = new FormData(this);
-            const requestId = document.getElementById('editRequestId').value;
-            
-            // Loading state
-            const submitBtn = editRequestForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px;"></div>';
-            submitBtn.disabled = true;
-            
-            try {
-                // Submit update
-                const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${requestId}`, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showToast('Request updated successfully!');
-                    closeModal(editRequestModal);
-                    
-                    // Refresh the requests list
-                    loadRequests();
-                } else {
-                    // Show validation errors
-                    if (data.errors) {
-                        for (const [field, message] of Object.entries(data.errors)) {
-                            const errorElement = document.getElementById(`edit${field.charAt(0).toUpperCase() + field.slice(1)}-error`);
-                            if (errorElement) errorElement.textContent = message;
-                        }
-                    }
-                    throw new Error(data.message || 'Update failed');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast(error.message || 'Failed to update request', false);
-            } finally {
-                submitBtn.textContent = originalBtnText;
-                submitBtn.disabled = false;
-            }
-        });
-
-      // DELETE REQUEST - Event delegation for dynamically loaded delete buttons
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('btn-delete-request')) {
-        const requestId = e.target.getAttribute('data-request-id');
-        document.getElementById('deleteRequestId').value = requestId;
-        openModal(deleteConfirmModal);
+   document.addEventListener('DOMContentLoaded', function () {
+    // Toast notification
+    function showToast(message, isSuccess = true) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.style.backgroundColor = isSuccess ? '#4CAF50' : '#f44336';
+        toast.className = 'toast show';
+        setTimeout(() => {
+            toast.className = toast.className.replace('show', '');
+        }, 3000);
     }
-});
 
-// CONFIRM DELETE
-document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-    const requestId = document.getElementById('deleteRequestId').value;
-    
-    // Loading state
-    const button = this;
-    const originalBtnText = button.textContent;
-    button.innerHTML = '<div class="spinner" style="width: 20px; height: 20px;"></div>';
-    button.disabled = true;
-    
-    fetch(`<?php echo URLROOT; ?>/resident/delete_request/${requestId}`, {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Request deleted successfully!',
-                timer: 2000,
-                showConfirmButton: false
-            });
-            closeModal(deleteConfirmModal);
-            loadRequests();
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message || 'Failed to delete request'
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to delete request'
+    const modals = {
+        newRequest: document.getElementById('newRequestModal'),
+        editRequest: document.getElementById('editRequestModal'),
+        deleteConfirm: document.getElementById('deleteConfirmModal')
+    };
+
+    function openModal(modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('newRequestBtn').addEventListener('click', () => {
+        document.getElementById('maintenanceRequestForm').reset();
+        openModal(modals.newRequest);
+    });
+
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', function () {
+            closeModal(this.closest('.modal'));
         });
-    })
-    .finally(() => {
-        button.textContent = originalBtnText;
-        button.disabled = false;
+    });
+
+    window.addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            closeModal(event.target);
+        }
+    });
+
+    // Submit New Request
+    document.getElementById('maintenanceRequestForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formElements = e.target.elements;
+        let isValid = true;
+
+        document.querySelectorAll('#newRequestModal .error-message').forEach(el => el.textContent = '');
+
+        if (!formElements.requestType.value) {
+            document.getElementById('requestType-error').textContent = 'Please select a request type';
+            isValid = false;
+        }
+
+        if (!formElements.description.value.trim()) {
+            document.getElementById('description-error').textContent = 'Please enter a description';
+            isValid = false;
+        }
+
+        if (!formElements.urgency.value) {
+            document.getElementById('urgency-error').textContent = 'Please select an urgency level';
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
+        const formData = new FormData(e.target);
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+        try {
+            const response = await fetch('<?php echo URLROOT; ?>/resident/submit_request', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Request submitted successfully!');
+                e.target.reset();
+                closeModal(modals.newRequest);
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                if (data.errors) {
+                    for (const [field, message] of Object.entries(data.errors)) {
+                        const errorElement = document.getElementById(`${field}-error`);
+                        if (errorElement) errorElement.textContent = message;
+                    }
+                }
+                throw new Error(data.message || 'Failed to submit request');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast(error.message || 'Failed to submit request', false);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
+    });
+
+    // Edit Request
+    document.addEventListener('click', async function (e) {
+        if (e.target.classList.contains('btn-edit-request')) {
+            const requestId = e.target.getAttribute('data-request-id');
+            const editBtn = e.target;
+            const originalBtnText = editBtn.innerHTML;
+
+            editBtn.disabled = true;
+            editBtn.innerHTML = '<span class="spinner"></span> Loading...';
+
+            try {
+                const response = await fetch(`<?php echo URLROOT; ?>/resident/request_details/${requestId}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.request) {
+                    document.getElementById('editRequestId').value = data.request.request_id;
+                    document.getElementById('editRequestType').value = data.request.type_id;
+                    document.getElementById('editDescription').value = data.request.description;
+                    document.getElementById('editUrgency').value = data.request.urgency_level;
+
+                    document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
+                    openModal(modals.editRequest);
+                } else {
+                    throw new Error(data.message || 'Failed to load request details');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast(error.message || 'Failed to load request details', false);
+            } finally {
+                editBtn.disabled = false;
+                editBtn.innerHTML = originalBtnText;
+            }
+        }
+    });
+
+    // Submit Edit
+    document.getElementById('editRequestForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formElements = e.target.elements;
+        let isValid = true;
+        const fieldMap = {
+            requestType: 'RequestType',
+            description: 'Description',
+            urgency: 'Urgency'
+        };
+
+        document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
+
+        if (!formElements.requestType.value) {
+            document.getElementById('editRequestType-error').textContent = 'Please select a request type';
+            isValid = false;
+        }
+
+        if (!formElements.description.value.trim()) {
+            document.getElementById('editDescription-error').textContent = 'Please enter a description';
+            isValid = false;
+        }
+
+        if (!formElements.urgency.value) {
+            document.getElementById('editUrgency-error').textContent = 'Please select an urgency level';
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
+        const requestId = formElements.requestId.value;
+        const formData = new FormData(e.target);
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
+
+        try {
+            const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${requestId}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Request updated successfully!');
+                closeModal(modals.editRequest);
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                if (data.errors) {
+                    for (const [field, message] of Object.entries(data.errors)) {
+                        const key = fieldMap[field] || field;
+                        const errorElement = document.getElementById(`edit${key}-error`);
+                        if (errorElement) errorElement.textContent = message;
+                    }
+                }
+                throw new Error(data.message || 'Failed to update request');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast(error.message || 'Failed to update request', false);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
+    });
+
+    // Delete Request
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('btn-delete-request')) {
+            const requestId = e.target.getAttribute('data-request-id');
+            document.getElementById('deleteRequestId').value = requestId;
+            openModal(modals.deleteConfirm);
+        }
+    });
+
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+        closeModal(modals.deleteConfirm);
+    });
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
+        const requestId = document.getElementById('deleteRequestId').value;
+        const deleteBtn = this;
+        const originalBtnText = deleteBtn.innerHTML;
+
+        deleteBtn.disabled = true;
+        deleteBtn.innerHTML = '<span class="spinner"></span> Deleting...';
+
+        try {
+            const response = await fetch(`<?php echo URLROOT; ?>/resident/delete_request/${requestId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ _method: 'DELETE' })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Request deleted successfully!');
+                closeModal(modals.deleteConfirm);
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                throw new Error(data.message || 'Failed to delete request');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast(error.message || 'Failed to delete request', false);
+        } finally {
+            deleteBtn.disabled = false;
+            deleteBtn.innerHTML = originalBtnText;
+        }
     });
 });
-
-// Function to load requests (for refreshing the list)
-function loadRequests() {
-    const container = document.getElementById('requestsContainer');
-    container.innerHTML = '<div class="spinner"></div>';
-    
-    fetch('<?php echo URLROOT; ?>/resident/request_details')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.requests && data.requests.length > 0) {
-                let html = '';
-                data.requests.forEach(request => {
-                    html += `
-                        <div class="request-card" data-request-id="${request.request_id}">
-                            <div class="request-header">
-                                <h3>${escapeHtml(request.type)}</h3>
-                                <div>
-                                    <span class="request-status status-${request.status.toLowerCase()}">
-                                        ${escapeHtml(request.status)}
-                                    </span>
-                                    <span class="urgency-level urgency-${request.urgency_level.toLowerCase()}">
-                                        ${escapeHtml(request.urgency_level)}
-                                    </span>
-                                </div>
-                            </div>
-                            <p>${escapeHtml(request.description)}</p>
-                            <div class="request-actions">
-                                ${request.status === 'Pending' ? `
-                                    <button class="btn-edit-request" data-request-id="${request.request_id}">Edit</button>
-                                    <button class="btn-delete-request" data-request-id="${request.request_id}">Delete</button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-            } else {
-                container.innerHTML = '<p>No maintenance requests found.</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error loading requests:', error);
-            container.innerHTML = '<p>Error loading requests. Please try again.</p>';
-        });
-}
-
-// Helper function to escape HTML
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-} });
-    </script>
+</script>
 </body>
 </html>
