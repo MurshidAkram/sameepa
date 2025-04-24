@@ -410,7 +410,25 @@ CREATE TABLE password_resets (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+<<<<<<< HEAD
 //**********************************************Security Part*******************************************
+=======
+ALTER TABLE listings ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+
+CREATE TABLE reports (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    reporter_id INT(11) NOT NULL,
+    reported_user_message VARCHAR(255) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    status ENUM('pending', 'validated', 'dismissed') DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE
+); 
+
+
+ALTER TABLE Reports ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+>>>>>>> origin/sankavi
 
 
 //emergency Contacts

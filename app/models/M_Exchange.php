@@ -10,14 +10,21 @@ class M_Exchange
 
     public function getAllListings($search = '')
     {
+        // First, let's do a test query to see all records with is_deleted=1
+        $this->db->query('SELECT COUNT(*) as deleted_count FROM listings WHERE is_deleted = 1');
+        $deletedCount = $this->db->single();
+        error_log('Number of listings with is_deleted=1: ' . $deletedCount['deleted_count']);
+
+        // Now build our main query with explicit filtering
         $sql = 'SELECT listings.*, 
-                    users.name AS posted_by_name 
-             FROM listings 
-             INNER JOIN users 
-             ON listings.posted_by = users.id';
+                     users.name AS posted_by_name
+              FROM listings
+              INNER JOIN users
+              ON listings.posted_by = users.id
+              WHERE listings.is_deleted != 1'; // Explicitly exclude records with is_deleted=1
 
         if (!empty($search)) {
-            $sql .= ' WHERE listings.title LIKE :search OR listings.description LIKE :search';
+            $sql .= ' AND (listings.title LIKE :search OR listings.description LIKE :search)';
             $this->db->query($sql);
             $searchTerm = '%' . $search . '%';
             $this->db->bind(':search', $searchTerm);
@@ -25,7 +32,9 @@ class M_Exchange
             $this->db->query($sql);
         }
 
-        return $this->db->resultSet();
+        $results = $this->db->resultSet();
+        error_log('getAllListings returned ' . count($results) . ' records');
+        return $results;
     }
 
     public function createListing($data)
@@ -59,11 +68,12 @@ class M_Exchange
     public function getUserListings($userId)
     {
         try {
-            $this->db->query('SELECT l.*, u.name as posted_by_name 
-                             FROM listings l 
-                             INNER JOIN users u ON l.posted_by = u.id 
-                             WHERE l.posted_by = :user_id
-                             ORDER BY l.date_posted DESC');
+            $this->db->query('SELECT l.*, u.name as posted_by_name
+                              FROM listings l
+                              INNER JOIN users u ON l.posted_by = u.id
+                              WHERE l.posted_by = :user_id 
+                              AND (l.is_deleted != 1 OR l.is_deleted IS NULL)
+                              ORDER BY l.date_posted DESC');
             $this->db->bind(':user_id', $userId);
             return $this->db->resultSet();
         } catch (Exception $e) {
@@ -106,6 +116,32 @@ class M_Exchange
             return false;
         }
     }
+    public function softDeleteListing($id)
+    {
+        try {
+            // Log the before state
+            $this->db->query('SELECT * FROM listings WHERE id = :id');
+            $this->db->bind(':id', $id);
+            $beforeRecord = $this->db->single();
+            error_log('Before deletion - Record state: ' . print_r($beforeRecord, true));
+
+            // Update is_deleted flag to 1
+            $this->db->query('UPDATE listings SET is_deleted = 1 WHERE id = :id');
+            $this->db->bind(':id', $id);
+            $updateResult = $this->db->execute();
+
+            // Verify the update was successful
+            $this->db->query('SELECT * FROM listings WHERE id = :id');
+            $this->db->bind(':id', $id);
+            $afterRecord = $this->db->single();
+            error_log('After deletion - Record state: ' . print_r($afterRecord, true));
+
+            return $updateResult;
+        } catch (Exception $e) {
+            error_log('Error in deleteListing: ' . $e->getMessage());
+            return false;
+        }
+    }
 
     public function deleteListing($id)
     {
@@ -135,14 +171,13 @@ class M_Exchange
             FROM listings l
             JOIN users u ON l.posted_by = u.id
             JOIN residents r ON u.id = r.user_id
-            WHERE l.id = :id
+            WHERE l.id = :id AND l.is_deleted != 1
         ');
         $this->db->bind(':id', $id);
-        return $this->db->single();
+        $result = $this->db->single();
+        error_log('getListingById for ID ' . $id . ' returned: ' . ($result ? 'record found' : 'no record'));
+        return $result;
     }
-    
-
-
 
     public function sendMessage($data)
     {
@@ -157,5 +192,22 @@ class M_Exchange
         $this->db->bind(':message', $data['message']);
 
         return $this->db->execute();
+    }
+
+    public function searchListings($search)
+    {
+        // Query to search reports by category, status, reporter name, or description, where is_deleted is 0
+        $search = '%' . $search . '%';
+        $this->db->query('SELECT l.*, u.name AS posted_by_name FROM listings l
+                          JOIN users u ON l.posted_by = u.id
+                          WHERE l.is_deleted = 0 
+                            AND (l.title LIKE :search 
+                             OR l.posted_by LIKE :search 
+                             OR l.date_posted LIKE :search 
+                             OR l.description LIKE :search 
+                             OR l.type LIKE :search)
+                          ORDER BY l.date_posted DESC');
+        $this->db->bind(':search', $search);
+        return $this->db->resultSet();
     }
 }

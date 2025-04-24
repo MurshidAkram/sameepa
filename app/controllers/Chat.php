@@ -261,7 +261,6 @@ public function declineRequest()
             if (file_exists($filePath)) {
                 $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
                 $contentType = 'image/jpeg'; // Default
-
                 switch (strtolower($fileExtension)) {
                     case 'png':
                         $contentType = 'image/png';
@@ -271,7 +270,6 @@ public function declineRequest()
                         break;
                     // Add other image types if needed
                 }
-
                 header('Content-Type: ' . $contentType);
                 readfile($filePath);
                 exit(); // Stop further execution
@@ -280,12 +278,10 @@ public function declineRequest()
                 error_log("Profile picture file not found at path: " . $filePath);
             }
         }
-
         // If user or profile picture is empty, or file doesn't exist, redirect to default
         redirect('img/default.png');
     }
     
-
     // Update message
 public function updateMessage() {
     if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -379,4 +375,318 @@ $messageId = isset($input['message_id']) ? filter_var($input['message_id'], FILT
         echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
     }
 }
+public function viewreport($reportId = null)
+{
+    if ($reportId === null) {
+        redirect('chat/report'); // Redirect if no report ID is provided
+        return;
+    }
+
+    // Fetch the specific report
+    $report = $this->chatModel->getReportById($reportId);
+
+    // Explicitly cast to object if it's an array
+    if (is_array($report)) {
+        $report = (object) $report;
+    }
+
+    if (!$report) {
+        flash('report_message', 'Report not found', 'alert alert-danger');
+        redirect('chat/report'); // Redirect if report not found
+        return;
+    }
+
+    // Check if the user is authorized to view this report (superadmin or the reporter)
+    if ($_SESSION['user_role_id'] != 3 && $report->reporter_id != $_SESSION['user_id']) {
+        flash('report_message', 'You are not authorized to view this report', 'alert alert-danger');
+        redirect('chat/myreports'); // Redirect if not authorized
+        return;
+    }
+
+
+    $data = [
+        'title' => 'Report Details',
+        'report' => $report
+    ];
+
+    $this->view('chat/viewreport', $data);
+}
+
+public function report()
+{
+    // Check if the user is a superadmin (user_role_id == 3)
+    if ($_SESSION['user_role_id'] != 3) {
+        redirect('chat/myreports'); // Redirect non-superadmins to their reports
+        return;
+    }
+
+    // Fetch all reports for superadmin
+    $reports = $this->chatModel->getAllReports();
+    
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+    // Log reports data for debugging
+    error_log('Fetched reports for superadmin: ' . print_r($reports, true));
+
+    if ($reports === false) {
+        // Handle potential database error
+        flash('report_message', 'Error fetching reports', 'alert alert-danger');
+        $reports = []; // Ensure $reports is an empty array to prevent view errors
+    }
+
+    if (!empty($search)) {
+        // Assuming you have a method in your Chat model to search reports
+        $reports = $this->chatModel->searchReports($search);
+    } else {
+        // Fetch all reports if no search term
+        $reports = $this->chatModel->getAllReports();
+    }
+
+    $data = [
+        'title' => 'Chat Reports',
+        'reports' => $reports
+    ];
+
+    $this->view('chat/report', $data);
+}
+public function createreport()
+{
+    // Load the create report view
+    $data = [
+        'title' => 'Create Chat Report'
+    ];
+    $this->view('chat/createreport', $data);
+}
+public function myreports()
+{
+    // Fetch reports for the current user
+    $reports = $this->chatModel->getUserReports($_SESSION['user_id']);
+
+    $data = [
+        'title' => 'My Chat Reports',
+        'reports' => $reports
+    ];
+    $this->view('chat/myreports', $data);
+}
+
+public function submitreport()
+{
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        redirect('chat/createreport');
+        return;
+    }
+
+    $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+    $data = [
+        'reporter_id' => $_SESSION['user_id'],
+        'reported_user_message' => trim($_POST['reported_user_message']),
+        'category' => trim($_POST['report_category']),
+        'description' => trim($_POST['report_description']),
+        'reported_user_message_err' => '',
+        'category_err' => '',
+        'description_err' => ''
+    ];
+
+    // Validate input
+    if (empty($data['reported_user_message'])) {
+        $data['reported_user_message_err'] = 'Please enter the reported user or message identifier';
+    }
+    if (empty($data['category'])) {
+        $data['category_err'] = 'Please select a report category';
+    }
+    if (empty($data['description'])) {
+        $data['description_err'] = 'Please provide a description';
+    }
+
+    // Check for errors
+    if (empty($data['reported_user_message_err']) && empty($data['category_err']) && empty($data['description_err'])) {
+        // No errors, attempt to create report
+        if ($this->chatModel->createReport($data)) {
+            flash('report_message', 'Chat report submitted successfully', 'alert alert-success');
+            redirect('chat/myreports'); // Redirect to user's reports after submission
+        } else {
+            flash('report_message', 'Something went wrong, please try again', 'alert alert-danger');
+            $this->view('chat/createreport', $data); // Load view with data if creation fails
+        }
+    } else {
+        // Load view with errors
+        $this->view('chat/createreport', $data);
+    }
+}
+
+public function validatereport($reportId = null)
+{
+    if ($_SERVER['REQUEST_METHOD'] != 'POST' || $reportId === null) {
+        redirect('chat/report');
+        return;
+    }
+
+    // Check if the user is a superadmin
+    if ($_SESSION['user_role_id'] != 3) {
+        flash('report_message', 'You are not authorized to perform this action', 'alert alert-danger');
+        redirect('chat/report');
+        return;
+    }
+
+    if ($this->chatModel->updateReportStatus($reportId, 'validated')) {
+        flash('report_message', 'Report validated successfully', 'alert alert-success');
+    } else {
+        flash('report_message', 'Failed to validate report', 'alert alert-danger');
+    }
+
+    redirect('chat/viewreport/' . $reportId); // Redirect back to the report details page
+}
+
+public function dismissreport($reportId = null)
+{
+    if ($_SERVER['REQUEST_METHOD'] != 'POST' || $reportId === null) {
+        redirect('chat/report');
+        return;
+    }
+
+    // Check if the user is a superadmin
+    if ($_SESSION['user_role_id'] != 3) {
+        flash('report_message', 'You are not authorized to perform this action', 'alert alert-danger');
+        redirect('chat/report');
+        return;
+    }
+
+    if ($this->chatModel->updateReportStatus($reportId, 'dismissed')) {
+        flash('report_message', 'Report dismissed successfully', 'alert alert-success');
+    } else {
+        flash('report_message', 'Failed to dismiss report', 'alert alert-danger');
+    }
+
+    redirect('chat/viewreport/' . $reportId); // Redirect back to the report details page
+}
+
+public function editreport($reportId = null)
+{
+    if ($reportId === null) {
+        redirect('chat/myreports');
+        return;
+    }
+
+    // Fetch the report
+    $report = $this->chatModel->getReportById($reportId);
+
+    // Explicitly cast to object if it's an array (since Database::single() might return array)
+    if (is_array($report)) {
+        $report = (object) $report;
+    }
+
+    // Check if report exists and the current user is the reporter and not a superadmin
+    if (!$report || $report->reporter_id != $_SESSION['user_id'] || $_SESSION['user_role_id'] == 3) {
+        flash('report_message', 'You are not authorized to edit this report', 'alert alert-danger');
+        redirect('chat/myreports');
+        return;
+    }
+
+    $data = [
+        'title' => 'Edit Chat Report',
+        'report' => $report,
+        'reported_user_message' => $report->reported_user_message,
+        'category' => $report->category,
+        'description' => $report->description,
+        'reported_user_message_err' => '',
+        'category_err' => '',
+        'description_err' => ''
+    ];
+
+    $this->view('chat/editreport', $data);
+}
+
+public function updatereport($reportId = null)
+{
+    if ($_SERVER['REQUEST_METHOD'] != 'POST' || $reportId === null) {
+        redirect('chat/myreports');
+        return;
+    }
+
+    // Fetch the report to verify ownership
+    $report = $this->chatModel->getReportById($reportId);
+
+    // Explicitly cast to object if it's an array
+    if (is_array($report)) {
+        $report = (object) $report;
+    }
+
+    // Check if report exists and the current user is the reporter and not a superadmin
+    if (!$report || $report->reporter_id != $_SESSION['user_id'] || $_SESSION['user_role_id'] == 3) {
+        flash('report_message', 'You are not authorized to update this report', 'alert alert-danger');
+        redirect('chat/myreports');
+        return;
+    }
+
+    $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+    $data = [
+        'id' => $reportId,
+        'reporter_id' => $_SESSION['user_id'],
+        'reported_user_message' => trim($_POST['reported_user_message']),
+        'category' => trim($_POST['report_category']),
+        'description' => trim($_POST['report_description']),
+        'reported_user_message_err' => '',
+        'category_err' => '',
+        'description_err' => ''
+    ];
+
+    // Validate input
+    if (empty($data['reported_user_message'])) {
+        $data['reported_user_message_err'] = 'Please enter the reported user or message identifier';
+    }
+    if (empty($data['category'])) {
+        $data['category_err'] = 'Please select a report category';
+    }
+    if (empty($data['description'])) {
+        $data['description_err'] = 'Please provide a description';
+    }
+
+    // Check for errors
+    if (empty($data['reported_user_message_err']) && empty($data['category_err']) && empty($data['description_err'])) {
+        // No errors, attempt to update report
+        if ($this->chatModel->updateReport($data)) {
+            flash('report_message', 'Chat report updated successfully', 'alert alert-success');
+            redirect('chat/viewreport/' . $reportId); // Redirect to report details page
+        } else {
+            flash('report_message', 'Something went wrong, please try again', 'alert alert-danger');
+            $this->view('chat/editreport', $data); // Load view with data if update fails
+        }
+    } else {
+        // Load view with errors
+        $this->view('chat/editreport', $data);
+    }
+}
+
+public function deletereport($reportId = null) {
+    if ($_SERVER['REQUEST_METHOD'] != 'POST' || $reportId === null) {
+        redirect('chat/myreports');
+        return;
+    }
+    
+    // Fetch the report to verify ownership
+    $report = $this->chatModel->getReportById($reportId);
+    
+    // Explicitly cast to object if it's an array
+    if (is_array($report)) {
+        $report = (object) $report;
+    }
+    
+    // Check if report exists and the current user is the reporter or a superadmin
+    if (!$report || $report->reporter_id != $_SESSION['user_id'] || $_SESSION['user_role_id'] == 3) {
+        flash('report_message', 'You are not authorized to delete this report', 'alert alert-danger');
+        redirect('chat/myreports');
+        return;
+    }
+    
+    // Use soft delete instead of hard delete
+    if ($this->chatModel->deleteReport($reportId, $_SESSION['user_id'])) {
+        flash('report_message', 'Chat report deleted successfully', 'alert alert-success');
+        redirect('chat/myreports'); // Redirect to user's reports after deletion
+    } else {
+        flash('report_message', 'Something went wrong, please try again', 'alert alert-danger');
+        redirect('chat/viewreport/' . $reportId); // Redirect back to report details page if deletion fails
+    }
+}
+
 }

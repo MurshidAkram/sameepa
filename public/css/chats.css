@@ -191,6 +191,17 @@ html, body {
     color: #888;
 }
 
+.edited-indicator {
+    font-size: 0.7em; /* Slightly smaller than time */
+    color: rgba(0, 0, 0, 0.5); /* Grey color */
+    margin-right: 4px; /* Space between 'edited' and time */
+    font-style: italic;
+}
+
+.sent .edited-indicator {
+    color: rgba(255, 255, 255, 0.7); /* Lighter grey for sent messages */
+}
+
 /* Message Actions */
 .message-actions {
     display: flex;
@@ -335,6 +346,24 @@ html, body {
 
 .cancel-edit-btn:hover {
     background-color: #9400d3;
+}
+.message-edited {
+    font-style: italic;
+    font-size: 0.75rem; /* Slightly smaller than the timestamp */
+    color: #d1d1d1; /* Light gray to contrast with the white timestamp */
+    margin-right: 4px; /* Small spacing between "edited" and the timestamp */
+}
+
+.message-meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: #ffffff; /* White for timestamp */
+}
+
+.message-time {
+    color: #ffffff; /* Ensure timestamp remains white */
 }
 
 /* Responsive Design */

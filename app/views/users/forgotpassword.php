@@ -17,6 +17,9 @@
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
     <div class="form-container">
         <div class="form-content">
+        <a href="<?php echo URLROOT; ?>/users/login" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
             <?php if (!empty($data['success'])): ?>
                 <div class="success-message"><?php echo $data['success']; ?></div>
             <?php endif; ?>
@@ -120,7 +123,7 @@
         }
 
         .form-group input:focus {
-            outline: none;
+            outline: #800080;
             border-color:#800080;
             box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
             background: #ffffff;
