@@ -36,13 +36,13 @@
                 <?php $current_page = basename($_SERVER['REQUEST_URI']); ?>
 
                 <nav class="groups-nav">
-                <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' || $current_page == 'chat') ? 'active' : ''; ?>">My Chats</a>
+                    <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' || $current_page == 'chat') ? 'active' : ''; ?>">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search') ? 'active' : ''; ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests') ? 'active' : ''; ?>">Chat Requests</a>
                     <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>" 
-   class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
-    <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
-</a>
+                       class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
+                        <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
+                    </a>
                 </nav>
             </aside>
 
@@ -51,13 +51,12 @@
                 <?php flash('chat_message'); ?>
 
                 <form class="groups-search" method="POST" action="<?php echo URLROOT; ?>/chat/index">
-    <input type="text" name="search" 
-           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" 
-           placeholder="Search chats...">
-    <button type="submit">Search</button>
-</form>
+                    <input type="text" name="search" 
+                           value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" 
+                           placeholder="Search chats...">
+                    <button type="submit">Search</button>
+                </form>
 
-                
                 <p>Connect and communicate with residents, admins, and community members!</p>
                 
                 <div class="groups-grid">
@@ -100,14 +99,15 @@
                             
                             <a href="<?php echo URLROOT; ?>/chat/viewChat/<?php echo $userId; ?>" class="chat-card-link">
                                 <div class="group-card">
-                                    <?php if (!empty($profilePic)): ?>
-                                        <img src="<?php echo URLROOT; ?>/chat/image/<?php echo $userId; ?>" alt="Chat with <?php echo htmlspecialchars($name); ?>">
-                                    <?php else: ?>
-                                        <div class="profile-image" style="background-color: #DDD; display: flex; align-items: center; justify-content: center;">
-                                            <span style="font-size: 24px; color: #888;"><?php echo strtoupper(substr($name, 0, 1)); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                
+                                    <div class="name-image">
+                                        <?php if (!empty($profilePic)): ?>
+                                            <img src="<?php echo URLROOT; ?>/chat/image/<?php echo $userId; ?>" alt="Chat with <?php echo htmlspecialchars($name); ?>" style=" border-radius: 50%; object-fit: cover; border: 1px solid #eaeaea;">
+                                        <?php else: ?>
+                                            <div class="profile-image" style="background-color: #DDD; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;">
+                                                <span style="font-size: 8px; color: #888;"><?php echo strtoupper(substr($name, 0, 1)); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
                                     <div class="group-details">
                                         <div class="chat-header">
                                             <div class="name-role-container">
@@ -183,6 +183,7 @@
 
 .group-card {
     display: flex;
+    align-items: center;
     background-color: white;
     padding: 12px 15px;
     border-bottom: 1px solid #f0f2f5;
@@ -198,12 +199,39 @@
     border-bottom: none;
 }
 
-.profile-image {
+.name-image {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.name-image img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #eaeaea;
+    visibility: visible;
+    opacity: 1;
+}
+
+.name-image .profile-image {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 15px;
-    object-fit: cover;
+    background-color: #DDD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: visible;
+    opacity: 1;
+}
+
+.name-image .profile-image span {
+    font-size: 14px;
+    color: #888;
+    visibility: visible;
+    opacity: 1;
 }
 
 .group-details {

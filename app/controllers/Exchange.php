@@ -249,8 +249,8 @@ class Exchange extends Controller
                 redirect('exchange/my_listings');
                 return;
             }
-
-            if ($this->ExchangeModel->deleteListing($listingId)) {
+            
+            if ($this->ExchangeModel->softDeleteListing($listingId)) {
                 $_SESSION['message'] = 'Listing deleted successfully';
             } else {
                 $_SESSION['error'] = 'Failed to delete listing';
@@ -258,6 +258,7 @@ class Exchange extends Controller
         }
         redirect('exchange/my_listings');
     }
+    
     public function adminDeletion($id)
 {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SESSION['user_role_id'] == 3) {

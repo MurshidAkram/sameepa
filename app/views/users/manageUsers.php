@@ -310,10 +310,10 @@
                                                         <button type="submit" class="btn-activate"><i class="fas fa-check-circle"></i></button>
                                                     </form>
                                                 <?php endif; ?>
-                                                <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;" onsubmit="return confirmDelete();">
+                                                <!-- <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;" onsubmit="return confirmDelete();">
                                                     <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
                                                     <button type="submit" class="btn-delete"><i class="fas fa-trash-alt"></i></button>
-                                                </form>
+                                                </form> -->
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
