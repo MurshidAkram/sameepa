@@ -459,7 +459,7 @@ public function createreport()
 public function myreports()
 {
     // Fetch reports for the current user
-    $reports = $this->chatModel->getReportsByUserId($_SESSION['user_id']);
+    $reports = $this->chatModel->getUserReports($_SESSION['user_id']);
 
     $data = [
         'title' => 'My Chat Reports',
@@ -658,28 +658,28 @@ public function updatereport($reportId = null)
     }
 }
 
-public function deletereport($reportId = null)
-{
+public function deletereport($reportId = null) {
     if ($_SERVER['REQUEST_METHOD'] != 'POST' || $reportId === null) {
         redirect('chat/myreports');
         return;
     }
-
+    
     // Fetch the report to verify ownership
     $report = $this->chatModel->getReportById($reportId);
-
+    
     // Explicitly cast to object if it's an array
     if (is_array($report)) {
         $report = (object) $report;
     }
-
-    // Check if report exists and the current user is the reporter and not a superadmin
+    
+    // Check if report exists and the current user is the reporter or a superadmin
     if (!$report || $report->reporter_id != $_SESSION['user_id'] || $_SESSION['user_role_id'] == 3) {
         flash('report_message', 'You are not authorized to delete this report', 'alert alert-danger');
         redirect('chat/myreports');
         return;
     }
-
+    
+    // Use soft delete instead of hard delete
     if ($this->chatModel->deleteReport($reportId, $_SESSION['user_id'])) {
         flash('report_message', 'Chat report deleted successfully', 'alert alert-success');
         redirect('chat/myreports'); // Redirect to user's reports after deletion

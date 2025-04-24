@@ -340,25 +340,63 @@ public function createReport($data) {
     return $this->db->execute();
 }
 
+public function deleteReport($reportId, $userId) {
+    try {
+        // Soft delete by setting is_deleted flag to 1
+        $this->db->query('UPDATE reports SET is_deleted = 1 WHERE id = :id AND reporter_id = :reporter_id');
+        $this->db->bind(':id', $reportId);
+        $this->db->bind(':reporter_id', $userId);
+        return $this->db->execute();
+    } catch (Exception $e) {
+        error_log('Error in deleteReport: ' . $e->getMessage());
+        return false;
+    }
+}
+
+public function getReportById($reportId) {
+    $this->db->query('SELECT r.*, u.name as reporter_name 
+                      FROM reports r 
+                      JOIN users u ON r.reporter_id = u.id 
+                      WHERE r.id = :report_id 
+                      AND (r.is_deleted != 1 OR r.is_deleted IS NULL)');
+    $this->db->bind(':report_id', $reportId);
+    return $this->db->single();
+}
+
 // Get all reports (for superadmin)
 public function getAllReports() {
-    $this->db->query('SELECT r.*, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id ORDER BY r.created_at DESC');
+    $this->db->query('SELECT r.*, u.name as reporter_name 
+                      FROM reports r 
+                      JOIN users u ON r.reporter_id = u.id 
+                      WHERE (r.is_deleted != 1 OR r.is_deleted IS NULL)
+                      ORDER BY r.created_at DESC');
     return $this->db->resultSet();
 }
 
-// Get reports by user ID
-public function getReportsByUserId($userId) {
-    $this->db->query('SELECT r.*, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id WHERE r.reporter_id = :user_id ORDER BY r.created_at DESC');
+public function getUserReports($userId) {
+    $this->db->query('SELECT r.*, u.name as reporter_name 
+                      FROM reports r 
+                      JOIN users u ON r.reporter_id = u.id 
+                      WHERE r.reporter_id = :user_id 
+                      AND (r.is_deleted != 1 OR r.is_deleted IS NULL)
+                      ORDER BY r.created_at DESC');
     $this->db->bind(':user_id', $userId);
     return $this->db->resultSet();
 }
 
+// Get reports by user ID
+// public function getReportsByUserId($userId) {
+//     $this->db->query('SELECT r.*, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id WHERE r.reporter_id = :user_id ORDER BY r.created_at DESC');
+//     $this->db->bind(':user_id', $userId);
+//     return $this->db->resultSet();
+// }
+
 // Get a single report by ID
-public function getReportById($reportId) {
-    $this->db->query('SELECT r.*, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id WHERE r.id = :report_id');
-    $this->db->bind(':report_id', $reportId);
-    return $this->db->single();
-}
+// public function getReportById($reportId) {
+//     $this->db->query('SELECT r.*, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id WHERE r.id = :report_id');
+//     $this->db->bind(':report_id', $reportId);
+//     return $this->db->single();
+// }
 
 // Update report status
 public function updateReportStatus($reportId, $status) {
@@ -381,13 +419,13 @@ public function updateReport($data) {
 }
 
 // Delete a report
-public function deleteReport($reportId, $userId) {
-    $this->db->query('DELETE FROM reports WHERE id = :id AND reporter_id = :reporter_id');
-    $this->db->bind(':id', $reportId);
-    $this->db->bind(':reporter_id', $userId);
+// public function deleteReport($reportId, $userId) {
+//     $this->db->query('DELETE FROM reports WHERE id = :id AND reporter_id = :reporter_id');
+//     $this->db->bind(':id', $reportId);
+//     $this->db->bind(':reporter_id', $userId);
 
-    return $this->db->execute();
-}
+//     return $this->db->execute();
+// }
 
 public function searchReports($search) {
     // Query to search reports by category, status, reporter name, or description
