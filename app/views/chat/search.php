@@ -66,7 +66,6 @@
                         3 => 'Super Admin',
                         4 =>'Maintenance',
                         5 =>'Security',
-                        6=>'External Service Provider'
                     ];
                     ?>
 

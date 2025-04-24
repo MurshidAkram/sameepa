@@ -422,7 +422,8 @@ public function report()
 
     // Fetch all reports for superadmin
     $reports = $this->chatModel->getAllReports();
-
+    
+    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     // Log reports data for debugging
     error_log('Fetched reports for superadmin: ' . print_r($reports, true));
 
@@ -430,6 +431,14 @@ public function report()
         // Handle potential database error
         flash('report_message', 'Error fetching reports', 'alert alert-danger');
         $reports = []; // Ensure $reports is an empty array to prevent view errors
+    }
+
+    if (!empty($search)) {
+        // Assuming you have a method in your Chat model to search reports
+        $reports = $this->chatModel->searchReports($search);
+    } else {
+        // Fetch all reports if no search term
+        $reports = $this->chatModel->getAllReports();
     }
 
     $data = [

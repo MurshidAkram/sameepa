@@ -36,7 +36,7 @@
                 <?php $current_page = basename($_SERVER['REQUEST_URI']); ?>
 
                 <nav class="groups-nav">
-                    <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' || $current_page == 'chat') ? 'active' : ''; ?>">My Chats</a>
+                <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' || $current_page == 'chat') ? 'active' : ''; ?>">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search') ? 'active' : ''; ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests') ? 'active' : ''; ?>">Chat Requests</a>
                     <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>" 

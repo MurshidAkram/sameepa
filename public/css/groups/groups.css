@@ -45,6 +45,12 @@
     background: #f5f5f5;
     color: #800080;
 }
+.groups-nav a.active {
+    background-color: #800080; /* Purple background for active state */
+    color: #ffffff; /* White text for active state */
+    border-radius: 6px;
+    font-weight: 600;
+}
 
 .btn-create-group {
     background: #800080;

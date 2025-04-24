@@ -47,7 +47,7 @@
 
             <div class="groups-content">
                 <h1>Chat Reports</h1>
-                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/viewreport">
+                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/report">
                     <input type="text" name="search" placeholder="Search reports...">
                     <button type="submit">Search</button>
                 </form>

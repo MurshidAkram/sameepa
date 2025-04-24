@@ -389,4 +389,19 @@ public function deleteReport($reportId, $userId) {
     return $this->db->execute();
 }
 
+public function searchReports($search) {
+    // Query to search reports by category, status, reporter name, or description
+    $search = '%' . $search . '%';
+    $this->db->query('SELECT reports.*, users.name AS reporter_name 
+                      FROM reports 
+                      JOIN users ON reports.reporter_id = users.id 
+                      WHERE reports.category LIKE :search 
+                         OR reports.status LIKE :search 
+                         OR reports.description LIKE :search 
+                         OR users.name LIKE :search 
+                      ORDER BY reports.created_at DESC');
+    $this->db->bind(':search', $search);
+    return $this->db->resultSet();
+}
+
 }
