@@ -152,6 +152,34 @@
 .btn-delete-listing:hover {
     background-color: #990000;
 }
+.groups-search {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    max-width: 600px;
+}
+
+.groups-search input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.groups-search button {
+    padding: 10px 20px;
+    background-color: #800080;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.groups-search button:hover {
+    background-color: #9a009a;
+}
 
 
 @media (max-width: 768px) {

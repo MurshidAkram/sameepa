@@ -428,15 +428,16 @@ public function updateReport($data) {
 // }
 
 public function searchReports($search) {
-    // Query to search reports by category, status, reporter name, or description
+    // Query to search reports by category, status, reporter name, or description, where is_deleted is 0
     $search = '%' . $search . '%';
     $this->db->query('SELECT reports.*, users.name AS reporter_name 
                       FROM reports 
                       JOIN users ON reports.reporter_id = users.id 
-                      WHERE reports.category LIKE :search 
+                      WHERE reports.is_deleted = 0 
+                        AND (reports.category LIKE :search 
                          OR reports.status LIKE :search 
                          OR reports.description LIKE :search 
-                         OR users.name LIKE :search 
+                         OR users.name LIKE :search)
                       ORDER BY reports.created_at DESC');
     $this->db->bind(':search', $search);
     return $this->db->resultSet();

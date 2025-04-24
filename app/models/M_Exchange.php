@@ -183,4 +183,20 @@ class M_Exchange {
         
         return $this->db->execute();
     }
+
+    public function searchListings($search) {
+        // Query to search reports by category, status, reporter name, or description, where is_deleted is 0
+        $search = '%' . $search . '%';
+        $this->db->query('SELECT l.*, u.name AS posted_by_name FROM listings l
+                          JOIN users u ON l.posted_by = u.id
+                          WHERE l.is_deleted = 0 
+                            AND (l.title LIKE :search 
+                             OR l.posted_by LIKE :search 
+                             OR l.date_posted LIKE :search 
+                             OR l.description LIKE :search 
+                             OR l.type LIKE :search)
+                          ORDER BY l.date_posted DESC');
+        $this->db->bind(':search', $search);
+        return $this->db->resultSet();
+    }
 }

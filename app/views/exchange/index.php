@@ -39,6 +39,11 @@
                 <a href="<?php echo URLROOT; ?>/exchange/my_listings" class="btn-my-listings">My Listings</a>
             </div>
 
+            <!-- <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/exchange/index">
+                    <input type="text" name="search" placeholder="Search listings...">
+                    <button type="submit">Search</button>
+                </form> -->
+
             <div class="exchange-grid">
                 <?php if (!empty($data['listings'])) : ?>
                     <?php foreach ($data['listings'] as $listing) : ?>
@@ -58,7 +63,7 @@
                             <div class="listing-actions">
     <a href="<?php echo URLROOT; ?>/exchange/view_listing/<?php echo $listing->id; ?>" class="btn-view-listing">View Listing</a>
 
-    <?php if (in_array($_SESSION['user_role_id'], [2, 3])):  ?>
+    <?php if (in_array($_SESSION['user_role_id'], [ 3])):  ?>
             <form action="<?php echo URLROOT; ?>/exchange/adminDeletion/<?php echo $listing->id; ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');" style="display: inline;">
                 <button type="submit" class="btn-delete-listing"><i class="fas fa-trash-alt"></i></button>
             </form>

@@ -24,15 +24,22 @@ class Exchange extends Controller
     public function index()
     {
         try {
-            // Get all listings
+            // Get the search query from the form, if provided
+            // $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+    
+            // Fetch listings based on whether a search query exists
+            $listings = $this->ExchangeModel->getAllListings();
+            // $listings = $search ? $this->ExchangeModel->searchListings($search)
+    
+            // Prepare data for the view
             $data = [
-                'listings' => $this->ExchangeModel->getAllListings() ?: [], // Default to an empty array
-                'search' => '' // Keep search if needed later
+                'listings' => $listings ?: [], // Default to an empty array if no listings
+                // 'search' => $search, // Pass the search query to the view for display
             ];
-
+    
             // Load view with data
             $this->view('exchange/index', $data);
-
+    
         } catch (Exception $e) {
             die('Something went wrong: ' . $e->getMessage());
         }
