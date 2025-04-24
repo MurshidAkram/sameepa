@@ -14,7 +14,6 @@ $userModel = new M_Users();
 
 
         <ul class="navbar-menu">
-            <li><a href="<?php echo URLROOT; ?>">Home</a></li>
 
 
             <?php if (isset($_SESSION['user_id'])) : ?>
@@ -63,6 +62,7 @@ $userModel = new M_Users();
                 </li>
                 <li><a href="<?php echo URLROOT; ?>/users/logout" class="logout-link">Logout</a></li>
             <?php else : ?>
+                <li><a href="<?php echo URLROOT; ?>">Home</a></li>
                 <li><a href="<?php echo URLROOT; ?>/pages/about">About Us</a></li>
                 <li><a href="<?php echo URLROOT; ?>/pages/contact">Contact Us</a></li>
                 <li><a href="<?php echo URLROOT; ?>/users/signup">Sign Up</a></li>
