@@ -9,6 +9,51 @@ class M_maintenance
         $this->db = new Database; // Assuming Database is a custom class for database interaction
     }
 
+
+
+    //*******************************************************************dashboard****************************************************************** */
+
+    public function getRequestCountsByStatus()
+    {
+        $this->db->query('
+            SELECT ms.status_name, ms.status_id, COUNT(r.request_id) as count
+            FROM maintenance_status ms
+            LEFT JOIN requests r ON ms.status_id = r.status_id
+            GROUP BY ms.status_id, ms.status_name
+            ORDER BY ms.status_id
+        ');
+        
+        return $this->db->resultSet();
+    }
+    
+    public function getRequestCountsByType()
+    {
+        $this->db->query('
+            SELECT mt.type_name, COUNT(r.request_id) as count
+            FROM maintenance_types mt
+            LEFT JOIN requests r ON mt.type_id = r.type_id
+            GROUP BY mt.type_id, mt.type_name
+        ');
+        
+        return $this->db->resultSet();
+    }
+    
+    public function getCompletedRequestCountsByType()
+    {
+        $this->db->query('
+            SELECT mt.type_name, COUNT(r.request_id) as count
+            FROM maintenance_types mt
+            LEFT JOIN requests r ON mt.type_id = r.type_id
+            WHERE r.status_id = 3 -- Assuming 4 is the status_id for "completed"
+            GROUP BY mt.type_id, mt.type_name
+        ');
+        
+        return $this->db->resultSet();
+    }
+    
+
+
+    
     //***************************************maintenance members**********************************************************************************************************
 
     // Fetch all maintenance members
@@ -69,40 +114,11 @@ class M_maintenance
         return $this->db->execute();
     }
 
-
-//**********************************************resident requests****************************************************************************************************************************** */
-
-public function getMaintenanceTypes() {
-    $this->db->query('SELECT * FROM maintenance_types');
-    return $this->db->resultSet();
-}
-
-public function submitRequest($data) {
-    $this->db->query('
-        INSERT INTO requests 
-        (resident_id, type_id, description, urgency_level) 
-        VALUES 
-        (:resident_id, :type_id, :description, :urgency_level)
-    ');
-    
-    $this->db->bind(':resident_id', $data['resident_id']);
-    $this->db->bind(':type_id', $data['type_id']);
-    $this->db->bind(':description', $data['description']);
-    $this->db->bind(':urgency_level', $data['urgency_level']);
-    
-    return $this->db->execute();
-}
+//**********************************************resident requests of resident side******************************************************** */
 
 public function getResidentRequests($residentId) {
     $this->db->query('
-        SELECT 
-            r.request_id, 
-            mt.type_name AS type, 
-            r.description, 
-            r.urgency_level, 
-            ms.status_name AS status, 
-            r.created_at,
-            r.updated_at
+        SELECT r.*, mt.type_name as type, ms.status_name as status 
         FROM requests r
         JOIN maintenance_types mt ON r.type_id = mt.type_id
         JOIN maintenance_status ms ON r.status_id = ms.status_id
@@ -110,56 +126,74 @@ public function getResidentRequests($residentId) {
         ORDER BY r.created_at DESC
     ');
     $this->db->bind(':resident_id', $residentId);
-    
     return $this->db->resultSet();
+}
+
+public function getMaintenanceTypes() {
+    $this->db->query('SELECT * FROM maintenance_types');
+    return $this->db->resultSet();
+}
+
+public function submitRequest($data) {
+    try {
+        $this->db->query('
+            INSERT INTO requests 
+            (resident_id, type_id, description, urgency_level) 
+            VALUES (:resident_id, :type_id, :description, :urgency_level)
+        ');
+        
+        $this->db->bind(':resident_id', $data['resident_id']);
+        $this->db->bind(':type_id', $data['type_id']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':urgency_level', $data['urgency_level']);
+        
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            error_log("Database execute failed");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        return false;
+    }
+}
+
+public function getLastInsertId() {
+    return $this->db->lastInsertId();
 }
 
 public function getRequestDetails($requestId, $residentId) {
     $this->db->query('
-        SELECT 
-            r.request_id, 
-            mt.type_name AS type, 
-            r.description, 
-            r.urgency_level, 
-            ms.status_name AS status, 
-            r.created_at,
-          
-            mm.name AS maintainer_name
+        SELECT r.*, mt.type_name as type, ms.status_name as status 
         FROM requests r
         JOIN maintenance_types mt ON r.type_id = mt.type_id
         JOIN maintenance_status ms ON r.status_id = ms.status_id
-        LEFT JOIN maintenance_members mm ON r.assigned_maintainer_id = mm.id
         WHERE r.request_id = :request_id AND r.resident_id = :resident_id
     ');
     $this->db->bind(':request_id', $requestId);
     $this->db->bind(':resident_id', $residentId);
-    
     return $this->db->single();
 }
 
 public function isRequestEditable($requestId, $residentId) {
     $this->db->query('
-        SELECT status_id 
-        FROM requests 
+        SELECT status_id FROM requests 
         WHERE request_id = :request_id AND resident_id = :resident_id
     ');
     $this->db->bind(':request_id', $requestId);
     $this->db->bind(':resident_id', $residentId);
     
-    $row = $this->db->single();
-    
-    // Only editable if status is 'Pending' (status_id = 1)
-    return $row && $row->status_id == 1;
+    $result = $this->db->single();
+    return ($result && $result->status_id == 1); // Only editable if status is "Pending"
 }
 
 public function updateRequest($data) {
     $this->db->query('
-        UPDATE requests 
-        SET 
-            type_id = :type_id,
-            description = :description,
-            urgency_level = :urgency_level,
-            updated_at = CURRENT_TIMESTAMP
+        UPDATE requests SET 
+        type_id = :type_id, 
+        description = :description, 
+        urgency_level = :urgency_level 
         WHERE request_id = :request_id
     ');
     
@@ -176,6 +210,10 @@ public function deleteRequest($requestId) {
     $this->db->bind(':request_id', $requestId);
     return $this->db->execute();
 }
+
+
+
+//**********************************************resident requests of maintenance side****************************************************************************************************************************** */
 
 // Methods used by maintenance side
 public function getAllRequests() {
@@ -252,3 +290,5 @@ public function getStaffBySpecialization($specialization) {
 
 
 }
+
+?>

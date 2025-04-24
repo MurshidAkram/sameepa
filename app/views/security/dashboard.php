@@ -138,7 +138,8 @@
   <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
   <div class="main-content">
-    <h2>Security Dashboard</h2>
+    <h1>Security Dashboard</h1>
+    
     
     <div class="compact-grid">
       <!-- Visitor Card -->

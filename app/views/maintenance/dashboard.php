@@ -99,8 +99,8 @@ main {
 
 .card {
     flex: 1 1 calc(25% - 20px);
-    background: (#A93CC7);
-    color: #fff;
+    background: #ffffff;
+    color: #333;
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -122,7 +122,7 @@ main {
 }
 
 .card p {
-    font-size: 1.3rem;
+    font-size: 1.8rem;
     font-weight: bold;
     margin: 0;
 }
@@ -139,10 +139,11 @@ main {
     flex: 1;
     padding: 20px;
     border-radius: 15px;
-    background:( #4C3E4F);
+    background: #ffffff;
     color: #000;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s, box-shadow 0.3s;
+    min-height: 300px;
 }
 
 .chart-card:hover {
@@ -153,38 +154,16 @@ main {
 .chart-card h4 {
     margin: 0 0 15px;
     font-size: 1.3rem;
+    color: #800080;
+    text-align: center;
 }
 
-/* Reminders & Summary */
-.reminders,
-.summary {
-    padding: 20px;
-    border-radius: 15px;
-    background: #e8f5e9;
-    color: #388e3c;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.reminders h4,
-.summary h4 {
-    margin: 0 0 15px;
-    font-size: 1.3rem;
-    color: #1b5e20;
-}
-
-.reminders ul li,
-.summary ul li {
-    font-size: 1rem;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    transition: background-color 0.3s;
-}
-
-.reminders ul li:hover,
-.summary ul li:hover {
-    background: #dcedc8;
-}
+/* Status Card Colors */
+.card.status-1 { border-top: 4px solid #FFC107; } /* Pending */
+.card.status-2 { border-top: 4px solid #2196F3; } /* In Progress */
+.card.status-3 { border-top: 4px solid #F44336; } /* On Hold */
+.card.status-4 { border-top: 4px solid #4CAF50; } /* Completed */
+.card.status-5 { border-top: 4px solid #9C27B0; } /* Cancelled */
 
 /* Table Styles */
 table {
@@ -219,7 +198,6 @@ footer {
     font-size: 0.9rem;
     color: #666;
 }
- /* Include the CSS from your previous message */
     </style>
 </head>
 
@@ -233,53 +211,40 @@ footer {
             <!-- Dashboard Header -->
             <header class="dashboard-header">
                 <!-- <div class="user-info">
-                    <p>Welcome, <strong><?php //echo $_SESSION['user_name']; ?></strong> (Maintenance Personnel)</p>
+                    <p>Welcome, <strong><?php echo $_SESSION['user_name']; ?></strong></p>
                     <p id="current-date-time"></p>
                 </div> -->
 
                 <div class="dashboard-controls">
-                    <!-- <input type="text" placeholder="Search..." class="search-bar"> -->
-                    <div class="filter-options">
-                        <!-- <label for="filter-status">Filter by Status:</label>
-                        <select id="filter-status">
-                            <option value="all">All</option>
-                            <option value="completed">Completed</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="pending">Pending</option> -->
-                        </select>
-                    </div>
-                    <div class="quick-links">
-                        <a href="#">Notifications <span class="badge">3</span></a>
-                       
-                    </div>
+                    <!-- <div class="quick-links">
+                        <a href="<?php echo URLROOT; ?>/maintenance/requests">View All Requests</a>
+                    </div> -->
                 </div>
             </header>
 
-            <h1>Maintenance Management</h1>
+            <h1>Maintenance Dashboard</h1>
            
-            <!-- Overview Cards -->
+            <!-- Status Summary Cards -->
+            <h2>Request Status Overview</h2>
             <section class="overview-cards">
-                <div class="card">
-                    <h3>Scheme Maintenance</h3>
-                    <p>Upcoming: 8 | Ongoing: 3 | Past: 15</p>
+                <?php foreach ($data['statusCounts'] as $status): ?>
+                <div class="card status-<?php echo $status->status_id; ?>">
+                    <h3><?php echo $status->status_name; ?></h3>
+                    <p><?php echo $status->count; ?></p>
                 </div>
-               
-                <div class="card">
-                    <h3>Team Productivity</h3>
-                    <p>Avg Tasks/Day: 7 | Completion Rate: 95%</p>
-                </div>
+                <?php endforeach; ?>
             </section>
 
-            <!-- Detailed Charts -->
+            <!-- Request Type Charts -->
             <section class="charts-section">
                 <div class="chart-card">
-                    <h4>Repair Categories</h4>
-                    <canvas id="repair-category-chart"></canvas>
+                    <h4>All Requests by Type</h4>
+                    <canvas id="request-type-chart"></canvas>
                 </div>
-               
+                
                 <div class="chart-card">
-                    <h4>Resident Satisfaction</h4>
-                    <canvas id="satisfaction-chart"></canvas>
+                    <h4>Completed Requests by Type</h4>
+                    <canvas id="completed-requests-chart"></canvas>
                 </div>
             </section>
 
@@ -291,72 +256,95 @@ footer {
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Repair Categories Chart
-        const repairCategoryCtx = document.getElementById('repair-category-chart').getContext('2d');
-        new Chart(repairCategoryCtx, {
-            type: 'doughnut',
+        // Current date and time
+        // const dateTimeElement = document.getElementById('current-date-time');
+        // function updateDateTime() {
+        //     const now = new Date();
+        //     dateTimeElement.textContent = now.toLocaleString();
+        // }
+        // setInterval(updateDateTime, 1000);
+        
+        // Request Types Chart
+        const requestTypeCtx = document.getElementById('request-type-chart').getContext('2d');
+        new Chart(requestTypeCtx, {
+            type: 'pie',
             data: {
-                labels: ['Electrical', 'Plumbing', 'HVAC', 'Other'],
+                labels: [
+                    <?php 
+                    foreach ($data['requestTypeData'] as $type) {
+                        echo "'" . $type->type_name . "', ";
+                    }
+                    ?>
+                ],
                 datasets: [{
-                    data: [25, 30, 20, 25],
-                    backgroundColor: ['#8A2BE2', '#7B68EE', '#6A5ACD', '#9370DB'],
-
-                }]
-            }
-        });
-
-        // // Response Time Metrics Chart
-        // const responseTimeCtx = document.getElementById('response-time-chart').getContext('2d');
-        // new Chart(responseTimeCtx, {
-        //     type: 'bar',
-        //     data: {
-        //         labels: ['1-2 hrs', '2-4 hrs', '4-8 hrs', '8+ hrs'],
-        //         datasets: [{
-        //             label: 'Tasks',
-        //             data: [10, 20, 15, 5],
-        //             backgroundColor: '#A93CC7',
-        //         }]
-        //     },
-        //     options: {
-        //         scales: {
-        //             y: {
-        //                 beginAtZero: true
-        //             }
-        //         }
-        //     }
-        // });
-
-        // Resident Satisfaction Chart
-        const satisfactionCtx = document.getElementById('satisfaction-chart').getContext('2d');
-        new Chart(satisfactionCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Satisfaction Rate (%)',
-                    data: [85, 88, 90, 92, 91, 95],
-                    borderColor: '#800080',
-                    fill: false,
-                    tension: 0.3
+                    data: [
+                        <?php 
+                        foreach ($data['requestTypeData'] as $type) {
+                            echo $type->count . ", ";
+                        }
+                        ?>
+                    ],
+                    backgroundColor: [
+                        '#8A2BE2', '#7B68EE', '#6A5ACD', '#9370DB', '#800080', 
+                        '#4B0082', '#663399', '#483D8B', '#9400D3', '#6B3FA0'
+                    ],
+                    borderWidth: 1
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        min: 80,
-                        max: 100
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribution of All Maintenance Requests'
                     }
                 }
             }
         });
 
-        // JavaScript to display current date and time
-        const dateTimeElement = document.getElementById('current-date-time');
-        function updateDateTime() {
-            const now = new Date();
-            dateTimeElement.textContent = now.toLocaleString();
-        }
-        setInterval(updateDateTime, 1000);
+        // Completed Requests by Type Chart
+        const completedRequestCtx = document.getElementById('completed-requests-chart').getContext('2d');
+        new Chart(completedRequestCtx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    <?php 
+                    foreach ($data['completedRequestData'] as $type) {
+                        echo "'" . $type->type_name . "', ";
+                    }
+                    ?>
+                ],
+                datasets: [{
+                    data: [
+                        <?php 
+                        foreach ($data['completedRequestData'] as $type) {
+                            echo $type->count . ", ";
+                        }
+                        ?>
+                    ],
+                    backgroundColor: [
+                        '#8A2BE2', '#7B68EE', '#6A5ACD', '#9370DB', '#800080', 
+                        '#4B0082', '#663399', '#483D8B', '#9400D3', '#6B3FA0'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribution of Completed Maintenance Requests'
+                    }
+                }
+            }
+        });
     </script>
 </body>
 

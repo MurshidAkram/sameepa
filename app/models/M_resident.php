@@ -12,13 +12,12 @@ class M_resident {
         
         $row = $this->db->single();
 
-        // Check if $row is an object or array and return the id accordingly
         if (is_object($row)) {
             return $row->id;
         } elseif (is_array($row)) {
             return $row['id'];
         } else {
-            return false; // Return false if no result is found
+            return false;
         }
     }
 
@@ -37,9 +36,9 @@ class M_resident {
     public function getResidentById($userId) {
         $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
         $this->db->bind(':user_id', $userId);
-
-        // Fetch a single result as an object
         return $this->db->single();
     }
 }
+
+   
 ?>
