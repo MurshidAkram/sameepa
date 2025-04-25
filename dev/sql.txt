@@ -691,6 +691,9 @@ ALTER TABLE `listings`
 
 ALTER TABLE `listings`
   ADD CONSTRAINT `listings_ibfk_1` FOREIGN KEY (`posted_by`) REFERENCES `users` (`id`);
+
+
+
 INSERT INTO maintenance_types (type_name) VALUES 
 ('Plumbing'), 
 ('Electrical'), 

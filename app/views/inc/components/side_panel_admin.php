@@ -12,6 +12,6 @@
                 <li><a href="<?php echo URLROOT; ?>/complaints/dashboard">Complaints & Reports</a></li>
                 <li><a href="<?php echo URLROOT; ?>/groups/admin_dashboard">Manage Groups</a></li>
                 <li><a href="<?php echo URLROOT; ?>/exchange/index">Manage Exchange Center</a></li>
-                <li><a href="<?php echo URLROOT; ?>/admin/Manage_security_duties">Manage_security_duties</a></li>
+                <li><a href="<?php echo URLROOT; ?>/admin/Manage_security_duties">Security Duties</a></li>
         </ul>
 </aside>
