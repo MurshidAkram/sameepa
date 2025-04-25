@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td>Address:</td>
-                        <td><?php echo is_array($data['payment']) ? $data['payment']['home_address'] : $data['payment']->home_address; ?></td>
+                        <td><?php echo is_array($data['payment']) ? $data['payment']['address'] : $data['payment']->address; ?></td>
                     </tr>
                 </table>
             </div>
@@ -75,7 +75,7 @@
             <p class="small">This is an automatically generated receipt. For questions or concerns, please contact our support team.</p>
             <div class="receipt-actions">
                 <button onclick="window.print()" class="btn-print">Print Receipt</button>
-                <button onclick="window.location.href='<?php echo URLROOT; ?>/payments/<?php echo ($_SESSION['user_role_id'] == 1) ? 'index' : 'admin_dashboard'; ?>'" class="btn-back">Back to Dashboard</button>
+                <button onclick="window.location.href='<?php echo URLROOT; ?>/payments/<?php echo ($_SESSION['user_role_id'] == 1) ? 'requests' : 'admin_dashboard'; ?>'" class="btn-back">Back to Dashboard</button>
             </div>
         </div>
     </div>

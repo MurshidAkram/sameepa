@@ -94,12 +94,12 @@ class M_Payments {
     // Get monthly payment data for chart
     public function getMonthlyPaymentData() {
         $this->db->query('SELECT 
-                          MONTH(created_at) as month, 
+                          MONTH(paid_at) as month, 
                           SUM(amount) as total 
-                          FROM payments 
-                          WHERE status = "completed" 
-                          AND YEAR(created_at) = YEAR(CURDATE()) 
-                          GROUP BY MONTH(created_at)');
+                          FROM payment_requests 
+                          WHERE status = "paid" 
+                          AND YEAR(paid_at) = YEAR(CURDATE()) 
+                          GROUP BY MONTH(paid_at)');
         
         $results = $this->db->resultSet();
         
@@ -132,78 +132,58 @@ class M_Payments {
     // Get most active day of the current month
     public function getMostActiveDayThisMonth() {
         $this->db->query('SELECT 
-                          DAYNAME(created_at) as day_name, 
-                          COUNT(*) as payment_count
-                          FROM payments 
-                          WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) 
-                          AND YEAR(created_at) = YEAR(CURRENT_DATE())
-                          GROUP BY DAYNAME(created_at)
-                          ORDER BY payment_count DESC
+                          DAYNAME(paid_at) as day_name, 
+                          COUNT(*) as request_count
+                          FROM payment_requests 
+                          WHERE MONTH(paid_at) = MONTH(CURRENT_DATE()) 
+                          AND YEAR(paid_at) = YEAR(CURRENT_DATE())
+                          AND status = "paid"
+                          GROUP BY DAYNAME(paid_at)
+                          ORDER BY request_count DESC
                           LIMIT 1');
         
         $result = $this->db->single();
-        // Check if result is an array and access it accordingly
-        if ($result && is_array($result)) {
-            return $result['day_name'] ?? 'N/A';
-        } elseif ($result && is_object($result)) {
-            return $result->day_name ?? 'N/A';
-        }
-        return 'N/A';
+        return is_array($result) ? ($result['day_name'] ?? 'N/A') : ($result->day_name ?? 'N/A');
     }
 
-    // Get payment count for the current month
-    public function getPaymentCountThisMonth() {
+    // Get request count for the current month
+    public function getRequestCountThisMonth() {
         $this->db->query('SELECT 
                           COUNT(*) as count
-                          FROM payments 
-                          WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) 
-                          AND YEAR(created_at) = YEAR(CURRENT_DATE())');
+                          FROM payment_requests 
+                          WHERE MONTH(paid_at) = MONTH(CURRENT_DATE()) 
+                          AND YEAR(paid_at) = YEAR(CURRENT_DATE())
+                          AND status = "paid"');
         
         $result = $this->db->single();
-        // Check if result is an array and access it accordingly
-        if ($result && is_array($result)) {
-            return $result['count'] ?? 0;
-        } elseif ($result && is_object($result)) {
-            return $result->count ?? 0;
-        }
-        return 0;
+        return is_array($result) ? ($result['count'] ?? 0) : ($result->count ?? 0);
     }
 
-    // Get total payment amount for the current month
+    // Get total amount for the current month
     public function getTotalAmountThisMonth() {
         $this->db->query('SELECT 
                           SUM(amount) as total
-                          FROM payments 
-                          WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) 
-                          AND YEAR(created_at) = YEAR(CURRENT_DATE())
-                          AND status = "completed"');
+                          FROM payment_requests 
+                          WHERE MONTH(paid_at) = MONTH(CURRENT_DATE()) 
+                          AND YEAR(paid_at) = YEAR(CURRENT_DATE())
+                          AND status = "paid"');
         
         $result = $this->db->single();
-        // Check if result is an array and access it accordingly
-        if ($result && is_array($result)) {
-            return $result['total'] ?? 0;
-        } elseif ($result && is_object($result)) {
-            return $result->total ?? 0;
-        }
-        return 0;
+        return is_array($result) ? ($result['total'] ?? 0) : ($result->total ?? 0);
     }
 
-    // Get recent payment activity (last 7 days)
-    public function getRecentPaymentActivity() {
+    // Get recent request activity (last 7 days)
+    public function getRecentRequestActivity() {
         $this->db->query('SELECT 
                           COUNT(*) as count
-                          FROM payments 
-                          WHERE created_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)');
+                          FROM payment_requests 
+                          WHERE paid_at >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+                          AND status = "paid"');
         
         $result = $this->db->single();
-        // Check if result is an array and access it accordingly
-        if ($result && is_array($result)) {
-            return $result['count'] ?? 0;
-        } elseif ($result && is_object($result)) {
-            return $result->count ?? 0;
-        }
-        return 0;
+        return is_array($result) ? ($result['count'] ?? 0) : ($result->count ?? 0);
     }
+
     // Get payment statistics for reports
     public function getPaymentStatistics() {
         $this->db->query('SELECT 
@@ -301,18 +281,30 @@ class M_Payments {
 
     // Get payment requests for a specific user
     public function getPaymentRequestsByUserId($user_id) {
+        // First get the user's address
+        $this->db->query('SELECT address FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $user_id);
+        $resident = $this->db->single();
+        
+        if (!$resident) {
+            return [];
+        }
+        
+        // Handle both array and object return types
+        $address = is_array($resident) ? $resident['address'] : $resident->address;
+        
+        // Then get payment requests for that address
         $this->db->query('
             SELECT pr.*, 
-                   u.name as resident_name,
                    cb.name as created_by_name
             FROM payment_requests pr
-            JOIN users u ON pr.user_id = u.id
             JOIN users cb ON pr.created_by = cb.id
-            WHERE pr.user_id = :user_id
-            ORDER BY pr.created_at DESC
+            WHERE pr.address = :address
+            AND pr.status = "paid"
+            ORDER BY pr.paid_at DESC
         ');
         
-        $this->db->bind(':user_id', $user_id);
+        $this->db->bind(':address', $address);
         return $this->db->resultSet();
     }
 
@@ -324,7 +316,6 @@ class M_Payments {
             FROM payment_requests pr
             JOIN users cb ON pr.created_by = cb.id
             WHERE pr.id = :id
-            AND pr.status != "paid"
         ');
         
         $this->db->bind(':id', $id);
@@ -339,19 +330,19 @@ class M_Payments {
     }
 
     // Update payment request status
-    public function updatePaymentRequestStatus($id, $status, $payment_id = null) {
-        $this->db->query('UPDATE payment_requests SET status = :status, paid_at = CURRENT_TIMESTAMP, payment_id = :payment_id WHERE id = :id');
+    public function updatePaymentRequestStatus($id, $status, $transaction_id = null) {
+        $this->db->query('UPDATE payment_requests SET status = :status, paid_at = CURRENT_TIMESTAMP, transaction_id = :transaction_id WHERE id = :id');
         
         $this->db->bind(':id', $id);
         $this->db->bind(':status', $status);
-        $this->db->bind(':payment_id', $payment_id);
+        $this->db->bind(':transaction_id', $transaction_id);
         
         return $this->db->execute();
     }
 
     // Get payment by transaction ID
     public function getPaymentByTransactionId($transaction_id) {
-        $this->db->query('SELECT * FROM payments WHERE transaction_id = :transaction_id');
+        $this->db->query('SELECT * FROM payment_requests WHERE transaction_id = :transaction_id');
         $this->db->bind(':transaction_id', $transaction_id);
         return $this->db->single();
     }
@@ -363,13 +354,15 @@ class M_Payments {
         return $this->db->execute();
     }
 
+    // Get all payment requests with resident names (only paid)
     public function getAllPaymentRequestsWithResidentNames() {
         $this->db->query('
             SELECT pr.*, 
                    cb.name as created_by_name
             FROM payment_requests pr
             JOIN users cb ON pr.created_by = cb.id
-            ORDER BY pr.created_at DESC
+            WHERE pr.status = "paid"
+            ORDER BY pr.paid_at DESC
         ');
         
         return $this->db->resultSet();
@@ -391,6 +384,110 @@ class M_Payments {
         
         $result = $this->db->single();
         return $result->count > 0;
+    }
+
+    // Get resident address by user ID
+    public function getResidentAddress($user_id) {
+        $this->db->query('SELECT address FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $user_id);
+        return $this->db->single();
+    }
+
+    // Validate payment request for checkout
+    public function validatePaymentRequestForCheckout($request_id, $user_id) {
+        // Get payment request
+        $request = $this->getPaymentRequestById($request_id);
+        if (!$request) {
+            return false;
+        }
+
+        // Get resident address
+        $resident = $this->getResidentAddress($user_id);
+        if (!$resident) {
+            return false;
+        }
+
+        // Handle both array and object return types
+        $userAddress = is_array($resident) ? $resident['address'] : $resident->address;
+
+        // Check if addresses match
+        return $request->address === $userAddress;
+    }
+
+    // Get payment history for a specific address (only paid)
+    public function getPaymentHistoryByAddress($address) {
+        $this->db->query('
+            SELECT pr.*, 
+                   cb.name as created_by_name
+            FROM payment_requests pr
+            JOIN users cb ON pr.created_by = cb.id
+            WHERE pr.address = :address
+            AND pr.status = "paid"
+            ORDER BY pr.paid_at DESC
+        ');
+        
+        $this->db->bind(':address', $address);
+        return $this->db->resultSet();
+    }
+
+    // Get all payment history (for admins, only paid)
+    public function getAllPaymentHistory() {
+        $this->db->query('
+            SELECT pr.*, 
+                   cb.name as created_by_name
+            FROM payment_requests pr
+            JOIN users cb ON pr.created_by = cb.id
+            WHERE pr.status = "paid"
+            ORDER BY pr.paid_at DESC
+        ');
+        
+        return $this->db->resultSet();
+    }
+
+    // Get payment details for view/receipt (only paid)
+    public function getPaymentDetails($id) {
+        $this->db->query('
+            SELECT pr.*, 
+                   cb.name as created_by_name,
+                   cb.email as created_by_email
+            FROM payment_requests pr
+            JOIN users cb ON pr.created_by = cb.id
+            WHERE pr.id = :id
+            AND pr.status = "paid"
+        ');
+        
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    // Get pending requests for a specific address
+    public function getPendingRequestsByAddress($address) {
+        $this->db->query('
+            SELECT pr.*, 
+                   cb.name as created_by_name
+            FROM payment_requests pr
+            JOIN users cb ON pr.created_by = cb.id
+            WHERE pr.address = :address
+            AND pr.status = "pending"
+            ORDER BY pr.created_at DESC
+        ');
+        
+        $this->db->bind(':address', $address);
+        return $this->db->resultSet();
+    }
+
+    // Get all pending requests (for admins)
+    public function getAllPendingRequests() {
+        $this->db->query('
+            SELECT pr.*, 
+                   cb.name as created_by_name
+            FROM payment_requests pr
+            JOIN users cb ON pr.created_by = cb.id
+            WHERE pr.status = "pending"
+            ORDER BY pr.created_at DESC
+        ');
+        
+        return $this->db->resultSet();
     }
 
 }

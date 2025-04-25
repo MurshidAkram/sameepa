@@ -22,11 +22,7 @@
 }
 
 .btn-back:hover {
-    background-color: #e9ecef;
-}
-
-.btn-back i {
-    margin-right: 0.5rem;
+    transform: translateY(-2px);
 }
 
 .payment-details {

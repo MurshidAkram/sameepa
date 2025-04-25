@@ -26,7 +26,7 @@
         ?>
         <main class="all-payments-main">
             <div class="page-header">
-                <h1>All Payment Records</h1>
+                <h1>All Payments</h1>
                 <div class="header-actions">
                     <a href="<?php echo URLROOT; ?>/payments/admin_dashboard" class="btn-back">
                         <i class="fas fa-arrow-left"></i> Back to Dashboard
@@ -39,7 +39,7 @@
 
             <div class="filter-search-container">
                 <div class="search-container">
-                    <input type="search" id="searchPayment" placeholder="Search payments..." class="search-input">
+                    <input type="search" id="searchPayment" placeholder="Search payment requests..." class="search-input">
                     <button class="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
@@ -50,43 +50,38 @@
                 <table class="payments-table">
                     <thead>
                         <tr>
-                            <th>Transaction ID</th>
-                            <th>User</th>
+                            <th>ID</th>
                             <th>Address</th>
                             <th>Amount</th>
                             <th>Description</th>
-                            <th>Date</th>
+                            <th>Paid At</th>
+                            <th>Created By</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(isset($data['payments']) && !empty($data['payments'])): ?>
-                            <?php foreach($data['payments'] as $payment): ?>
+                        <?php if(isset($data['requests']) && !empty($data['requests'])): ?>
+                            <?php foreach($data['requests'] as $request): ?>
                             <tr>
-                                <td><?php echo substr($payment->transaction_id, 0, 10) . '...'; ?></td>
-                                <td><?php echo $payment->user_name ?? 'Unknown'; ?></td>
-                                <td><?php echo $payment->home_address; ?></td>
-                                <td>Rs.<?php echo number_format($payment->amount, 2); ?></td>
-                                <td><?php echo substr($payment->description, 0, 30) . (strlen($payment->description) > 30 ? '...' : ''); ?></td>
-                                <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
+                                <td><?php echo $request->id; ?></td>
+                                <td><?php echo $request->address; ?></td>
+                                <td>Rs.<?php echo number_format($request->amount, 2); ?></td>
+                                <td><?php echo substr($request->description, 0, 30) . (strlen($request->description) > 30 ? '...' : ''); ?></td>
+                                <td><?php echo date('M d, Y H:i', strtotime($request->paid_at)); ?></td>
+                                <td><?php echo $request->created_by_name; ?></td>
                                 <td class="action-buttons">
-                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $payment->id; ?>" class="btn-view-p" title="View Details">
+                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $request->id; ?>" class="btn-view-p" title="View Details">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $payment->id; ?>" class="btn-receipt" title="Generate Receipt">
+                                    <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $request->id; ?>" class="btn-receipt" title="Generate Receipt">
                                         <i class="fas fa-file-invoice"></i>
                                     </a>
-                                    <form action="<?php echo URLROOT; ?>/payments/delete/<?php echo $payment->id; ?>" method="POST" style="display: inline;">
-                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this payment record? This action cannot be undone.')" title="Delete Payment">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="8" class="no-data">No payment records found</td>
+                                <td colspan="7" class="no-data">No paid requests found</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

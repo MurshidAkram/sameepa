@@ -39,10 +39,16 @@
                         <label for="address">Address: <sup>*</sup></label>
                         <select name="address" id="address" class="form-control <?php echo (!empty($data['address_err'])) ? 'is-invalid' : ''; ?>">
                             <option value="">Select Address</option>
-                            <?php foreach($data['residents'] as $resident): ?>
-                                <option value="<?php echo htmlspecialchars($resident->address); ?>" 
-                                    <?php echo ($data['address'] == $resident->address) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($resident->address); ?>
+                            <?php 
+                            // Get unique addresses
+                            $uniqueAddresses = array_unique(array_map(function($resident) {
+                                return $resident->address;
+                            }, $data['residents']));
+                            
+                            foreach($uniqueAddresses as $address): ?>
+                                <option value="<?php echo htmlspecialchars($address); ?>" 
+                                    <?php echo ($data['address'] == $address) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($address); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

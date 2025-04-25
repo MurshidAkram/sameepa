@@ -31,7 +31,15 @@
             <div class="page-header">
                 <h1>Payment Requests</h1>
                 <div class="header-actions">
-                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                    <?php if ($_SESSION['user_role_id'] == 1): ?>
+                        <a href="<?php echo URLROOT; ?>/payments/history" class="btn-history">
+                            <i class="fas fa-history"></i> Payment History
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['user_role_id'] == 3): ?>
+                        <a href="<?php echo URLROOT; ?>/payments/admin_dashboard" class="btn-back">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
                         <a href="<?php echo URLROOT; ?>/payments/create_request" class="btn-create">
                             <i class="fas fa-plus"></i> Create New Request
                         </a>
@@ -40,20 +48,19 @@
             </div>
             
             <?php if (empty($data['requests'])): ?>
-                <p class="no-data">No payment requests found.</p>
+                <p class="no-data">No pending payment requests found.</p>
             <?php else: ?>
                 <div class="requests-table-container">
                     <table class="requests-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <?php if ($_SESSION['user_role_id'] == 2): ?>
+                                <?php if ($_SESSION['user_role_id'] == 3): ?>
                                     <th>Address</th>
                                 <?php endif; ?>
                                 <th>Amount</th>
                                 <th>Description</th>
                                 <th>Due Date</th>
-                                <th>Status</th>
                                 <th>Created By</th>
                                 <th>Created At</th>
                                 <th>Actions</th>
@@ -63,26 +70,21 @@
                             <?php foreach($data['requests'] as $request): ?>
                                 <tr>
                                     <td><?php echo $request->id; ?></td>
-                                    <?php if ($_SESSION['user_role_id'] == 2): ?>
+                                    <?php if ($_SESSION['user_role_id'] == 3): ?>
                                         <td><?php echo $request->address; ?></td>
                                     <?php endif; ?>
                                     <td>Rs.<?php echo number_format($request->amount, 2); ?></td>
                                     <td><?php echo $request->description; ?></td>
                                     <td><?php echo date('M d, Y', strtotime($request->due_date)); ?></td>
-                                    <td>
-                                        <span class="badge badge-<?php echo $request->status == 'paid' ? 'success' : 'warning'; ?>">
-                                            <?php echo ucfirst($request->status); ?>
-                                        </span>
-                                    </td>
                                     <td><?php echo $request->created_by_name; ?></td>
                                     <td><?php echo date('M d, Y H:i', strtotime($request->created_at)); ?></td>
                                     <td class="action-buttons">
-                                        <?php if ($_SESSION['user_role_id'] == 1 && $request->status == 'pending'): ?>
+                                        <?php if ($_SESSION['user_role_id'] == 1): ?>
                                             <a href="<?php echo URLROOT; ?>/payments/pay_request/<?php echo $request->id; ?>" class="btn-pay">
-                                                <i class="fas fa-credit-card"></i>
+                                                <i class="fas fa-money-bill-wave"></i>
                                             </a>
                                         <?php endif; ?>
-                                        <?php if ($_SESSION['user_role_id'] == 2 && $request->status == 'pending'): ?>
+                                        <?php if ($_SESSION['user_role_id'] == 3): ?>
                                             <form action="<?php echo URLROOT; ?>/payments/delete_request/<?php echo $request->id; ?>" method="post" class="delete-form">
                                                 <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this payment request?');">
                                                     <i class="fas fa-trash"></i>

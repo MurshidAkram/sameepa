@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/payments/checkout.css">
+    <script src="https://js.stripe.com/v3/"></script>
     <title>Complete Payment | <?php echo SITENAME; ?></title>
 </head>
 
@@ -44,15 +45,15 @@
                     <h2>Payment Summary</h2>
                     <div class="summary-item">
                         <span>Amount:</span>
-                        <span>Rs.<?php echo number_format($data['request']->amount, 2); ?></span>
+                        <span>Rs.<?php echo number_format($data['paymentRequest']->amount, 2); ?></span>
                     </div>
                     <div class="summary-item">
                         <span>Description:</span>
-                        <span><?php echo $data['request']->description; ?></span>
+                        <span><?php echo $data['paymentRequest']->description; ?></span>
                     </div>
                     <div class="summary-item">
                         <span>Due Date:</span>
-                        <span><?php echo date('M d, Y', strtotime($data['request']->due_date)); ?></span>
+                        <span><?php echo date('M d, Y', strtotime($data['paymentRequest']->due_date)); ?></span>
                     </div>
                 </div>
 
@@ -74,10 +75,9 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <script src="https://js.stripe.com/v3/"></script>
     <script>
-        const stripe = Stripe('<?php echo STRIPE_PUBLISHABLE_KEY; ?>');
-        const clientSecret = '<?php echo $data['client_secret']; ?>';
+        const stripe = Stripe('<?php echo STRIPE_PUBLIC_KEY; ?>');
+        const clientSecret = '<?php echo $data['clientSecret']; ?>';
         
         const appearance = {
             theme: 'stripe',
@@ -103,7 +103,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Disable the submit button to prevent repeated clicks
             submitButton.disabled = true;
             spinner.classList.remove('hidden');
             buttonText.classList.add('hidden');
@@ -111,30 +110,19 @@
             const { error } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: '<?php echo URLROOT; ?>/payments/request_success/<?php echo $data['request']->id; ?>',
+                    return_url: '<?php echo URLROOT; ?>/payments/success',
                 },
             });
             
             if (error) {
-                // Show error to your customer
-                showMessage(error.message);
+                paymentMessage.classList.remove('hidden');
+                paymentMessage.textContent = error.message;
                 
-                // Re-enable the submit button
                 submitButton.disabled = false;
                 spinner.classList.add('hidden');
                 buttonText.classList.remove('hidden');
             }
         });
-        
-        function showMessage(messageText) {
-            paymentMessage.classList.remove('hidden');
-            paymentMessage.textContent = messageText;
-            
-            setTimeout(function () {
-                paymentMessage.classList.add('hidden');
-                paymentMessage.textContent = "";
-            }, 4000);
-        }
     </script>
 </body>
 
