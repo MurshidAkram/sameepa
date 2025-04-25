@@ -10,10 +10,14 @@
   <style>
   .dashboard-container {
   display: flex;
-  
+  padding-bottom: 20px;
   padding: 15px;
   gap: 15px;
   
+}
+
+.padding{
+  padding-bottom: 40px;
 }
 
 .main-content {
@@ -134,7 +138,8 @@
   <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
   <div class="main-content">
-    <h2>Security Dashboard</h2>
+    <h1>Security Dashboard</h1>
+    
     
     <div class="compact-grid">
       <!-- Visitor Card -->
@@ -252,7 +257,14 @@
     </div>
   </div>
 </div>
+
+<div class="padding">
+
+</div>
 <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+
+
+
 <script>
 // Initialize all charts
 function initializeCharts() {

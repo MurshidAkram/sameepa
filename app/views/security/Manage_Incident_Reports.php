@@ -425,7 +425,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             line-height: 1.4;
         }
@@ -909,7 +908,7 @@
             const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-success';
             alertDiv.textContent = message;
-            document.body.appendChild(alertDiv);
+            // document.body.appendChild(alertDiv);
             setTimeout(() => alertDiv.remove(), 3000);
         }
 
@@ -917,7 +916,7 @@
             const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-error';
             alertDiv.textContent = message;
-            document.body.appendChild(alertDiv);
+          
             setTimeout(() => alertDiv.remove(), 5000);
         }
 

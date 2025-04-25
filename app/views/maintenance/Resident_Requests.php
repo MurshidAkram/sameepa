@@ -1,29 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Requests | <?php echo SITENAME; ?></title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <title>Resident Requests | <?php echo SITENAME; ?></title>
     <style>
-        /* General Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            background: #f5f7fa;
             margin: 0;
             color: #333;
-            line-height: 1.6;
         }
 
         .dashboard-container {
             display: flex;
             min-height: 100vh;
-            padding: 20px;
-            gap: 20px;
-            background-color: #f8f9fa;
         }
 
         main {
@@ -32,10 +25,9 @@
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            margin: 20px;
         }
 
-        /* Content Header */
         .content-header {
             margin-bottom: 30px;
             padding-bottom: 15px;
@@ -45,18 +37,10 @@
         .content-header h1 {
             margin: 0 0 10px;
             font-size: 2.2rem;
-            color: #6a3093;
+            color: #800080;
             font-weight: 700;
-            letter-spacing: -0.5px;
         }
 
-        .content-header p {
-            margin: 0;
-            color: #666;
-            font-size: 1.05rem;
-        }
-
-        /* Filter Section */
         .filter-section {
             display: flex;
             flex-wrap: wrap;
@@ -67,25 +51,13 @@
 
         .filter-section input,
         .filter-section select {
-            padding: 12px 15px;
+            padding: 10px 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            min-width: 220px;
-            background-color: #f8f9fa;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            min-width: 200px;
         }
 
-        .filter-section input:focus,
-        .filter-section select:focus {
-            border-color: #9c27b0;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
-            background-color: #fff;
-        }
-
-        /* Table Styles */
         .table-container {
             overflow-x: auto;
             margin-bottom: 30px;
@@ -98,97 +70,62 @@
             border-collapse: separate;
             border-spacing: 0;
             font-size: 0.95rem;
-            border-radius: 10px;
-            overflow: hidden;
         }
 
         .dashboard-table th {
-            background: linear-gradient(135deg, #6a3093 0%, #a044ff 100%);
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
             color: #fff;
-            padding: 16px;
+            padding: 12px;
             font-weight: 600;
-            text-align: center;
-            position: sticky;
-            top: 0;
+            text-align: left;
         }
 
         .dashboard-table td {
-            padding: 14px;
-            text-align: center;
-            border: 1px solid #e0e0e0;
-            color: #555;
-            transition: background-color 0.2s;
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
         }
 
-        .dashboard-table tbody tr:nth-child(even) {
+        .dashboard-table tr:nth-child(even) {
             background: #fafafa;
         }
 
-        .dashboard-table tbody tr:hover {
+        .dashboard-table tr:hover {
             background: #f0e6ff;
         }
 
-        /* Urgency Indicators */
-        .urgency-low {
-            color: #28a745;
-            font-weight: 500;
-        }
-
-        .urgency-medium {
-            color: #ffc107;
-            font-weight: 500;
-        }
-
-        .urgency-high {
-            color: #dc3545;
-            font-weight: 600;
-        }
-
-        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
         }
 
-        .action-buttons button {
-            padding: 10px 18px;
+        .btn {
+            padding: 8px 12px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 0.9rem;
-            color: #fff;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
+            transition: all 0.3s;
         }
 
         .btn-edit {
-            background: linear-gradient(135deg, #3498db 0%, #2c80c7 100%);
-            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+            background: #9c27b0;
+            color: white;
         }
 
         .btn-edit:hover {
-            background: linear-gradient(135deg, #2c80c7 0%, #256fb3 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+            background: #7b1fa2;
         }
 
-        .btn-urgent {
-            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-            box-shadow: 0 2px 5px rgba(243, 156, 18, 0.3);
+        .btn-assign {
+            background: #2196F3;
+            color: white;
         }
 
-        .btn-urgent:hover {
-            background: linear-gradient(135deg, #e67e22 0%, #d46a17 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.4);
+        .btn-assign:hover {
+            background: #0d8bf2;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -198,8 +135,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(3px);
-            animation: fadeIn 0.3s;
         }
 
         .modal-content {
@@ -207,166 +142,100 @@
             margin: 10% auto;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             width: 90%;
             max-width: 500px;
             position: relative;
-            animation: slideDown 0.3s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal h2 {
-            margin-top: 0;
-            color: #6a3093;
-            font-size: 1.5rem;
         }
 
         .close {
             position: absolute;
             right: 20px;
             top: 15px;
-            color: #aaa;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-            transition: color 0.3s;
         }
 
-        .close:hover {
-            color: #333;
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        /* Form Elements in Modals */
-        .modal-content form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .modal-content label {
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
             font-weight: 500;
-            color: #555;
-            margin-bottom: -10px;
         }
 
-        .modal-content input[type="date"],
-        .modal-content select {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
+        .form-group select,
+        .form-group input {
             width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
         }
 
-        .modal-content input[type="date"]:focus,
-        .modal-content select:focus {
-            border-color: #9c27b0;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        /* Request History Section */
-        h2 {
-            color: #6a3093;
-            font-size: 1.8rem;
-            margin: 30px 0 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+        .toast.show {
+            opacity: 1;
         }
 
-        /* Responsive Adjustments */
+        .toast-success {
+            background: #4CAF50;
+        }
+
+        .toast-error {
+            background: #F44336;
+        }
+
         @media (max-width: 768px) {
-            .dashboard-container {
-                flex-direction: column;
-                padding: 10px;
-            }
-
             .filter-section {
                 flex-direction: column;
                 align-items: stretch;
             }
-
+            
             .filter-section input,
             .filter-section select {
-                min-width: 100%;
+                width: 100%;
             }
-
+            
             .action-buttons {
                 flex-direction: column;
-                gap: 5px;
             }
-
-            .action-buttons button {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .modal-content {
-                margin: 20% auto;
-                width: 95%;
-            }
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 30px;
-            border-top: 1px solid #eee;
         }
     </style>
 </head>
-
-
 <body>
-    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+  <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+   
 
     <div class="dashboard-container">
-        <?php require APPROOT . '/views/inc/components/side_panel_maintenance.php'; ?>
-
+ <?php require APPROOT . '/views/inc/components/side_panel_maintenance.php'; ?>
         <main>
             <div class="content-header">
                 <h1>Resident Requests</h1>
+                <p>Manage all maintenance requests from residents</p>
             </div>
 
-            <!-- Search & Filters -->
             <section class="filter-section">
-                <input type="text" id="searchInput" placeholder="Search requests..." />
+                <input type="text" id="searchInput" placeholder="Search requests...">
                 <select id="typeFilter">
                     <option value="">All Request Types</option>
                     <?php foreach ($data['types'] as $type): ?>
                         <option value="<?php echo $type->type_id; ?>"><?php echo $type->type_name; ?></option>
                     <?php endforeach; ?>
-                </select>
-                <select id="urgencyFilter">
-                    <option value="">All Urgency Levels</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
                 </select>
                 <select id="statusFilter">
                     <option value="">All Statuses</option>
@@ -376,61 +245,43 @@
                 </select>
             </section>
 
-            <!-- Request Table -->
             <div class="table-container">
                 <table class="dashboard-table">
                     <thead>
                         <tr>
                             <th>Request ID</th>
-                            <th>Resident Details</th>
-                            <th>Type of Request</th>
-                            <th>Title</th>
+                            <th>Resident Name</th>
+                            <th>Address</th>
+                            <th>Phone</th>
+                            <th>Request Type</th>
+                            <th>Description</th>
                             <th>Urgency</th>
                             <th>Status</th>
-                            <th>Assigned Maintainer</th>
-                            <th>Due Date</th>
+                            <th>Maintainer</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($data['requests'] as $request): ?>
-                            <tr>
+                            <tr data-status-id="<?php echo $request->status_id; ?>">
                                 <td><?php echo $request->request_id; ?></td>
-                                <td>
-                                    <?php echo $request->resident_name; ?><br>
-                                    <?php echo $request->unit_number; ?>
-                                </td>
+                                <td><?php echo $request->resident_name; ?></td>
+                                <td><?php echo $request->resident_address; ?></td>
+                                <td><?php echo $request->resident_phone; ?></td>
                                 <td><?php echo $request->type_name; ?></td>
-                                <td><?php echo $request->title; ?></td>
-                                <td>
-                                    <span class="urgency-<?php echo $request->urgency_level; ?>">
-                                        <?php echo ucfirst($request->urgency_level); ?>
-                                    </span>
-                                </td>
+                                <td><?php echo $request->description; ?></td>
+                                <td><?php echo ucfirst($request->urgency_level); ?></td>
                                 <td><?php echo $request->status_name; ?></td>
+                                <td><?php echo $request->maintainer_name ?? 'Not assigned'; ?></td>
                                 <td>
-                                    <?php if ($request->staff_name): ?>
-                                        <?php echo $request->staff_name; ?>
-                                    <?php else: ?>
-                                        Not assigned
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($request->due_date): ?>
-                                        <?php echo date('Y-m-d', strtotime($request->due_date)); ?>
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </td>
-                                <td class="action-buttons">
-                                    <?php if ($request->status_id == 1 || $request->status_id == 2): ?>
-                                        <button class="btn-edit" onclick="openEditModal(<?php echo $request->request_id; ?>, '<?php echo $request->due_date; ?>')">
-                                            Edit Date
+                                    <div class="action-buttons">
+                                        <button class="btn btn-edit" onclick="openStatusModal(<?php echo $request->request_id; ?>, <?php echo $request->status_id; ?>)">
+                                            Change Status
                                         </button>
-                                        <button class="btn-urgent" onclick="openAssignModal(<?php echo $request->request_id; ?>)">
+                                        <button class="btn btn-assign" onclick="openAssignModal(<?php echo $request->request_id; ?>)">
                                             Assign Maintainer
                                         </button>
-                                    <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -438,155 +289,234 @@
                 </table>
             </div>
 
-            <!-- Modals -->
-            <div id="editDateModal" class="modal">
+            <!-- Status Change Modal -->
+            <div id="statusModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>Edit Due Date</h2>
-                    <form id="editDateForm">
-                        <input type="hidden" id="editRequestId">
-                        <label for="newDueDate">New Due Date:</label>
-                        <input type="date" id="newDueDate" required>
-                        <button type="submit" class="btn-edit">Update Date</button>
+                    <span class="close" onclick="closeModal('statusModal')">&times;</span>
+                    <h2>Change Request Status</h2>
+                    <form id="statusForm">
+                        <input type="hidden" id="statusRequestId" name="requestId">
+                        <div class="form-group">
+                            <label for="newStatus">New Status:</label>
+                            <select id="newStatus" name="statusId" required>
+                                <?php foreach ($data['statuses'] as $status): ?>
+                                    <option value="<?php echo $status->status_id; ?>"><?php echo $status->status_name; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-edit">Update Status</button>
                     </form>
                 </div>
             </div>
 
-            <div id="assignMaintainerModal" class="modal">
+            <!-- Assign Maintainer Modal -->
+            <div id="assignModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close" onclick="closeModal('assignModal')">&times;</span>
                     <h2>Assign Maintenance Staff</h2>
-                    <form id="assignMaintainerForm">
-                        <input type="hidden" id="assignRequestId">
-                        <label for="maintenanceStaff">Select Staff:</label>
-                        <select id="maintenanceStaff" required>
-                            <option value="">Select a maintainer</option>
-                            <?php foreach ($data['staff'] as $staff): ?>
-                                <option value="<?php echo $staff->staff_id; ?>">
-                                    <?php echo $staff->staff_name; ?> (<?php echo $staff->specialization; ?>)
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <label for="assignmentDueDate">Due Date:</label>
-                        <input type="date" id="assignmentDueDate" required>
-                        <button type="submit" class="btn-urgent">Assign</button>
+                    <form id="assignForm">
+                        <input type="hidden" id="assignRequestId" name="requestId">
+                        <div class="form-group">
+                            <label for="specialization">Specialization:</label>
+                            <select id="specialization" name="specialization" required>
+                                <option value="">Select Specialization</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintainer">Maintainer:</label>
+                            <select id="maintainer" name="staffId" required disabled>
+                                <option value="">Select a maintainer</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-assign">Assign Maintainer</button>
                     </form>
                 </div>
-            </div>
-
-            <!-- Request History -->
-            <h2>Request History</h2>
-            <div class="table-container">
-                <table class="dashboard-table">
-                    <thead>
-                        <tr>
-                            <th>Resident</th>
-                            <th>Past Requests</th>
-                            <th>Common Issues</th>
-                            <th>Average Completion Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($data['history'] as $history): ?>
-                            <tr>
-                                <td><?php echo $history->resident_name; ?></td>
-                                <td><?php echo $history->total_requests; ?></td>
-                                <td><?php echo $history->common_issues; ?></td>
-                                <td><?php echo $history->avg_completion_time; ?> days</td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
             </div>
         </main>
     </div>
-
-    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
+   <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <script>
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const typeFilter = document.getElementById('typeFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const statusModal = document.getElementById('statusModal');
+        const assignModal = document.getElementById('assignModal');
+        const statusForm = document.getElementById('statusForm');
+        const assignForm = document.getElementById('assignForm');
+        const specializationSelect = document.getElementById('specialization');
+        const maintainerSelect = document.getElementById('maintainer');
+
         // Modal functions
-        function openEditModal(requestId, currentDueDate) {
-            document.getElementById('editRequestId').value = requestId;
-            document.getElementById('newDueDate').value = currentDueDate || '';
-            document.getElementById('editDateModal').style.display = 'block';
+        function openStatusModal(requestId, currentStatusId) {
+            document.getElementById('statusRequestId').value = requestId;
+            document.getElementById('newStatus').value = currentStatusId;
+            statusModal.style.display = 'block';
         }
 
         function openAssignModal(requestId) {
             document.getElementById('assignRequestId').value = requestId;
-            document.getElementById('assignmentDueDate').value = '';
-            document.getElementById('maintenanceStaff').value = '';
-            document.getElementById('assignMaintainerModal').style.display = 'block';
+            loadSpecializations();
+            assignModal.style.display = 'block';
         }
 
-        // Close modals when clicking X
-        document.querySelectorAll('.close').forEach(closeBtn => {
-            closeBtn.addEventListener('click', function() {
-                this.closest('.modal').style.display = 'none';
-            });
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Load specializations for assign modal
+        async function loadSpecializations() {
+    try {
+        specializationSelect.innerHTML = '<option value="">Loading...</option>';
+        const response = await fetch('<?php echo URLROOT; ?>/maintenance/getSpecializations');
+        const data = await response.json();
+        
+        specializationSelect.innerHTML = '<option value="">Select Specialization</option>';
+        data.forEach(spec => {
+            const option = document.createElement('option');
+            option.value = spec.specialization;
+            option.textContent = spec.specialization;
+            specializationSelect.appendChild(option);
         });
+    } catch (error) {
+        console.error('Error loading specializations:', error);
+        showToast('Failed to load specializations', 'error');
+    }
+}
+
+// When specialization changes, load maintainers
+specializationSelect.addEventListener('change', async function() {
+    if (!this.value) {
+        maintainerSelect.innerHTML = '<option value="">Select a maintainer</option>';
+        maintainerSelect.disabled = true;
+        return;
+    }
+
+    try {
+        maintainerSelect.innerHTML = '<option value="">Loading...</option>';
+        maintainerSelect.disabled = true;
+        
+        const response = await fetch('<?php echo URLROOT; ?>/maintenance/getStaffBySpecialization', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ specialization: this.value })
+        });
+        const data = await response.json();
+        
+        maintainerSelect.innerHTML = '<option value="">Select a maintainer</option>';
+        data.forEach(staff => {
+            const option = document.createElement('option');
+            option.value = staff.id;
+            option.textContent = `${staff.name} (${staff.specialization})`;
+            maintainerSelect.appendChild(option);
+        });
+        maintainerSelect.disabled = false;
+    } catch (error) {
+        console.error('Error loading maintainers:', error);
+        showToast('Failed to load maintainers', 'error');
+    }
+});
+
+        // Handle status form submission
+statusForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('requestId', document.getElementById('statusRequestId').value);
+    formData.append('statusId', document.getElementById('newStatus').value);
+    
+    fetch('<?php echo URLROOT; ?>/maintenance/updateStatus', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Status updated successfully', 'success');
+            setTimeout(() => location.reload());
+        } else {
+            throw new Error(data.message || 'Failed to update status');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast(error.message, 'error');
+    });
+});
+
+       
+// Handle assign form submission
+assignForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = {
+        requestId: document.getElementById('assignRequestId').value,
+        staffId: document.getElementById('maintainer').value
+    };
+
+    try {
+        const response = await fetch('<?php echo URLROOT; ?>/maintenance/assignMaintainer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            showToast('Maintainer assigned successfully', 'success');
+            setTimeout(() => location.reload());
+        } else {
+            throw new Error(data.message || 'Failed to assign maintainer');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast(error.message, 'error');
+    }
+});
+
+        // Table filtering
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const typeFilterValue = typeFilter.value;
+            const statusFilterValue = statusFilter.value;
+
+            document.querySelectorAll('.dashboard-table tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+                const typeMatch = !typeFilterValue || cells[4].textContent === typeFilter.options[typeFilter.selectedIndex].text;
+                const statusMatch = !statusFilterValue || cells[7].textContent === statusFilter.options[statusFilter.selectedIndex].text;
+                const searchMatch = !searchTerm || rowText.includes(searchTerm);
+
+                row.style.display = (typeMatch && statusMatch && searchMatch) ? '' : 'none';
+            });
+        }
+
+        // Event listeners for filters
+        searchInput.addEventListener('input', filterTable);
+        typeFilter.addEventListener('change', filterTable);
+        statusFilter.addEventListener('change', filterTable);
+
+        // Toast notification
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type} show`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
         // Close modals when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target.className === 'modal') {
-                event.target.style.display = 'none';
-            }
-        });
-
-        // Form submissions
-        document.getElementById('editDateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const requestId = document.getElementById('editRequestId').value;
-            const newDueDate = document.getElementById('newDueDate').value;
-
-            // AJAX call to update due date
-            fetch('<?php echo URLROOT; ?>/maintenance/updateDueDate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        requestId: requestId,
-                        dueDate: newDueDate
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Error updating due date');
-                    }
-                });
-        });
-
-        document.getElementById('assignMaintainerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const requestId = document.getElementById('assignRequestId').value;
-            const staffId = document.getElementById('maintenanceStaff').value;
-            const dueDate = document.getElementById('assignmentDueDate').value;
-
-            // AJAX call to assign maintainer
-            fetch('<?php echo URLROOT; ?>/maintenance/assignMaintainer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        requestId: requestId,
-                        staffId: staffId,
-                        dueDate: dueDate
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Error assigning maintainer');
-                    }
-                });
+        window.addEventListener('click', function(e) {
+            if (e.target === statusModal) statusModal.style.display = 'none';
+            if (e.target === assignModal) assignModal.style.display = 'none';
         });
     </script>
 </body>
-
 </html>
