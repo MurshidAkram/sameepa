@@ -103,11 +103,12 @@ class Resident extends Controller
     //***********************************************************************************resident request************************************************************************************** */
 
 
-    public function maintenance() {
+    public function maintenance()
+    {
         // if (!isLoggedIn() || $_SESSION['user_role'] != 'resident') {
         //     redirect('users/login');
         // }
-      
+
         $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
         $requests = $this->maintenanceModel->getResidentRequests($residentId);
         $types = $this->maintenanceModel->getMaintenanceTypes();
@@ -122,27 +123,28 @@ class Resident extends Controller
 
 
 
-//**********************************************************************create request************************************************************ */
+    //**********************************************************************create request************************************************************ */
 
 
 
-    public function submit_request() {
+    public function submit_request()
+    {
         header('Content-Type: application/json'); // Ensure JSON response
-        
+
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);
             return;
         }
-    
+
         try {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            
+
             $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
             if (!$residentId) {
                 echo json_encode(['success' => false, 'message' => 'Resident not found']);
                 return;
             }
-            
+
             $data = [
                 'resident_id' => $residentId,
                 'type_id' => isset($_POST['requestType']) ? trim($_POST['requestType']) : '',
@@ -152,28 +154,28 @@ class Resident extends Controller
                 'description_error' => '',
                 'urgency_error' => ''
             ];
-    
+
             // Validate
             $valid = true;
-            
+
             if (empty($data['type_id'])) {
                 $data['type_error'] = 'Please select a request type';
                 $valid = false;
             }
-            
+
             if (empty($data['description'])) {
                 $data['description_error'] = 'Please enter a description';
                 $valid = false;
             }
-            
+
             if (empty($data['urgency_level'])) {
                 $data['urgency_error'] = 'Please select an urgency level';
                 $valid = false;
             }
-    
+
             if (!$valid) {
                 echo json_encode([
-                    'success' => false, 
+                    'success' => false,
                     'errors' => [
                         'requestType' => $data['type_error'],
                         'description' => $data['description_error'],
@@ -183,25 +185,25 @@ class Resident extends Controller
                 ]);
                 return;
             }
-    
+
             // Submit to database
             if ($this->maintenanceModel->submitRequest($data)) {
                 echo json_encode([
-                    'success' => true, 
+                    'success' => true,
                     'message' => 'Request submitted successfully',
                     'request_id' => $this->maintenanceModel->getLastInsertId()
                 ]);
             } else {
                 error_log("Failed to submit request - Model returned false");
                 echo json_encode([
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'Failed to save request to database. Please check server logs.'
                 ]);
             }
         } catch (Exception $e) {
             error_log("Error in submit_request: " . $e->getMessage());
             echo json_encode([
-                'success' => false, 
+                'success' => false,
                 'message' => 'An unexpected error occurred: ' . $e->getMessage()
             ]);
         }
@@ -210,7 +212,7 @@ class Resident extends Controller
 
 
 
-//*********************************************************************************edit request************************************************************************ */
+    //*********************************************************************************edit request************************************************************************ */
 
 
 public function request_details($request_id) {
@@ -223,16 +225,16 @@ public function request_details($request_id) {
         'message' => "Request cannot be edited (either not yours or not pending). Request ID: {$request_id}"
     ]);
 
-    // Proceed to fetch and return request data
-    $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
-    $request = $this->maintenanceModel->getRequestDetails($request_id, $residentId);
+        // Proceed to fetch and return request data
+        $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
+        $request = $this->maintenanceModel->getRequestDetails($request_id, $residentId);
 
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => true,
-        'request' => $request
-    ]);
-}
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'request' => $request
+        ]);
+    }
 
 public function update_request($request_id) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -288,13 +290,13 @@ public function update_request($request_id) {
 
 
 
-//**********************************************************************************delete request********************************************************************* */
-   
+    //**********************************************************************************delete request********************************************************************* */
+
 
     public function delete_request($request_id) {
         if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
-            
+
             // Verify the request belongs to the resident and is still deletable
             if (!$this->maintenanceModel->isRequestEditable($request_id, $residentId)) {
                 echo json_encode(['success' => false, 'message' => 'Request cannot be deleted']);

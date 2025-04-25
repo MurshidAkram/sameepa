@@ -39,6 +39,10 @@
                     <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' || $current_page == 'chat') ? 'active' : ''; ?>">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search') ? 'active' : ''; ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests') ? 'active' : ''; ?>">Chat Requests</a>
+                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>" 
+                       class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
+                        <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
+                    </a>
                 </nav>
             </aside>
 
@@ -46,7 +50,7 @@
                 <h1>Search Users</h1>
                 <?php flash('chat_message'); ?>
                 
-                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/search">
+                <form class="groups-search" method="POST" action="<?php echo URLROOT; ?>/chat/search">
                     <input type="text" name="search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" placeholder="Search users...">
                     <button type="submit">Search</button>
                 </form>
@@ -60,20 +64,25 @@
                         1 => 'Resident',
                         2 => 'Admin',
                         3 => 'Super Admin',
-                        4 =>'Maintenance',
-                        5 =>'Security',
-                        6=>'External Service Provider'
+                        4 => 'Maintenance',
+                        5 => 'Security',
                     ];
                     ?>
 
                     <?php if (!empty($data['users'])): ?>
                         <?php foreach ($data['users'] as $user): ?>
                             <div class="user-card">
-                                <div class="user-avatar">
-                                    <?php if (!empty($user->profile_picture)): ?>
-                                        <img src="<?php echo htmlspecialchars($user->profile_picture); ?>" alt="Profile Picture">
+                            <div class="name-image">
+                                    <?php $profilePic = $user->profile_picture ?? ''; ?>
+                                    <?php if (!empty($profilePic)): ?>
+                                        <img src="<?php echo URLROOT; ?>/chat/image/<?php echo $user->id; ?>" alt="Chat with <?php echo htmlspecialchars($user->name); ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #eaeaea;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="profile-image" style="background-color: #DDD; display: none; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;">
+                                            <span style="font-size: 14px; color: #888;"><?php echo strtoupper(substr($user->name, 0, 1)); ?></span>
+                                        </div>
                                     <?php else: ?>
-                                        <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="Default Profile">
+                                        <div class="profile-image" style="background-color: #DDD; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;">
+                                            <span style="font-size: 14px; color: #888;"><?php echo strtoupper(substr($user->name, 0, 1)); ?></span>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                                 
@@ -126,7 +135,6 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     padding: 15px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     transition: transform 0.2s;
 }
@@ -136,23 +144,45 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.user-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: 15px;
+.name-image {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
 }
 
-.user-avatar img {
-    width: 100%;
-    height: 100%;
+.name-image img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     object-fit: cover;
+    border: 1px solid #eaeaea;
+    visibility: visible;
+    opacity: 1;
+}
+
+.name-image .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #DDD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: visible;
+    opacity: 1;
+}
+
+.name-image .profile-image span {
+    font-size: 14px;
+    color: #888;
+    visibility: visible;
+    opacity: 1;
 }
 
 .user-details {
-    text-align: center;
-    margin-bottom: 15px;
+    flex: 1;
+    text-align: left;
+    margin-right: 15px;
 }
 
 .user-name {
@@ -167,7 +197,7 @@
 }
 
 .user-actions {
-    width: 100%;
+    width: 120px;
 }
 
 .btn-primary, .btn-view, .btn-disabled {

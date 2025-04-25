@@ -29,8 +29,7 @@
                 break;
         }
         ?>
-
-<main class="payments-main">
+  <main class="payments-main">
         <h1>Payment History</h1>
         
         <?php flash('payment_success'); ?>
@@ -38,7 +37,7 @@
         
         <div class="payment-actions">
             <a href="<?php echo URLROOT; ?>/payments/checkout" class="btn-create">
-                <i class="fas fa-plus"></i> &nbsp; Make New Payment
+                <i class="fas fa-plus"></i>   Make New Payment
             </a>
         </div>
         
@@ -52,7 +51,7 @@
                             <th>Description</th>
                             <th>Amount</th>
                             <th>Transaction ID</th>
-                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,12 +60,15 @@
                                 <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
                                 <td><?php echo $payment->home_address; ?></td>
                                 <td><?php echo $payment->description; ?></td>
-                                <td>$<?php echo number_format($payment->amount, 2); ?></td>
-                                <td><?php echo $payment->transaction_id; ?></td>
-                                <td>
-                                    <span class="status-badge status-<?php echo strtolower($payment->status); ?>">
-                                        <?php echo ucfirst($payment->status); ?>
-                                    </span>
+                                <td>Rs.<?php echo number_format($payment->amount, 2); ?></td>
+                                <td><?php echo substr($payment->transaction_id, 0, 10) . '...'; ?></td>
+                                <td class="action-buttons">
+                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $payment->id; ?>" class="btn-view-p" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $payment->id; ?>" class="btn-receipt" title="Generate Receipt">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

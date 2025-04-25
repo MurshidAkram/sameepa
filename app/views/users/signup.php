@@ -225,7 +225,7 @@
                     </div>
                     <div class="form-group resident-only">
                         <label for="address">Address/House No:</label>
-                        <input type="text" name="address" id="address" value="<?php echo isset($data['address']) ? $data['address'] : ''; ?>">
+                        <input type="number" name="address" id="address" min="1" required>
                     </div>
                     <div class="form-group resident-only">
                         <label for="phonenumber">Phone No.</label>

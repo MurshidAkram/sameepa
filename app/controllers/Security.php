@@ -205,27 +205,28 @@ public function Edit_Contact($id) {
             'description' => trim($data['description'] ?? '')
         ];
 
-        if ($this->securityModel->updateContact($contactData)) {
-            echo json_encode([
-                'success' => true,
-                'name' => $contactData['name'],
-                'phone' => $contactData['phone'],
-                'description' => $contactData['description']
-            ]);
-        } else {
-            echo json_encode(['success' => false]);
+            if ($this->securityModel->updateContact($contactData)) {
+                echo json_encode([
+                    'success' => true,
+                    'name' => $contactData['name'],
+                    'phone' => $contactData['phone'],
+                    'description' => $contactData['description']
+                ]);
+            } else {
+                echo json_encode(['success' => false]);
+            }
         }
     }
-}
 
-public function Add_Contact() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $data = [
-            'category_id' => trim($_POST['category_id']),
-            'name' => trim($_POST['name']),
-            'phone' => trim($_POST['phone']),
-            'description' => trim($_POST['description'] ?? '')
-        ];
+    public function Add_Contact()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'category_id' => trim($_POST['category_id']),
+                'name' => trim($_POST['name']),
+                'phone' => trim($_POST['phone']),
+                'description' => trim($_POST['description'] ?? '')
+            ];
 
         if ($this->securityModel->addContact($data)) {
             echo json_encode([

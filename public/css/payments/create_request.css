@@ -1,0 +1,27 @@
+.create-request-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-request-container h2 {
+    color: #800080;
+    font-size: 2em;
+    margin-bottom: 30px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.form-buttons {
+    padding-top: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .create-request-container {
+        padding: 1.5rem;
+    }
+}

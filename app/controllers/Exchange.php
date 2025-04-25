@@ -24,10 +24,17 @@ class Exchange extends Controller
     public function index()
     {
         try {
-            // Get all listings
+            // Get the search query from the form, if provided
+            // $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+            // Fetch listings based on whether a search query exists
+            $listings = $this->ExchangeModel->getAllListings();
+            // $listings = $search ? $this->ExchangeModel->searchListings($search)
+
+            // Prepare data for the view
             $data = [
-                'listings' => $this->ExchangeModel->getAllListings() ?: [], // Default to an empty array
-                'search' => '' // Keep search if needed later
+                'listings' => $listings ?: [], // Default to an empty array if no listings
+                // 'search' => $search, // Pass the search query to the view for display
             ];
 
             // Load view with data
@@ -251,7 +258,7 @@ class Exchange extends Controller
                 return;
             }
 
-            if ($this->ExchangeModel->deleteListing($listingId)) {
+            if ($this->ExchangeModel->softDeleteListing($listingId)) {
                 $_SESSION['message'] = 'Listing deleted successfully';
             } else {
                 $_SESSION['error'] = 'Failed to delete listing';
@@ -259,6 +266,7 @@ class Exchange extends Controller
         }
         redirect('exchange/my_listings');
     }
+
     public function adminDeletion($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SESSION['user_role_id'] == 3) {

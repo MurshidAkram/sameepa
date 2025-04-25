@@ -58,7 +58,7 @@ class M_Users
                         'user_id' => $userId
                     ];
                     return $this->registerSecurity($securityData);
-                case '6': // External Service Provider
+                case '6':
                     $externalServiceProviderData = [
                         'user_id' => $userId
                     ];
@@ -167,13 +167,27 @@ class M_Users
         }
     }
 
+    public function findUserByPhone($phone)
+    {
+        $this->db->query('SELECT * FROM residents r  WHERE phonenumber = :phonenumber');
+        $this->db->bind(':phonenumber', $phone);
+
+        $row = $this->db->single();
+
+        if ($this->db->rowCount() > 0) {
+            return $row;
+        } else {
+            return false;
+        }
+    }
+
     public function getResidentIDByUserId($userId)
-{
-    $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
-    $this->db->bind(':user_id', $userId);
-    
-    return $this->db->single();
-}
+    {
+        $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $userId);
+
+        return $this->db->single();
+    }
 
 
     public function getResidentByUserId($userId)
@@ -197,7 +211,6 @@ class M_Users
         return $roleName;
     }
 
-    // Add these methods to your existing M_Users model class
 
     public function getUserById($userId)
     {
@@ -211,7 +224,7 @@ class M_Users
         $this->db->beginTransaction();
 
         try {
-            // Update basic user information
+            // Updating basic user information
             $sql = 'UPDATE users SET name = :name, email = :email';
             if (!empty($data['new_password'])) {
                 $sql .= ', password = :password';
@@ -269,12 +282,16 @@ class M_Users
                 case 2:
                     $this->db->query('DELETE FROM admins WHERE user_id = :user_id');
                     break;
-                    // Add other roles as needed
+                case 4:
+                    $this->db->query('DELETE FROM maintenance WHERE user_id = :user_id');
+                    break;
+                case 5:
+                    $this->db->query('DELETE FROM security WHERE user_id = :user_id');
+                    break;
             }
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
 
-            // Delete user record
             $this->db->query('DELETE FROM users WHERE id = :id');
             $this->db->bind(':id', $userId);
             $this->db->execute();
@@ -444,5 +461,91 @@ class M_Users
         }
     }
 
-    
+    public function createPasswordResetToken($email)
+    {
+        // Check if the user exists
+        $user = $this->findUserByEmail($email);
+        if (!$user) {
+            return false;
+        }
+
+        // Generate a token
+        $token = bin2hex(random_bytes(32));
+        // Generate a token
+        $token = bin2hex(random_bytes(32));
+
+        // Check if a token already exists for this user
+        $this->db->query('SELECT * FROM password_resets WHERE user_id = :user_id');
+        $this->db->bind(':user_id', $user['id']);
+        $existingToken = $this->db->single();
+
+        if ($existingToken) {
+            // Update existing token, setting expires_at using SQL function
+            $this->db->query('UPDATE password_resets SET token = :token, expires_at = NOW() + INTERVAL 1 HOUR WHERE user_id = :user_id');
+        } else {
+            // Create new token, setting expires_at using SQL function
+            $this->db->query('INSERT INTO password_resets (user_id, token, expires_at) VALUES (:user_id, :token, NOW() + INTERVAL 1 HOUR)');
+        }
+
+        $this->db->bind(':user_id', $user['id']);
+        $this->db->bind(':token', $token);
+        // No need to bind expires_at here as it's set by SQL function
+
+        if ($this->db->execute()) {
+            return [
+                'token' => $token,
+                'user' => $user
+            ];
+        } else {
+            return false;
+        }
+    }
+
+    public function verifyPasswordResetToken($token)
+    {
+        $this->db->query('SELECT pr.*, u.email, u.id as user_id
+                         FROM password_resets pr
+                         JOIN users u ON pr.user_id = u.id
+                         WHERE pr.token = :token AND pr.expires_at > NOW()');
+        $this->db->bind(':token', $token);
+
+        $result = $this->db->single();
+
+        if ($this->db->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function resetPassword($userId, $newPassword)
+    {
+        // Update the user's password
+        $this->db->query('UPDATE users SET password = :password WHERE id = :id');
+        $this->db->bind(':password', password_hash($newPassword, PASSWORD_DEFAULT));
+        $this->db->bind(':id', $userId);
+
+        $success = $this->db->execute();
+
+        if ($success) {
+            // Delete the reset token
+            $this->db->query('DELETE FROM password_resets WHERE user_id = :user_id');
+            $this->db->bind(':user_id', $userId);
+            $this->db->execute();
+        }
+
+        return $success;
+    }
+
+    public function getResidentsWithAddresses()
+    {
+        $this->db->query('
+            SELECT u.id, u.name, r.address 
+            FROM users u 
+            JOIN residents r ON u.id = r.user_id 
+            WHERE u.role_id = 1 AND u.is_active = 1 
+            ORDER BY u.name
+        ');
+        return $this->db->resultSet();
+    }
 }

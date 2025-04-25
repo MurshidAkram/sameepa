@@ -33,14 +33,14 @@
 
         <main class="forums-main">
             <?php if ($_SESSION['user_role_id'] == 2): ?>
-                <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="back-to-forums">
+                <a href="<?php echo URLROOT; ?>/forums/index" class="back-to-forums">
                     <i class="fas fa-arrow-left"></i> Back to Forums
                 </a>
             <?php else: ?>
                 <a href="<?php echo URLROOT; ?>/forums" class="back-to-forums">
                     <i class="fas fa-arrow-left"></i> Back to Forums
                 </a>
-            <?php endif; ?>            
+            <?php endif; ?>
             <h1><?php echo $data['forum']['title']; ?></h1>
             <p><?php echo $data['forum']['description']; ?></p>
 

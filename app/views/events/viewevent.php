@@ -46,9 +46,9 @@
             <div class="event-view-container">
                 <div class="top-actions">
                     <?php if ($_SESSION['user_role_id'] == 2): ?>
-                    <a href="<?php echo URLROOT; ?>/events/admin_dashboard" class="back-button">
-                        <i class="fas fa-arrow-left"></i> Back to Events
-                    </a>
+                        <a href="<?php echo URLROOT; ?>/events/index" class="back-button">
+                            <i class="fas fa-arrow-left"></i> Back to Events
+                        </a>
                     <?php else: ?>
                         <a href="<?php echo URLROOT; ?>/events" class="back-button">
                             <i class="fas fa-arrow-left"></i> Back to Events
@@ -150,21 +150,21 @@
         function deleteEvent(eventId) {
             if (confirm('Are you sure you want to delete this event?')) {
                 fetch(`<?php echo URLROOT; ?>/events/admindelete/${eventId}`, {
-                    method: 'POST'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Check user role and redirect accordingly
-                        <?php if ($_SESSION['user_role_id'] == 2): ?>
-                            window.location.href = '<?php echo URLROOT; ?>/events/admin_dashboard';
-                        <?php else: ?>
-                            window.location.href = '<?php echo URLROOT; ?>/events';
-                        <?php endif; ?>
-                    } else {
-                        alert('Failed to delete event');
-                    }
-                });
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Check user role and redirect accordingly
+                            <?php if ($_SESSION['user_role_id'] == 2): ?>
+                                window.location.href = '<?php echo URLROOT; ?>/events/index';
+                            <?php else: ?>
+                                window.location.href = '<?php echo URLROOT; ?>/events';
+                            <?php endif; ?>
+                        } else {
+                            alert('Failed to delete event');
+                        }
+                    });
             }
         }
     </script>

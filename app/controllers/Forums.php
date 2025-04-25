@@ -50,7 +50,7 @@ class Forums extends Controller
             if (empty($data['errors'])) {
                 if ($this->forumsModel->createForum($data)) {
                     if ($_SESSION['user_role_id'] == 2) {
-                        redirect('forums/admin_dashboard');
+                        redirect('forums/index');
                     } else {
                         redirect('forums/index');
                     }
@@ -80,14 +80,12 @@ class Forums extends Controller
         // Check if user has admin or super admin role
         if ($_SESSION['user_role_id'] >= 2) {
             if ($this->forumsModel->deleteForum($id)) {
-                //flash('forum_message', 'Forum deleted successfully.');
-                redirect('forums/admin_dashboard');
+                redirect('forums/index');
             } else {
                 die('Something went wrong.');
             }
         } else {
-            //flash('error', 'Unauthorized access');
-            redirect('forums/admin_dashboard');
+            redirect('forums/index');
         }
     }
 
@@ -159,7 +157,6 @@ class Forums extends Controller
         }
     }
 
-    // In Forums.php controller, update the delete_reported_comment method:
     public function delete_reported_comment($id)
     {
         // Check if user has admin or super admin role
@@ -167,7 +164,6 @@ class Forums extends Controller
             // Get the forum_id before deleting the comment
             $comment = $this->forumsModel->getCommentById($id);
             if ($comment && $this->forumsModel->deleteReportedComment($id)) {
-                //flash('comment_message', 'Reported comment deleted successfully.');
                 redirect('forums/reported_comments/' . $comment['forum_id']); // Redirect back to reported comments page
             } else {
                 die('Something went wrong.');
@@ -185,7 +181,7 @@ class Forums extends Controller
             if ($this->forumsModel->ignoreReport($id)) {
                 //flash('comment_message', 'Report ignored successfully.');
                 if ($_SESSION['user_role_id'] == 2) {
-                    redirect('forums/admin_dashboard');
+                    redirect('forums/index');
                 } else {
                     redirect('forums/index');
                 }
@@ -253,7 +249,7 @@ class Forums extends Controller
         }
     }
 
-    public function admin_dashboard()
+    /*   public function admin_dashboard()
     {
         if ($_SESSION['user_role_id'] < 2) {
             redirect('forums/index');
@@ -284,5 +280,5 @@ class Forums extends Controller
             header('Content-Type: application/json');
             echo json_encode($forums);
         }
-    }
+    } */
 }

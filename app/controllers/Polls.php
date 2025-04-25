@@ -198,7 +198,6 @@ class Polls extends Controller
 
         // Check if poll has ended
         if (strtotime($poll['end_date']) < strtotime('today')) {
-            flash('poll_error', 'This poll has ended');
             redirect("polls/viewpoll/$pollId");
         }
 

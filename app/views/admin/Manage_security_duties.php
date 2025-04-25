@@ -7,8 +7,89 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
 
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Security Duty Schedule</title>
+    <style>
+        /* Reset layout structure */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Main content wrapper */
+        .content {
+            display: flex;
+            min-height: calc(100vh - 60px);
+            /* Subtract navbar height */
+            padding-top: 60px;
+            /* Add padding for navbar */
+            position: relative;
+        }
+
+        /* Side panel styling */
+        .side-panel {
+            width: 150px;
+            /* Reduced width based on screenshot */
+            min-height: 100vh;
+            background-color: #fff;
+            position: fixed;
+            top: 60px;
+            /* Offset for navbar */
+            left: 0;
+            z-index: 10;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        /* Main container adjustment */
+        .container {
+            width: calc(100% - 150px);
+            /* Adjust width to account for side panel */
+            margin-left: 150px;
+            /* Same as side panel width */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Footer positioning */
+        footer {
+            position: relative;
+            /* Change from fixed to relative */
+            width: 100%;
+            clear: both;
+        }
+
+        /* Fix for the calendar area */
+        .calendar-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .side-panel {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+                min-height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .container {
+                width: 100%;
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .content {
+                flex-direction: column;
+            }
+        }
+    </style>
     <style>
         :root {
             --primary-color: #800080;
@@ -27,6 +108,8 @@
             --modal-highlight: #f6e4f7;
         }
 
+
+
         body {
 
             background-color: #f5f5f5;
@@ -40,11 +123,11 @@
             min-height: 100vh;
         }
 
-       
+
 
         .container {
             flex: 1;
-            
+
             padding: 50px 20px 20px 20px;
             display: flex;
             flex-direction: column;
@@ -460,10 +543,11 @@
 
             .container {
                 flex: 1;
-    margin: 0 auto; /* Center the content */
-    padding: 50px 20px 20px 20px;
-    display: flex;
-    flex-direction: column;
+                margin: 0 auto;
+                /* Center the content */
+                padding: 50px 20px 20px 20px;
+                display: flex;
+                flex-direction: column;
             }
 
             .calendar {
@@ -514,9 +598,23 @@
 <body>
     <!-- Navbar -->
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
-    <!-- Content Section -->
     <div class="content">
-        
+        <?php
+        // Load appropriate side panel based on user role
+        switch ($_SESSION['user_role_id']) {
+            case 1:
+                require APPROOT . '/views/inc/components/side_panel_resident.php';
+                break;
+            case 2:
+                require APPROOT . '/views/inc/components/side_panel_admin.php';
+                break;
+            case 3:
+                require APPROOT . '/views/inc/components/side_panel_superadmin.php';
+                break;
+        }
+        ?>
+        <!-- Content Section -->
+
 
         <div class="container">
 
@@ -672,9 +770,11 @@
                 <div class="modal-footer">
 
                 </div>
+
             </div>
+
         </div>
-        <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+        <br>
 
         <script>
             // Global variables

@@ -24,10 +24,10 @@ class M_maintenance
             GROUP BY ms.status_id, ms.status_name
             ORDER BY ms.status_id
         ');
-        
+
         return $this->db->resultSet();
     }
-    
+
     public function getRequestCountsByType()
     {
         $this->db->query('
@@ -36,10 +36,10 @@ class M_maintenance
             LEFT JOIN requests r ON mt.type_id = r.type_id
             GROUP BY mt.type_id, mt.type_name
         ');
-        
+
         return $this->db->resultSet();
     }
-    
+
     public function getCompletedRequestCountsByType()
     {
         $this->db->query('
@@ -49,13 +49,13 @@ class M_maintenance
             WHERE r.status_id = 3 -- Assuming 4 is the status_id for "completed"
             GROUP BY mt.type_id, mt.type_name
         ');
-        
+
         return $this->db->resultSet();
     }
-    
 
 
-    
+
+
     //***************************************maintenance members**********************************************************************************************************
 
 
@@ -119,51 +119,54 @@ class M_maintenance
         return $this->db->execute();
     }
 
-//********************************************************************************resident requests of resident side******************************************************** */
+    //********************************************************************************resident requests of resident side******************************************************** */
 
 
 
 
-//*******************************************************************************create request*********************************************************************** */
+    //*******************************************************************************create request*********************************************************************** */
 
-public function getLastInsertId() {
-    return $this->db->lastInsertId();
-}
+    public function getLastInsertId()
+    {
+        return $this->db->lastInsertId();
+    }
 
-public function submitRequest($data) {
-    try {
-        $this->db->query('
+    public function submitRequest($data)
+    {
+        try {
+            $this->db->query('
             INSERT INTO requests 
             (resident_id, type_id, description, urgency_level) 
             VALUES (:resident_id, :type_id, :description, :urgency_level)
         ');
-        
-        $this->db->bind(':resident_id', $data['resident_id']);
-        $this->db->bind(':type_id', $data['type_id']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':urgency_level', $data['urgency_level']);
-        
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            error_log("Database execute failed");
+
+            $this->db->bind(':resident_id', $data['resident_id']);
+            $this->db->bind(':type_id', $data['type_id']);
+            $this->db->bind(':description', $data['description']);
+            $this->db->bind(':urgency_level', $data['urgency_level']);
+
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                error_log("Database execute failed");
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             return false;
         }
-    } catch (PDOException $e) {
-        error_log("Database error: " . $e->getMessage());
-        return false;
     }
-}
 
 
 
 
 
-//******************************************************************************************edit request ********************************************************************** */
+    //******************************************************************************************edit request ********************************************************************** */
 
 
-public function getRequestDetails($requestId, $residentId) {
-    $this->db->query('
+    public function getRequestDetails($requestId, $residentId)
+    {
+        $this->db->query('
         SELECT 
         r.type_id,
         r.description,
@@ -175,23 +178,24 @@ public function getRequestDetails($requestId, $residentId) {
         JOIN maintenance_status ms ON r.status_id = ms.status_id
         WHERE r.request_id = :request_id AND r.resident_id = :resident_id
     ');
-    $this->db->bind(':request_id', $requestId);
-    $this->db->bind(':resident_id', $residentId);
-    return $this->db->single();
-}
+        $this->db->bind(':request_id', $requestId);
+        $this->db->bind(':resident_id', $residentId);
+        return $this->db->single();
+    }
 
 
-public function isRequestEditable($requestId, $residentId) {
-    $this->db->query('
+    public function isRequestEditable($requestId, $residentId)
+    {
+        $this->db->query('
         SELECT status_id FROM requests 
         WHERE request_id = :request_id AND resident_id = :resident_id
     ');
-    $this->db->bind(':request_id', $requestId);
-    $this->db->bind(':resident_id', $residentId);
-    
-    $result = $this->db->single();
-    return ($result && $result->status_id == 1); // Only editable if status is "Pending"
-}
+        $this->db->bind(':request_id', $requestId);
+        $this->db->bind(':resident_id', $residentId);
+
+        $result = $this->db->single();
+        return ($result && $result->status_id == 1); // Only editable if status is "Pending"
+    }
 
 
 public function updateRequestStatus($requestId, $statusId) {
@@ -217,26 +221,28 @@ public function updateRequestStatus($requestId, $statusId) {
 
 
 
-//**************************************************************************************delete request************************************************************************ */
+    //**************************************************************************************delete request************************************************************************ */
 
 
 
 
-public function deleteRequest($requestId) {
-    $this->db->query('DELETE FROM requests WHERE request_id = :request_id');
-    $this->db->bind(':request_id', $requestId);
-    return $this->db->execute();
-}
+    public function deleteRequest($requestId)
+    {
+        $this->db->query('DELETE FROM requests WHERE request_id = :request_id');
+        $this->db->bind(':request_id', $requestId);
+        return $this->db->execute();
+    }
 
 
 
 
-//************************************************************************************************************************************************************************************* */
+    //************************************************************************************************************************************************************************************* */
 
 
 
-public function getResidentRequests($residentId) {
-    $this->db->query('
+    public function getResidentRequests($residentId)
+    {
+        $this->db->query('
         SELECT r.*, mt.type_name as type, ms.status_name as status 
         FROM requests r
         JOIN maintenance_types mt ON r.type_id = mt.type_id
@@ -244,42 +250,45 @@ public function getResidentRequests($residentId) {
         WHERE r.resident_id = :resident_id
         ORDER BY r.created_at DESC
     ');
-    $this->db->bind(':resident_id', $residentId);
-    return $this->db->resultSet();
-}
+        $this->db->bind(':resident_id', $residentId);
+        return $this->db->resultSet();
+    }
 
-public function getMaintenanceTypes() {
-    $this->db->query('SELECT * FROM maintenance_types');
-    return $this->db->resultSet();
-}
+    public function getMaintenanceTypes()
+    {
+        $this->db->query('SELECT * FROM maintenance_types');
+        return $this->db->resultSet();
+    }
 
-public function updateRequest($data) {
-    $this->db->query('
+    public function updateRequest($data)
+    {
+        $this->db->query('
         UPDATE requests SET 
         type_id = :type_id, 
         description = :description, 
         urgency_level = :urgency_level 
         WHERE request_id = :request_id
     ');
-    
-    $this->db->bind(':type_id', $data['type_id']);
-    $this->db->bind(':description', $data['description']);
-    $this->db->bind(':urgency_level', $data['urgency_level']);
-    $this->db->bind(':request_id', $data['request_id']);
-    
-    return $this->db->execute();
-}
+
+        $this->db->bind(':type_id', $data['type_id']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':urgency_level', $data['urgency_level']);
+        $this->db->bind(':request_id', $data['request_id']);
+
+        return $this->db->execute();
+    }
 
 
 
 
-//**********************************************resident requests of maintenance side****************************************************************************************************************************** */
+    //**********************************************resident requests of maintenance side****************************************************************************************************************************** */
 
 
 
-// Methods used by maintenance side
-public function getAllRequests() {
-    $this->db->query('
+    // Methods used by maintenance side
+    public function getAllRequests()
+    {
+        $this->db->query('
         SELECT 
             r.request_id,
             u.name AS resident_name,
@@ -299,59 +308,63 @@ public function getAllRequests() {
         LEFT JOIN maintenance_members mm ON r.assigned_maintainer_id = mm.id
         ORDER BY r.created_at DESC
     ');
-    
-    return $this->db->resultSet();
-}
 
-public function getStatuses() {
-    $this->db->query('SELECT * FROM maintenance_status');
-    return $this->db->resultSet();
-}
+        return $this->db->resultSet();
+    }
 
-// public function updateRequestStatus($requestId, $statusId) {
-//     $this->db->query('
-//         UPDATE requests 
-//         SET status_id = :status_id 
-//         WHERE request_id = :request_id
-//     ');
-//     $this->db->bind(':status_id', $statusId);
-//     $this->db->bind(':request_id', $requestId);
-    
-//     return $this->db->execute();
-// }
+    public function getStatuses()
+    {
+        $this->db->query('SELECT * FROM maintenance_status');
+        return $this->db->resultSet();
+    }
+
+    // public function updateRequestStatus($requestId, $statusId) {
+    //     $this->db->query('
+    //         UPDATE requests 
+    //         SET status_id = :status_id 
+    //         WHERE request_id = :request_id
+    //     ');
+    //     $this->db->bind(':status_id', $statusId);
+    //     $this->db->bind(':request_id', $requestId);
+
+    //     return $this->db->execute();
+    // }
 
 
-public function assignMaintainer($requestId, $maintainerId) {
-    $this->db->query('
+    public function assignMaintainer($requestId, $maintainerId)
+    {
+        $this->db->query('
         UPDATE requests 
         SET 
             assigned_maintainer_id = :maintainer_id,
             status_id = 2 
         WHERE request_id = :request_id');
-    $this->db->bind(':maintainer_id', $maintainerId);
-    $this->db->bind(':request_id', $requestId);
-    
-    return $this->db->execute();
-}
+        $this->db->bind(':maintainer_id', $maintainerId);
+        $this->db->bind(':request_id', $requestId);
 
-public function getSpecializations() {
-    $this->db->query('SELECT DISTINCT specialization FROM maintenance_members');
-    return $this->db->resultSet();
-}
+        return $this->db->execute();
+    }
 
-public function getStaffBySpecialization($specialization) {
-    $this->db->query('
+    public function getSpecializations()
+    {
+        $this->db->query('SELECT DISTINCT specialization FROM maintenance_members');
+        return $this->db->resultSet();
+    }
+
+    public function getStaffBySpecialization($specialization)
+    {
+        $this->db->query('
         SELECT id, name, specialization 
         FROM maintenance_members 
         WHERE specialization = :specialization
     ');
-    $this->db->bind(':specialization', $specialization);
-    
-    return $this->db->resultSet();
-}
+        $this->db->bind(':specialization', $specialization);
+
+        return $this->db->resultSet();
+    }
 
 
-//***********************************************************************************************************************************************************************************
+    //***********************************************************************************************************************************************************************************
 
 
 }

@@ -8,14 +8,12 @@ $userModel = new M_Users();
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <nav class="navbar">
     <div class="navdiv">
-        <!-- Logo image with link to home page -->
         <a href="<?php echo URLROOT; ?>" class="navbar-logo">
             <img src="<?php echo URLROOT; ?>/public/img/sitelogo.svg" alt="Sameepa Logo">
         </a>
 
 
         <ul class="navbar-menu">
-            <li><a href="<?php echo URLROOT; ?>">Home</a></li>
 
 
             <?php if (isset($_SESSION['user_id'])) : ?>
@@ -40,11 +38,11 @@ $userModel = new M_Users();
                         <li><a href="<?php echo URLROOT; ?>/security/dashboard">Dashboard</a></li>
                 <?php break;
                 endswitch; ?>
-                <li class="notification-dropdown">
+                <!-- <li class="notification-dropdown">
                     <a href="<?php echo URLROOT; ?>/notifications" class="notification-link">
                         <i class="fas fa-bell"></i>
                     </a>
-                </li>
+                </li> -->
                 <!-- Profile dropdown -->
                 <li class="profile-dropdown">
                     <a href="<?php echo URLROOT; ?>/users/profile" class="profile-link">
@@ -64,6 +62,7 @@ $userModel = new M_Users();
                 </li>
                 <li><a href="<?php echo URLROOT; ?>/users/logout" class="logout-link">Logout</a></li>
             <?php else : ?>
+                <li><a href="<?php echo URLROOT; ?>">Home</a></li>
                 <li><a href="<?php echo URLROOT; ?>/pages/about">About Us</a></li>
                 <li><a href="<?php echo URLROOT; ?>/pages/contact">Contact Us</a></li>
                 <li><a href="<?php echo URLROOT; ?>/users/signup">Sign Up</a></li>

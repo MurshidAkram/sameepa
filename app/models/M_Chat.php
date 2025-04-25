@@ -252,24 +252,29 @@ class M_Chat {
     }
 
     // Update a message
-public function updateMessage($messageId, $newMessage, $userId) {
-    // First verify the user owns this message
-    $this->db->query('SELECT * FROM messages WHERE id = :id AND sender_id = :sender_id');
-    $this->db->bind(':id', $messageId);
-    $this->db->bind(':sender_id', $userId);
-    $message = $this->db->single();
-    
-    if (!$message) {
-        return false; // Message not found or user doesn't own it
+    public function updateMessage($messageId, $newMessage, $userId) {
+        // First verify the user owns this message
+        $this->db->query('SELECT * FROM messages WHERE id = :id AND sender_id = :sender_id');
+        $this->db->bind(':id', $messageId);
+        $this->db->bind(':sender_id', $userId);
+        $message = $this->db->single();
+        
+        if (!$message) {
+            return false; // Message not found or user doesn't own it
+        }
+        
+        // Update the message and set is_edited to 1
+        $this->db->query('UPDATE messages SET message = :message, is_edited = 1 WHERE id = :id');
+        $this->db->bind(':id', $messageId);
+        $this->db->bind(':message', $newMessage);
+        
+        return $this->db->execute();
     }
-    
-    // Update the message
-    $this->db->query('UPDATE messages SET message = :message WHERE id = :id');
-    $this->db->bind(':id', $messageId);
-    $this->db->bind(':message', $newMessage);
-    
-    return $this->db->execute();
-}
+    public function getMessages($chatId) {
+        $this->db->query('SELECT id, sender_id, chat_id, message, sent_at, is_edited FROM messages WHERE chat_id = :chat_id ORDER BY sent_at ASC');
+        $this->db->bind(':chat_id', $chatId);
+        return $this->db->resultSet();
+    }
 
 public function deleteMessage($messageId, $userId) {
     // First verify the user owns this message
@@ -306,6 +311,7 @@ public function getMessageById($messageId) {
     
     return $result;
 }
+
 // models/Chat.php
 public function acceptChatRequest($requestId)
 {
@@ -319,6 +325,122 @@ public function declineChatRequest($requestId)
     $this->db->query("UPDATE chat_requests SET status = 'declined' WHERE id = :id");
     $this->db->bind(':id', $requestId);
     return $this->db->execute();
+}
+
+// Create a new chat report
+public function createReport($data) {
+    $this->db->query('INSERT INTO reports (reporter_id, reported_user_message, category, description, status)
+                      VALUES (:reporter_id, :reported_user_message, :category, :description, :status)');
+    $this->db->bind(':reporter_id', $data['reporter_id']);
+    $this->db->bind(':reported_user_message', $data['reported_user_message']);
+    $this->db->bind(':category', $data['category']);
+    $this->db->bind(':description', $data['description']);
+    $this->db->bind(':status', 'pending'); // Default status is pending
+
+    return $this->db->execute();
+}
+
+public function deleteReport($reportId, $userId) {
+    try {
+        // Soft delete by setting is_deleted flag to 1
+        $this->db->query('UPDATE reports SET is_deleted = 1 WHERE id = :id AND reporter_id = :reporter_id');
+        $this->db->bind(':id', $reportId);
+        $this->db->bind(':reporter_id', $userId);
+        return $this->db->execute();
+    } catch (Exception $e) {
+        error_log('Error in deleteReport: ' . $e->getMessage());
+        return false;
+    }
+}
+
+public function getReportById($reportId) {
+    $this->db->query('SELECT r.*, u.name as reporter_name 
+                      FROM reports r 
+                      JOIN users u ON r.reporter_id = u.id 
+                      WHERE r.id = :report_id 
+                      AND (r.is_deleted != 1 OR r.is_deleted IS NULL)');
+    $this->db->bind(':report_id', $reportId);
+    return $this->db->single();
+}
+
+// Get all reports (for superadmin)
+public function getAllReports() {
+    $this->db->query('SELECT r.*, u.name as reporter_name 
+                      FROM reports r 
+                      JOIN users u ON r.reporter_id = u.id 
+                      WHERE (r.is_deleted != 1 OR r.is_deleted IS NULL)
+                      ORDER BY r.created_at DESC');
+    return $this->db->resultSet();
+}
+
+public function getUserReports($userId) {
+    $this->db->query('SELECT r.*, u.name as reporter_name 
+                      FROM reports r 
+                      JOIN users u ON r.reporter_id = u.id 
+                      WHERE r.reporter_id = :user_id 
+                      AND (r.is_deleted != 1 OR r.is_deleted IS NULL)
+                      ORDER BY r.created_at DESC');
+    $this->db->bind(':user_id', $userId);
+    return $this->db->resultSet();
+}
+
+// Get reports by user ID
+// public function getReportsByUserId($userId) {
+//     $this->db->query('SELECT r.*, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id WHERE r.reporter_id = :user_id ORDER BY r.created_at DESC');
+//     $this->db->bind(':user_id', $userId);
+//     return $this->db->resultSet();
+// }
+
+// Get a single report by ID
+// public function getReportById($reportId) {
+//     $this->db->query('SELECT r.*, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id WHERE r.id = :report_id');
+//     $this->db->bind(':report_id', $reportId);
+//     return $this->db->single();
+// }
+
+// Update report status
+public function updateReportStatus($reportId, $status) {
+    $this->db->query('UPDATE reports SET status = :status WHERE id = :report_id');
+    $this->db->bind(':report_id', $reportId);
+    $this->db->bind(':status', $status);
+    return $this->db->execute();
+}
+
+// Update a report
+public function updateReport($data) {
+    $this->db->query('UPDATE reports SET reported_user_message = :reported_user_message, category = :category, description = :description WHERE id = :id AND reporter_id = :reporter_id');
+    $this->db->bind(':id', $data['id']);
+    $this->db->bind(':reported_user_message', $data['reported_user_message']);
+    $this->db->bind(':category', $data['category']);
+    $this->db->bind(':description', $data['description']);
+    $this->db->bind(':reporter_id', $data['reporter_id']);
+
+    return $this->db->execute();
+}
+
+// Delete a report
+// public function deleteReport($reportId, $userId) {
+//     $this->db->query('DELETE FROM reports WHERE id = :id AND reporter_id = :reporter_id');
+//     $this->db->bind(':id', $reportId);
+//     $this->db->bind(':reporter_id', $userId);
+
+//     return $this->db->execute();
+// }
+
+public function searchReports($search) {
+    // Query to search reports by category, status, reporter name, or description, where is_deleted is 0
+    $search = '%' . $search . '%';
+    $this->db->query('SELECT reports.*, users.name AS reporter_name 
+                      FROM reports 
+                      JOIN users ON reports.reporter_id = users.id 
+                      WHERE reports.is_deleted = 0 
+                        AND (reports.category LIKE :search 
+                         OR reports.status LIKE :search 
+                         OR reports.description LIKE :search 
+                         OR users.name LIKE :search)
+                      ORDER BY reports.created_at DESC');
+    $this->db->bind(':search', $search);
+    return $this->db->resultSet();
 }
 
 }
