@@ -1,4 +1,24 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
 class M_resident {
     private $db;
@@ -43,13 +63,3 @@ class M_resident {
 
    
 ?>
-
-
-
-
-
-
-
-
-
-
