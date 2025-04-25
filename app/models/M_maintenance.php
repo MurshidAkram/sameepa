@@ -1,5 +1,3 @@
-
-
 <?php
 
 class M_maintenance
@@ -167,17 +165,18 @@ class M_maintenance
     public function getRequestDetails($requestId, $residentId)
     {
         $this->db->query('
-        SELECT 
-        r.type_id,
-        r.description,
-        r.urgency_level,
-        mt.type_name as type, 
-        ms.status_name as status 
-        FROM requests r
-        JOIN maintenance_types mt ON r.type_id = mt.type_id
-        JOIN maintenance_status ms ON r.status_id = ms.status_id
-        WHERE r.request_id = :request_id AND r.resident_id = :resident_id
-    ');
+            SELECT 
+                r.request_id,
+                r.type_id,
+                r.description,
+                r.urgency_level,
+                mt.type_name as type, 
+                ms.status_name as status 
+            FROM requests r
+            JOIN maintenance_types mt ON r.type_id = mt.type_id
+            JOIN maintenance_status ms ON r.status_id = ms.status_id
+            WHERE r.request_id = :request_id AND r.resident_id = :resident_id
+        ');
         $this->db->bind(':request_id', $requestId);
         $this->db->bind(':resident_id', $residentId);
         return $this->db->single();
@@ -187,9 +186,10 @@ class M_maintenance
     public function isRequestEditable($requestId, $residentId)
     {
         $this->db->query('
-        SELECT status_id FROM requests 
-        WHERE request_id = :request_id AND resident_id = :resident_id
-    ');
+            SELECT status_id 
+            FROM requests 
+            WHERE request_id = :request_id AND resident_id = :resident_id
+        ');
         $this->db->bind(':request_id', $requestId);
         $this->db->bind(':resident_id', $residentId);
 
@@ -198,18 +198,18 @@ class M_maintenance
     }
 
 
-public function updateRequestStatus($requestId, $statusId) {
-    
-    $this->db->query('
-        UPDATE requests 
-        SET status_id = :status_id 
-        WHERE request_id = :request_id
-    ');
-    $this->db->bind(':status_id', $statusId);
-    $this->db->bind(':request_id', $requestId);
-    
-    return $this->db->execute();
-}
+    public function updateRequestStatus($requestId, $statusId) {
+        
+        $this->db->query('
+            UPDATE requests 
+            SET status_id = :status_id 
+            WHERE request_id = :request_id
+        ');
+        $this->db->bind(':status_id', $statusId);
+        $this->db->bind(':request_id', $requestId);
+        
+        return $this->db->execute();
+    }
 
 
 
@@ -263,12 +263,13 @@ public function updateRequestStatus($requestId, $statusId) {
     public function updateRequest($data)
     {
         $this->db->query('
-        UPDATE requests SET 
-        type_id = :type_id, 
-        description = :description, 
-        urgency_level = :urgency_level 
-        WHERE request_id = :request_id
-    ');
+            UPDATE requests 
+            SET 
+                type_id = :type_id,
+                description = :description,
+                urgency_level = :urgency_level
+            WHERE request_id = :request_id
+        ');
 
         $this->db->bind(':type_id', $data['type_id']);
         $this->db->bind(':description', $data['description']);

@@ -1,6 +1,3 @@
-
-
-
 <?php
 
 class Resident extends Controller
@@ -215,77 +212,92 @@ class Resident extends Controller
     //*********************************************************************************edit request************************************************************************ */
 
 
-public function request_details($request_id) {
-    // Only allow access if user is logged in
-    // if (!isLoggedIn()) {
-    //     redirect('users/login');
-    // }
-    echo json_encode([
-        'success' => false, 
-        'message' => "Request cannot be edited (either not yours or not pending). Request ID: {$request_id}"
-    ]);
-
-        // Proceed to fetch and return request data
-        $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
-        $request = $this->maintenanceModel->getRequestDetails($request_id, $residentId);
-
+    public function request_details($request_id) {
         header('Content-Type: application/json');
-        echo json_encode([
-            'success' => true,
-            'request' => $request
-        ]);
-    }
-
-public function update_request($request_id) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         
         $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
         if (!$residentId) {
             echo json_encode(['success' => false, 'message' => 'Resident not found']);
             return;
         }
-        
+
         // Verify the request belongs to the resident and is still editable
         if (!$this->maintenanceModel->isRequestEditable($request_id, $residentId)) {
             echo json_encode([
                 'success' => false, 
-                'message' => "Request cannot be edited (either not yours or not pending). Request ID: {$request_id}, Resident ID: {$residentId}"
+                'message' => "Request cannot be edited (either not yours or not pending)"
             ]);
             return;
         }
-        
-        $data = [
-            'request_id' => $request_id,
-            'type_id' => trim($_POST['requestType']),
-            'description' => trim($_POST['description']),
-            'urgency_level' => trim($_POST['urgency'])
-        ];
 
-        // Validate data
-        $errors = [];
-        if (empty($data['type_id'])) {
-            $errors['requestType'] = 'Request type is required';
-        }
-        if (empty($data['description'])) {
-            $errors['description'] = 'Description is required';
-        }
-        if (empty($data['urgency_level'])) {
-            $errors['urgency'] = 'Urgency level is required';
-        }
+        // Proceed to fetch and return request data
+        $request = $this->maintenanceModel->getRequestDetails($request_id, $residentId);
         
-        if (!empty($errors)) {
-            echo json_encode(['success' => false, 'errors' => $errors]);
-            return;
-        }
-
-        if ($this->maintenanceModel->updateRequest($data)) {
-            echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
+        if ($request) {
+            echo json_encode([
+                'success' => true,
+                'request' => $request
+            ]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update request']);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Request not found'
+            ]);
         }
     }
-}
+
+    public function update_request($request_id) {
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            
+            $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
+            if (!$residentId) {
+                echo json_encode(['success' => false, 'message' => 'Resident not found']);
+                return;
+            }
+            
+            // Verify the request belongs to the resident and is still editable
+            if (!$this->maintenanceModel->isRequestEditable($request_id, $residentId)) {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => "Request cannot be edited (either not yours or not pending)"
+                ]);
+                return;
+            }
+            
+            $data = [
+                'request_id' => $request_id,
+                'type_id' => trim($_POST['requestType']),
+                'description' => trim($_POST['description']),
+                'urgency_level' => trim($_POST['urgency'])
+            ];
+
+            // Validate data
+            $errors = [];
+            if (empty($data['type_id'])) {
+                $errors['requestType'] = 'Request type is required';
+            }
+            if (empty($data['description'])) {
+                $errors['description'] = 'Description is required';
+            }
+            if (empty($data['urgency_level'])) {
+                $errors['urgency'] = 'Urgency level is required';
+            }
+            
+            if (!empty($errors)) {
+                echo json_encode(['success' => false, 'errors' => $errors]);
+                return;
+            }
+
+            if ($this->maintenanceModel->updateRequest($data)) {
+                echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update request']);
+            }
+        }
+    }
 
 
 
@@ -294,10 +306,16 @@ public function update_request($request_id) {
 
 
     public function delete_request($request_id) {
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
+            if (!$residentId) {
+                echo json_encode(['success' => false, 'message' => 'Resident not found']);
+                return;
+            }
 
-            // Verify the request belongs to the resident and is still deletable
+            // Verify the request belongs to the resident and is still editable
             if (!$this->maintenanceModel->isRequestEditable($request_id, $residentId)) {
                 echo json_encode(['success' => false, 'message' => 'Request cannot be deleted']);
                 return;
