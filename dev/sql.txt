@@ -228,6 +228,7 @@ CREATE TABLE chats (
      FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
      FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE
  );
+
  CREATE TABLE messages (
      id INT AUTO_INCREMENT PRIMARY KEY,
      chat_id INT NOT NULL,
@@ -632,3 +633,38 @@ INSERT INTO maintenance_types (type_name) VALUES
 ('Structural'), 
 ('Appliance'), 
 ('General Maintenance');
+
+-- Insert sample maintenance requests
+INSERT INTO maintenance_requests (resident_id, type_id, title, description, urgency_level) VALUES
+(1, 1, 'Leaky faucet', 'Kitchen faucet is leaking continuously', 'medium'),
+(2, 3, 'Clogged drain', 'Bathroom sink drain is completely clogged', 'high'),
+(3, 4, 'Broken light switch', 'Living room light switch not working', 'low');
+
+-- Insert sample assignments
+INSERT INTO request_assignments (request_id, staff_id, due_date) VALUES
+(1, 2, '2024-09-18'),
+(2, 1, '2024-09-20');
+
+
+CREATE TABLE `listings` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `type` enum('service','sale','exchange','lost') NOT NULL,
+  `description` text NOT NULL,
+  `posted_by` int(11) NOT NULL,
+  `date_posted` timestamp NOT NULL DEFAULT current_timestamp(),
+  `image_data` longblob DEFAULT NULL,
+  `image_type` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+ALTER TABLE `listings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `posted_by` (`posted_by`),
+  ADD KEY `date_posted` (`date_posted`);
+
+ALTER TABLE `listings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+ALTER TABLE `listings`
+  ADD CONSTRAINT `listings_ibfk_1` FOREIGN KEY (`posted_by`) REFERENCES `users` (`id`);

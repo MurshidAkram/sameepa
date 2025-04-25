@@ -521,8 +521,20 @@
     <div class="content">
         <!-- Side Panel Section -->
         <div class="side-panel">
-            <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
-        </div>
+            <?php
+            // Load appropriate side panel based on user role
+            switch ($_SESSION['user_role_id']) {
+                case 2:
+                    require APPROOT . '/views/inc/components/side_panel_admin.php';
+                    break;
+                case 3:
+                    require APPROOT . '/views/inc/components/side_panel_superadmin.php';
+                    break;
+                case 5:
+                    require APPROOT . '/views/inc/components/side_panel_security.php';
+                    break;
+            }
+            ?> </div>
 
         <div class="container">
 

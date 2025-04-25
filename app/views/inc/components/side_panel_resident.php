@@ -19,5 +19,7 @@
                 <li><a href="<?php echo URLROOT; ?>/payments/index"> Payments</a></li>
                 <!-- <li><a href="<?php echo URLROOT; ?>/resident/reports">Security</a></li> -->
                 <li><a href="<?php echo URLROOT; ?>/complaints/mycomplaints">Complaints</a></li>
+                <li><a href="<?php echo URLROOT; ?>/security/Manage_Duty_Schedule">Manage Duty Schedule</a></li>
+
         </ul>
 </aside>
