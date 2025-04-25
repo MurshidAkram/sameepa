@@ -1,3 +1,5 @@
+
+
 <?php
 
 class M_maintenance
@@ -193,7 +195,7 @@ public function isRequestEditable($requestId, $residentId) {
 
 
 public function updateRequestStatus($requestId, $statusId) {
-
+    
     $this->db->query('
         UPDATE requests 
         SET status_id = :status_id 
@@ -203,7 +205,6 @@ public function updateRequestStatus($requestId, $statusId) {
     $this->db->bind(':request_id', $requestId);
     
     return $this->db->execute();
-    
 }
 
 
@@ -356,3 +357,7 @@ public function getStaffBySpecialization($specialization) {
 }
 
 ?>
+
+
+
+

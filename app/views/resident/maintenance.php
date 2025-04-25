@@ -597,74 +597,80 @@
     });
 
     // Submit Edit
-    document.getElementById('editRequestForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
+   // Submit Edit
+document.getElementById('editRequestForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-        const formElements = e.target.elements;
-        let isValid = true;
-        const fieldMap = {
-            requestType: 'RequestType',
-            description: 'Description',
-            urgency: 'Urgency'
-        };
+    const formElements = e.target.elements;
+    let isValid = true;
+    const fieldMap = {
+        requestType: 'RequestType',
+        description: 'Description',
+        urgency: 'Urgency'
+    };
 
-        document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
+    // Clear previous errors
+    document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
 
-        if (!formElements.requestType.value) {
-            document.getElementById('editRequestType-error').textContent = 'Please select a request type';
-            isValid = false;
-        }
+    // Validate form
+    if (!formElements.requestType.value) {
+        document.getElementById('editRequestType-error').textContent = 'Please select a request type';
+        isValid = false;
+    }
 
-        if (!formElements.description.value.trim()) {
-            document.getElementById('editDescription-error').textContent = 'Please enter a description';
-            isValid = false;
-        }
+    if (!formElements.description.value.trim()) {
+        document.getElementById('editDescription-error').textContent = 'Please enter a description';
+        isValid = false;
+    }
 
-        if (!formElements.urgency.value) {
-            document.getElementById('editUrgency-error').textContent = 'Please select an urgency level';
-            isValid = false;
-        }
+    if (!formElements.urgency.value) {
+        document.getElementById('editUrgency-error').textContent = 'Please select an urgency level';
+        isValid = false;
+    }
 
-        if (!isValid) return;
+    if (!isValid) return;
 
-        const requestId = formElements.requestId.value;
-        const formData = new FormData(e.target);
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.innerHTML;
+    const requestId = formElements.requestId.value;
+    const formData = new FormData(e.target);
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
 
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
 
-        try {
-            const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${requestId}`, {
-                method: 'POST',
-                body: formData
-            });
+    try {
+        const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${requestId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData)
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            if (data.success) {
-                showToast('Request updated successfully!');
-                closeModal(modals.editRequest);
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                if (data.errors) {
-                    for (const [field, message] of Object.entries(data.errors)) {
-                        const key = fieldMap[field] || field;
-                        const errorElement = document.getElementById(`edit${key}-error`);
-                        if (errorElement) errorElement.textContent = message;
-                    }
+        if (data.success) {
+            showToast('Request updated successfully!');
+            closeModal(modals.editRequest);
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            if (data.errors) {
+                for (const [field, message] of Object.entries(data.errors)) {
+                    const key = fieldMap[field] || field;
+                    const errorElement = document.getElementById(`edit${key}-error`);
+                    if (errorElement) errorElement.textContent = message;
                 }
-                throw new Error(data.message || 'Failed to update request');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            showToast(error.message || 'Failed to update request', false);
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
+            throw new Error(data.message || 'Failed to update request');
         }
-    });
+    } catch (error) {
+        console.error('Error:', error);
+        showToast(error.message || 'Failed to update request', false);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    }
+});
 
     // Delete Request
     document.addEventListener('click', function (e) {
@@ -718,3 +724,5 @@
 </script>
 </body>
 </html>
+
+

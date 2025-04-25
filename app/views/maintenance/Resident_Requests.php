@@ -275,7 +275,13 @@
                                 <td><?php echo $request->maintainer_name ?? 'Not assigned'; ?></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="btn btn-edit" onclick="openStatusModal(<?php echo $request->request_id; ?>, <?php echo $request->status_id; ?>)">
+                                        <button class="btn btn-edit" onclick="openEditModal(<?php echo $request->request_id; ?>)">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-delete" onclick="openDeleteModal(<?php echo $request->request_id; ?>)">
+                                            Delete
+                                        </button>
+                                        <button class="btn btn-status" onclick="openStatusModal(<?php echo $request->request_id; ?>, <?php echo $request->status_id; ?>)">
                                             Change Status
                                         </button>
                                         <button class="btn btn-assign" onclick="openAssignModal(<?php echo $request->request_id; ?>)">
@@ -330,6 +336,52 @@
                         </div>
                         <button type="submit" class="btn btn-assign">Assign Maintainer</button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Edit Request Modal -->
+            <div id="editModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('editModal')">&times;</span>
+                    <h2>Edit Request</h2>
+                    <form id="editForm">
+                        <input type="hidden" id="editRequestId" name="requestId">
+                        <div class="form-group">
+                            <label for="editType">Request Type:</label>
+                            <select id="editType" name="typeId" required>
+                                <?php foreach ($data['types'] as $type): ?>
+                                    <option value="<?php echo $type->type_id; ?>"><?php echo $type->type_name; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescription">Description:</label>
+                            <textarea id="editDescription" name="description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editUrgency">Urgency Level:</label>
+                            <select id="editUrgency" name="urgency" required>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-edit">Update Request</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="deleteModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('deleteModal')">&times;</span>
+                    <h2>Confirm Deletion</h2>
+                    <p>Are you sure you want to delete this request? This action cannot be undone.</p>
+                    <input type="hidden" id="deleteRequestId">
+                    <div class="modal-actions">
+                        <button class="btn btn-delete" onclick="confirmDelete()">Delete</button>
+                        <button class="btn btn-cancel" onclick="closeModal('deleteModal')">Cancel</button>
+                    </div>
                 </div>
             </div>
         </main>
@@ -516,6 +568,82 @@ assignForm.addEventListener('submit', async function(e) {
         window.addEventListener('click', function(e) {
             if (e.target === statusModal) statusModal.style.display = 'none';
             if (e.target === assignModal) assignModal.style.display = 'none';
+        });
+
+        // Edit Request functions
+        function openEditModal(requestId) {
+            document.getElementById('editRequestId').value = requestId;
+            // Load request details
+            fetch(`<?php echo URLROOT; ?>/maintenance/getRequestDetails/${requestId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('editType').value = data.request.type_id;
+                        document.getElementById('editDescription').value = data.request.description;
+                        document.getElementById('editUrgency').value = data.request.urgency_level;
+                        document.getElementById('editModal').style.display = 'block';
+                    } else {
+                        showToast('Failed to load request details', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Failed to load request details', 'error');
+                });
+        }
+
+        // Delete Request functions
+        function openDeleteModal(requestId) {
+            document.getElementById('deleteRequestId').value = requestId;
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function confirmDelete() {
+            const requestId = document.getElementById('deleteRequestId').value;
+            fetch(`<?php echo URLROOT; ?>/maintenance/deleteRequest/${requestId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Request deleted successfully', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Failed to delete request', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Failed to delete request', 'error');
+            });
+        }
+
+        // Handle edit form submission
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const requestId = document.getElementById('editRequestId').value;
+
+            fetch(`<?php echo URLROOT; ?>/maintenance/updateRequest/${requestId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Request updated successfully', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Failed to update request', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Failed to update request', 'error');
+            });
         });
     </script>
 </body>

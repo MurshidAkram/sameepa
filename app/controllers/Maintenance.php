@@ -262,5 +262,74 @@ public function assignMaintainer() {
         }
     }
 }
+
+public function getRequestDetails($requestId) {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        $request = $this->maintenanceModel->getRequestDetails($requestId);
+        if ($request) {
+            echo json_encode(['success' => true, 'request' => $request]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Request not found']);
+        }
+    }
+}
+
+public function updateRequest($requestId) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        
+        $data = [
+            'request_id' => $requestId,
+            'type_id' => trim($_POST['typeId']),
+            'description' => trim($_POST['description']),
+            'urgency_level' => trim($_POST['urgency'])
+        ];
+        
+        // Validate data
+        $errors = [];
+        if (empty($data['type_id'])) {
+            $errors['typeId'] = 'Request type is required';
+        }
+        if (empty($data['description'])) {
+            $errors['description'] = 'Description is required';
+        }
+        if (empty($data['urgency_level'])) {
+            $errors['urgency'] = 'Urgency level is required';
+        }
+        
+        if (!empty($errors)) {
+            echo json_encode(['success' => false, 'errors' => $errors]);
+            return;
+        }
+
+        if ($this->maintenanceModel->updateRequest($data)) {
+            echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update request']);
+        }
+    }
+}
+
+public function deleteRequest($requestId) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Check if request exists and is not completed
+        $request = $this->maintenanceModel->getRequestDetails($requestId);
+        if (!$request) {
+            echo json_encode(['success' => false, 'message' => 'Request not found']);
+            return;
+        }
+
+        if ($request->status_id == 3) { // Assuming 3 is the status_id for completed
+            echo json_encode(['success' => false, 'message' => 'Cannot delete completed requests']);
+            return;
+        }
+
+        if ($this->maintenanceModel->deleteRequest($requestId)) {
+            echo json_encode(['success' => true, 'message' => 'Request deleted successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to delete request']);
+        }
+    }
+}
 }
    
