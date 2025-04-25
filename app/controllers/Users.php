@@ -658,4 +658,33 @@ class Users extends Controller
 
         $this->view('users/resetpassword', $data);
     }
+
+    public function getResidentAddress($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $user = $this->userModel->getUserById($id);
+
+            if ($user) {
+                // Get the full user details including address
+                $userDetails = $this->userModel->getResidentAddressAndPhone($id);
+
+                if ($userDetails) {
+                    echo json_encode([
+                        'success' => true,
+                        'address' => $userDetails['address']
+                    ]);
+                } else {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Address not found'
+                    ]);
+                }
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'User not found'
+                ]);
+            }
+        }
+    }
 }

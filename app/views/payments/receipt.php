@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td>Address:</td>
-                        <td><?php echo is_array($data['payment']) ? $data['payment']['home_address'] : $data['payment']->home_address; ?></td>
+                        <td><?php echo is_array($data['payment']) ? $data['payment']['address'] : $data['payment']->address; ?></td>
                     </tr>
                 </table>
             </div>
@@ -60,16 +60,11 @@
                             <th>Amount</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><?php echo is_array($data['payment']) ? $data['payment']['description'] : $data['payment']->description; ?></td>
-                            <td>$<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></td>
-                        </tr>
-                    </tbody>
+
                     <tfoot>
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>$<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></strong></td>
+                            <td><strong>Rs.<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></strong></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -80,7 +75,7 @@
             <p class="small">This is an automatically generated receipt. For questions or concerns, please contact our support team.</p>
             <div class="receipt-actions">
                 <button onclick="window.print()" class="btn-print">Print Receipt</button>
-                <button onclick="window.location.href='<?php echo URLROOT; ?>/payments/<?php echo ($_SESSION['user_role_id'] == 1) ? 'index' : 'admin_dashboard'; ?>'" class="btn-back">Back to Dashboard</button>
+                <button onclick="window.location.href='<?php echo URLROOT; ?>/payments/<?php echo ($_SESSION['user_role_id'] == 1) ? 'requests' : 'admin_dashboard'; ?>'" class="btn-back">Back to Dashboard</button>
             </div>
         </div>
     </div>

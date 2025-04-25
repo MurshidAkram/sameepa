@@ -31,8 +31,8 @@
             <div class="view-header">
                 <h1>Payment Details</h1>
                 <div class="actions">
-                    <a href="<?php echo URLROOT; ?>/payments/<?php echo ($_SESSION['user_role_id'] == 1) ? 'index' : 'admin_dashboard'; ?>" class="btn-back">
-                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    <a href="<?php echo $_SESSION['user_role_id'] == 3 ? URLROOT . '/payments/admin_dashboard' : URLROOT . '/payments/requests'; ?>" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to <?php echo $_SESSION['user_role_id'] == 3 ? 'Dashboard' : 'Requests'; ?>
                     </a>
                     <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo is_array($data['payment']) ? $data['payment']['id'] : $data['payment']->id; ?>" class="btn-receipt">
                         <i class="fas fa-file-invoice"></i> Generate Receipt
@@ -44,14 +44,14 @@
                 <div class="payment-header">
                     <div class="payment-id">
                         <h2>Transaction ID</h2>
-                        <p><?php echo is_array($data['payment']) ? $data['payment']['transaction_id'] : $data['payment']->transaction_id; ?></p>
+                        <p><?php echo is_array($data['payment']) ? ($data['payment']['transaction_id'] ?? 'N/A') : ($data['payment']->transaction_id ?? 'N/A'); ?></p>
                     </div>
                 </div>
 
                 <div class="payment-info-grid">
                     <div class="info-group">
                         <h3>Amount</h3>
-                        <p>$<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></p>
+                        <p>Rs.<?php echo number_format(is_array($data['payment']) ? $data['payment']['amount'] : $data['payment']->amount, 2); ?></p>
                     </div>
                     <div class="info-group">
                         <h3>Date</h3>
@@ -63,7 +63,7 @@
                     </div>
                     <div class="info-group">
                         <h3>Home Address</h3>
-                        <p><?php echo is_array($data['payment']) ? $data['payment']['home_address'] : $data['payment']->home_address; ?></p>
+                        <p><?php echo is_array($data['payment']) ? ($data['payment']['address'] ?? 'N/A') : ($data['payment']->address ?? 'N/A'); ?></p>
                     </div>
                 </div>
 

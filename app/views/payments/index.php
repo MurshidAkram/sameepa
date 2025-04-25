@@ -60,7 +60,7 @@
                                 <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
                                 <td><?php echo $payment->home_address; ?></td>
                                 <td><?php echo $payment->description; ?></td>
-                                <td>$<?php echo number_format($payment->amount, 2); ?></td>
+                                <td>Rs.<?php echo number_format($payment->amount, 2); ?></td>
                                 <td><?php echo substr($payment->transaction_id, 0, 10) . '...'; ?></td>
                                 <td class="action-buttons">
                                     <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $payment->id; ?>" class="btn-view-p" title="View Details">

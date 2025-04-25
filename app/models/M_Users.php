@@ -536,4 +536,16 @@ class M_Users
 
         return $success;
     }
+
+    public function getResidentsWithAddresses()
+    {
+        $this->db->query('
+            SELECT u.id, u.name, r.address 
+            FROM users u 
+            JOIN residents r ON u.id = r.user_id 
+            WHERE u.role_id = 1 AND u.is_active = 1 
+            ORDER BY u.name
+        ');
+        return $this->db->resultSet();
+    }
 }

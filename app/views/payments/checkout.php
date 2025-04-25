@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/payments/checkout.css">
+    <script src="https://js.stripe.com/v3/"></script>
     <title>Complete Payment | <?php echo SITENAME; ?></title>
 </head>
 
@@ -32,8 +33,8 @@
 
         <main class="checkout-main">
             <div class="top-page">
-                <a href="<?php echo URLROOT; ?>/payments/checkout" class="back-button">
-                    <i class="fas fa-arrow-left"></i> &nbsp; Back to Payment Form
+                <a href="<?php echo URLROOT; ?>/payments/requests" class="back-button">
+                    <i class="fas fa-arrow-left"></i> &nbsp; Back to Requests
                 </a>
             </div>
 
@@ -43,16 +44,16 @@
                 <div class="payment-summary">
                     <h2>Payment Summary</h2>
                     <div class="summary-item">
-                        <span>Home Address:</span>
-                        <span><?php echo $data['home_address']; ?></span>
+                        <span>Amount:</span>
+                        <span>Rs.<?php echo number_format($data['paymentRequest']->amount, 2); ?></span>
                     </div>
                     <div class="summary-item">
                         <span>Description:</span>
-                        <span><?php echo $data['description']; ?></span>
+                        <span><?php echo $data['paymentRequest']->description; ?></span>
                     </div>
                     <div class="summary-item">
-                        <span>Amount:</span>
-                        <span>$<?php echo number_format($data['amount'], 2); ?></span>
+                        <span>Due Date:</span>
+                        <span><?php echo date('M d, Y', strtotime($data['paymentRequest']->due_date)); ?></span>
                     </div>
                 </div>
 
@@ -74,10 +75,9 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <script src="https://js.stripe.com/v3/"></script>
     <script>
-        const stripe = Stripe('<?php echo STRIPE_PUBLISHABLE_KEY; ?>');
-        const clientSecret = '<?php echo $data['client_secret']; ?>';
+        const stripe = Stripe('<?php echo STRIPE_PUBLIC_KEY; ?>');
+        const clientSecret = '<?php echo $data['clientSecret']; ?>';
         
         const appearance = {
             theme: 'stripe',
@@ -103,7 +103,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Disable the submit button to prevent repeated clicks
             submitButton.disabled = true;
             spinner.classList.remove('hidden');
             buttonText.classList.add('hidden');
@@ -116,25 +115,14 @@
             });
             
             if (error) {
-                // Show error to your customer
-                showMessage(error.message);
+                paymentMessage.classList.remove('hidden');
+                paymentMessage.textContent = error.message;
                 
-                // Re-enable the submit button
                 submitButton.disabled = false;
                 spinner.classList.add('hidden');
                 buttonText.classList.remove('hidden');
             }
         });
-        
-        function showMessage(messageText) {
-            paymentMessage.classList.remove('hidden');
-            paymentMessage.textContent = messageText;
-            
-            setTimeout(function () {
-                paymentMessage.classList.add('hidden');
-                paymentMessage.textContent = "";
-            }, 4000);
-        }
     </script>
 </body>
 

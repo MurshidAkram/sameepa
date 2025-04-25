@@ -19,21 +19,37 @@
     gap: 1rem;
 }
 
-.btn-view-all{
+.btn-view-all,
+.btn-view-requests {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    color: white;
     border-radius: 4px;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-view-all{
     background: #800080;
 }
 
-.btn-view-all:hover{
+.btn-view-requests{
+    background: #ffa000;
+}
+
+.btn-view-all:hover,
+.btn-view-requests:hover {
     transform: translateY(-2px);
+    opacity: 0.9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-view-all i,
+.btn-view-requests i {
+    font-size: 1.1rem;
 }
 
 /* Stats Cards */

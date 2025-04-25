@@ -28,11 +28,14 @@
             <div class="admin-header">
                 <h1>Payment Management Dashboard</h1>
             </div>
-              <div class="admin-actions">
-                  <a href="<?php echo URLROOT; ?>/payments/all" class="btn-view-all">
-                      <i class="fas fa-list"></i> View All Payments
-                  </a>
-              </div>
+            <div class="admin-actions">
+                <a href="<?php echo URLROOT; ?>/payments/all" class="btn-view-all">
+                    <i class="fas fa-list"></i> View All Payments
+                </a>
+                <a href="<?php echo URLROOT; ?>/payments/requests" class="btn-view-requests">
+                        <i class="fas fa-list"></i> View Payment Requests
+                    </a>
+            </div>
             <div class="payments-stats">
                 <div class="stat-card">                  
                     <div class="stat-info">
@@ -42,14 +45,14 @@
                 </div>
                 <div class="stat-card">                   
                     <div class="stat-info">
-                        <h3><i class="fas fa-money-bill-wave"></i> Payments This Month</h3>
-                        <p><?php echo isset($data['payments_this_month']) ? $data['payments_this_month'] : 0; ?></p>
+                        <h3><i class="fas fa-money-bill-wave"></i> Requests This Month</h3>
+                        <p><?php echo isset($data['requests_this_month']) ? $data['requests_this_month'] : 0; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3><i class="fas fa-dollar-sign"></i> Total This Month</h3>
-                        <p>$<?php echo isset($data['total_amount_this_month']) ? number_format($data['total_amount_this_month'], 2) : '0.00'; ?></p>
+                        <p>Rs.<?php echo isset($data['total_amount_this_month']) ? number_format($data['total_amount_this_month'], 2) : '0.00'; ?></p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -59,14 +62,14 @@
                     </div>
                 </div>
             </div>
-              <div class="single-chart-container">
-                  <div class="chart-card">
-                      <h2>Monthly Payments</h2>
-                      <div class="chart-container-inner">
-                          <canvas id="monthlyPaymentsChart"></canvas>
-                      </div>
-                  </div>
-              </div>
+            <div class="single-chart-container">
+                <div class="chart-card">
+                    <h2>Monthly Payments</h2>
+                    <div class="chart-container-inner">
+                        <canvas id="monthlyPaymentsChart"></canvas>
+                    </div>
+                </div>
+            </div>
             <div class="payments-table-container">
                 <div class="table-header">
                     <h2>Recent Payments</h2>
@@ -75,43 +78,41 @@
                 <table class="payments-table">
                     <thead>
                         <tr>
-                            <th>Transaction ID</th>
-                            <th>User</th>
+                            <th>ID</th>
                             <th>Address</th>
                             <th>Amount</th>
                             <th>Description</th>
-                            <th>Date</th>
+                            <th>Paid At</th>
+                            <th>Created By</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(isset($data['payments']) && !empty($data['payments'])): ?>
-                            <?php foreach($data['payments'] as $payment): ?>
+                        <?php if(isset($data['requests']) && !empty($data['requests'])): ?>
+                            <?php 
+                            // Get only the first 5 records
+                            $recentRequests = array_slice($data['requests'], 0, 5);
+                            foreach($recentRequests as $request): ?>
                             <tr>
-                                <td><?php echo substr($payment->transaction_id, 0, 10) . '...'; ?></td>
-                                <td><?php echo $payment->user_name ?? 'Unknown'; ?></td>
-                                <td><?php echo $payment->home_address; ?></td>
-                                <td>$<?php echo number_format($payment->amount, 2); ?></td>
-                                <td><?php echo substr($payment->description, 0, 30) . (strlen($payment->description) > 30 ? '...' : ''); ?></td>
-                                <td><?php echo date('M d, Y', strtotime($payment->created_at)); ?></td>
+                                <td><?php echo $request->id; ?></td>
+                                <td><?php echo $request->address; ?></td>
+                                <td>Rs.<?php echo number_format($request->amount, 2); ?></td>
+                                <td><?php echo substr($request->description, 0, 30) . (strlen($request->description) > 30 ? '...' : ''); ?></td>
+                                <td><?php echo date('M d, Y H:i', strtotime($request->paid_at)); ?></td>
+                                <td><?php echo $request->created_by_name; ?></td>
                                 <td class="action-buttons">
-                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $payment->id; ?>" class="btn-view-p">
+                                    <a href="<?php echo URLROOT; ?>/payments/viewPayment/<?php echo $request->id; ?>" class="btn-view-p">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $payment->id; ?>" class="btn-receipt">
+                                    <a href="<?php echo URLROOT; ?>/payments/receipt/<?php echo $request->id; ?>" class="btn-receipt">
                                         <i class="fas fa-file-invoice"></i>
                                     </a>
-                                    <form action="<?php echo URLROOT; ?>/payments/delete/<?php echo $payment->id; ?>" method="POST" style="display: inline;">
-                                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this payment record? This action cannot be undone.')" title="Delete Payment">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="8" class="no-data">No payment records found</td>
+                                <td colspan="7" class="no-data">No paid requests found</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -130,14 +131,14 @@
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
-                    label: 'Payment Amount ($)',
+                    label: 'Payment Amount (Rs.)',
                     data: <?php echo isset($data['monthly_data']) ? json_encode($data['monthly_data']) : '[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'; ?>,
                     backgroundColor: '#3498db'
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false, // This allows the chart to use the container's height
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true
