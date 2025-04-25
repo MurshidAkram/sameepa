@@ -39,6 +39,8 @@ CREATE TABLE announcements (
         ON UPDATE CASCADE
 );
 
+ALTER TABLE announcements ADD COLUMN status ENUM('active', 'deleted') DEFAULT 'active';
+
 CREATE TABLE announcement_reactions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     announcement_id INT NOT NULL,
@@ -277,6 +279,8 @@ CREATE TABLE chats (
      FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
      FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
  );
+
+ ALTER TABLE messages ADD is_edited TINYINT(1) DEFAULT 0;
  
  CREATE TABLE chat_requests (
      id INT AUTO_INCREMENT PRIMARY KEY,
@@ -373,6 +377,7 @@ ALTER TABLE `listings`
 ALTER TABLE `listings`
   ADD CONSTRAINT `listings_ibfk_1` FOREIGN KEY (`posted_by`) REFERENCES `users` (`id`);
 
+ALTER TABLE listings ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
 
 CREATE TABLE group_chats (
     id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each message
@@ -395,6 +400,7 @@ CREATE TABLE reported_group_message (
     FOREIGN KEY (message_id) REFERENCES group_chats(id),
     FOREIGN KEY (reported_by) REFERENCES users(id)
 );
+
 ALTER TABLE facilities 
 ADD COLUMN image_data LONGBLOB COMMENT 'Facility image data' AFTER status,
 ADD COLUMN image_type VARCHAR(50) COMMENT 'Facility image MIME type' AFTER image_data;
@@ -410,25 +416,7 @@ CREATE TABLE password_resets (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-<<<<<<< HEAD
 //**********************************************Security Part*******************************************
-=======
-ALTER TABLE listings ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
-
-CREATE TABLE reports (
-    id INT(11) PRIMARY KEY AUTO_INCREMENT,
-    reporter_id INT(11) NOT NULL,
-    reported_user_message VARCHAR(255) NOT NULL,
-    category VARCHAR(50) NOT NULL,
-    description TEXT NOT NULL,
-    status ENUM('pending', 'validated', 'dismissed') DEFAULT 'pending',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE
-); 
-
-
-ALTER TABLE Reports ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
->>>>>>> origin/sankavi
 
 
 //emergency Contacts

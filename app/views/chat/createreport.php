@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/groups/groups.css">
     <title>Create Chat Report | <?php echo SITENAME; ?></title>
 </head>
 
@@ -38,16 +38,16 @@
                     <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
-                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>" 
-   class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
-    <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
-</a>
+                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>"
+                        class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
+                        <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
+                    </a>
             </aside>
 
             <div class="groups-content">
-            <a href="<?php echo URLROOT; ?>/chat/myreports" class="back-button">
-                        <i class="fas fa-arrow-left"></i> back to report
-                    </a>
+                <a href="<?php echo URLROOT; ?>/chat/myreports" class="back-button">
+                    <i class="fas fa-arrow-left"></i> back to report
+                </a>
                 <h1>Create Chat Report</h1>
                 <p>Use the form below to submit a report regarding a chat or message.</p>
 
