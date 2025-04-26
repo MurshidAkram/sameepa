@@ -125,6 +125,7 @@ class Posts extends Controller
 
         // Condition for update:
         // 1. User is the post creator 
+        // 2. User is an admin or super admin
         if (
             $post['created_by'] == $_SESSION['user_id']
         ) {
@@ -179,7 +180,7 @@ class Posts extends Controller
             }
         } else {
             // Unauthorized access
-            redirect('posts/index');
+            redirect('posts');
         }
     }
 
@@ -253,6 +254,7 @@ class Posts extends Controller
             ];
 
             if ($this->postModel->addComment($data)) {
+                // Fetch updated comments
                 $comments = $this->postModel->getCommentsByPostId($id);
                 echo json_encode(['success' => true, 'comments' => $comments]);
             } else {

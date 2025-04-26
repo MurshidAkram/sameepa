@@ -34,11 +34,11 @@
                 <div class="page-header">
                     <h1>Create New Forum</h1>
                     <?php if ($_SESSION['user_role_id'] == 2): ?>
-                        <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-back">
+                        <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="btn btn-back">
                             <i class="fas fa-arrow-left"></i> Back to Dashboard
                         </a>
                     <?php else: ?>
-                        <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-back">
+                        <a href="<?php echo URLROOT; ?>/forums" class="btn btn-back">
                             <i class="fas fa-arrow-left"></i> Back to Dashboard
                         </a>
                     <?php endif; ?>

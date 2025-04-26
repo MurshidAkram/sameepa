@@ -1,6 +1,6 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,13 +10,12 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/exchange/my_listings.css">
     <title>My Listings | <?php echo SITENAME; ?></title>
 </head>
-
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
-        <?php
-        switch ($_SESSION['user_role_id']) {
+        <?php 
+        switch($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
                 break;
@@ -43,60 +42,57 @@
                 </div>
 
                 <div class="listings-grid">
-                    <?php if (!empty($data['listings'])) : ?>
-                        <?php foreach ($data['listings'] as $listing) : ?>
-                            <div class="listing-card">
-                                <div class="listing-image">
-                                    <?php if (!empty($listing->image_data)) : ?>
-                                        <img src="<?php echo URLROOT; ?>/exchange/image/<?php echo $listing->id; ?>" alt="<?php echo htmlspecialchars($listing->title); ?>">
-                                    <?php else : ?>
-                                        <img src="<?php echo URLROOT; ?>/img/default.png" alt="No image available">
-                                    <?php endif; ?>
-                                    <span class="listing-status active">Active</span>
-                                </div>
-                                <div class="listing-content">
-                                    <h2><?php echo htmlspecialchars($listing->title); ?></h2>
-                                    <p class="listing-type"><?php echo ucfirst(htmlspecialchars($listing->type)); ?></p>
-                                    <p class="listing-description">
-                                        <?php echo htmlspecialchars(substr($listing->description, 0, 100)) . (strlen($listing->description) > 100 ? '...' : ''); ?>
-                                    </p>
-                                    <div class="listing-meta">
-                                        <span><i class="far fa-calendar"></i> Posted: <?php echo date('F j, Y', strtotime($listing->date_posted)); ?></span>
-                                    </div>
-                                    <div class="listing-actions">
-                                        <form method="POST" action="<?php echo URLROOT; ?>/exchange/view_listing/<?php echo $listing->id; ?>" style="display:inline;">
-                                            <button type="submit" class="btn-view">
-                                                <i class="fas fa-eye"></i> View
-                                            </button>
-                                        </form>
-
-                                        <form method="GET" action="<?php echo URLROOT; ?>/exchange/update_listing" style="display:inline;">
-                                            <input type="hidden" name="listing_id" value="<?php echo $listing->id; ?>">
-                                            <button type="submit" class="btn-edit">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </button>
-                                        </form>
-
-
-
-                                        <form method="POST" action="<?php echo URLROOT; ?>/exchange/delete" class="delete-form" style="display:inline;">
-                                            <input type="hidden" name="listing_id" value="<?php echo $listing->id; ?>">
-                                            <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this listing?');">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <div class="no-listings">
-                            <p>You haven't created any listings yet.</p>
-                            <a href="<?php echo URLROOT; ?>/exchange/create_listing" class="btn-primary">Create Your First Listing</a>
+                    <!-- First Listing -->
+                    <div class="listing-card">
+                        <div class="listing-image">
+                            <img src="<?php echo URLROOT; ?>/img/lawn-mower.jpg" alt="Lawn Mower">
+                            <span class="listing-status active">Active</span>
                         </div>
-                    <?php endif; ?>
-                </div>
+                        <div class="listing-content">
+                            <h2>Professional Lawn Mowing Service</h2>
+                            <p class="listing-type">Service</p>
+                            <p class="listing-description">Weekend lawn mowing service available. Professional equipment and reliable service.</p>
+                            <div class="listing-meta">
+                                <span><i class="far fa-calendar"></i> Posted: July 15, 2023</span>
+                                <span><i class="far fa-eye"></i> Views: 45</span>
+                            </div>
+                            <div class="listing-actions">
+                                <a href="<?php echo URLROOT; ?>/exchange/view_listing" class="btn-view">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <button class="btn-edit" onclick="window.location.href='<?php echo URLROOT; ?>/exchange/edit_listing'">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
 
+                        </div>
+                    </div>
+
+                    <!-- Second Listing -->
+                    <div class="listing-card">
+                        <div class="listing-image">
+                            <img src="<?php echo URLROOT; ?>/img/bookscol.jpg" alt="Books">
+                            <span class="listing-status active">Active</span>
+                        </div>
+                        <div class="listing-content">
+                            <h2>Programming Books Collection</h2>
+                            <p class="listing-type">Exchange</p>
+                            <p class="listing-description">Collection of programming books for exchange. Looking for design books.</p>
+                            <div class="listing-meta">
+                                <span><i class="far fa-calendar"></i> Posted: July 10, 2023</span>
+                                <span><i class="far fa-eye"></i> Views: 32</span>
+                            </div>
+                            <div class="listing-actions">
+                                <button class="btn-view"><i class="fas fa-eye"></i> View</button>
+                                <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -104,5 +100,4 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
-
 </html>

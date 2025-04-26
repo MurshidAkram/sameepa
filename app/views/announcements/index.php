@@ -51,6 +51,9 @@
                 </button>
             </div>
 
+            <?php //flash('announcement_message'); 
+            ?>
+
             <div class="announcements-list">
                 <?php
                 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';

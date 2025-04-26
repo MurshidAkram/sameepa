@@ -15,6 +15,5 @@
         <li><a href="<?php echo URLROOT; ?>/chat/index">Chats</a></li>
         <li><a href="<?php echo URLROOT; ?>/polls/index">Polls</a></li>
         <li><a href="<?php echo URLROOT; ?>/exchange/index">Manage Exchange Center</a></li>
-        <li><a href="<?php echo URLROOT; ?>/security/Manage_Duty_Schedule">Manage Duty Schedule</a></li>
     </ul>
 </aside>

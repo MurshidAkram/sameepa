@@ -11,7 +11,7 @@
     <title>Create Poll | <?php echo SITENAME; ?></title>
 
     <style>
-        /* i added inline styling to improve the look */
+        /* Create Poll Form Enhancements */
         .create-poll-container {
             background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
             border: 1px solid #d1d9e6;

@@ -184,20 +184,9 @@ class Users extends Controller
     {
         if (empty($data['address'])) {
             $data['errors'][] = 'Address is required';
-        } else {
-            if ($data['address'] < 1 || $data['address'] > 100) {
-                $data['errors'][] = 'Please pick your address unit between 1 and 100!';
-            }
         }
         if (empty($data['phonenumber'])) {
             $data['errors'][] = 'Phone number is required';
-        } else {
-            if ($this->userModel->findUserByPhone($data['phonenumber'])) {
-                $data['errors'][] = 'Phone number already exists';
-            }
-            if (!preg_match('/^\d{10}$/', $data['phonenumber'])) {
-                $data['errors'][] = 'Phone number must be exactly 10 digits';
-            }
         }
     }
 
@@ -268,7 +257,8 @@ class Users extends Controller
         }
 
         $data = array_merge((array)$userData, (array)$additionalData);
-
+        //$data['message'] = flash('profile_message');
+        //$data['message_type'] = flash('message_type');
 
         $this->view('users/profile', $data);
     }
@@ -326,6 +316,7 @@ class Users extends Controller
         }
 
         if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK) {
+            //flash('profile_message', 'Please select a valid image file', 'error');
             redirect('users/profile');
         }
 
@@ -333,6 +324,7 @@ class Users extends Controller
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
         if (!in_array($file['type'], $allowedTypes)) {
+            //flash('profile_message', 'Only JPG, PNG, and GIF files are allowed', 'error');
             redirect('users/profile');
         }
 
@@ -354,10 +346,15 @@ class Users extends Controller
             session_destroy();
             redirect('users/login');
         } else {
+            //flash('profile_message', 'Failed to delete account', 'error');
             redirect('users/profile');
         }
     }
 
+    public function forgotpassword()
+    {
+        $this->view('users/forgotpassword');
+    }
 
 
     public function manageUsers()
@@ -552,122 +549,15 @@ class Users extends Controller
             echo json_encode(['success' => false, 'message' => 'Failed to update address']);
         }
     }
-    public function forgotpassword()
-    {
-        $data = [
-            'errors' => [],
-            'success' => ''
-        ];
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Process form
-            $email = trim($_POST['email']);
-
-            // Validate email
-            if (empty($email)) {
-                $data['errors'][] = 'Please enter your email address';
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $data['errors'][] = 'Please enter a valid email address';
-            } else {
-                // Check if email exists
-                $result = $this->userModel->createPasswordResetToken($email);
-
-                if ($result) {
-                    // Load PHPMailer
-                    if (file_exists(APPROOT . '/vendor/autoload.php')) {
-                        // If using Composer
-                        require_once APPROOT . '/vendor/autoload.php';
-                    } else {
-                        // If manually installed
-                        require_once dirname(__DIR__) . '/libraries/PHPMailer/src/Exception.php';
-                        require_once dirname(__DIR__) . '/libraries/PHPMailer/src/PHPMailer.php';
-                        require_once dirname(__DIR__) . '/libraries/PHPMailer/src/SMTP.php';
-                    }
-
-                    require_once APPROOT . '/helpers/Email.php';
-                    $emailSent = Email::sendPasswordResetEmail($result['user']['email'], $result['user']['name'], $result['token']);
-
-                    if ($emailSent) {
-                        $data['success'] = 'A password reset link has been sent to your email address';
-                    } else {
-                        $data['errors'][] = 'Failed to send the password reset email. Please try again later.';
-                    }
-                } else {
-                    // Don't reveal that the email doesn't exist
-                    $data['success'] = 'If your email is registered, a password reset link will be sent to your email address';
-                }
-            }
-        }
-
-        $this->view('users/forgotpassword', $data);
-    }
-
-    public function resetpassword($token = null)
-    {
-        error_log("Reset password function accessed. Token: " . $token);
-        // If no token is provided in the URL, check POST data
-        if (empty($token) && isset($_POST['token'])) {
-            $token = $_POST['token'];
-            error_log("Token found in POST data: " . $token);
-        }
-
-        // If still no token, redirect to forgot password page
-        if (empty($token)) {
-            error_log("No token found, redirecting to forgot password.");
-            redirect('users/forgotpassword');
-        }
-
-        // Verify token is valid
-        $tokenData = $this->userModel->verifyPasswordResetToken($token);
-        error_log("Token verification result for token " . $token . ": " . ($tokenData ? "Success" : "Failure"));
-
-        $data = [
-            'token' => $token,
-            'errors' => []
-        ];
-
-        if (!$tokenData) {
-            // If token is invalid or expired, set an error message and don't proceed with password reset form
-            $data['errors'][] = 'Invalid or expired token. Please request a new password reset link.';
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $tokenData) {
-            // Process form only if token is valid and request is POST
-            $newPassword = trim($_POST['new_password']);
-            $confirmPassword = trim($_POST['confirm_password']);
-
-            // Validate passwords
-            if (empty($newPassword) || empty($confirmPassword)) {
-                $data['errors'][] = 'Please enter and confirm your new password';
-            } elseif ($newPassword !== $confirmPassword) {
-                $data['errors'][] = 'Passwords do not match';
-            } elseif (strlen($newPassword) < 6) {
-                $data['errors'][] = 'Password must be at least 6 characters';
-            }
-
-            if (empty($data['errors'])) {
-                // Reset password
-                if ($this->userModel->resetPassword($tokenData['user_id'], $newPassword)) {
-                    flash('login_message', 'Your password has been reset. You can now log in with your new password.');
-                    redirect('users/login');
-                } else {
-                    $data['errors'][] = 'Failed to reset password. Please try again.';
-                }
-            }
-        }
-
-        $this->view('users/resetpassword', $data);
-    }
-
-    public function getResidentAddress($id)
-    {
+    public function getResidentAddress($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $user = $this->userModel->getUserById($id);
-
+            
             if ($user) {
                 // Get the full user details including address
                 $userDetails = $this->userModel->getResidentAddressAndPhone($id);
-
+                
                 if ($userDetails) {
                     echo json_encode([
                         'success' => true,

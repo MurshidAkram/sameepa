@@ -209,7 +209,7 @@ class M_Events
         return $result['total'];
     }
 
-    /* public function getEventsByStatus($status)
+    public function getEventsByStatus($status)
     {
         $today = date('Y-m-d');
 
@@ -289,7 +289,7 @@ class M_Events
                             END = :status');
         $this->db->bind(':status', $status);
         return $this->db->resultSet();
-    } */
+    }
 
     //DONE BY SANKAVI FOR THE SUPER ADMIN DASHBOARD
     // public function getTodayEvents()

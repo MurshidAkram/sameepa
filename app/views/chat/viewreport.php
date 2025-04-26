@@ -39,87 +39,75 @@
                     <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
-                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>" 
-   class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
-    <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
-</a>
+                    <a href="<?php echo URLROOT; ?>/chat/report" class="<?php echo ($current_page == 'report' ? 'active' : ''); ?>">Report</a>
                 </nav>
             </aside>
 
             <div class="group-view-container">
                 <div class="top-actions">
-                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>" class="back-button">
+                    <a href="<?php echo URLROOT; ?>/chat/report" class="back-button">
                         <i class="fas fa-arrow-left"></i> Back to Reports
                     </a>
-                    <!-- Add a "Close Report" button/action if needed, perhaps handled via status update -->
+                    <button class="adminremovegrp">
+                        <i class="fas fa-times-circle"></i> Close Report
+                    </button>
                 </div>
 
                 <div class="group-view-content">
                     <div>
-                        <h1 class="group-title">Report: <?php echo htmlspecialchars($data['report']->category); ?></h1>
+                        <h1 class="group-title">Inappropriate Message Report</h1>
 
                         <div class="group-meta">
-                        <?php if ($_SESSION['user_role_id'] == 3): ?>
-    <div class="meta-item">
-        <i class="fas fa-user"></i>
-        Reported By: <?php echo htmlspecialchars($data['report']->reporter_name); ?>
-    </div>
-<?php endif; ?>
+                            <div class="meta-item">
+                                <i class="fas fa-user"></i>
+                                Reported By: Jane Smith
+                            </div>
                             <div class="meta-item">
                                 <i class="fas fa-clock"></i>
-                                Reported on: <?php echo date('F j, Y, g:i a', strtotime($data['report']->created_at)); ?>
+                                Reported on: March 15, 2024, 10:45 AM
                             </div>
                             <div class="meta-item">
                                 <i class="fas fa-flag"></i>
-                                Status: <?php echo htmlspecialchars(ucfirst($data['report']->status)); ?>
+                                Status: Pending Investigation
                             </div>
                             <div class="meta-item">
                                 <i class="fas fa-user-shield"></i>
-                                Reported User/Message: <?php echo htmlspecialchars($data['report']->reported_user_message); ?>
+                                Reported User: John Doe
                             </div>
                         </div>
 
                         <div class="group-description">
                             <h2>Report Details</h2>
-                            <p><?php echo htmlspecialchars($data['report']->description); ?></p>
+                            <p>A message containing inappropriate and offensive language was sent in the chat. The message violated our community guidelines and created an uncomfortable environment for other users.</p>
                         </div>
 
-                        <!-- Assuming there's no specific "Reported Conversation" block data in the model for now -->
-                        <!-- You might add a section here to display relevant chat messages if available -->
-
-                        <?php if ($_SESSION['user_role_id'] == 3 && $data['report']->status == 'pending') : ?>
-                            <div class="form-buttons">
-                                <form action="<?php echo URLROOT; ?>/chat/validatereport/<?php echo $data['report']->id; ?>" method="POST" style="display: inline-block;">
-                                    <button type="submit" class="btn-submit">
-                                        <i class="fas fa-check"></i> Validate Report
-                                    </button>
-                                </form>
-                                <form action="<?php echo URLROOT; ?>/chat/dismissreport/<?php echo $data['report']->id; ?>" method="POST" style="display: inline-block;">
-                                    <button type="submit" class="btn-cancel">
-                                        <i class="fas fa-ban"></i> Dismiss Report
-                                    </button>
-                                </form>
+                        <div class="group-description">
+                            <h2>Reported Conversation</h2>
+                            <div class="chat-message received" style="max-width: 100%; margin-bottom: 1rem;">
+                                <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="Reported User Avatar" class="message-avatar">
+                                <div class="message-content">
+                                    <div class="message-info">
+                                        <span class="message-sender">Mr.Sunil</span>
+                                        <span class="message-time">10:30 AM</span>
+                                    </div>
+                                    <p>Inappropriate message content would be displayed here</p>
+                                </div>
                             </div>
-                        <?php endif; ?>
+                        </div>
 
-                        <?php if ($_SESSION['user_role_id'] != 3 && $data['report']->reporter_id == $_SESSION['user_id'] && $data['report']->status == 'pending') : ?>
-    <div class="form-buttons">
-        <a href="<?php echo URLROOT; ?>/chat/editreport/<?php echo $data['report']->id; ?>" class="btn-submit">
-            <i class="fas fa-edit"></i> Edit Report
-        </a>
-        <form action="<?php echo URLROOT; ?>/chat/deletereport/<?php echo $data['report']->id; ?>" method="POST" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this report?');">
-            <button type="submit" class="btn-cancel">
-                <i class="fas fa-trash"></i> Delete Report
-            </button>
-        </form>
-    </div>
-<?php endif; ?>
+                        <div class="form-buttons">
+                            <button class="btn-submit">
+                                <i class="fas fa-check"></i> Validate Report
+                            </button>
+                            <button class="btn-cancel">
+                                <i class="fas fa-ban"></i> Dismiss Report
+                            </button>
+                        </div>
+                    </div>
 
-                   </div>
-
-                   <!-- Assuming there's no specific "Report Evidence" image data in the model for now -->
-                   <!-- You might add a section here to display uploaded evidence if available -->
-
+                    <div>
+                        <img src="<?php echo URLROOT; ?>/img/default-user.jpg" alt="Report Evidence" class="group-main-image">
+                    </div>
                 </div>
             </div>
         </main>
@@ -128,191 +116,6 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
-<style>
-  .group-view-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.group-view-content {
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.top-actions {
-    margin-bottom: 15px;
-}
-
-.back-button {
-    background-color: #4b5563;
-    color: #ffffff;
-    padding: 8px 16px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.back-button:hover {
-    background-color: #374151;
-}
-
-.back-button i {
-    font-size: 0.8rem;
-}
-
-.group-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-}
-
-.group-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 25px;
-}
-
-.meta-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.85rem;
-    color: #666;
-}
-
-.meta-item i {
-    font-size: 0.8rem;
-    color: #800080;
-}
-
-.meta-item span {
-    color: #2c3e50;
-    font-weight: 500;
-}
-
-.meta-item.reported-user-message {
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.meta-item.reported-user-message span {
-    margin-left: 20px;
-    display: block;
-}
-
-.group-description {
-    position: relative;
-    margin-bottom: 20px;
-    padding-top: 15px;
-}
-
-.group-description::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background-color: #800080;
-}
-
-.group-description h2 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-}
-
-.group-description p {
-    font-size: 0.9rem;
-    color: #666;
-    line-height: 1.5;
-}
-
-/* Styling for the form-buttons section */
-.form-buttons {
-    display: flex;
-    gap: 15px; /* Space between buttons */
-    margin-top: 20px; /* Space above buttons */
-}
-
-/* Edit Report button */
-.btn-submit {
-    background: linear-gradient(135deg, #800080, #6a006a); /* Purple gradient */
-    color: #ffffff; /* White text */
-    padding: 10px 20px; /* Padding to match screenshot */
-    border-radius: 6px; /* Rounded corners */
-    border: none; /* No border */
-    font-size: 0.95rem; /* Font size */
-    font-weight: 500; /* Medium weight */
-    text-decoration: none; /* For the <a> tag */
-    display: inline-flex; /* Flex to align icon and text */
-    align-items: center; /* Center vertically */
-    gap: 5px; /* Space between icon and text */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
-}
-
-.btn-submit:hover {
-    background: linear-gradient(135deg, #6a006a, #550055); /* Darker purple on hover */
-    transform: translateY(-2px); /* Slight lift on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-}
-
-.btn-submit:active {
-    transform: translateY(0); /* Reset lift on click */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow on click */
-}
-
-.btn-submit i {
-    font-size: 0.9rem; /* Slightly smaller icon */
-}
-
-/* Delete Report button */
-.btn-cancel {
-    background: linear-gradient(135deg, #e74c3c, #c0392b); /* Red gradient */
-    color: #ffffff; /* White text */
-    padding: 10px 20px; /* Padding to match screenshot */
-    border-radius: 6px; /* Rounded corners */
-    border: none; /* No border */
-    font-size: 0.95rem; /* Font size */
-    font-weight: 500; /* Medium weight */
-    display: inline-flex; /* Flex to align icon and text */
-    align-items: center; /* Center vertically */
-    gap: 5px; /* Space between icon and text */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
-}
-
-.btn-cancel:hover {
-    background: linear-gradient(135deg, #c0392b, #a0291f); /* Darker red on hover */
-    transform: translateY(-2px); /* Slight lift on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
-}
-
-.btn-cancel:active {
-    transform: translateY(0); /* Reset lift on click */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow on click */
-}
-
-.btn-cancel i {
-    font-size: 0.9rem; /* Slightly smaller icon */
-}
-    </style>
-
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const links = document.querySelectorAll(".groups-nav a");

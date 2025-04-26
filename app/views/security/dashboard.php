@@ -1,444 +1,483 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Security Dashboard | <?php echo SITENAME; ?></title>
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css" />
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-  .dashboard-container {
-  display: flex;
-  padding-bottom: 20px;
-  padding: 15px;
-  gap: 15px;
-  
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/form-styles.css">
+    <title>Enhanced Security Dashboard | <?php echo SITENAME; ?></title>
 
-.padding{
-  padding-bottom: 40px;
-}
-
-.main-content {
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-}
-
-/* Force one card per row */
-.compact-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 90%;
-  align-items: center;
-}
-
-/* Card appearance */
-.compact-card {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  width: 95%;
-  max-width: 95%;
-  overflow: hidden;
-}
-
-.compact-card h3 {
-  font-size: 1.1em;
-  margin: 0 0 10px 0;
-  color: #333;
-}
-
-.metric-value {
-  font-size: 3.5em;
-  font-weight: bold;
-  color: #6A5ACD;
-  margin: 5px 0;
-}
-
-.mini-chart-container {
-  height: 70px;
-  margin-top: 10px;
-}
-
-/* Table inside cards - UPDATED */
-.compact-table {
-  width: 90%;
-  font-size: 0.85em;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.compact-table th {
-  background-color: #9b59b6; /* Purple header */
-  color: white;
-  padding: 8px;
-  text-align: left;
-  font-weight: 500;
-}
-
-.compact-table td {
-  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-  transition: all 0.2s ease; /* Smooth hover transition */
-}
-
-.compact-table tr:hover td {
-  background-color: #f5e6ff; /* White-violet hover color */
-  cursor: pointer;
-}
-
-/* Chart container style */
-.compact-chart {
-  background: white;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  height: 260px;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.compact-chart h3 {
-  font-size: 1em;
-  margin: 0 0 10px 0;
-  text-align: center;
-}
-
-/* Color themes */
-.visitor-card { border-left: 4px solid #9b59b6; }
-.officer-card { border-left: 4px solid #3498db; }
-.incident-card { border-left: 4px solid #e74c3c; }
-
-/* Additional improvements */
-.compact-table th:first-child {
-  border-top-left-radius: 4px;
-}
-
-.compact-table th:last-child {
-  border-top-right-radius: 4px;
-}
-
-.compact-table tr:last-child td {
-  border-bottom: none;
-}
-  </style>
 </head>
+
 <body>
-<?php require APPROOT . '/views/inc/components/navbar.php'; ?>
-
-<div class="dashboard-container">
-  <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
-
-  <div class="main-content">
-    <h1>Security Dashboard</h1>
-    
-    
-    <div class="compact-grid">
-      <!-- Visitor Card -->
-      <div class="compact-card visitor-card">
-        <h3>Today's Visitors</h3>
-        <div class="metric-value" id="active-passes"><?php echo count($data['todayPasses']); ?></div>
-        <p>Passes issued today</p>
-    
-        <table class="compact-table">
-          <thead>
-            <tr>
-              <th>Visitor</th>
-              <th>Resident</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php if (!empty($data['todayPasses'])) : ?>
-              <?php foreach (array_slice($data['todayPasses'], 0, 100) as $pass) : ?>
-                <tr>
-                  <td><?php echo htmlspecialchars($pass->visitor_name); ?></td>
-                  <td><?php echo htmlspecialchars($pass->resident_name); ?></td>
-                </tr>
-              <?php endforeach; ?>
-              <?php if (count($data['todayPasses']) > 3) : ?>
-               
-              <?php endif; ?>
-            <?php else : ?>
-              <tr><td colspan="2">None today</td></tr>
-            <?php endif; ?>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Officers Card -->
-      <div class="compact-card officer-card">
-        <h3>On Duty Officers</h3>
-        <div class="metric-value" id="on-duty"><?php echo count($data['onDutyOfficers']); ?></div>
-        <p>Currently active</p>
-        
-        
-        <table class="compact-table">
-          <tbody>
-            <?php foreach (array_slice($data['onDutyOfficers'], 0, 20) as $officer): ?>
-              <tr>
-                <td><?php echo htmlspecialchars($officer->name); ?></td>
-                <td><?php echo htmlspecialchars($officer->shift_name); ?></td>
-              </tr>
-            <?php endforeach; ?>
-            <?php if (count($data['onDutyOfficers']) > 5) : ?>
-             
-            <?php endif; ?>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Incidents Card -->
-      <div class="compact-card incident-card" style="position: relative;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <div>
-      <h3>Monthly Incidents</h3>
-      <?php if (!empty($data['incidentTrends']['data'])): ?>
-        <div class="metric-value"><?php echo array_sum($data['incidentTrends']['data']); ?></div>
-        <p>Total this month</p>
-      <?php else: ?>
-        <div class="metric-value">0</div>
-        <p>No incidents</p>
-      <?php endif; ?>
-    </div>
-  </div>
-
-  <!-- Large Pie Chart (5x size) -->
-  <div style="width: 100%; height: 200px; margin: 10px 0;">
-    <canvas id="largeIncidentPieChart"></canvas>
-  </div>
-
-  <table class="compact-table">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Count</th>
-        <th>%</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php 
-      $total = array_sum($data['incidentTrends']['data']);
-      foreach (array_slice($data['incidentTrends']['labels'], 0, 100) as $index => $type): 
-        $percentage = $total > 0 ? round(($data['incidentTrends']['data'][$index] / $total) * 100, 1) : 0;
-      ?>
-        <tr>
-          <td><?php echo htmlspecialchars($type); ?></td>
-          <td><?php echo $data['incidentTrends']['data'][$index]; ?></td>
-          <td><?php echo $percentage; ?>%</td>
-        </tr>
-      <?php endforeach; ?>
-      <?php if (count($data['incidentTrends']['labels']) > 5): ?>
-      
-      <?php endif; ?>
-    </tbody>
-  </table>
-</div>
-    </div>
-
-    <!-- Compact Charts Row -->
-    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-      <div class="compact-chart">
-        <h3>Weekly Visitors</h3>
-        <canvas id="visitorFlowCanvas" style="height: 250px;"></canvas>
-      </div>
-      
-      <div class="compact-chart">
-        <h3>Incident Types</h3>
-        <canvas id="incidentTrendsCanvas" style="height: 250px;"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="padding">
-
-</div>
-<?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
-
-
-<script>
-// Initialize all charts
-function initializeCharts() {
-  // Weekly Visitor Flow - Small bar chart
-  new Chart(document.getElementById('visitorFlowCanvas').getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: <?php echo json_encode($data['visitorFlow']['labels']); ?>,
-      datasets: [{
-        data: <?php echo json_encode($data['visitorFlow']['data']); ?>,
-        backgroundColor: '#9b59b6',
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, ticks: { stepSize: 1 } }
-      }
-    }
-  });
-
-  // Incident Trends - Small horizontal bar chart
-  new Chart(document.getElementById('incidentTrendsCanvas').getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: <?php echo json_encode($data['incidentTrends']['labels']); ?>,
-      datasets: [{
-        data: <?php echo json_encode($data['incidentTrends']['data']); ?>,
-        backgroundColor: '#e74c3c'
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { beginAtZero: true }
-      }
-    }
-  });
-
-  // Mini Visitor Chart - Tiny line chart
-  const visitorCountByHour = calculateVisitorCountByHour(<?php echo json_encode($data['todayPasses']); ?>);
-  new Chart(document.getElementById('miniVisitorChart').getContext('2d'), {
-    type: 'line',
-    data: {
-      labels: visitorCountByHour.labels,
-      datasets: [{
-        data: visitorCountByHour.data,
-        borderColor: '#9b59b6',
-        borderWidth: 1,
-        fill: false,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { x: { display: false }, y: { display: false } }
-    }
-  });
-
-  // Mini Officer Chart - Tiny bar chart
-  new Chart(document.getElementById('miniOfficerChart').getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: <?php echo json_encode($data['miniOfficer']['labels']); ?>,
-      datasets: [{
-        data: <?php echo json_encode($data['miniOfficer']['data']); ?>,
-        backgroundColor: '#3498db'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { x: { display: false }, y: { display: false } }
-    }
-  });
-
-  // Mini Incident Chart - Tiny doughnut chart
-  new Chart(document.getElementById('miniIncidentChart').getContext('2d'), {
-    type: 'doughnut',
-    data: {
-      labels: <?php echo json_encode($data['incidentTrends']['labels']); ?>,
-      datasets: [{
-        data: <?php echo json_encode($data['incidentTrends']['data']); ?>,
-        backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      cutout: '70%'
-    }
-  });
-}
-
-// Helper function to calculate visitor count by hour
-function calculateVisitorCountByHour(passes) {
-  const hours = Array.from({length: 24}, (_, i) => i);
-  const counts = Array(24).fill(0);
-  
-  passes.forEach(pass => {
-    if (pass.visit_time) {
-      const hour = new Date('1970-01-01T' + pass.visit_time).getHours();
-      counts[hour]++;
-    }
-  });
-  
-  return {
-    labels: hours.map(h => h + ':00'),
-    data: counts
-  };
-}
-
-document.addEventListener('DOMContentLoaded', initializeCharts);
-// Initialize the large pie chart (5x size)
-document.addEventListener('DOMContentLoaded', function() {
-  const ctx = document.getElementById('largeIncidentPieChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: <?php echo json_encode($data['incidentTrends']['labels']); ?>,
-      datasets: [{
-        data: <?php echo json_encode($data['incidentTrends']['data']); ?>,
-        backgroundColor: [
-          '#e74c3c', '#f39c12', '#2ecc71', '#3498db', '#9b59b6',
-          '#1abc9c', '#d35400', '#34495e', '#7f8c8d', '#c0392b',
-          '#e67e22', '#27ae60', '#2980b9', '#8e44ad', '#16a085'
-        ],
-        borderWidth: 1,
-        borderColor: '#fff'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: {
-            boxWidth: 12,
-            padding: 10,
-            font: {
-              size: 10
-            }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const total = context.dataset.data.reduce((a, b) => a + b, 0);
-              const percentage = Math.round((context.raw / total) * 100);
-              return `${context.label}: ${context.raw} (${percentage}%)`;
-            }
-          }
+    <style>
+        /* General Dashboard Styling */
+        .dashboard-container {
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 20px;
+            gap: 20px;
         }
-      },
-      cutout: '50%',
-      animation: {
-        animateScale: true,
-        animateRotate: true
-      }
-    }
-  });
-});
 
-</script>
+        .side-panel {
+            flex-basis: 15%;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .section {
+    display: flex;               /* Use flexbox for layout */
+    flex-direction: column;      /* Stack items vertically */
+    align-items: flex-start;     /* Align items to the start of the container */
+    justify-content: flex-start; /* Align items at the top */
+    gap: 20px;                   /* Add vertical spacing between child elements */
+    background: #ffffff;         /* Background color */
+    border-radius: 12px;         /* Rounded corners */
+    padding: 20px;               /* Inner padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    width: 80%;                 /* Full width of the container */
+}
+
+
+.section h2 {
+    margin-bottom: 15px;         /* Spacing below the heading */
+    font-size: 1.5em;            /* Increase font size for better visibility */
+    color: #333;                 /* Text color */
+    align-self: center;          /* Center align heading horizontally */
+}
+
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+
+
+        .card {
+            flex: 1 1 calc(33.333% - 20px);
+            min-width: 250px;
+            background: #f7f7f7;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        .chart {
+            flex: 1 1 calc(50% - 20px);
+            max-width: 60%;
+            max-height: 50%;
+            flex-direction: row; 
+        }
+
+        canvas {
+            width: 100%;
+            height: 250px;
+        }
+
+        .action {
+            width: 48%;
+    padding: 15px;
+    background-color: #2980b9;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+        }
+
+        .action:hover {
+            background-color: #D2B4DE;
+        }
+        /* Table Styling */
+        .data-table {
+
+            
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .data-table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .data-table tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .data-table td {
+            font-size: 0.9em;
+        }
+
+        .action.active {
+            background-color: #2980b9;
+        }
+        .too{
+            text-align: left;
+            color :#800080;
+            padding-right: 95px;
+            font-size: 24px;
+        }
+
+    </style>
+
+    <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
+
+    <div class="dashboard-container">
+        <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
+
+        <div class="main-content">
+            <!-- Key Metrics Section -->
+            <section class="section">
+                <h3 class="too">Key Metrics</h3>
+                <div class="grid">
+                    <!-- <div class="card" style="background-color:#9B59B6;">
+                        <h3>Total Alerts</h3>
+                        <p>Today: <span id="total-alerts">15</span></p>
+                    </div> -->
+                    <div class="card" style="background-color: #D2B4DE;">
+                        <h3>Active Visitor Passes</h3>
+                        <p>Currently: <span id="active-passes">5</span></p>
+                    </div>
+                    <div class="card" style="background-color: #D2B4DE;">
+                        <h3>Security Personnel On Duty</h3>
+                        <p>Active: <span id="on-duty">10</span></p>
+                    </div>
+                    <div class="card" style="background-color: #9b59b6;">
+                        <h3>Recent Emergency Calls</h3>
+                        <p>Last: <span id="recent-emergency">911 at 10:35 AM</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-Time Monitoring Section with Charts -->
+           
+                <!-- <h3 class="too">Real-Time Monitoring</h3> -->
+                <!-- <div class="grid">
+                    <!- <div class="chart">
+                        <h3>Live Camera Feeds</h3>
+                        <p>View ongoing surveillance</p>
+                        <button class="action" onclick="toggleTable('camera')">View Feeds</button>
+                        <canvas id="cameraFeedsCanvas"></canvas> -->
+
+                        <!-- Camera Feeds Table -->
+                    <!-- <table class="data-table" id="cameraTable">
+                        <thead>
+                            <tr>
+                                <th>Camera ID</th>
+                                <th>Status</th>
+                                <th>Viewers</th>
+                                <th>Location</th>
+                                <th>Resolution</th>
+                                <th>Last Maintenance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Camera 1</td>
+                                <td>Active</td>
+                                <td>15</td>
+                                <td>Main Entrance</td>
+                                <td>1080p</td>
+                                <td>2024-01-15</td>
+                            </tr>
+                            <tr>
+                                <td>Camera 2</td>
+                                <td>Inactive</td>
+                                <td>0</td>
+                                <td>Garage</td>
+                                <td>720p</td>
+                                <td>2023-12-10</td>
+                            </tr>
+                            <tr>
+                                <td>Camera 3</td>
+                                <td>Active</td>
+                                <td>10</td>
+                                <td>Lobby</td>
+                                <td>1080p</td>
+                                <td>2024-02-01</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    
+
+                    
+                <div class="chart">
+                        <h3>Recent Access Logs</h3>
+                        <p>Visitors: 12 | Residents: 45</p>
+                        <button class="action" onclick="toggleTable('access')">View Logs</button>
+
+                        <canvas id="accessLogsCanvas"></canvas>
+
+                         <!-- Access Logs Table -->
+                    <table class="data-table" id="accessTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Visitor</th>
+                                <th>Access Point</th>
+                                <th>Access Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-11-20</td>
+                                <td>08:00 AM</td>
+                                <td>Malith Damsara</td>
+                                <td>Main Gate</td>
+                                <td>Visitor</td>
+                                <td>Granted</td>
+                            </tr>
+                            <tr>
+                                <td>2024-11-21</td>
+                                <td>09:00 AM</td>
+                                <td>Sasila Sadamsara</td>
+                                <td>Visitor Entrance</td>
+                                <td>Visitor</td>
+                                <td>Granted</td>
+                            </tr>
+                            <tr>
+                                <td>2024-11-22</td>
+                                <td>10:00 AM</td>
+                                <td>Wishawa Nimsara</td>
+                                <td>Garage</td>
+                                <td>Visitor</td>
+                                <td>Denied</td>
+                            </tr>
+                            <tr>
+                                <td>2024-11-23</td>
+                                <td>11:30 AM</td>
+                                <td>Lakmali Gunarathne</td>
+                                <td>Main Gate</td>
+                                <td>Suplier</td>
+                                <td>Granted</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    </div>
+                    <!-- <div class="chart">
+                        <h3>Alarm Status</h3>
+                        <p>Status: <span style="color: red;">Triggered</span></p>
+                        <button class="action" onclick="toggleTable('alarm')">View Alarms</button>
+                        <canvas id="alarmStatusCanvas"></canvas> -->
+
+                         <!-- Alarm Status Table -->
+                    <!-- <table class="data-table" id="alarmTable">
+                        <thead>
+                            <tr>
+                                <th>Alarm ID</th>
+                                <th>Status</th>
+                                <th>Triggered Time</th>
+                                <th>Location</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ALARM-001</td>
+                                <td>Triggered</td>
+                                <td>10:30 AM</td>
+                                <td>Main Gate</td>
+                                <td>Intruder</td>
+                            </tr>
+                            <tr>
+                                <td>ALARM-002</td>
+                                <td>Resolved</td>
+                                <td>9:00 AM</td>
+                                <td>Back Door</td>
+                                <td>Fire</td>
+                            </tr>
+                        </tbody>
+                    </table>
+ -->
+                  
+                <div> 
+                    <div class="chart">
+                        <h3>Incident Trends</h3>
+                        <canvas id="incidentTrendsCanvas"></canvas>
+                    </div>
+                    <div class="chart">
+                        <h3>Visitor Flow</h3>
+                        <canvas id="visitorFlowCanvas"></canvas>
+                    </div>
+                </div>
+            
+
+            <!-- Charts Section -->
+            <section class="chart">
+                <h3 class="too">Analytics and Reports</h3>
+                <div class="grid">
+                    <!-- <div class="chart">
+                        <h3>Maintenance Requests</h3>
+                        <canvas id="maintenanceRequestsCanvas"></canvas>
+                    </div> -->
+                    <div class="chart">
+                        <h3>Incident Response Time</h3>
+                        <canvas id="responseTimeCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </div>
+    </div>
+    </div>
+
+    <?php require APPROOT . '/views/inc/components/footer.php'; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+function toggleTable(tableId) {
+            const table = document.getElementById(tableId + 'Table');
+            const button = document.querySelector('button[action="' + tableId + '"]');
+
+            if (table.style.display === 'none') {
+                table.style.display = 'table';
+                button.classList.add('active');
+            } else {
+                table.style.display = 'none';
+                button.classList.remove('active');
+            }
+        }
+
+
+
+        // // Live Camera Feeds Chart (Line Chart example)
+        // new Chart(document.getElementById('cameraFeedsCanvas').getContext('2d'), {
+        //     type: 'line',
+        //     data: {
+        //         labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM'],
+        //         datasets: [{
+        //             label: 'Live Feeds Viewers',
+        //             data: [5, 8, 3, 6, 9],
+        //             borderColor: '#ff6347',  // Tomato color for the line
+        //             fill: false,
+        //             backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        //             borderWidth: 2
+        //         }]
+        //     }
+        // });
+
+        // Recent Access Logs Chart (Bar Chart example)
+        new Chart(document.getElementById('accessLogsCanvas').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Access Logs (Visitors)',
+                    data: [10, 20, 30, 40, 25, 35, 50],
+                    backgroundColor: '#9b59b6',  // Green for visitors
+                    borderColor: '#27ae60',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // // Alarm Status Chart (Pie Chart example)
+        // new Chart(document.getElementById('alarmStatusCanvas').getContext('2d'), {
+        //     type: 'pie',
+        //     data: {
+        //         labels: ['Triggered', 'Resolved', 'Pending'],
+        //         datasets: [{
+        //             data: [3, 5, 2],  // Example data for different alarm statuses
+        //             backgroundColor: ['#e74c3c', '#3498db', '#f39c12']
+        //         }]
+        //     }
+        // });
+
+        // Incident Trends Chart (Doughnut Chart example)
+        new Chart(document.getElementById('incidentTrendsCanvas').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Theft', 'Fire', 'Access Violation'],
+                datasets: [{
+                    data: [10, 15, 5],
+                    backgroundColor: ['#800080', '#9b59b6', '#6A5ACD']
+
+                }]
+            }
+        });
+
+        // Visitor Flow Chart (Line Chart example)
+        new Chart(document.getElementById('visitorFlowCanvas').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Visitors',
+                    data: [12, 20, 30, 25, 35, 50, 40],
+                    borderColor: '#6A5ACD',
+                    fill: true,
+                    backgroundColor: 'rgba(138, 43, 226, 0.2)'
+                }]
+            }
+        });
+
+        // // Maintenance Requests Chart
+        // new Chart(document.getElementById('maintenanceRequestsCanvas').getContext('2d'), {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        //         datasets: [{
+        //             label: 'Requests',
+        //             data: [10, 12, 8, 15, 20],
+        //             backgroundColor: '#6A5ACD'
+        //         }]
+        //     }
+        // });
+
+        // Incident Response Time Chart
+        new Chart(document.getElementById('responseTimeCanvas').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Incident 1', 'Incident 2', 'Incident 3', 'Incident 4', 'Incident 5'],
+                datasets: [{
+                    label: 'Response Time (minutes)',
+                    data: [10, 15, 12, 18, 20],
+                    backgroundColor: '#9b59b6'
+                }]
+            }
+        });
+    </script>
 </body>
+
 </html>

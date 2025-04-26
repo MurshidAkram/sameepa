@@ -1,511 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>Emergency Contacts | <?php echo SITENAME; ?></title>
-    <style>
-    .dashboard-container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-}
-
-.side-panel {
-    width: 250px;
-    position: fixed;
-    height: 100vh;
-    background: #2c3e50;
-    color: white;
-    padding: 20px;
-    overflow-y: auto;
-    border-radius: 10px 0 0 10px;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    z-index: 100;
-}
-
-.main-content {
-    flex: 1;
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-    transition: padding-bottom 0.3s ease;
-    margin-left: 20px;
-}
-
-.category-card {
-    background: linear-gradient(135deg, rgb(128, 33, 147) 0%, rgb(130, 37, 154) 100%);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.category-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-.category-card.active {
-    background: linear-gradient(135deg, rgb(96, 17, 85) 0%, rgb(128, 33, 147) 100%);
-    z-index: 10;
-}
-
-.category-header {
-    display: flex;
-    align-items: center;
-}
-
-.category-icon {
-    font-size: 1.8rem;
-    margin-right: 15px;
-    width: 50px;
-    height: 50px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.category-title {
-    font-size: 1.3rem;
-    margin: 0;
-}
-
-.contacts-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.contacts-grid {
-    display: none;
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255,255,255,0.2);
-    transform-origin: top;
-    animation: fadeIn 0.3s ease;
-}
-
-.category-card.active .contacts-grid {
-    display: grid;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.contact-item {
-    background: rgba(255,255,255,0.1);
-    border-radius: 8px;
-    padding: 15px;
-    transition: transform 0.3s ease;
-}
-
-.contact-item:hover {
-    transform: translateY(-3px);
-    background: rgba(255,255,255,0.15);
-}
-
-.contact-name {
-    font-weight: 600;
-    margin-bottom: 5px;
-    font-size: 1.1rem;
-}
-
-.contact-phone {
-    font-size: 1rem;
-    margin-bottom: 5px;
-}
-
-.contact-description {
-    font-size: 0.85rem;
-    opacity: 0.8;
-    margin-bottom: 10px;
-}
-
-.contact-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-call {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.btn-call:hover {
-    background: #3d8b40;
-}
-
-/* Modal styles */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background: rgb(186, 57, 237);
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    color: #fff;
-    position: relative;
-}
-
-.modal-content .close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: white;
-}
-
-.modal-content h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    background: rgba(255,255,255,0.9);
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.btn {
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.btn.save-btn {
-    background: #450d8f;
-    color: white;
-}
-
-.btn.save-btn:hover {
-    background: rgb(96, 17, 85);
-}
-
-.btn.cancel-btn {
-    background: #e74c3c;
-    color: white;
-}
-
-.btn.cancel-btn:hover {
-    background: #c0392b;
-}
-
-@media (max-width: 768px) {
-    .main-content {
-        margin-left: 0;
-        margin-top: 70px;
-    }
-    
-    .side-panel {
-        width: 100%;
-        height: auto;
-        position: fixed;
-        top: 0;
-        z-index: 99;
-        border-radius: 0;
-    }
-
-    .contacts-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .contacts-grid {
-        grid-template-columns: 1fr;
-    }
-}
-    </style>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/security/Emergency_Contacts.css">
+    <title>Manage Emergency Contacts | <?php echo SITENAME; ?></title>
 </head>
+
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
         <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
-        <div class="main-content">
-            <h1>Emergency Contacts</h1>
+        <main>
 
-            <div class="contacts-container">
-                <?php foreach ($data['contactsByCategory'] as $categoryData): ?>
-                    <div class="category-card" onclick="toggleContacts(this, <?php echo $categoryData['category']->id; ?>)">
-                        <div class="category-header">
-                            <!-- <div class="category-icon">
-                                <i class="fas fa-<?php echo $categoryData['category']->icon; ?>"></i>
-                            </div> -->
-                            <h2 class="category-title"><?php echo $categoryData['category']->name; ?></h2>
-                        </div>
-                        
-                        <div class="contacts-grid">
-                            <?php foreach ($categoryData['contacts'] as $contact): ?>
-                                <div class="contact-item">
-                                    <div class="contact-name"><?php echo htmlspecialchars($contact->name); ?></div>
-                                    <div class="contact-phone"><?php echo htmlspecialchars($contact->phone); ?></div>
-                                    <?php if (!empty($contact->description)): ?>
-                                        <div class="contact-description"><?php echo htmlspecialchars($contact->description); ?></div>
-                                    <?php endif; ?>
-                                    <!-- <div class="contact-actions">
-                                        <a href="tel:<?php echo htmlspecialchars($contact->phone); ?>" class="btn-call">
-                                            <i class="fas fa-phone"></i> Call
-                                        </a>
-                                        <button class="btn-edit" onclick="openEditModal(
-                                            '<?php echo $contact->id; ?>',
-                                            '<?php echo htmlspecialchars($contact->name); ?>', 
-                                            '<?php echo htmlspecialchars($contact->phone); ?>',
-                                            '<?php echo htmlspecialchars($contact->description); ?>',
-                                            event
-                                        )">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </button>
-                                    </div> -->
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
+        
+       
+            <div class="contacts-list-container">
+
+            
+
+              <!-- Emergency Contact Cards -->
+                  <div>
+                  <div class="contact-item" id="contact-1">
+                        <h4>Police Emergency Hotline</h4>
+                        <p>Phone: 119</p>
+                        <button class="btn call-btn">Hotline</button>
+                        <button class="btn message-btn">Message</button>
+                        <button class="btn edit-btn" onclick="openEditModal('Police Emergency Hotline', '119', 'National Emergency Center', 'contact-1')">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
                     </div>
-                <?php endforeach; ?>
+                    <div class="contact-item" id="contact-1">
+                        <h4>Ambulance Service</h4>
+                        <p>Phone: 1990</p>
+                        <button class="btn call-btn">Hotline</button>
+                        <button class="btn message-btn">Message</button>
+                        <button class="btn edit-btn" onclick="openEditModal('Ambulance Service', '1990', 'National Emergency Center', 'contact-1')">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
+                    </div>
+                          
+                    <div class="contact-item" id="contact-1">
+                        <h4>Fire Brigade</h4>
+                        <p>Phone: 110</p>
+                        <button class="btn call-btn">Hotline</button>
+                        <button class="btn message-btn">Message</button>
+                        <button class="btn edit-btn" onclick="openEditModal('Fire Brigade', '110', 'National Emergency Center', 'contact-1')">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
+                    </div>
+                  </div>
+                    
+
+                  <div>
+                  <div class="contact-item" id="contact-1">
+                        <h4>Child Protection Authority</h4>
+                        <p>Phone: 1929</p>
+                        <button class="btn call-btn">Hotline</button>
+                        <button class="btn message-btn">Message</button>
+                        <button class="btn edit-btn" onclick="openEditModal('Child Protection Authority', '1929', 'National Emergency Center', 'contact-1')">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
+                    </div>
+
+                    <div class="contact-item" id="contact-1">
+                        <h4>Tourist Police</h4>
+                        <p>Phone: 1912</p>
+                        <button class="btn call-btn">Hotline</button>
+                        <button class="btn message-btn">Message</button>
+                        <button class="btn edit-btn" onclick="openEditModal('Tourist Police', '1912', 'National Emergency Center', 'contact-1')">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
+                    </div>
+                    <div class="contact-item" id="contact-1">
+                        <h4>Electricity Breakdown Service</h4>
+                        <p>Phone: 1987</p>
+                        <button class="btn call-btn">Hotline</button>
+                        <button class="btn message-btn">Message</button>
+                        <button class="btn edit-btn" onclick="openEditModal('Electricity Breakdown Service', '1987', 'National Emergency Center', 'contact-1')">Edit</button>
+                        <button class="btn delete-btn" onclick="deleteContact('contact-1')">Delete</button>
+                    </div>
+                    
+                  </div>
+                   
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Edit Contact Modal -->
-    <div id="editContactModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('editContactModal')">&times;</span>
-            <h3>Edit Emergency Contact</h3>
-            <form id="editContactForm">
-                <div class="form-group">
-                    <label for="editContactName">Name:</label>
-                    <input type="text" id="editContactName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editContactPhone">Phone:</label>
-                    <input type="text" id="editContactPhone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editContactDescription">Description:</label>
-                    <textarea id="editContactDescription" rows="3"></textarea>
-                </div>
-                
-                <input type="hidden" id="editContactId">
-                
-                <div class="form-actions">
-                    <button type="button" class="btn cancel-btn" onclick="closeModal('editContactModal')">Cancel</button>
-                    <button type="submit" class="btn save-btn">Save</button>
-                </div>
-            </form>
-        </div>
+    
+<!-- Edit Contact Modal -->
+<div id="editContactModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('editContactModal')">&times;</span>
+        <h2>Edit Emergency Contact</h2>
+        <form id="editContactForm" onsubmit="saveContactEdits(event)">
+            <label for="editContactName">Name:</label>
+            <input type="text" id="editContactName" required>
+
+            <label for="editContactPhone">Phone:</label>
+            <input type="text" id="editContactPhone" required>
+
+            <input type="hidden" id="editContactId">
+
+            <div class="button-group">
+                <button type="submit" class="btn save-btn">Save</button>
+                <button type="button" class="btn cancel-btn" onclick="closeModal('editContactModal')">Cancel</button>
+            </div>
+        </form>
     </div>
+</div>
+
+
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
     <script>
-      // Store all contacts data from PHP
-const allContacts = <?php echo json_encode($data['contactsByCategory']); ?>;
-let currentCategoryId = null;
+    // Open the modal
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.add('active');   // Show the modal
+    }
 
-// Toggle contacts visibility when clicking a category card
-function toggleContacts(card, categoryId, categoryName, categoryIcon) {
-    // Close all other open category cards
-    document.querySelectorAll('.category-card').forEach(item => {
-        item.classList.remove('active');
-    });
+    // Close the modal
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('active'); // Hide the modal
+    }
 
-    // Toggle the clicked card
-    card.classList.add('active');
+    // Submit the incident form
+    function submitIncidentForm() {
+        // Collect the form data
+        var type = document.getElementById("incident_type").value;
+        var date = document.getElementById("incident_date").value;
+        var time = document.getElementById("incident_time").value;
+        var description = document.getElementById("incident_description").value;
 
-    // Show contacts
-    showCategoryContacts(categoryId, categoryName, categoryIcon);
-}
+        // Assuming you'd handle the submission to the backend here
 
-// Show contacts for a specific category
-function showCategoryContacts(categoryId, categoryName, categoryIcon) {
-    // Update display header
-    document.getElementById('displayCategoryTitle').textContent = categoryName;
-    document.getElementById('displayCategoryIcon').className = `fas fa-${categoryIcon}`;
+        alert("Incident Report Submitted!");
+        cancelIncidentForm(); // Close the form after submission
+    }
 
-    // Find and show contacts
-    const categoryData = allContacts.find(cat => cat.category.id == categoryId);
-    const contacts = categoryData ? categoryData.contacts : [];
-    const contactsList = document.getElementById('contactsList');
-    contactsList.innerHTML = '';
+    // Cancel the incident form
+    function cancelIncidentForm() {
+        document.getElementById("incidentForm").style.display = "none";
+    }
 
-    contacts.forEach(contact => {
-        const contactItem = document.createElement('div');
-        contactItem.className = 'contact-item';
-        contactItem.innerHTML = `
-            <div class="contact-name">${contact.name}</div>
-            <div class="contact-phone">${contact.phone}</div>
-            ${contact.description ? `<div class="contact-description">${contact.description}</div>` : ''}
-            <div class="contact-actions">
-                <a href="tel:${contact.phone}" class="btn-call">
-                    <i class="fas fa-phone"></i> Call
-                </a>
-                <button class="btn-edit" onclick="openEditModal(
-                    '${contact.id}',
-                    '${contact.name.replace(/'/g, "\\'")}',
-                    '${contact.phone}',
-                    '${contact.description ? contact.description.replace(/'/g, "\\'") : ''}',
-                    event
-                )">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
+    // Create a new contact
+    function createContact(event) {
+        event.preventDefault();
+        const name = document.getElementById('newContactName').value;
+        const phone = document.getElementById('newContactPhone').value;
+
+        const id = `contact-${Date.now()}`;
+        const contactList = document.querySelector('.contacts-list');
+        const newContactHTML = `
+            <div class="contact-item" id="${id}">
+                <h4>${name}</h4>
+                <p>Phone: ${phone}</p>
+                <button class="btn call-btn">Hotline</button>
+                <button class="btn message-btn">Message</button>
+                <button class="btn edit-btn" onclick="openEditModal('${name}', '${phone}', '${id}')">Edit</button>
+                <button class="btn delete-btn" onclick="deleteContact('${id}')">Delete</button>
             </div>
         `;
-        contactsList.appendChild(contactItem);
-    });
+        contactList.insertAdjacentHTML('beforeend', newContactHTML);
+        closeModal('newContactModal');
+    }
 
-    document.getElementById('contactsDisplay').style.display = 'block';
-    document.getElementById('contactsDisplay').scrollIntoView({ behavior: 'smooth' });
+    // Open the edit modal with the contact details
+    function openEditModal(name, phone, id) {
+        document.getElementById('editContactName').value = name;
+        document.getElementById('editContactPhone').value = phone;
+        document.getElementById('editContactId').value = id;
+        openModal('editContactModal');
+    }
 
-    currentCategoryId = categoryId;
-}
+    // Save the contact edits
+    function saveContactEdits(event) {
+        event.preventDefault();  // Prevent form from submitting
 
-// Open a modal
-function openModal(modalId) {
-    document.getElementById(modalId).classList.add('active');
-    document.getElementById(modalId).style.display = 'block';
-}
+        const id = document.getElementById('editContactId').value;
+        const name = document.getElementById('editContactName').value;
+        const phone = document.getElementById('editContactPhone').value;
+       
 
-// Close a modal
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('active');
-    document.getElementById(modalId).style.display = 'none';
-}
-
-// Open the edit modal with contact details
-function openEditModal(id, name, phone, description, event) {
-    event.stopPropagation();
-    document.getElementById('editContactId').value = id;
-    document.getElementById('editContactName').value = name;
-    document.getElementById('editContactPhone').value = phone;
-    document.getElementById('editContactDescription').value = description || '';
-    openModal('editContactModal');
-}
-
-// Save edited contact
-document.getElementById('editContactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const id = document.getElementById('editContactId').value;
-    const name = document.getElementById('editContactName').value;
-    const phone = document.getElementById('editContactPhone').value;
-    const description = document.getElementById('editContactDescription').value;
-
-    const data = { id, name, phone, description };
-
-    fetch(`<?php echo URLROOT; ?>/security/Edit_Contact/${id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Contact updated successfully');
-            closeModal('editContactModal');
-
-            // Refresh contacts for current category
-            if (currentCategoryId) {
-                const currentCategory = allContacts.find(cat => cat.category.id == currentCategoryId);
-                if (currentCategory) {
-                    showCategoryContacts(
-                        currentCategoryId,
-                        currentCategory.category.name,
-                        currentCategory.category.icon
-                    );
-                }
-            }
-        } else {
-            alert('Failed to update contact');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while updating the contact.');
-    });
-});
-
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-    if (event.target.classList.contains('modal')) {
+        const contact = document.getElementById(id);
+        contact.innerHTML = `
+            <h4>${name}</h4>
+            <p>Phone: ${phone}</p>
+            <button class="btn call-btn">Hotline</button>
+            <button class="btn message-btn">Message</button>
+            <button class="btn edit-btn" onclick="openEditModal('${name}', '${phone}', '${id}')">Edit</button>
+            <button class="btn delete-btn" onclick="deleteContact('${id}')">Delete</button>
+        `;
         closeModal('editContactModal');
     }
-});
 
-     
-    </script>
+    // Delete a contact
+    function deleteContact(id) {
+        const contact = document.getElementById(id);
+        contact.remove();
+    }
+
+    // Optional: Open the modal with an "Edit Contact" button
+    document.getElementById('openModalButton').addEventListener('click', () => {
+        openModal('editContactModal');
+    });
+</script>
+
+    <style>
+
+
+        /* Styles for modals */
+.contact-item {
+    padding: 20px;
+    margin: 15px;
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-item h4 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+}
+
+.contact-item p {
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+/* Specific Styles for Each Card */
+#contact-1 {
+    background: linear-gradient(135deg, #8e44ad, #9b59b6); /* Dark Violet to Light Violet */
+}
+
+#contact-2 {
+    background: linear-gradient(135deg, #bb8fce, #8e44ad); /* Light Violet to Dark Violet */
+}
+
+#contact-3 {
+    background: linear-gradient(135deg, #8e44ad, #3498db); /* Violet to Blue */
+}
+
+#contact-4 {
+    background: linear-gradient(135deg, #f1c40f, #e67e22); /* Yellow to Orange */
+}
+
+
+/* Button Styles */
+.contact-item .btn {
+    margin: 5px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.contact-item .call-btn {
+    background-color: #27ae60;
+}
+
+.contact-item .call-btn:hover {
+    background-color: #2ecc71;
+}
+
+.contact-item .message-btn {
+    background-color: #2980b9;
+}
+
+.contact-item .message-btn:hover {
+    background-color: #3498db;
+}
+
+.contact-item .edit-btn {
+    background-color: #f39c12;
+}
+
+.contact-item .edit-btn:hover {
+    background-color: #e67e22;
+}
+
+.contact-item .delete-btn {
+    background-color: #e74c3c;
+}
+
+.contact-item .delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Hover Effect for Cards */
+.contact-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+        .dashboard-container{
+                  display:flex;
+                  
+
+        }
+        .contacts-list-container {
+
+            justify-content: space-between;
+            display:flex;
+    padding: 20px;
+    background-color: #ffffff; /* White background for a clean look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 12px; /* Rounded corners for a modern feel */
+    margin-left:20px; /* Adds space around the container */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+    width: 100%;
+}
+
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Dark overlay for background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #8e44ad, #bb8fce);/* Gradient background */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Elevated shadow */
+    width: 400px;
+    text-align: center;
+    color: #fff; /* White text for contrast */
+    animation: slide-in 0.4s ease; /* Subtle entry animation */
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff;
+}                                             
+
+.modal-content label {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    display: block;
+    text-align: left;
+    font-weight: 500;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.modal-content input:focus {
+    border-color: #4caf50; /* Highlight border on focus */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.modal-content .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.save-btn {
+    background-color: blue;
+    color: white;
+}
+
+.save-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cancel-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: blue;
+    transition: transform 0.3s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.2);
+}
+
+/* Keyframe animation for modal slide-in effect */
+@keyframes slide-in {
+    from {
+        transform: translateY(-30%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+
+    </style>
 </body>
+
 </html>

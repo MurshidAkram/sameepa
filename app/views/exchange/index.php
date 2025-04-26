@@ -1,3 +1,4 @@
+<!-- app/views/resident/exchange.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/exchange/exchange.css?v=1.1">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/exchange/exchange.css">
     <title>Exchange Center | <?php echo SITENAME; ?></title>
 </head>
 
@@ -39,46 +40,62 @@
                 <a href="<?php echo URLROOT; ?>/exchange/my_listings" class="btn-my-listings">My Listings</a>
             </div>
 
-            <!-- <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/exchange/index">
-                    <input type="text" name="search" placeholder="Search listings...">
-                    <button type="submit">Search</button>
-                </form> -->
-
             <div class="exchange-grid">
-                <?php if (!empty($data['listings'])) : ?>
-                    <?php foreach ($data['listings'] as $listing) : ?>
-                        <div class="listing-card <?php echo $listing->type; ?>">
-                            <?php if (!empty($listing->image_data)) : ?>
-                                <img src="<?php echo URLROOT; ?>/exchange/image/<?php echo $listing->id; ?>" alt="<?php echo $listing->title; ?>" class="listing-image">
-                            <?php else : ?>
-                                <img src="<?php echo URLROOT; ?>/img/default.png" alt="No image available" class="listing-image">
-                            <?php endif; ?>
-                            <h2 class="listing-title"><?php echo $listing->title; ?></h2>
-                            <p class="listing-description"><?php echo $listing->description; ?></p>
-                            <div class="listing-details">
-                                <p>Type: <span class="listing-type"><?php echo ucfirst($listing->type); ?></span></p>
-                                <p>Posted on: <?php echo date('Y-m-d', strtotime($listing->date_posted)); ?></p>
-                                <p>By: <?php echo $listing->posted_by_name; ?></p>
-                            </div>
-                            <div class="listing-actions">
-                                <a href="<?php echo URLROOT; ?>/exchange/view_listing/<?php echo $listing->id; ?>" class="btn-view-listing">View Listing</a>
+                <?php
+                // Dummy listings data
+                $listings = [
+                    [
+                        'id' => 1,
+                        'title' => 'Lawn Mowing Service',
+                        'type' => 'service',
+                        'description' => 'Professional lawn mowing service available on weekends.Please contactd.',
+                        'image' => 'lawn-mower.jpg',
+                        'date_posted' => '2023-07-10',
+                        'posted_by' => 'John Doe'
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => 'Vintage Bicycle for Sale',
+                        'type' => 'sale',
+                        'description' => 'Beautiful vintage bicycle in excellent condition. $150 OBO. Please contact if found.',
+                        'image' => 'vintage-bike.jpg',
+                        'date_posted' => '2023-07-12',
+                        'posted_by' => 'Jane Smith'
+                    ],
+                    [
+                        'id' => 3,
+                        'title' => 'Book Exchange',
+                        'type' => 'exchange',
+                        'description' => 'Looking to exchange mystery novels for sci-fi books. Please contact if found.',
+                        'image' => 'books.jpg',
+                        'date_posted' => '2023-07-14',
+                        'posted_by' => 'Mike Johnson'
+                    ],
+                    [
+                        'id' => 4,
+                        'title' => 'Lost Cat',
+                        'type' => 'lost',
+                        'description' => 'Orange tabby cat missing since yesterday. Please contact if found.',
+                        'image' => 'cat.jpg',
+                        'date_posted' => '2023-07-15',
+                        'posted_by' => 'Sarah Brown'
+                    ]
+                ];
 
-                                <?php if (in_array($_SESSION['user_role_id'], [3])):  ?>
-                                    <form action="<?php echo URLROOT; ?>/exchange/adminDeletion/<?php echo $listing->id; ?>" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');" style="display: inline;">
-                                        <button type="submit" class="btn-delete-listing"><i class="fas fa-trash-alt"></i></button>
-                                    </form>
-                                <?php endif; ?>
-                            </div>
-
-
-
+                foreach ($listings as $listing) :
+                ?>
+                    <div class="listing-card <?php echo $listing['type']; ?>">
+                        <img src="<?php echo URLROOT; ?>/img/lawnmower.jpeg" alt="<?php echo $listing['title']; ?>" class="listing-image">
+                        <h2 class="listing-title"><?php echo $listing['title']; ?></h2>
+                        <p class="listing-description"><?php echo $listing['description']; ?></p>
+                        <div class="listing-details">
+                            <p>Type: <span class="listing-type"><?php echo ucfirst($listing['type']); ?></span></p>
+                            <p>Posted on: <?php echo $listing['date_posted']; ?></p>
+                            <p>By: <?php echo $listing['posted_by']; ?></p>
                         </div>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <div class="no-listings">
-                        <p>No listings available at the moment.</p>
+                        <a href="<?php echo URLROOT; ?>/exchange/view_listing/<?php echo $listing['id']; ?>" class="btn-view-listing">View Listing</a>
                     </div>
-                <?php endif; ?>
+                <?php endforeach; ?>
             </div>
         </main>
     </div>

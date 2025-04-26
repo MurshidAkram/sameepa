@@ -21,7 +21,6 @@ class M_Announcements
         return $this->db->execute();
     }
 
-
     public function updateAnnouncement($data)
     {
         $this->db->query('UPDATE announcements SET title = :title, content = :content WHERE id = :id');
@@ -46,8 +45,7 @@ class M_Announcements
             $this->db->execute();
 
             // Then delete the announcement
-            $this->db->query('UPDATE announcements SET status = :status WHERE id = :id');
-            $this->db->bind(':status', 'deleted');
+            $this->db->query('DELETE FROM announcements WHERE id = :id');
             $this->db->bind(':id', $id);
             $this->db->execute();
 
@@ -80,8 +78,7 @@ class M_Announcements
                   (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "like") as likes,
                   (SELECT COUNT(*) FROM announcement_reactions WHERE announcement_id = a.id AND reaction_type = "dislike") as dislikes
                   FROM announcements a
-                  JOIN users u ON a.created_by = u.id
-                  WHERE a.status = :status';
+                  JOIN users u ON a.created_by = u.id';
 
         if (!empty($searchTerm)) {
             $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
@@ -90,7 +87,6 @@ class M_Announcements
         $query .= ' ORDER BY a.updated_at DESC';
 
         $this->db->query($query);
-        $this->db->bind(':status', 'active');
 
         if (!empty($searchTerm)) {
             $this->db->bind(':searchTerm', '%' . $searchTerm . '%');

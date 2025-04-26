@@ -37,14 +37,14 @@
             <div class="forums-actions">
                 <a href="<?php echo URLROOT; ?>/forums/create" class="btn-create-forum">Create New Forum</a>
                 <?php if ($_SESSION['user_role_id'] == 2): ?>
-                    <a href="<?php echo URLROOT; ?>/forums/index" class="btn-my-forums">
-                        <i class="fas fa-arrow-left"></i> Back to All Forums
-                    </a>
-                <?php else: ?>
-                    <a href="<?php echo URLROOT; ?>/forums/index" class="btn-my-forums">
-                        <i class="fas fa-arrow-left"></i> Back to All Forums
-                    </a>
-                <?php endif; ?>
+                <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="btn-my-forums">
+                    <i class="fas fa-arrow-left"></i> Back to All Forums
+                </a>
+            <?php else: ?>
+                <a href="<?php echo URLROOT; ?>/forums" class="btn-my-forums">
+                    <i class="fas fa-arrow-left"></i> Back to All Forums
+                </a>
+            <?php endif; ?>
             </div>
 
             <div class="forums-list">

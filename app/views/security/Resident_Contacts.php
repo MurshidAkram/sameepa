@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 // Your PHP logic here (e.g., initializing variables, handling requests, etc.)
 ?>
 
@@ -100,14 +100,16 @@
             text-align: left;
         }
 
-        
+        .resident-contacts-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
         .resident-contacts-table tr:nth-child(odd) {
-            background-color:rgb(248, 197, 248);
+            background-color: #e6f7ff;
         }
 
         .resident-contacts-table tr:hover {
-            background-color: #E0AAFF;
+            background-color: #ddd;
         }
 
         .form-submit {
@@ -143,7 +145,7 @@
         <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
         <main>
-           
+            <h2 class="to">Residents Contacts</h2>
 
             <!-- Search Bar for Finding Resident Contacts -->
             <section id="search-section">
@@ -203,7 +205,7 @@
                             row.innerHTML = ` 
                                 <td>${resident.resident_name}</td>
                                 <td>${resident.address}</td>
-                                <td>${resident.phonenumber}</td>
+                                <td>${resident.phone_number}</td>
                                 <td>${resident.fixed_line}</td>
                                 <td>${resident.email}</td>
                             `;
@@ -212,15 +214,13 @@
                         resultsTable.style.display = 'table';
                     } else {
                         resultsTable.style.display = 'none';
-                        alert("cannot find the resident details");
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    
                 });
         }
     </script>
 </body>
 
-</html> -->
+</html>

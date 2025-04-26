@@ -1,5 +1,5 @@
  /* app/public/css/resident/groups.css */
- .dashboard-container {
+.dashboard-container {
     display: flex;
 }
 
@@ -45,17 +45,10 @@
     background: #f5f5f5;
     color: #800080;
 }
-.groups-nav a.active {
-    background-color: #800080; /* Purple background for active state */
-    color: #ffffff; /* White text for active state */
-    border-radius: 6px;
-    font-weight: 600;
-}
 
 .btn-create-group {
     background: #800080;
     color: white !important;
-    margin-bottom: 10px;
 }
 
 .btn-create-group:hover {
@@ -67,10 +60,10 @@
 }
 
 .groups-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px; /* Space between cards */
-    justify-content: flex-start; /* Align cards to the start */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .groups-search {
@@ -101,6 +94,7 @@
 .groups-search button:hover {
     background-color: #9a009a;
 }
+
 .group-card {
     background-color: white;
     border-radius: 8px;
@@ -111,75 +105,54 @@
 }
 
 .group-card:hover {
-    transform: translateY(-5px); /* Slightly more lift on hover */
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-
+.group-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+  .group-image img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+  }
 .group-details {
-    padding: 20px; /* Slightly more padding for a spacious feel */
-    display: flex;
-    flex-direction: column;
-   
+    padding: 15px;
 }
 
 .group-title {
-    color: #800080; /* Keep the purple color */
-    font-size: 1.5rem; /* Maintain size */
-    font-weight: 600; /* Slightly bolder for emphasis */
-    margin-bottom: 5px;
+    color: #800080;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: color 0.3s ease; /* Smooth color transition on hover */
-}
-
-.group-card:hover .group-title {
-    color: #6a006a; /* Slightly darker purple on hover */
 }
 
 .group-info {
-    font-size: 0.95rem; /* Slightly larger for readability */
-    color: #666; /* Keep the gray color */
+    font-size: 0.9rem;
+    color: #666;
     margin-bottom: 15px;
 }
 
 .group-info p {
-    margin: 6px 0; /* Slightly more spacing between lines */
+    margin: 5px 0;
     display: flex;
     align-items: center;
-    gap: 6px; /* Slightly more gap for better alignment */
-    color: #555; /* Slightly darker gray for better contrast */
-}
-
-.group-info p i {
-    color: #888; /* Lighter gray for icons */
+    gap: 5px;
 }
 
 .btnviewgroup {
-    background: linear-gradient(135deg, #28a745, #219653); /* Gradient for a modern look */
-    color: #ffffff; /* White text */
-    padding: 10px 20px; /* Larger padding for a more prominent button */
-    border-radius: 6px; /* Rounded corners */
-    text-decoration: none; /* Remove underline */
-    font-size: 0.95rem; /* Slightly larger text */
-    font-weight: 500; /* Medium weight for readability */
-    text-align: center;
-    display: inline-block;
-    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    background-color: #28a745;
 }
 
 .btnviewgroup:hover {
-    background: linear-gradient(135deg, #219653, #1b7d41); /* Darker gradient on hover */
-    transform: translateY(-2px); /* Lift on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
-    opacity: 1; /* Remove the opacity change for a cleaner hover effect */
-}
-
-.btnviewgroup:active {
-    transform: translateY(0); /* Reset lift on click */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow on click */
+    opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 .btn-reports-group, .btn-update-group, .btndeletegroup, .btnviewgroup {
@@ -232,7 +205,7 @@
       padding-top: 10px;
   }
 
-.btn-view-group, .btn-create-group{
+.btn-view-group {
     display: inline-flex;
     align-items: center;
     padding: 8px 16px;
@@ -243,7 +216,6 @@
     transition: all 0.3s ease;
     font-size: 0.9rem;
     gap: 10px;
-    margin-right: 10px;
 }
 
 .btn-view-group:hover {
@@ -327,14 +299,14 @@
 
 .form-group label {
     display: block;
-    margin-bottom: 8px; /* Increased margin for better spacing */
+    margin-bottom: 0.5rem;
     font-weight: 500;
     color: #444;
 }
 
 .form-control {
     width: 100%;
-    padding: 10px; /* Adjusted padding */
+    padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
@@ -355,7 +327,6 @@
 
 .form-buttons {
     display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
     gap: 1rem;
     margin-top: 2rem;
 }
@@ -905,8 +876,6 @@
       font-weight: bold;
       color: #800080;
   }
-
-  
 @media (max-width: 768px) {
     .admin-header {
         flex-direction: column;
@@ -1125,7 +1094,7 @@
     padding: 15px;
     margin-bottom: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-left: 4px solid C;
+    border-left: 4px solid #800080;
 }
 
 .comment-header {
@@ -1345,83 +1314,4 @@
 
 .reportedreason{
     font-weight: bold;
-}
-/* Styles for the Create Report Form */
-.report-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 20px auto; /* Center the form and add some space */
-}
-
-.report-form .form-group {
-    margin-bottom: 15px;
-}
-
-.report-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-}
-
-.report-form input[type="text"],
-.report-form select,
-.report-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-    font-size: 1rem;
-}
-
-.report-form textarea {
-    resize: vertical; /* Allow vertical resizing */
-}
-
-.report-form small {
-    display: block;
-    margin-top: 5px;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.report-form .form-buttons {
-    margin-top: 20px;
-    text-align: right; /* Align buttons to the right */
-}
-
-.report-form .btn-submit,
-.report-form .btn-cancel {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    text-decoration: none; /* Remove underline for anchor tag button */
-    display: inline-block; /* Allow anchor tag to be styled like a button */
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.report-form .btn-submit {
-    background-color: #800080; /* Primary button color */
-    color: white;
-    margin-left: 10px; /* Add space between buttons */
-}
-
-.report-form .btn-submit:hover {
-    background-color: #800080;
-}
-
-.report-form .btn-cancel {
-    background-color: #6c757d; /* Secondary button color */
-    color: white;
-}
-
-.report-form .btn-cancel:hover {
-    background-color: #5a6268;
 }

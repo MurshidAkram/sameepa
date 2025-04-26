@@ -38,53 +38,52 @@
                     <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
-                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>"
-   class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'report' : 'myreports')) ? 'active' : ''; ?>">
-    <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Reports'; ?>
-</a>
+                    <a href="<?php echo URLROOT; ?>/chat/report" class="<?php echo ($current_page == 'report' ? 'active' : ''); ?>">Report</a>
                 </nav>
             </aside>
 
             <div class="groups-content">
                 <h1>Chat Reports</h1>
-                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/report">
+                <form class="groups-search" method="GET" action="<?php echo URLROOT; ?>/chat/viewreport">
                     <input type="text" name="search" placeholder="Search reports...">
                     <button type="submit">Search</button>
                 </form>
                 <p>Review and manage chat-related reports and incidents.</p>
 
                 <div class="groups-grid">
-                    <?php if (!empty($data['reports'])) : ?>
-                        <?php foreach ($data['reports'] as $report) : ?>
-                            <div class="group-card">
-    <div class="group-details">
-        <h3 class="group-title"><?php echo htmlspecialchars($report->category); ?></h3>
-        <div class="group-info">
-            <p class="group-category">
-                <i class="fas fa-flag"></i>
-                Status: <span class="status <?php echo htmlspecialchars(strtolower($report->status)); ?>"><?php echo htmlspecialchars(ucfirst($report->status)); ?></span>
-            </p>
-            <p class="group-creator">
-                <i class="fas fa-clock"></i>
-                Reported: <?php echo date('F j, Y, g:i a', strtotime($report->created_at)); ?>
-            </p>
-        </div>
-        <div class="group-actions">
-            <a href="<?php echo URLROOT; ?>/chat/viewreport/<?php echo $report->id; ?>" class="btn-view-group">View Details</a>
-            <span class="member-count">
-                <i class="fas fa-user"></i>
-                Reported By: <?php echo htmlspecialchars($report->reporter_name); ?>
-            </span>
-        </div>
-    </div>
-</div>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        <!-- No Reports Placeholder -->
-                        <div class="no-groups">
-                            <p>No chat reports at this time.</p>
+                    <!-- Report Card Template -->
+                    <div class="group-card">
+                        <div class="group-image">
+                            <img src="<?php echo URLROOT; ?>/img/default-user.png" alt="Report from John Doe">
                         </div>
-                    <?php endif; ?>
+                        <div class="group-details">
+                            <h3 class="group-title">Inappropriate Message</h3>
+                            <div class="group-info">
+                                <p class="group-category">
+                                    <i class="fas fa-flag"></i>
+                                    Status: Pending
+                                </p>
+                                <p class="group-creator">
+                                    <i class="fas fa-clock"></i>
+                                    Reported: 3 hours ago
+                                </p>
+                            </div>
+                            <div class="group-actions">
+                                <a href="<?php echo URLROOT; ?>/chat/viewreport" class="btn-view-group">View Details</a>
+                                <span class="member-count">
+                                    <i class="fas fa-user"></i>
+                                    Reported By
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repeat similar report card structures -->
+                </div>
+
+                <!-- No Reports Placeholder -->
+                <div class="no-groups" style="display: none;">
+                    <p>No chat reports at this time.</p>
                 </div>
             </div>
         </main>
@@ -93,193 +92,6 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
-<style>
-   .groups-content {
-    padding: 20px;
-}
-
-.groups-search {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.groups-search input {
-    flex: 1;
-    padding: 10px;
-    font-size: 0.9rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-.groups-search input:focus {
-    outline: none;
-    border-color: #800080;
-    box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.1);
-}
-
-.groups-search button {
-    background: linear-gradient(135deg, #800080, #6a006a);
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
-}
-
-.groups-search button:hover {
-    background: linear-gradient(135deg, #6a006a, #550055);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.groups-search button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.groups-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.group-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    padding: 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.group-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-.group-details {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.group-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #800080;
-    margin: 0;
-    text-transform: lowercase;
-}
-
-.group-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.9rem;
-}
-
-.group-info i {
-    font-size: 0.8rem;
-    margin-right: 5px;
-    color: #7f8c8d;
-}
-
-.group-info .group-category {
-    color: #34495e;
-    display: inline-flex;
-    align-items: center;
-}
-
-.group-info .group-category .status {
-    font-weight: 600; /* Bold for emphasis */
-    font-size: 0.95rem; /* Slightly larger */
-    margin-left: 5px; /* Small space after "Status:" */
-}
-
-/* Color coding for statuses */
-.group-info .group-category .status.pending {
-    color: #e67e22; /* Orange for Pending */
-}
-
-.group-info .group-category .status.validated {
-    color: #28a745; /* Green for Validated */
-}
-
-.group-info .group-category .status.dismissed {
-    color: #e74c3c; /* Red for Dismissed */
-}
-
-.group-info .group-creator {
-    color: #7f8c8d;
-}
-
-.group-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.btn-view-group {
-    background: linear-gradient(135deg, #800080, #6a006a);
-    color: #ffffff;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.btn-view-group:hover {
-    background: linear-gradient(135deg, #6a006a, #550055);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.btn-view-group:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.member-count {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 0.9rem;
-    color: #555;
-}
-
-.member-count i {
-    font-size: 0.8rem;
-    margin-right: 5px;
-    color: #7f8c8d;
-}
-
-.member-count span {
-    color: #000000;
-    font-weight: 500;
-    margin-left: 20px;
-}
-
-/* Placeholder for no reports */
-.no-groups {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-}
-    </style>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const links = document.querySelectorAll(".groups-nav a");

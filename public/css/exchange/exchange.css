@@ -113,16 +113,9 @@
     margin-bottom: 0.5rem;
 }
 
-.listing-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
 .btn-view-listing {
-    margin: 1rem 0.2rem 1rem 0.2rem;
-    padding: 12px 70px;
+    margin: 1rem 1.5rem;
+    padding: 0.75rem;
     background: #28a745;
     color: white;
     text-decoration: none;
@@ -135,52 +128,6 @@
 .btn-view-listing:hover {
     background: #218838;
 }
-.btn-delete-listing {
-    background-color: #cc0000;
-    color: #fff;
-    border: none;
-    padding: 0.75rem;
-    margin-top: 3px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    display: inline-block;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.btn-delete-listing:hover {
-    background-color: #990000;
-}
-.groups-search {
-    margin: 20px 0;
-    display: flex;
-    gap: 10px;
-    max-width: 600px;
-}
-
-.groups-search input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.groups-search button {
-    padding: 10px 20px;
-    background-color: #800080;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.groups-search button:hover {
-    background-color: #9a009a;
-}
-
 
 @media (max-width: 768px) {
     .exchange-grid {

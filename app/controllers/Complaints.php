@@ -56,7 +56,7 @@ class Complaints extends Controller
     {
         // Check if user is allowed to create complaints
         if (!in_array($_SESSION['user_role_id'], [1, 2, 4, 5])) {
-            redirect('complaints/dashboard');
+            redirect('complaints/mycomplaints');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -210,6 +210,7 @@ class Complaints extends Controller
         }
     }
 
+    // Add this method to your existing Complaints controller class
 
     public function viewcomplaint($id = null)
     {
@@ -245,11 +246,14 @@ class Complaints extends Controller
 
         // Check if complaint exists and user can access it
         if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $id)) {
+            flash('complaint_message', 'Unauthorized access', 'alert alert-danger');
             redirect('complaints/mycomplaints');
         }
 
         if ($this->complaintsModel->deleteComplaint($id, $_SESSION['user_id'])) {
+            flash('complaint_message', 'Complaint deleted successfully');
         } else {
+            flash('complaint_message', 'Only pending complaints can be deleted', 'alert alert-danger');
         }
 
         redirect('complaints/mycomplaints');
