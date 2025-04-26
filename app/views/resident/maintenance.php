@@ -390,7 +390,7 @@
             <span class="close-modal">&times;</span>
             <h2>Edit Maintenance Request</h2>
             <form id="editRequestForm">
-                <input type="hidden" id="editRequestId" name="request_id">
+            <input type="hidden" id="editRequestId" name="request_id" value="">
                 <div class="form-group">
                     <label for="editRequestType">Request Type</label>
                     <select id="editRequestType" name="requestType" required>
@@ -399,13 +399,16 @@
                             <option value="<?php echo $type->type_id; ?>"><?php echo htmlspecialchars($type->type_name); ?></option>
                         <?php endforeach; ?>
                     </select>
+
                     <span id="editRequestType-error" class="error-message"></span>
                 </div>
+
                 <div class="form-group">
                     <label for="editDescription">Description</label>
-                    <textarea id="editDescription" name="description" rows="4" required></textarea>
+                   <textarea name="description" id="editDescription" required></textarea>
                     <span id="editDescription-error" class="error-message"></span>
                 </div>
+
                 <div class="form-group">
                     <label for="editUrgency">Urgency Level</label>
                     <select id="editUrgency" name="urgency" required>
@@ -416,6 +419,7 @@
                     </select>
                     <span id="editUrgency-error" class="error-message"></span>
                 </div>
+
                 <button type="submit" class="btn-submit">Update Request</button>
             </form>
         </div>
@@ -436,7 +440,7 @@
     </div>
 
     <!-- Success/Error Toast Notification -->
-    <!-- <div id="toast" class="toast"></div> -->
+    <div id="toast" class="toast"></div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
@@ -551,133 +555,164 @@
         }
     });
 
-    // Edit Request
-    document.addEventListener('click', async function (e) {
-        if (e.target.classList.contains('btn-edit-request')) {
-            const requestId = e.target.getAttribute('data-request-id');
-            console.log(requestId);
-            const editBtn = e.target;
-            const originalBtnText = editBtn.innerHTML;
 
-            editBtn.disabled = true;
-            editBtn.innerHTML = '<span class="spinner"></span> Loading...';
+ //*****************************************************************************edit****************************************************************************************************************************** */   
+ let editingRequestId = null;
 
-            try {
-                const response = await fetch(`<?php echo URLROOT; ?>/resident/request_details/${requestId}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    }
-                });
 
-                if (response.redirected) {
-                    window.location.href = response.url;
-                    return;
-                }
+document.addEventListener('click', async function (e) {
+    if (e.target.classList.contains('btn-edit-request')) {
+        const requestId = e.target.getAttribute('data-request-id');
+        const editBtn = e.target;
+        const originalBtnText = editBtn.innerHTML;
 
-                const data = await response.json();
-
-                if (data.success && data.request) {
-                    document.getElementById('editRequestId').value = data.request.request_id;
-                    document.getElementById('editRequestType').value = data.request.type_id;
-                    document.getElementById('editDescription').value = data.request.description;
-                    document.getElementById('editUrgency').value = data.request.urgency_level;
-
-                    document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
-                    openModal(modals.editRequest);
-                } else {
-                    throw new Error(data.message || 'Failed to load request details');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast(error.message || 'Failed to load request details', false);
-            } finally {
-                editBtn.disabled = false;
-                editBtn.innerHTML = originalBtnText;
-            }
+        // Validate request ID
+        console.log(requestId);
+        if (!requestId) {
+            showToast('Invalid request ID', false);
+            return;
         }
+
+        editBtn.disabled = true;
+        editBtn.innerHTML = '<span class="spinner"></span> Loading...';
+
+        try {
+    const response = await fetch(`<?php echo URLROOT; ?>/resident/request_details/${requestId}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        credentials: 'include'
     });
 
-   // Submit Edit
-document.getElementById('editRequestForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const formElements = e.target.elements;
-    let isValid = true;
-    const fieldMap = {
-        requestId:'RequestId',
-        requestType: 'RequestType',
-        description: 'Description',
-        urgency: 'Urgency'
-    };
-
-    // Clear previous errors
-    document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
-
-    // Validate form
-    if (!formElements.requestType.value) {
-        document.getElementById('editRequestType-error').textContent = 'Please select a request type';
-        isValid = false;
+    if (response.redirected) {
+        window.location.href = response.url;
+        return;
     }
 
-    if (!formElements.description.value.trim()) {
-        document.getElementById('editDescription-error').textContent = 'Please enter a description';
-        isValid = false;
+    if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
     }
 
-    if (!formElements.urgency.value) {
-        document.getElementById('editUrgency-error').textContent = 'Please select an urgency level';
-        isValid = false;
+    const contentType = response.headers.get('content-type');
+    const rawText = await response.text();
+
+    console.log("RAW RESPONSE TEXT:", rawText);
+
+    if (!contentType || !contentType.includes('application/json')) {
+        throw new Error("Invalid response format");
     }
 
-    if (!isValid) return;
+    const data = JSON.parse(rawText);
 
-    const requestId = formElements.requestId.value;
-    const formData = new FormData(e.target);
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.innerHTML;
+    if (data.success && data.request) {
+        editingRequestId = data.request.request_id;
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
+        document.getElementById('editRequestType').value = data.request.type_id;
+        document.getElementById('editDescription').value = data.request.description;
+        document.getElementById('editUrgency').value = data.request.urgency_level;
 
-    try {
-        const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${requestId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams(formData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            
-            showToast('Request updated successfully!');
-            closeModal(modals.editRequest);
-            setTimeout(() => window.location.reload(), 1000);
-        } else {
-            if (data.errors) {
-                for (const [field, message] of Object.entries(data.errors)) {
-                    const key = fieldMap[field] || field;
-                    const errorElement = document.getElementById(`edit${key}-error`);
-                    if (errorElement) errorElement.textContent = message;
-                }
-            }
-            throw new Error(data.message || 'Failed to update request');
+        document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
+        openModal(modals.editRequest);
+    } else {
+        throw new Error(data.message || 'Failed to load request details');
+    }
+} catch (error) {
+    console.error('Error:', error);
+    showToast(error.message || 'Failed to load request details', false);
+}
+ finally {
+            editBtn.disabled = false;
+            editBtn.innerHTML = originalBtnText;
         }
-    } catch (error) {
-        console.error('Error:', error);
-        showToast(error.message || 'Failed to update request', false);
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnText;
     }
 });
 
+// Ensure the form exists before adding event listener
+
+const editRequestForm = document.getElementById('editRequestForm');
+if (editRequestForm) {
+    editRequestForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (!editingRequestId) {
+            showToast('No request selected for editing', false);
+            return;
+        }
+
+        const formData = new FormData(this);
+        formData.append('request_id', editingRequestId);
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
+
+        try {
+            const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${editingRequestId}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            // First check if response is OK
+            if (!response.ok) {
+                // Clone the response to read it multiple times if needed
+                const responseClone = response.clone();
+                
+                // Try to parse as JSON first
+                try {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Server returned ${response.status}`);
+                } catch (jsonError) {
+                    // If JSON parsing fails, try as text
+                    const errorText = await responseClone.text();
+                    throw new Error(errorText || `Server returned ${response.status}`);
+                }
+            }
+
+            // If response is OK, parse as JSON
+            const data = await response.json();
+
+            if (data.success) {
+                showToast(data.message || 'Request updated successfully');
+                closeModal(modals.editRequest);
+                setTimeout(() => window.location.reload());
+            } else {
+                if (data.errors) {
+                    // Clear previous errors
+                    document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
+                    
+                    // Show new errors
+                    for (const [field, message] of Object.entries(data.errors)) {
+                        const errorElement = document.getElementById(`edit${field.charAt(0).toUpperCase() + field.slice(1)}-error`);
+                        if (errorElement) errorElement.textContent = message;
+                    }
+                }
+                throw new Error(data.message || 'Update failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            // Clean error message by removing HTML tags
+            const cleanError = error.message.replace(/<[^>]*>?/gm, '');
+            showToast(cleanError || 'Failed to update request', false);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    });
+}
 
 
-// Delete Request Handler - First click shows modal
+//**************************************************************** */ Delete Request Handler - First click shows modal***************************************************************************************************************
+
+
+
+
+
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('btn-delete-request')) {
         const requestId = e.target.getAttribute('data-request-id');

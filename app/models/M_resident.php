@@ -30,9 +30,9 @@ class M_resident {
     public function getResidentIdByUserId($userId) {
         $this->db->query('SELECT id FROM residents WHERE user_id = :user_id');
         $this->db->bind(':user_id', $userId);
-        
+    
         $row = $this->db->single();
-
+    
         if (is_object($row)) {
             return $row->id;
         } elseif (is_array($row)) {
@@ -41,6 +41,7 @@ class M_resident {
             return false;
         }
     }
+    
 
     public function getResidentDetails($residentId) {
         $this->db->query('
