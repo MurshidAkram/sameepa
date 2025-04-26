@@ -2,14 +2,22 @@
 
 class Admin extends Controller
 {
-    private $adminModel;
+
+    private $announcementModel;
+    private $eventModel;
+    private $facilityModel;
+    private $complaintModel;
+
 
     public function __construct()
     {
         $this->checkAdminAuth();
 
-        // Initialize any resident-specific models if needed
-        // $this->residentModel = $this->model('M_Resident');
+        // Initialize models
+        $this->announcementModel = $this->model('M_Announcements');
+        $this->eventModel = $this->model('M_Events');
+        $this->facilityModel = $this->model('M_Facilities');
+        $this->complaintModel = $this->model('M_Complaints');
     }
 
     private function checkAdminAuth()
@@ -20,7 +28,7 @@ class Admin extends Controller
             exit();
         }
 
-        // Check if user is a resident (role_id = 1)
+        // Check if user is an admin (role_id = 2)
         if ($_SESSION['user_role_id'] != 2) {
             // Redirect to unauthorized page
             header('Location: ' . URLROOT . '/pages/unauthorized');
@@ -30,125 +38,58 @@ class Admin extends Controller
 
     public function dashboard()
     {
-        // Get any necessary data for the dashboard
+        // Get announcements
+        $announcements = $this->announcementModel->getActiveAnnouncements();
+
+        // Get upcoming events and sort by date and time
+        $events = $this->eventModel->getEventsByStatus('upcoming');
+        
+        // Sort events by date and time (nearest first)
+        usort($events, function($a, $b) {
+            $datetimeA = strtotime($a->date . ' ' . $a->time);
+            $datetimeB = strtotime($b->date . ' ' . $b->time);
+            $now = time();
+            
+            // Calculate time differences from now
+            $diffA = $datetimeA - $now;
+            $diffB = $datetimeB - $now;
+            
+            // Only consider future events
+            if ($diffA < 0 && $diffB < 0) return 0;
+            if ($diffA < 0) return 1;
+            if ($diffB < 0) return -1;
+            
+            return $diffA - $diffB;
+        });
+        
+        // Take only the first 5 nearest upcoming events
+        $events = array_slice($events, 0, 5);
+
+        // Get facility stats
+        $todayBookings = $this->facilityModel->getActiveBookingsCount();
+        $totalFacilities = $this->facilityModel->getAllFacilities();
+        $totalFacilities = count($totalFacilities);
+
+        // Get complaint stats
+        $complaintStats = $this->complaintModel->getDashboardStats();
+        $openComplaints = $complaintStats['pending'];
+        $resolvedComplaints = $complaintStats['resolved'];
+
+        // Prepare data for the view
         $data = [
-            'user_id' => $_SESSION['user_id'],
-            'email' => $_SESSION['user_email'],
-            'role' => $_SESSION['user_role']
+            'announcements' => $announcements,
+            'events' => $events,
+            'today_bookings' => $todayBookings,
+            'total_facilities' => $totalFacilities,
+            'open_complaints' => $openComplaints,
+            'resolved_complaints' => $resolvedComplaints
         ];
 
-        // Load resident dashboard view with data
+        // Load admin dashboard view with data
         $this->view('admin/dashboard', $data);
     }
 
-    /*public function facilities()
-    {
-        // Load admin dashboard view
-        $this->view('admin/facilities');
-    }*/
 
-    
-
-    /*public function announcements()
-    {
-        // Load admin dashboard view
-        $this->view('admin/announcements');
-    }*/
-
-    public function payments()
-    {
-        // Load admin dashboard view
-        $this->view('admin/payments');
-    }
-
-    public function complaints()
-    {
-        // Load admin dashboard view
-        $this->view('admin/complaints');
-    }
-
-    public function forums()
-    {
-        // Load admin dashboard view
-        $this->view('admin/forums');
-    }
-
-
-    public function users()
-    {
-        // Load admin dashboard view
-        $this->view('admin/users');
-    }
-
-    public function groups()
-    {
-        // Load admin dashboard view
-        $this->view('resident/groups');
-    }
-
-    public function exchange()
-    {
-        // Load admin dashboard view
-        $this->view('admin/exchange');
-    }
-
-    public function create_booking() {
-        $this->view('admin/create_booking');
-    }
-    
-    public function view_complaint_history(){
-        $this->view('admin/view_complaint_history');
-    }
-
-    public function viewAnnouncementHistory() {
-        $data = [
-            'title' => 'Announcement History'
-        ];
-        $this->view('admin/view_announcement_history', $data);
-    }
-
-    public function view_event_history(){
-        $this->view('admin/view_event_history');
-    }
-
-    public function view_facilities_history(){
-        $this->view('admin/view_facilities_history');
-    }
-    public function create_announcement() {
-         $this->view('admin/create_announcement');
-    }
-    public function create_facility() {
-        $this->view('admin/create_facility');
-    }
-    public function create_event() {
-        $this->view('admin/create_event');
-    }
-    public function create_new_user(){
-        $this->view('admin/create_new_user');
-    }
-    public function create_forum(){
-        $this->view('admin/create_forum');
-    }
-
-    public function create_group(){
-        $this->view('admin/create_group');
-    }
-
-    public function view_forum(){
-        $this->view('admin/view_forum');
-    }
-    public function view_group(){
-        $this->view('admin/view_group');
-    }
-    public function create_payment(){
-        $this->view('admin/create_payment');
-    }
-    public function view_complaint(){
-        $this->view('admin/view_complaint');
-    }
-    public function update_complaint(){
-        $this->view('admin/update_complaint');
-    }
 }
 
 

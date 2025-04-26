@@ -458,6 +458,30 @@ class Facilities extends Controller
                 'booking_time' => $_POST['booking_time'],
                 'duration' => $_POST['duration']
             ];
+
+            // Get the facility ID for the booking being updated
+            $booking = $this->facilityModel->getBookingById($id);
+            if (!$booking) {
+                echo json_encode(['success' => false, 'message' => 'Booking not found']);
+                return;
+            }
+
+            // Check for overlaps, excluding the current booking
+            $overlap = $this->facilityModel->checkBookingOverlap(
+                $booking->facility_id,
+                $bookingData['booking_date'],
+                $bookingData['booking_time'],
+                $bookingData['duration'],
+                $id // Exclude current booking from overlap check
+            );
+
+            if ($overlap) {
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'This time slot overlaps with an existing booking'
+                ]);
+                return;
+            }
     
             // Update booking in database through model
             if ($this->facilityModel->updateBooking($bookingData)) {
