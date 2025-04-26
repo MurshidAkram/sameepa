@@ -313,4 +313,14 @@ class M_Facilities
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
+
+    public function getTodayBookings()
+    {
+        $this->db->query('SELECT b.*, f.name as facility_name 
+                          FROM bookings b 
+                          JOIN facilities f ON b.facility_id = f.id 
+                          WHERE b.booking_date = CURDATE()
+                          ORDER BY b.booking_time ASC');
+        return $this->db->resultSet();
+    }
 }

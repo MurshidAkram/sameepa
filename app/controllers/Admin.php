@@ -64,25 +64,28 @@ class Admin extends Controller
         
         // Take only the first 5 nearest upcoming events
         $events = array_slice($events, 0, 5);
-
-        // Get facility stats
-        $todayBookings = $this->facilityModel->getActiveBookingsCount();
-        $totalFacilities = $this->facilityModel->getAllFacilities();
-        $totalFacilities = count($totalFacilities);
+        
+        // Get today's specific bookings
+        $todayBookingsList = $this->facilityModel->getTodayBookings();
 
         // Get complaint stats
         $complaintStats = $this->complaintModel->getDashboardStats();
         $openComplaints = $complaintStats['pending'];
         $resolvedComplaints = $complaintStats['resolved'];
+        
+        // Get open and in-progress complaints
+        $openComplaintsList = $this->complaintModel->getComplaintsByStatus('pending');
+        $inProgressComplaintsList = $this->complaintModel->getComplaintsByStatus('in_progress');
 
         // Prepare data for the view
         $data = [
             'announcements' => $announcements,
             'events' => $events,
-            'today_bookings' => $todayBookings,
-            'total_facilities' => $totalFacilities,
+            'today_bookings_list' => $todayBookingsList,
             'open_complaints' => $openComplaints,
-            'resolved_complaints' => $resolvedComplaints
+            'resolved_complaints' => $resolvedComplaints,
+            'open_complaints_list' => $openComplaintsList,
+            'in_progress_complaints_list' => $inProgressComplaintsList
         ];
 
         // Load admin dashboard view with data

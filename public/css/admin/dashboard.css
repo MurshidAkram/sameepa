@@ -31,7 +31,7 @@ main {
 }
 
 .dashboard-header h1 {
-    color: #2c3e50;
+    color: #800080;
     font-size: 2rem;
     margin: 0;
 }
@@ -50,7 +50,6 @@ main {
 
 /* Card Styles */
 .card {
-    background: rgb(196, 80, 80);
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -153,19 +152,23 @@ main {
 
 /* Card Background Gradients */
 .announcements-card {
-    background: linear-gradient(135deg, #fff8f6 0%, #ffe9e9 100%);
+    border: 2px solid #F1BA88;
+    background-color: #f6e8db;
 }
 
 .events-card {
-    background: linear-gradient(135deg, #f6fff8 0%, #e9ffe9 100%);
+    border: 2px solid #03A791;
+    background-color: #bfe8e3;
 }
 
 .facilities-card {
-    background: linear-gradient(135deg, #f8fff6 0%, #e9ffe9 100%);
+    border : 2px solid #d1b2c2;
+    background-color: #e8cddb   ;
 }
 
 .complaints-card {
-    background: linear-gradient(135deg, #fff6f8 0%, #ffe9e9 100%);
+    border: 2px solid #d3b1b1;
+    background-color: #f3dada;
 }
 
 /* Responsive Design */
@@ -188,5 +191,111 @@ main {
 
     main {
         padding: 1.5rem;
+    }
+}
+
+/* Enhance the facilities card to accommodate the new list */
+.facilities-card {
+    min-height: 300px;
+}
+
+.no-bookings-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    text-align: center;
+}
+
+.no-bookings-message p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Complaints Lists */
+.complaints-lists {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.complaints-card h2{
+    text-align: center;
+}
+
+.complaints-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.complaints-section h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.complaints-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.complaints-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #eaf5ff;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.complaint-title {
+    font-weight: 500;
+    color: #2c3e50;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.complaint-date {
+    font-size: 0.85rem;
+    color: #666;
+    white-space: nowrap;
+}
+
+.no-complaints {
+    color: #6c757d;
+    text-align: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .complaints-lists {
+        flex-direction: column;
+    }
+    
+    .complaints-section {
+        margin-bottom: 20px;
+    }
+    
+    .complaints-section:last-child {
+        margin-bottom: 0;
     }
 }

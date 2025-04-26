@@ -62,31 +62,72 @@
                 </div>
 
                 <!-- Facilities Card -->
-                <div class="card facilities-card">
-                    <h2>Facility Bookings</h2>
-                    <div class="stats-content">
-                        <div class="stat-item">
-                            <span class="stat-value"><?php echo $data['today_bookings'] ?? 0; ?></span>
-                            <span class="stat-label">Today's Bookings</span>
+                <div class="card facilities-card">   
+                    <h2>Today's Bookings</h2>                
+                    <?php if (!empty($data['today_bookings_list'])): ?>
+                        <div class="today-bookings-list">                            
+                            <ul>
+                                <?php foreach ($data['today_bookings_list'] as $booking): ?>
+                                    <li>
+                                        <span class="booking-facility"><?php echo htmlspecialchars($booking->facility_name); ?></span>
+                                        <span class="booking-time">
+                                            <?php 
+                                            $time = date('h:i A', strtotime($booking->booking_time));
+                                            echo $time . ' (' . $booking->duration . 'hr)';
+                                            ?>
+                                        </span>
+                                        <span class="booking-user"><?php echo htmlspecialchars($booking->booked_by); ?></span>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-value"><?php echo $data['total_facilities'] ?? 0; ?></span>
-                            <span class="stat-label">Total Facilities</span>
+                    <?php else: ?>
+                        <div class="no-bookings-message">
+                            <p>No facility bookings for today</p>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Complaints Card -->
                 <div class="card complaints-card">
-                    <h2>Complaints & Reports</h2>
-                    <div class="stats-content">
-                        <div class="stat-item">
-                            <span class="stat-value"><?php echo $data['open_complaints'] ?? 0; ?></span>
-                            <span class="stat-label">Open Complaints</span>
+                    <h2>Complaints & Reports</h2>                   
+                    <div class="complaints-lists">
+                        <!-- Open Complaints -->
+                        <div class="complaints-section">
+                            <h3>Open Complaints</h3>
+                            <?php if (!empty($data['open_complaints_list'])): ?>
+                                <ul class="complaints-list">
+                                    <?php foreach ($data['open_complaints_list'] as $complaint): ?>
+                                        <li>
+                                            <span class="complaint-title"><?php echo htmlspecialchars($complaint->title); ?></span>
+                                            <span class="complaint-date">
+                                                <?php echo date('M d, Y', strtotime($complaint->created_at)); ?>
+                                            </span>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else: ?>
+                                <p class="no-complaints">No open complaints</p>
+                            <?php endif; ?>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-value"><?php echo $data['resolved_complaints'] ?? 0; ?></span>
-                            <span class="stat-label">Resolved This Month</span>
+                        
+                        <!-- In Progress Complaints -->
+                        <div class="complaints-section">
+                            <h3>In Progress</h3>
+                            <?php if (!empty($data['in_progress_complaints_list'])): ?>
+                                <ul class="complaints-list">
+                                    <?php foreach ($data['in_progress_complaints_list'] as $complaint): ?>
+                                        <li>
+                                            <span class="complaint-title"><?php echo htmlspecialchars($complaint->title); ?></span>
+                                            <span class="complaint-date">
+                                                <?php echo date('M d, Y', strtotime($complaint->created_at)); ?>
+                                            </span>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else: ?>
+                                <p class="no-complaints">No complaints in progress</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
