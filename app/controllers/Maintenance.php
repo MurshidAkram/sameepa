@@ -3,6 +3,7 @@
 class Maintenance extends Controller
 {
     private $maintenanceModel;
+    private $userModel;
 
     public function __construct()
     {
@@ -10,6 +11,7 @@ class Maintenance extends Controller
 
         // Initialize the maintenance model
         $this->maintenanceModel = $this->model('M_maintenance'); // Make sure this matches your actual model class
+        $this->userModel = $this->model('M_Users'); // Initialize user model
     }
 
     private function checkMaintenanceAuth()
@@ -31,13 +33,25 @@ class Maintenance extends Controller
     // Dashboard
     public function dashboard()
     {
+        // Get request counts by status
+        $statusCounts = $this->maintenanceModel->getRequestCountsByStatus();
+        
+        // Get request counts by type
+        $requestTypeData = $this->maintenanceModel->getRequestCountsByType();
+        
+        // Get completed request counts by type
+        $completedRequestData = $this->maintenanceModel->getCompletedRequestCountsByType();
+    
         // Pass necessary data for the dashboard
         $data = [
             'user_id' => $_SESSION['user_id'],
             'email' => $_SESSION['user_email'],
-            'role' => $_SESSION['user_role']
+            'role' => $_SESSION['user_role'],
+            'statusCounts' => $statusCounts,
+            'requestTypeData' => $requestTypeData,
+            'completedRequestData' => $completedRequestData
         ];
-
+    
         // Load the dashboard view
         $this->view('maintenance/dashboard', $data);
     }
@@ -48,7 +62,7 @@ class Maintenance extends Controller
     {
         $members = $this->maintenanceModel->getAllMembers();
         $data = ['members' => $members];
-        $this->view('maintenance/team_scheduling', $data);
+        $this->view('maintenance/Team_Scheduling', $data);
     }
 
     // Add a new member
@@ -76,7 +90,7 @@ class Maintenance extends Controller
 
             // Add to database
             if ($this->maintenanceModel->addMember($data)) {
-                header('Location: ' . URLROOT . '/maintenance/team_scheduling');
+                header('Location: ' . URLROOT . 'maintenance/Team_Scheduling');
                 exit();
             } else {
                 die('Error adding member');
@@ -149,17 +163,6 @@ class Maintenance extends Controller
 
 
 
-
-
-    //*************************************************************************************************************************************************** */
-
-
-    public function Resident_Requests()
-    {
-        // This will load the view to update or manage duty schedules
-        $this->view('maintenance/Resident_Requests');
-    }
-
     public function Reports_Analytics()
     {
         $this->view('maintenance/Reports_Analytics');
@@ -168,100 +171,165 @@ class Maintenance extends Controller
     {
         $this->view('maintenance/Scheme_Maintenance');
     }
+
+
+
+
+
+   
+//*****************************************resident requests****************************************************************************************************************** */
+
+
+public function Resident_Requests() {
+    // Get all maintenance requests
+    $requests = $this->maintenanceModel->getAllRequests();
+    
+    // Get request history (completed/cancelled requests)
+   // $history = $this->maintenanceModel->getRequestHistory();
+    
+    // Get maintenance types for filter dropdown
+    $types = $this->maintenanceModel->getMaintenanceTypes();
+    
+    // Get statuses for filter dropdown
+    $statuses = $this->maintenanceModel->getStatuses();
+    
+    // Get maintenance staff for assign dropdown
+   // $staff = $this->maintenanceModel->getMaintenanceStaff();
+    
+    $data = [
+        'requests' => $requests,
+        //'history' => $history,
+        'types' => $types,
+        'statuses' => $statuses,
+       // 'staff' => $staff
+    ];
+    
+    $this->view('maintenance/Resident_Requests', $data);
 }
 
 
+public function getSpecializations() {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        $specializations = $this->maintenanceModel->getSpecializations();
+        echo json_encode($specializations);
+    }
+}
 
-//************************************************************************************************************************************************** */
+public function getStaffBySpecialization() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Get the JSON input
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        
+        $specialization = $data['specialization'];
+        $staff = $this->maintenanceModel->getStaffBySpecialization($specialization);
+        
+        echo json_encode($staff);
+    }
+}
+
+
+public function updateStatus() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        
+        $data = [
+            'requestId' => trim($_POST['requestId']),
+            'statusId' => trim($_POST['statusId'])
+        ];
+        
+        // Debug
+        error_log("Request ID: {$data['requestId']}, Status ID: {$data['statusId']}");
+        
+        if ($this->maintenanceModel->updateRequestStatus($data['requestId'], $data['statusId'])) {
+            echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+        }
+    }
+}
+
+public function assignMaintainer() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Get the JSON input
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        
+        if ($this->maintenanceModel->assignMaintainer($data['requestId'], $data['staffId'])) {
+            echo json_encode(['success' => true, 'message' => 'Maintainer assigned successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to assign maintainer']);
+        }
+    }
+}
+
+public function getRequestDetails($requestId) {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        $request = $this->maintenanceModel->getRequestDetails($requestId);
+        if ($request) {
+            echo json_encode(['success' => true, 'request' => $request]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Request not found']);
+        }
+    }
+}
+
+public function updateRequest($requestId) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        
+        $data = [
+            'request_id' => $requestId,
+            'type_id' => trim($_POST['typeId']),
+            'description' => trim($_POST['description']),
+            'urgency_level' => trim($_POST['urgency'])
+        ];
+        
+        // Validate data
+        $errors = [];
+        if (empty($data['type_id'])) {
+            $errors['typeId'] = 'Request type is required';
+        }
+        if (empty($data['description'])) {
+            $errors['description'] = 'Description is required';
+        }
+        if (empty($data['urgency_level'])) {
+            $errors['urgency'] = 'Urgency level is required';
+        }
+        
+        if (!empty($errors)) {
+            echo json_encode(['success' => false, 'errors' => $errors]);
+            return;
+        }
+
+        if ($this->maintenanceModel->updateRequest($data)) {
+            echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update request']);
+        }
+    }
+}
+
+public function deleteRequest($requestId) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Check if request exists and is not completed
+        $request = $this->maintenanceModel->getRequestDetails($requestId);
+        if (!$request) {
+            echo json_encode(['success' => false, 'message' => 'Request not found']);
+            return;
+        }
+
+        if ($request->status_id == 3) { // Assuming 3 is the status_id for completed
+            echo json_encode(['success' => false, 'message' => 'Cannot delete completed requests']);
+            return;
+        }
+
+        if ($this->maintenanceModel->deleteRequest($requestId)) {
+            echo json_encode(['success' => true, 'message' => 'Request deleted successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to delete request']);
+        }
+    }
+}
+}
    
-//  // Inventory CRUD
-//     // Display Inventory Usage Logs
-//     public function inventory()
-//     {
-//         // Fetch all inventory usage logs from the model
-//         $logs = $this->maintenanceModel->getInventoryUsageLogs();
-    
-//         // Check if the logs were retrieved successfully
-//         if ($logs === false) {
-//             die('Error fetching inventory logs');
-//         }
-    
-//         // Prepare the data to pass to the view
-//         $data = [
-//             'logs' => $logs
-//         ];
-    
-//         // Load the inventory view with the data
-//         $this->view('maintenance/inventory', $data);
-//     }
-
-//     // Add an inventory usage log entry
-//     public function addInventoryUsage()
-//     {
-//         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//             // Sanitize and get form data
-//             $data = [
-//                 'item_id' => trim($_POST['item_id']),
-//                 'item_name' => trim($_POST['item_name']),
-//                 'usage_date' => trim($_POST['usage_date']),
-//                 'usage_time' => trim($_POST['usage_time']),
-//                 'quantity' => trim($_POST['quantity'])
-//             ];
-
-//             // Insert the log data into the database using the model
-//             if ($this->maintenanceModel->addInventoryUsageLog($data)) {
-//                 // Redirect back to inventory page
-//                 header('Location: ' . URLROOT . '/maintenance/inventory');
-//                 exit;
-//             } else {
-//                 die('Something went wrong');
-//             }
-//         } else {
-//             // Load the view for adding an inventory usage log
-//             $this->view('maintenance/add_inventory_usage');
-//         }
-//     }
-
-//     public function editInventoryUsage($log_id)
-//     {
-//         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//             $data = [
-//                 'log_id' => $log_id,
-//                 'item_id' => $_POST['item_id'],
-//                 'item_name' => $_POST['item_name'],
-//                 'usage_date' => $_POST['usage_date'],
-//                 'usage_time' => $_POST['usage_time'],
-//                 'quantity' => $_POST['quantity']
-//             ];
-    
-//             // Update only the quantity in the database
-//             if ($this->maintenanceModel->updateInventoryUsageLog($data)) {
-//                 header('Location: ' . URLROOT . '/maintenance/inventory');
-//             } else {
-//                 die('Something went wrong');
-//             }
-//         } else {
-//             $log = $this->maintenanceModel->getInventoryUsageLogById($log_id);
-//             $data = [
-//                 'log' => $log
-//             ];
-//             $this->view('maintenance/edit_inventory_usage', $data);
-//         }
-//     }
-
-//     // Delete an inventory usage log
-//     public function deleteInventoryUsage($log_id)
-//     {
-//         if ($this->maintenanceModel->deleteInventoryUsageLog($log_id)) {
-//             header('Location: ' . URLROOT . '/maintenance/inventory');
-//         } else {
-//             die('Error deleting log');
-//         }
-//     }
-
-//     // Fetch a specific log by ID
-//     public function getInventoryUsageLogById($log_id)
-//     {
-//         $log = $this->maintenanceModel->getInventoryUsageLogById($log_id);
-//         echo json_encode($log);
-//     }

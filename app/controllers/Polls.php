@@ -5,14 +5,12 @@ class Polls extends Controller
 
     public function __construct()
     {
-        // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
         }
 
         // Check if user has appropriate role
         if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
-            //flash('error', 'Unauthorized access');
             redirect('users/login');
         }
 
@@ -21,7 +19,6 @@ class Polls extends Controller
 
     public function index()
     {
-        // Get all polls from the database
         $polls = $this->pollsModel->getAllPolls();
 
         // Prepare data for each poll
@@ -49,9 +46,7 @@ class Polls extends Controller
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Process form
 
-            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             // Prepare data array
@@ -74,7 +69,7 @@ class Polls extends Controller
                 $data['title_err'] = 'Title cannot exceed 255 characters';
             }
 
-            // Validate Description (optional)
+            // Validate Description
             if (!empty($data['description']) && strlen($data['description']) > 1000) {
                 $data['description_err'] = 'Description cannot exceed 1000 characters';
             }
@@ -94,7 +89,6 @@ class Polls extends Controller
             if (empty($data['choices'])) {
                 $data['choices_err'] = 'Please add at least two choices';
             } else {
-                // Remove empty choices
                 $data['choices'] = array_filter($data['choices'], 'trim');
 
                 if (count($data['choices']) < 2) {
@@ -104,7 +98,7 @@ class Polls extends Controller
                 }
             }
 
-            // Make sure no errors
+            // Making sure no errors
             if (
                 empty($data['title_err']) && empty($data['description_err']) &&
                 empty($data['end_date_err']) && empty($data['choices_err'])
@@ -112,8 +106,7 @@ class Polls extends Controller
 
                 // Validated
                 if ($this->pollsModel->createPoll($data)) {
-                    flash('poll_message', 'Poll Created Successfully');
-                    redirect('polls');
+                    redirect('polls/index');
                 } else {
                     die('Something went wrong');
                 }
@@ -140,19 +133,19 @@ class Polls extends Controller
     }
     public function mypolls()
     {
-        $this->view('polls/mypolls');
+        $userPolls = $this->pollsModel->getPollsByUserID($_SESSION['user_id']);
+        $data = ['polls' => $userPolls];
+        $this->view('polls/mypolls', $data);
     }
 
     public function viewpoll($id)
     {
-        // Get poll details
         $poll = $this->pollsModel->getPollById($id);
 
         if (!$poll) {
             redirect('polls');
         }
 
-        // Get poll choices with vote counts
         $choices = $this->pollsModel->getPollChoices($id);
 
         // Calculate percentages and get voters for each choice
@@ -205,7 +198,6 @@ class Polls extends Controller
 
         // Check if poll has ended
         if (strtotime($poll['end_date']) < strtotime('today')) {
-            flash('poll_error', 'This poll has ended');
             redirect("polls/viewpoll/$pollId");
         }
 
@@ -219,8 +211,23 @@ class Polls extends Controller
         redirect("polls/viewpoll/$pollId");
     }
 
-    public function edit()
+    public function delete($id)
     {
-        $this->view('polls/edit');
+        $poll = $this->pollsModel->getPollById($id);
+
+        if (!$poll) {
+            redirect('polls/mypolls');
+        }
+
+
+        if ($poll->created_by == $_SESSION['user_id'] || $_SESSION['user_role_id'] >= 2) {
+            if ($this->pollsModel->deletePoll($id)) {
+                redirect('polls/mypolls');
+            } else {
+                redirect('polls/mypolls');
+            }
+        } else {
+            redirect('polls/mypolls');
+        }
     }
 }

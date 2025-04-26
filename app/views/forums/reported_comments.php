@@ -34,7 +34,7 @@
         <main class="forums-main">
             <h1>Reported Comments</h1>
             <?php if ($_SESSION['user_role_id'] == 2): ?>
-                <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="btn btn-back">
+                <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-back">
                     <i class="fas fa-arrow-left"></i> Back to Forums
                 </a>
             <?php else: ?>

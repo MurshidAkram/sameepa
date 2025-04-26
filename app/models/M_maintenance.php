@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 <?php
 
 class M_maintenance
@@ -9,7 +16,62 @@ class M_maintenance
         $this->db = new Database; // Assuming Database is a custom class for database interaction
     }
 
-    //*************************************************************************************************************************************************
+
+
+    //*******************************************************************dashboard****************************************************************** */
+
+    public function getRequestCountsByStatus()
+    {
+        $this->db->query('
+            SELECT ms.status_name, ms.status_id, COUNT(r.request_id) as count
+            FROM maintenance_status ms
+            LEFT JOIN requests r ON ms.status_id = r.status_id
+            GROUP BY ms.status_id, ms.status_name
+            ORDER BY ms.status_id
+        ');
+        
+        return $this->db->resultSet();
+    }
+    
+    public function getRequestCountsByType()
+    {
+        $this->db->query('
+            SELECT mt.type_name, COUNT(r.request_id) as count
+            FROM maintenance_types mt
+            LEFT JOIN requests r ON mt.type_id = r.type_id
+            GROUP BY mt.type_id, mt.type_name
+        ');
+        
+        return $this->db->resultSet();
+    }
+    
+    public function getCompletedRequestCountsByType()
+    {
+        $this->db->query('
+            SELECT mt.type_name, COUNT(r.request_id) as count
+            FROM maintenance_types mt
+            LEFT JOIN requests r ON mt.type_id = r.type_id
+            WHERE r.status_id = 3 -- Assuming 4 is the status_id for "completed"
+            GROUP BY mt.type_id, mt.type_name
+        ');
+        
+        return $this->db->resultSet();
+    }
+    
+
+
+    
+    //***************************************maintenance members**********************************************************************************************************
+
+
+
+
+    // Fetch all maintenance members
+    public function getAllMembers()
+    {
+        $this->db->query("SELECT * FROM maintenance_members");
+        return $this->db->resultSet();
+    }
 
     // Add new maintenance member to the database
     public function addMember($data)
@@ -21,7 +83,6 @@ class M_maintenance
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':specialization', $data['specialization']);
         $this->db->bind(':experience', $data['experience']);
-
         $this->db->bind(':profile_image', $data['profile_image']);
         $this->db->bind(':phone_number', $data['phone_number']);
 
@@ -29,12 +90,6 @@ class M_maintenance
         return $this->db->execute();
     }
 
-    // Fetch all maintenance members
-    public function getAllMembers()
-    {
-        $this->db->query("SELECT * FROM maintenance_members");
-        return $this->db->resultSet();
-    }
 
     public function updateMember($data)
     {
@@ -68,97 +123,284 @@ class M_maintenance
 
         return $this->db->execute();
     }
+
+//********************************************************************************resident requests of resident side******************************************************** */
+
+
+
+
+//*******************************************************************************create request*********************************************************************** */
+
+public function getLastInsertId() {
+    return $this->db->lastInsertId();
 }
-//**************************************************************************************************************************************************************************** */
+
+public function submitRequest($data) {
+    try {
+        $this->db->query('
+            INSERT INTO requests 
+            (resident_id, type_id, description, urgency_level) 
+            VALUES (:resident_id, :type_id, :description, :urgency_level)
+        ');
+        
+        $this->db->bind(':resident_id', $data['resident_id']);
+        $this->db->bind(':type_id', $data['type_id']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':urgency_level', $data['urgency_level']);
+        
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            error_log("Database execute failed");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        return false;
+    }
+}
+
+
+
+
+
+//******************************************************************************************edit request ********************************************************************** */
+
+public function getRequestDetails($requestId, $residentId) {
+    $this->db->query('
+        SELECT 
+            r.request_id,
+            r.type_id,
+            r.description,
+            r.urgency_level
+        FROM requests r
+        WHERE r.request_id = :request_id AND r.resident_id = :resident_id
+    ');
+    $this->db->bind(':request_id', $requestId);
+    $this->db->bind(':resident_id', $residentId);
+    return $this->db->single();
+}
+
+
+
+
+
+
+public function updateRequestStatus($requestId, $statusId) {
     
-
+    $this->db->query('
+        UPDATE requests 
+        SET status_id = :status_id 
+        WHERE request_id = :request_id
+    ');
+    $this->db->bind(':status_id', $statusId);
+    $this->db->bind(':request_id', $requestId);
     
- //*************************************************************************************************************************************************
+    return $this->db->execute();
+}
 
 
-//     // Get all inventory usage logs
-//     public function getInventoryUsageLogs()
-//     {
-//         $this->db->query("SELECT * FROM inventory_usage_log");
-//         return $this->db->resultSet(); // Executes the query and returns the results as an array
-//     }
 
-//     // Add a new inventory usage log
-//     public function addInventoryUsageLog($data)
-// {
-//     // Prepare the query to insert the new log
-//     $this->db->query("INSERT INTO inventory_usage_log (item_id, item_name, usage_date, usage_time, quantity) 
-//                       VALUES (:item_id, :item_name, :usage_date, :usage_time, :quantity)");
 
-//     // Bind data
-//     $this->db->bind(':item_id', $data['item_id']);
-//     $this->db->bind(':item_name', $data['item_name']);
-//     $this->db->bind(':usage_date', $data['usage_date']);
-//     $this->db->bind(':usage_time', $data['usage_time']);
-//     $this->db->bind(':quantity', $data['quantity']);
 
-//     // Execute the query and return the result
+
+
+
+
+
+
+//**************************************************************************************delete request************************************************************************ */
+
+public function delete_request($requestId) {
+    try {
+        $this->db->beginTransaction();
+        
+        $this->db->query('DELETE FROM requests WHERE request_id = :request_id');
+        $this->db->bind(':request_id', $requestId);
+        $success = $this->db->execute();
+        
+        if ($success && $this->db->rowCount() > 0) {
+            $this->db->commit();
+            return true;
+        }
+        
+        $this->db->rollBack();
+        return false;
+    } catch (PDOException $e) {
+        $this->db->rollBack();
+        error_log("Delete request error: " . $e->getMessage());
+        return false;
+    }
+}
+
+
+public function isRequestEditable($requestId, $residentId) {
+    $this->db->query('
+        SELECT 1 FROM requests 
+        WHERE request_id = :request_id AND resident_id = :resident_id
+    ');
+    $this->db->bind(':request_id', $requestId);
+    $this->db->bind(':resident_id', $residentId);
+    
+    $row = $this->db->single();
+    
+    // Just verify the request exists and belongs to this resident
+    return !empty($row);
+}
+
+
+//************************************************************************************************************************************************************************************* */
+
+
+
+public function getResidentRequests($residentId) {
+    $this->db->query('
+        SELECT r.*, mt.type_name as type, ms.status_name as status 
+        FROM requests r
+        JOIN maintenance_types mt ON r.type_id = mt.type_id
+        JOIN maintenance_status ms ON r.status_id = ms.status_id
+        WHERE r.resident_id = :resident_id
+        ORDER BY r.created_at DESC
+    ');
+    $this->db->bind(':resident_id', $residentId);
+    return $this->db->resultSet();
+}
+
+public function getMaintenanceTypes() {
+    $this->db->query('SELECT * FROM maintenance_types');
+    return $this->db->resultSet();
+}
+public function updateRequest($data) {
+    try {
+        // First verify the request belongs to this resident
+        $this->db->query('SELECT resident_id FROM requests WHERE request_id = :request_id');
+        $this->db->bind(':request_id', $data['request_id']);
+        $request = $this->db->single();
+        
+        // Check if the query returned a result and if resident_id matches
+        if (!$request || (is_array($request) && $request['resident_id'] != $data['resident_id'])) {
+            return false;
+        }
+        if (is_object($request) && $request->resident_id != $data['resident_id']) {
+            return false;
+        }
+
+        $this->db->query('
+            UPDATE requests 
+            SET type_id = :type_id, 
+                description = :description, 
+                urgency_level = :urgency_level,
+                updated_at = NOW()
+            WHERE request_id = :request_id
+        ');
+        
+        $this->db->bind(':request_id', $data['request_id']);
+        $this->db->bind(':type_id', $data['type_id']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':urgency_level', $data['urgency_level']);
+        
+        return $this->db->execute();
+    } catch (PDOException $e) {
+        error_log('Database error in updateRequest: ' . $e->getMessage());
+        return false;
+    }
+}
+
+//**********************************************resident requests of maintenance side****************************************************************************************************************************** */
+
+
+
+// Methods used by maintenance side
+public function getAllRequests() {
+    $this->db->query('
+        SELECT 
+            r.request_id,
+            u.name AS resident_name,
+            res.address AS resident_address,
+            res.phonenumber AS resident_phone,
+            mt.type_name,
+            r.description,
+            r.urgency_level,
+            ms.status_name,
+            mm.name AS maintainer_name,
+            r.status_id
+        FROM requests r
+        JOIN residents res ON r.resident_id = res.id
+        JOIN users u ON res.user_id = u.id
+        JOIN maintenance_types mt ON r.type_id = mt.type_id
+        JOIN maintenance_status ms ON r.status_id = ms.status_id
+        LEFT JOIN maintenance_members mm ON r.assigned_maintainer_id = mm.id
+        ORDER BY r.created_at DESC
+    ');
+    
+    return $this->db->resultSet();
+}
+
+public function getStatuses() {
+    $this->db->query('SELECT * FROM maintenance_status');
+    return $this->db->resultSet();
+}
+
+// public function updateRequestStatus($requestId, $statusId) {
+//     $this->db->query('
+//         UPDATE requests 
+//         SET status_id = :status_id 
+//         WHERE request_id = :request_id
+//     ');
+//     $this->db->bind(':status_id', $statusId);
+//     $this->db->bind(':request_id', $requestId);
+    
 //     return $this->db->execute();
 // }
 
 
-// public function updateInventoryUsageLog($data) 
-// {
-//     $this->db->query("UPDATE inventory_usage_log 
-//                       SET quantity = :quantity
-//                       WHERE log_id = :log_id AND item_id = :item_id");
+public function assignMaintainer($requestId, $maintainerId) {
+    $this->db->query('
+        UPDATE requests 
+        SET 
+            assigned_maintainer_id = :maintainer_id,
+            status_id = 2 
+        WHERE request_id = :request_id');
+    $this->db->bind(':maintainer_id', $maintainerId);
+    $this->db->bind(':request_id', $requestId);
+    
+    return $this->db->execute();
+}
 
-//     // Bind only the necessary data for update
-//     $this->db->bind(':log_id', $data['log_id']);
-//     $this->db->bind(':item_id', $data['item_id']);
-//     $this->db->bind(':quantity', $data['quantity']);
+public function getSpecializations() {
+    $this->db->query('SELECT DISTINCT specialization FROM maintenance_members');
+    return $this->db->resultSet();
+}
 
-//     return $this->db->execute();
-// }
+public function getStaffBySpecialization($specialization) {
+    $this->db->query('
+        SELECT id, name, specialization 
+        FROM maintenance_members 
+        WHERE specialization = :specialization
+    ');
+    $this->db->bind(':specialization', $specialization);
+    
+    return $this->db->resultSet();
+}
 
-//     // Delete an inventory usage log
-//     public function deleteInventoryUsageLog($log_id)
-//     {
-//         // Prepare the query to delete the log entry
-//         $this->db->query("DELETE FROM inventory_usage_log WHERE log_id = :log_id");
 
-//         // Bind the log_id to the query
-//         $this->db->bind(':log_id', $log_id);
+//***********************************************************************************************************************************************************************************
 
-//         // Execute the query and return the result
-//         return $this->db->execute();
-//     }
 
-//     // Get a specific inventory usage log by log_id
-//     public function getInventoryUsageLogById($log_id)
-//     {
-//         // Prepare the query to get a specific log entry
-//         $this->db->query("SELECT * FROM inventory_usage_log WHERE log_id = :log_id");
+}
 
-//         // Bind the log_id parameter
-//         $this->db->bind(':log_id', $log_id);
+?>
 
-//         // Execute the query and return the result as a single object
-//         return $this->db->single();
-//     }
 
-//available inventory
-// public function getInventoryAvailableLogs()
-// {
-//     $this->db->query("SELECT * FROM available_store");
-//     return $this->db->resultSet(); // Executes the query and returns the results as an array
-// }
 
-// //available store
 
-// public function getInventoryAvailableLogById($item_id)
-// {
-//     // Prepare the query to get a specific log entry
-//     $this->db->query("SELECT * FROM available_store WHERE log_id = :log_id");
 
-//     // Bind the log_id parameter
-//     $this->db->bind(':log_id', $item_id);
 
-//     // Execute the query and return the result as a single object
-//     return $this->db->single();
-// }
+
+
+
+
+
+
+
+

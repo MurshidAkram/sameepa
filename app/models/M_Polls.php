@@ -8,14 +8,11 @@ class M_Polls
         $this->db = new Database;
     }
 
-    // Create a new poll with its choices
     public function createPoll($data)
     {
-        // Start transaction since we're inserting into multiple tables
         $this->db->beginTransaction();
 
         try {
-            // First insert the poll
             $this->db->query("INSERT INTO polls (title, description, created_by, end_date) 
                              VALUES (:title, :description, :created_by, :end_date)");
 
@@ -26,10 +23,10 @@ class M_Polls
 
             $this->db->execute();
 
-            // Get the ID of the newly created poll
+            // Get the ID of the created poll
             $pollId = $this->db->lastInsertId();
 
-            // Then insert all the choices
+            // insert all the choices
             foreach ($data['choices'] as $choice) {
                 if (!empty(trim($choice))) { // Only insert non-empty choices
                     $this->db->query("INSERT INTO poll_choices (poll_id, choice_text) 
@@ -160,5 +157,51 @@ class M_Polls
         $this->db->bind(':user_id', $userId);
         $result = $this->db->single();
         return $result ? $result['choice_id'] : null;
+    }
+
+    public function getPollsbyUserID($userId)
+    {
+        $this->db->query("SELECT p.*, 
+                      u.name as creator_name,
+                      COUNT(DISTINCT pv.id) as total_votes,
+                      COUNT(DISTINCT pc.id) as total_choices
+                      FROM polls p
+                      LEFT JOIN users u ON p.created_by = u.id
+                      LEFT JOIN poll_choices pc ON p.id = pc.poll_id
+                      LEFT JOIN poll_votes pv ON p.id = pv.poll_id
+                      WHERE p.created_by = :user_id
+                      GROUP BY p.id, u.name
+                      ORDER BY p.created_at DESC");
+        $this->db->bind(':user_id', $userId);
+        return $this->db->resultSet();
+    }
+
+    public function deletePoll($id)
+    {
+        $this->db->beginTransaction();
+
+        try {
+            //delete poll choices
+            $this->db->query("DELETE FROM poll_choices WHERE poll_id = :poll_id");
+            $this->db->bind(':poll_id', $id);
+            $this->db->execute();
+
+            //delete poll votes
+            $this->db->query("DELETE FROM poll_votes WHERE poll_id = :poll_id");
+            $this->db->bind(':poll_id', $id);
+            $this->db->execute();
+
+            //delete poll
+            $this->db->query("DELETE FROM polls WHERE id = :id");
+            $this->db->bind(':id', $id);
+            $this->db->execute();
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Error deleting poll: " . $e->getMessage());
+            return false;
+        }
     }
 }
