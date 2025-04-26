@@ -302,4 +302,21 @@ class M_Facilities
         $this->db->bind(':status', $status);
         return $this->db->resultSet();
     }
+    public function getTodaysBookings()
+    {
+        $today = date('2025-04-24');
+        
+        $this->db->query("SELECT 
+                            booking_time as time,
+                            facility_name,
+                            duration,
+                            booked_by
+                          FROM bookings 
+                          WHERE booking_date = :today
+                          ORDER BY booking_time ASC");
+        
+        $this->db->bind(':today', $today);
+        
+        return $this->db->resultSet();
+    }
 }

@@ -28,9 +28,8 @@ class Exchange extends Controller
             // $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     
             // Fetch listings based on whether a search query exists
-            $listings = $this->ExchangeModel->getAllListings();
-            // $listings = $search ? $this->ExchangeModel->searchListings($search)
-    
+            $listings =  $this->ExchangeModel->getAllListings();
+            // $search ? $this->ExchangeModel->searchListings($search) :
             // Prepare data for the view
             $data = [
                 'listings' => $listings ?: [], // Default to an empty array if no listings
@@ -44,7 +43,6 @@ class Exchange extends Controller
             die('Something went wrong: ' . $e->getMessage());
         }
     }
-
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

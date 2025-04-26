@@ -283,7 +283,7 @@ class M_Users
         $this->db->query('SELECT u.*, r.name as role_name 
                       FROM users u 
                       JOIN roles r ON u.role_id = r.id 
-                      WHERE u.is_active = 0 
+                      WHERE u.is_active = 0 AND u.is_rejected= 0
                       ORDER BY u.registration_date DESC');
         return $this->db->resultSet();
     }
@@ -303,47 +303,29 @@ class M_Users
     }
 
     public function getUsersByRole($roleId)
-    {
-        $this->db->query('SELECT u.*, r.name as role_name 
+{
+    $this->db->query('SELECT u.*, r.name as role_name 
                       FROM users u 
                       JOIN roles r ON u.role_id = r.id 
-                      WHERE u.role_id = :role_id');
-        $this->db->bind(':role_id', $roleId);
-        return $this->db->resultSet();
-    }
+                      WHERE u.role_id = :role_id AND u.is_rejected = 0');
+    $this->db->bind(':role_id', $roleId);
+    return $this->db->resultSet();
+}
 
     public function deletePendingUser($userId)
     {
         try {
             // Start transaction
             $this->db->beginTransaction();
-
-            // Delete from child tables first
-            $this->db->query("DELETE FROM security WHERE user_id = :user_id");
+    
+            // Soft delete by setting is_deleted to 1
+            $this->db->query("UPDATE users SET is_rejected = 1 WHERE id = :user_id");
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
-
-            $this->db->query("DELETE FROM residents WHERE user_id = :user_id");
-            $this->db->bind(':user_id', $userId);
-            $this->db->execute();
-
-            $this->db->query("DELETE FROM admins WHERE user_id = :user_id");
-            $this->db->bind(':user_id', $userId);
-            $this->db->execute();
-            $this->db->query("DELETE FROM maintenance WHERE user_id = :user_id");
-            $this->db->bind(':user_id', $userId);
-            $this->db->execute();
-            $this->db->query("DELETE FROM external_service_providers WHERE user_id = :user_id");
-            $this->db->bind(':user_id', $userId);
-            $this->db->execute();
-            // Finally, delete from users table
-            $this->db->query("DELETE FROM users WHERE id = :user_id");
-            $this->db->bind(':user_id', $userId);
-            $this->db->execute();
-
+    
             // Commit transaction
             $this->db->commit();
-
+    
             return true;
         } catch (Exception $e) {
             // Rollback transaction on error
@@ -351,7 +333,6 @@ class M_Users
             return false;
         }
     }
-
     public function getUserVerificationDocument($userId)
     {
         $this->db->query('SELECT role_verification_document, role_verification_filename FROM users WHERE id = :user_id');
@@ -510,4 +491,20 @@ class M_Users
 
         return $success;
     }
+    public function getActiveUsersCount()
+{
+    try {
+        $this->db->query('SELECT COUNT(*) AS activeUsersCount FROM users WHERE is_active = 1');
+        $result = $this->db->single();
+        if (!$result) {
+            error_log("Database query failed or returned empty result.");
+            return 0;
+        }
+        return (int) $result['activeUsersCount'];
+    } catch (Exception $e) {
+        error_log("Error fetching active users: " . $e->getMessage());
+        return 0;
+    }
+}
+
 }

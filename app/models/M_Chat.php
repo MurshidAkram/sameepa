@@ -427,6 +427,22 @@ public function updateReport($data) {
 //     return $this->db->execute();
 // }
 
+// In M_Chat.php - Update the getProfileImage method
+public function getProfileImage($userId) {
+    $this->db->query('SELECT profile_picture FROM users WHERE id = :user_id');
+    $this->db->bind(':user_id', $userId);
+    $result = $this->db->single();
+    
+    if ($result) {
+        // Handle both object and array results
+        $profilePic = is_object($result) ? $result->profile_picture : $result['profile_picture'];
+        if ($profilePic) {
+            return $profilePic;
+        }
+    }
+    
+    return null;
+}
 public function searchReports($search) {
     // Query to search reports by category, status, reporter name, or description, where is_deleted is 0
     $search = '%' . $search . '%';
