@@ -1,15 +1,18 @@
 <?php
-class M_resident {
+class M_resident
+{
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = new Database;
     }
 
-    public function getResidentIdByUserId($userId) {
+    public function getResidentIdByUserId($userId)
+    {
         $this->db->query('SELECT id FROM residents WHERE user_id = :user_id');
         $this->db->bind(':user_id', $userId);
-        
+
         $row = $this->db->single();
 
         if (is_object($row)) {
@@ -21,7 +24,8 @@ class M_resident {
         }
     }
 
-    public function getResidentDetails($residentId) {
+    public function getResidentDetails($residentId)
+    {
         $this->db->query('
             SELECT r.*, u.name, u.email 
             FROM residents r 
@@ -29,16 +33,14 @@ class M_resident {
             WHERE r.id = :resident_id
         ');
         $this->db->bind(':resident_id', $residentId);
-        
+
         return $this->db->single();
     }
 
-    public function getResidentById($userId) {
+    public function getResidentById($userId)
+    {
         $this->db->query('SELECT * FROM residents WHERE user_id = :user_id');
         $this->db->bind(':user_id', $userId);
         return $this->db->single();
     }
 }
-
-   
-?>

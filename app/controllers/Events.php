@@ -120,8 +120,14 @@ class Events extends Controller
         // Validate Date
         if (empty($data['date'])) {
             $data['errors'][] = 'Please enter event date';
-        } elseif (strtotime($data['date']) < strtotime(date('Y-m-d'))) {
-            $data['errors'][] = 'Event date cannot be in the past';
+        } else {
+            if (strtotime($data['date']) < strtotime(date('Y-m-d'))) {
+                $data['errors'][] = 'Event date cannot be in the past';
+            }
+            $threeDaysLater = strtotime('+3 days', strtotime(date('Y-m-d')));
+            if (strtotime($data['date']) < $threeDaysLater) {
+                $data['errors'][] = 'Events must be created at least 3 days in advance';
+            }
         }
 
         // Validate Time

@@ -567,7 +567,9 @@
                     } else {
                         if (data.errors) {
                             for (const [field, message] of Object.entries(data.errors)) {
-                                const errorElement = document.getElementById(`${field}-error`);
+                                const errorElement = document.getElementById($ {
+                                    field
+                                } - error);
                                 if (errorElement) errorElement.textContent = message;
                             }
                         }
@@ -593,7 +595,9 @@
                     editBtn.innerHTML = '<span class="spinner"></span> Loading...';
 
                     try {
-                        const response = await fetch(`<?php echo URLROOT; ?>/resident/request_details/${requestId}`, {
+                        const response = await fetch(<?php echo URLROOT; ?> / resident / request_details / $ {
+                            requestId
+                        }, {
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Accept': 'application/json'
@@ -629,6 +633,7 @@
             });
 
             // Submit Edit
+            // Submit Edit
             document.getElementById('editRequestForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
 
@@ -640,8 +645,10 @@
                     urgency: 'Urgency'
                 };
 
+                // Clear previous errors
                 document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
 
+                // Validate form
                 if (!formElements.requestType.value) {
                     document.getElementById('editRequestType-error').textContent = 'Please select a request type';
                     isValid = false;
@@ -668,9 +675,14 @@
                 submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
 
                 try {
-                    const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${requestId}`, {
+                    const response = await fetch(<?php echo URLROOT; ?> / resident / update_request / $ {
+                        requestId
+                    }, {
                         method: 'POST',
-                        body: formData
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams(formData)
                     });
 
                     const data = await response.json();
@@ -683,7 +695,9 @@
                         if (data.errors) {
                             for (const [field, message] of Object.entries(data.errors)) {
                                 const key = fieldMap[field] || field;
-                                const errorElement = document.getElementById(`edit${key}-error`);
+                                const errorElement = document.getElementById(edit$ {
+                                    key
+                                } - error);
                                 if (errorElement) errorElement.textContent = message;
                             }
                         }
@@ -720,7 +734,9 @@
                 deleteBtn.innerHTML = '<span class="spinner"></span> Deleting...';
 
                 try {
-                    const response = await fetch(`<?php echo URLROOT; ?>/resident/delete_request/${requestId}`, {
+                    const response = await fetch(<?php echo URLROOT; ?> / resident / delete_request / $ {
+                        requestId
+                    }, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

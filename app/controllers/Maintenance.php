@@ -12,6 +12,7 @@ class Maintenance extends Controller
         // Initialize the maintenance model
         $this->maintenanceModel = $this->model('M_maintenance'); // Make sure this matches your actual model class
         $this->userModel = $this->model('M_Users'); // Initialize user model
+
     }
 
     private function checkMaintenanceAuth()
@@ -35,13 +36,13 @@ class Maintenance extends Controller
     {
         // Get request counts by status
         $statusCounts = $this->maintenanceModel->getRequestCountsByStatus();
-        
+
         // Get request counts by type
         $requestTypeData = $this->maintenanceModel->getRequestCountsByType();
-        
+
         // Get completed request counts by type
         $completedRequestData = $this->maintenanceModel->getCompletedRequestCountsByType();
-    
+
         // Pass necessary data for the dashboard
         $data = [
             'user_id' => $_SESSION['user_id'],
@@ -51,7 +52,7 @@ class Maintenance extends Controller
             'requestTypeData' => $requestTypeData,
             'completedRequestData' => $completedRequestData
         ];
-    
+
         // Load the dashboard view
         $this->view('maintenance/dashboard', $data);
     }
@@ -176,91 +177,95 @@ class Maintenance extends Controller
 
 
 
-   
-//*****************************************resident requests****************************************************************************************************************** */
+
+    //*****************************************resident requests****************************************************************************************************************** */
 
 
-public function Resident_Requests() {
-    // Get all maintenance requests
-    $requests = $this->maintenanceModel->getAllRequests();
-    
-    // Get request history (completed/cancelled requests)
-   // $history = $this->maintenanceModel->getRequestHistory();
-    
-    // Get maintenance types for filter dropdown
-    $types = $this->maintenanceModel->getMaintenanceTypes();
-    
-    // Get statuses for filter dropdown
-    $statuses = $this->maintenanceModel->getStatuses();
-    
-    // Get maintenance staff for assign dropdown
-   // $staff = $this->maintenanceModel->getMaintenanceStaff();
-    
-    $data = [
-        'requests' => $requests,
-        //'history' => $history,
-        'types' => $types,
-        'statuses' => $statuses,
-       // 'staff' => $staff
-    ];
-    
-    $this->view('maintenance/Resident_Requests', $data);
-}
+    public function Resident_Requests()
+    {
+        // Get all maintenance requests
+        $requests = $this->maintenanceModel->getAllRequests();
 
+        // Get request history (completed/cancelled requests)
+        // $history = $this->maintenanceModel->getRequestHistory();
 
-public function getSpecializations() {
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        $specializations = $this->maintenanceModel->getSpecializations();
-        echo json_encode($specializations);
-    }
-}
+        // Get maintenance types for filter dropdown
+        $types = $this->maintenanceModel->getMaintenanceTypes();
 
-public function getStaffBySpecialization() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Get the JSON input
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        
-        $specialization = $data['specialization'];
-        $staff = $this->maintenanceModel->getStaffBySpecialization($specialization);
-        
-        echo json_encode($staff);
-    }
-}
+        // Get statuses for filter dropdown
+        $statuses = $this->maintenanceModel->getStatuses();
 
+        // Get maintenance staff for assign dropdown
+        // $staff = $this->maintenanceModel->getMaintenanceStaff();
 
-public function updateStatus() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        
         $data = [
-            'requestId' => trim($_POST['requestId']),
-            'statusId' => trim($_POST['statusId'])
+            'requests' => $requests,
+            //'history' => $history,
+            'types' => $types,
+            'statuses' => $statuses,
+            // 'staff' => $staff
         ];
-        
-        // Debug
-        error_log("Request ID: {$data['requestId']}, Status ID: {$data['statusId']}");
-        
-        if ($this->maintenanceModel->updateRequestStatus($data['requestId'], $data['statusId'])) {
-            echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update status']);
-        }
-    }
-}
 
-public function assignMaintainer() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Get the JSON input
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        
-        if ($this->maintenanceModel->assignMaintainer($data['requestId'], $data['staffId'])) {
-            echo json_encode(['success' => true, 'message' => 'Maintainer assigned successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to assign maintainer']);
+        $this->view('maintenance/Resident_Requests', $data);
+    }
+
+
+    public function getSpecializations()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $specializations = $this->maintenanceModel->getSpecializations();
+            echo json_encode($specializations);
+        }
+    }
+
+    public function getStaffBySpecialization()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get the JSON input
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+
+            $specialization = $data['specialization'];
+            $staff = $this->maintenanceModel->getStaffBySpecialization($specialization);
+
+            echo json_encode($staff);
+        }
+    }
+
+
+    public function updateStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'requestId' => trim($_POST['requestId']),
+                'statusId' => trim($_POST['statusId'])
+            ];
+
+            // Debug
+            error_log("Request ID: {$data['requestId']}, Status ID: {$data['statusId']}");
+
+            if ($this->maintenanceModel->updateRequestStatus($data['requestId'], $data['statusId'])) {
+                echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+            }
+        }
+    }
+
+    public function assignMaintainer()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get the JSON input
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+
+            if ($this->maintenanceModel->assignMaintainer($data['requestId'], $data['staffId'])) {
+                echo json_encode(['success' => true, 'message' => 'Maintainer assigned successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to assign maintainer']);
+            }
         }
     }
 }
-}
-   

@@ -97,7 +97,7 @@ class Resident extends Controller
     }
 
 
-    //***********************************************************************************resident request************************************************************************************** */
+    //resident request************************************************************************************* */
 
 
     public function maintenance()
@@ -120,7 +120,7 @@ class Resident extends Controller
 
 
 
-    //**********************************************************************create request************************************************************ */
+    //*create request*********************************************************** */
 
 
 
@@ -209,7 +209,7 @@ class Resident extends Controller
 
 
 
-    //*********************************************************************************edit request************************************************************************ */
+    //edit request*********************************************************************** */
 
 
     public function request_details($request_id)
@@ -230,17 +230,20 @@ class Resident extends Controller
         ]);
     }
 
-
     public function update_request($requestId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
+            if (!$residentId) {
+                echo json_encode(['success' => false, 'message' => 'Resident not found']);
+                return;
+            }
 
             // Verify the request belongs to the resident and is still editable
             if (!$this->maintenanceModel->isRequestEditable($requestId, $residentId)) {
-                echo json_encode(['success' => false, 'message' => 'Request cannot be edited']);
+                echo json_encode(['success' => false, 'message' => 'Request cannot be edited (either not yours or not pending)']);
                 return;
             }
 
@@ -250,6 +253,23 @@ class Resident extends Controller
                 'description' => trim($_POST['description']),
                 'urgency_level' => trim($_POST['urgency'])
             ];
+
+            // Validate data
+            $errors = [];
+            if (empty($data['type_id'])) {
+                $errors['requestType'] = 'Request type is required';
+            }
+            if (empty($data['description'])) {
+                $errors['description'] = 'Description is required';
+            }
+            if (empty($data['urgency_level'])) {
+                $errors['urgency'] = 'Urgency level is required';
+            }
+
+            if (!empty($errors)) {
+                echo json_encode(['success' => false, 'errors' => $errors]);
+                return;
+            }
 
             if ($this->maintenanceModel->updateRequest($data)) {
                 echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
@@ -262,8 +282,7 @@ class Resident extends Controller
 
 
 
-
-    //**********************************************************************************delete request********************************************************************* */
+    //*delete request******************************************************************** */
 
 
     public function delete_request($requestId)
