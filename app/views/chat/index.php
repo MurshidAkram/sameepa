@@ -99,54 +99,54 @@
                             
                             <a href="<?php echo URLROOT; ?>/chat/viewChat/<?php echo $userId; ?>" class="chat-card-link">
                                 <div class="group-card">
-                                    <div class="name-image">
-                                        <?php if (!empty($profilePic)): ?>
-                                            <img src="<?php echo URLROOT; ?>/chat/image/<?php echo $userId; ?>" alt="Chat with <?php echo htmlspecialchars($name); ?>" style=" border-radius: 50%; object-fit: cover; border: 1px solid #eaeaea;">
-                                        <?php else: ?>
-                                            <div class="profile-image" style="background-color: #DDD; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;">
-                                                <span style="font-size: 8px; color: #888;"><?php echo strtoupper(substr($name, 0, 1)); ?></span>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="group-details">
-                                        <div class="chat-header">
-                                            <div class="name-role-container">
-                                                <h3 class="group-title"><?php echo htmlspecialchars($name); ?></h3>
-                                                <span class="user-role" style="background-color: <?php echo $roleColor; ?>;">
-                                                    <?php echo $roleName; ?>
-                                                </span>
-                                            </div>
-                                            <span class="chat-time"><?php echo $lastMessageTime; ?></span>
-                                        </div>
-                                        
-                                        <?php 
-                                        // Handle either object or array format for lastMessage
-                                        $lastMessage = $chatItem['lastMessage'];
-                                        $messageText = '';
-                                        
-                                        if (is_object($lastMessage) && isset($lastMessage->message)) {
-                                            $messageText = $lastMessage->message;
-                                        } elseif (is_array($lastMessage) && isset($lastMessage['message'])) {
-                                            $messageText = $lastMessage['message'];
-                                        }
-                                        ?>
-                                        
-                                        <p class="last-message">
-                                            <?php 
-                                            if (!empty($messageText)) {
-                                                echo htmlspecialchars(substr($messageText, 0, 50));
-                                                if (strlen($messageText) > 50) echo '...';
-                                            } else {
-                                                echo 'No messages yet.';
-                                            }
-                                            ?>
-                                        </p>
-                                        
-                                        <?php if ($chatItem['unreadCount'] > 0): ?>
-                                            <span class="unread-badge"><?php echo $chatItem['unreadCount']; ?></span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
+    <div class="name-image">
+        <?php if (!empty($profilePic)): ?>
+            <img src="data:image/jpeg;base64,<?php echo base64_encode($profilePic); ?>" alt="Chat with <?php echo htmlspecialchars($name); ?>" style="border-radius: 50%; object-fit: cover; border: 1px solid #eaeaea;">
+        <?php else: ?>
+            <div class="profile-image" style="background-color: #DDD; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;">
+                <span style="font-size: 8px; color: #888;"><?php echo strtoupper(substr($name, 0, 1)); ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+    <div class="group-details">
+        <div class="chat-header">
+            <div class="name-role-container">
+                <h3 class="group-title"><?php echo htmlspecialchars($name); ?></h3>
+                <span class="user-role" style="background-color: <?php echo $roleColor; ?>;">
+                    <?php echo $roleName; ?>
+                </span>
+            </div>
+            <span class="chat-time"><?php echo $lastMessageTime; ?></span>
+        </div>
+        
+        <?php 
+        // Handle either object or array format for lastMessage
+        $lastMessage = $chatItem['lastMessage'];
+        $messageText = '';
+        
+        if (is_object($lastMessage) && isset($lastMessage->message)) {
+            $messageText = $lastMessage->message;
+        } elseif (is_array($lastMessage) && isset($lastMessage['message'])) {
+            $messageText = $lastMessage['message'];
+        }
+        ?>
+        
+        <p class="last-message">
+            <?php 
+            if (!empty($messageText)) {
+                echo htmlspecialchars(substr($messageText, 0, 50));
+                if (strlen($messageText) > 50) echo '...';
+            } else {
+                echo 'No messages yet.';
+            }
+            ?>
+        </p>
+        
+        <?php if ($chatItem['unreadCount'] > 0): ?>
+            <span class="unread-badge"><?php echo $chatItem['unreadCount']; ?></span>
+        <?php endif; ?>
+    </div>
+</div>
                             </a>
                         <?php endforeach; ?>
                     <?php else: ?>

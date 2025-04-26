@@ -701,3 +701,5 @@ INSERT INTO maintenance_types (type_name) VALUES
 ('Structural'), 
 ('Appliance'), 
 ('General Maintenance');
+
+ALTER TABLE users ADD COLUMN is_deleted TINYINT(1) DEFAULT 0 NOT NULL AFTER is_active;

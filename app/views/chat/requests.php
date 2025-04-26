@@ -58,12 +58,17 @@
                                 </div>
                                 <div class="group-details">
                                     <h3 class="group-title"><?php echo htmlspecialchars($request->name); ?></h3>
+                                    
+                                    <button class="icon-btn report-btn" title="Report User" aria-label="View my reports">
+        <i class="fas fa-flag"></i>
+    </button>
                                     <div class="group-actions" id="actions-<?php echo $request->id; ?>">
                                         <button onclick="acceptRequest(<?php echo $request->id; ?>, <?php echo $request->sender_id; ?>)"
                                             class="btn-update-group">Accept</button>
                                         <button onclick="declineRequest(<?php echo $request->id; ?>)"
                                             class="btn-delete-group">Decline</button>
                                     </div>
+
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -168,6 +173,33 @@
         .btn-view-group:hover {
             background-color: #45a049;
         }
+
+        .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.report-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #dc3545;
+    padding: 5px;
+    transition: color 0.2s ease;
+}
+
+.report-btn:hover {
+    color: #b02a37;
+}
+
+.report-btn i {
+    margin: 0;
+}
     </style>
 
 <script>
@@ -219,6 +251,14 @@ function declineRequest(requestId) {
         } else {
             alert("Failed to decline request.");
         }
+    });
+}
+// Add event listener for report button
+const reportButton = document.querySelector('.report-btn');
+if (reportButton) {
+    reportButton.addEventListener('click', function() {
+        // Redirect to the chat/myreports section
+        window.location.href = '<?php echo URLROOT; ?>/chat/myreports';
     });
 }
 </script>

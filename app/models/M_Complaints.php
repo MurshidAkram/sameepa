@@ -229,4 +229,19 @@ class M_Complaints
 
         return $this->db->execute();
     }
+    public function getComplaints()
+    {
+        try {
+            $this->db->query('
+                SELECT title,status
+                FROM complaints
+                where status="pending"
+                ORDER BY created_at DESC
+            ');
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log("Error fetching complaints: " . $e->getMessage());
+            return [];
+        }
+    }
 }

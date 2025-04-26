@@ -292,24 +292,25 @@ class M_Events
     } */
 
     //DONE BY SANKAVI FOR THE SUPER ADMIN DASHBOARD
-    // public function getTodayEvents()
-    // {
-    //     try {
-    //         // Set specific date instead of today (for testing)
-    //         $specificDate = '2024-11-30';
+    public function getTodaysEvents()
+    {
+        try {
+            // Set specific date instead of today (for testing)
+            $specificDate = '2025-04-30';
 
-    //         $this->db->query('
-    //             SELECT 
-    //                 title AS event_title,
-    //                 time AS event_time
-    //             FROM events
-    //             WHERE DATE(date) = :today
-    //             ORDER BY time
-    //         ');
-    //         $this->db->bind(':today', $specificDate);
-    //         return $this->db->resultSet();
-    //     } catch (Exception $e) {
-    //         error_log("Error fetching today's events: " . $e->getMessage());
-    //         return [];
-    //     }
+            $this->db->query('
+                SELECT 
+                    title AS event_title,
+                    time AS event_time
+                FROM events
+                WHERE DATE(date) = :today
+                ORDER BY time
+            ');
+            $this->db->bind(':today', $specificDate);
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log("Error fetching today's events: " . $e->getMessage());
+            return [];
+        }
+}
 }

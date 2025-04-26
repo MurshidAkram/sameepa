@@ -194,4 +194,12 @@ class M_Announcements
     //     return $this->db->resultSet();
     // }
 
+    // public function getActiveAnnouncements() {
+    //     $this->db->query("SELECT id, title, content, created_by, created_at 
+    //                       FROM announcements 
+    //                       ORDER BY created_at DESC");
+        
+    //     return $this->db->resultSet();
+    // }
+
 }
