@@ -178,34 +178,32 @@ class Security extends Controller
     }
 
 
-    //*******************************************Emergency_Contacts*************************************************************************************************** */
-    public function Emergency_Contacts()
-    {
-        $categories = $this->securityModel->getAllContactCategories();
-        $contactsByCategory = [];
-
-        foreach ($categories as $category) {
-            $contactsByCategory[$category->id] = [
-                'category' => $category,
-                'contacts' => $this->securityModel->getContactsByCategory($category->id)
-            ];
-        }
-
-        $data = ['contactsByCategory' => $contactsByCategory];
-        $this->view('security/Emergency_Contacts', $data);
+//*******************************************Emergency_Contacts*************************************************************************************************** */
+public function Emergency_Contacts() {
+    $categories = $this->securityModel->getAllContactCategories();
+    $contactsByCategory = [];
+    
+    foreach ($categories as $category) {
+        $contactsByCategory[$category->id] = [
+            'category' => $category,
+            'contacts' => $this->securityModel->getContactsByCategory($category->id)
+        ];
     }
+    
+    $data = ['contactsByCategory' => $contactsByCategory];
+    $this->view('security/Emergency_Contacts', $data);
+}
 
-    public function Edit_Contact($id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $data = json_decode(file_get_contents("php://input"), true);
-
-            $contactData = [
-                'id' => $id,
-                'name' => trim($data['name']),
-                'phone' => trim($data['phone']),
-                'description' => trim($data['description'] ?? '')
-            ];
+public function Edit_Contact($id) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        
+        $contactData = [
+            'id' => $id,
+            'name' => trim($data['name']),
+            'phone' => trim($data['phone']),
+            'description' => trim($data['description'] ?? '')
+        ];
 
             if ($this->securityModel->updateContact($contactData)) {
                 echo json_encode([
@@ -230,32 +228,31 @@ class Security extends Controller
                 'description' => trim($_POST['description'] ?? '')
             ];
 
-            if ($this->securityModel->addContact($data)) {
-                echo json_encode([
-                    'success' => true,
-                    'contact' => [
-                        'id' => $this->securityModel->getLastInsertId(),
-                        'name' => $data['name'],
-                        'phone' => $data['phone'],
-                        'description' => $data['description']
-                    ]
-                ]);
-            } else {
-                echo json_encode(['success' => false]);
-            }
+        if ($this->securityModel->addContact($data)) {
+            echo json_encode([
+                'success' => true,
+                'contact' => [
+                    'id' => $this->securityModel->getLastInsertId(),
+                    'name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'description' => $data['description']
+                ]
+            ]);
+        } else {
+            echo json_encode(['success' => false]);
         }
     }
+}
 
-    public function Delete_Contact($id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
-            if ($this->securityModel->deleteContact($id)) {
-                echo json_encode(['success' => true]);
-            } else {
-                echo json_encode(['success' => false]);
-            }
+public function Delete_Contact($id) {
+    if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+        if ($this->securityModel->deleteContact($id)) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false]);
         }
     }
+}
 
     //*****************************************Search Resident_Contacts in Manage_Visitor_Passes***************************************************************************************************** */
     public function Resident_Contacts()

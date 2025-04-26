@@ -660,6 +660,13 @@ INSERT INTO maintenance_status (status_name) VALUES
 ('Completed'), 
 ('Cancelled');
 
+INSERT INTO maintenance_types (type_name) VALUES 
+('Plumbing'), 
+('Electrical'), 
+('HVAC'), 
+('Structural'), 
+('Appliance'), 
+('General Maintenance');
 
 -- Insert sample maintenance requests
 INSERT INTO maintenance_requests (resident_id, type_id, title, description, urgency_level) VALUES

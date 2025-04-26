@@ -9,262 +9,283 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Emergency Contacts | <?php echo SITENAME; ?></title>
     <style>
-        .dashboard-container {
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-        }
+    .dashboard-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
 
-        .side-panel {
-            width: 250px;
-            position: fixed;
-            height: 100vh;
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            overflow-y: auto;
-            border-radius: 10px 0 0 10px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
+.side-panel {
+    width: 250px;
+    position: fixed;
+    height: 100vh;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    overflow-y: auto;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 100;
+}
 
-        .main-content {
-            flex: 1;
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            
-        }
+.main-content {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    transition: padding-bottom 0.3s ease;
+    margin-left: 20px;
+}
 
-        .category-card {
-            background: linear-gradient(135deg, rgb(128, 33, 147) 0%, rgb(130, 37, 154) 100%);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+.category-card {
+    background: linear-gradient(135deg, rgb(128, 33, 147) 0%, rgb(130, 37, 154) 100%);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
 
-        .category-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
 
-        .category-card.active {
-            background: linear-gradient(135deg, rgb(96, 17, 85) 0%, rgb(128, 33, 147) 100%);
-        }
+.category-card.active {
+    background: linear-gradient(135deg, rgb(96, 17, 85) 0%, rgb(128, 33, 147) 100%);
+    z-index: 10;
+}
 
-        .category-header {
-            display: flex;
-            align-items: center;
-        }
+.category-header {
+    display: flex;
+    align-items: center;
+}
 
-        .category-icon {
-            font-size: 1.8rem;
-            margin-right: 15px;
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.category-icon {
+    font-size: 1.8rem;
+    margin-right: 15px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .category-title {
-            font-size: 1.3rem;
-            margin: 0;
-        }
+.category-title {
+    font-size: 1.3rem;
+    margin: 0;
+}
 
-        .contacts-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+.contacts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
 
-        .contacts-grid {
-            display: none;
-            grid-column: 1 / -1;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
+.contacts-grid {
+    display: none;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    transform-origin: top;
+    animation: fadeIn 0.3s ease;
+}
 
-        .category-card.active .contacts-grid {
-            display: grid;
-        }
+.category-card.active .contacts-grid {
+    display: grid;
+}
 
-        .contact-item {
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 15px;
-            transition: transform 0.3s ease;
-        }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .contact-item:hover {
-            transform: translateY(-3px);
-            background: rgba(255,255,255,0.15);
-        }
+.contact-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 15px;
+    transition: transform 0.3s ease;
+}
 
-        .contact-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 1.1rem;
-        }
+.contact-item:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.15);
+}
 
-        .contact-phone {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
+.contact-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
 
-        .contact-description {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            margin-bottom: 10px;
-        }
+.contact-phone {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
 
-        .contact-actions {
-            display: flex;
-            gap: 8px;
-        }
+.contact-description {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
 
-        .btn-call {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
+.contact-actions {
+    display: flex;
+    gap: 8px;
+}
 
-        .btn-call:hover {
-            background: #3d8b40;
-        }
+.btn-call {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
 
-        /* Modal styles */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
+.btn-call:hover {
+    background: #3d8b40;
+}
 
-        .modal.active {
-            display: flex;
-        }
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
 
-        .modal-content {
-            background: rgb(186, 57, 237);
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            color: #fff;
-            position: relative;
-        }
+.modal.active {
+    display: flex;
+}
 
-        .modal-content .close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: white;
-        }
+.modal-content {
+    background: rgb(186, 57, 237);
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    color: #fff;
+    position: relative;
+}
 
-        .modal-content h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+.modal-content .close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: white;
+}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
+.form-group {
+    margin-bottom: 15px;
+}
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            background: rgba(255,255,255,0.9);
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
 
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: rgba(255,255,255,0.9);
+}
 
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-        }
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
 
-        .btn.save-btn {
-            background: #450d8f;
-            color: white;
-        }
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
 
-        .btn.save-btn:hover {
-            background: rgb(96, 17, 85);
-        }
+.btn.save-btn {
+    background: #450d8f;
+    color: white;
+}
 
-        .btn.cancel-btn {
-            background: #e74c3c;
-            color: white;
-        }
+.btn.save-btn:hover {
+    background: rgb(96, 17, 85);
+}
 
-        .btn.cancel-btn:hover {
-            background: #c0392b;
-        }
+.btn.cancel-btn {
+    background: #e74c3c;
+    color: white;
+}
 
-        @media (max-width: 768px) {
-            .contacts-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .main-content {
-                margin-left: 0;
-                margin-top: 70px;
-            }
-            
-            .side-panel {
-                width: 100%;
-                height: auto;
-                position: fixed;
-                top: 0;
-                z-index: 99;
-                border-radius: 0;
-            }
-        }
+.btn.cancel-btn:hover {
+    background: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        margin-top: 70px;
+    }
+    
+    .side-panel {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        top: 0;
+        z-index: 99;
+        border-radius: 0;
+    }
+
+    .contacts-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .contacts-grid {
+        grid-template-columns: 1fr;
+    }
+}
     </style>
 </head>
 <body>
