@@ -11,7 +11,7 @@ class M_maintenance
 
 
 
-    //dashboard***************************************************************** */
+    //*******************************************************************dashboard****************************************************************** */
 
     public function getRequestCountsByStatus()
     {
@@ -54,7 +54,7 @@ class M_maintenance
 
 
 
-    //maintenance members*********************************************************************************************************
+    //***************************************maintenance members**********************************************************************************************************
 
 
 
@@ -117,12 +117,12 @@ class M_maintenance
         return $this->db->execute();
     }
 
-    //*resident requests of resident side******************************************************* */
+    //********************************************************************************resident requests of resident side******************************************************** */
 
 
 
 
-    //create request********************************************************************** */
+    //*******************************************************************************create request*********************************************************************** */
 
     public function getLastInsertId()
     {
@@ -159,21 +159,17 @@ class M_maintenance
 
 
 
-    //**edit request ********************************************************************** */
-
+    //******************************************************************************************edit request ********************************************************************** */
 
     public function getRequestDetails($requestId, $residentId)
     {
         $this->db->query('
         SELECT 
-        r.type_id,
-        r.description,
-        r.urgency_level,
-        mt.type_name as type, 
-        ms.status_name as status 
+            r.request_id,
+            r.type_id,
+            r.description,
+            r.urgency_level
         FROM requests r
-        JOIN maintenance_types mt ON r.type_id = mt.type_id
-        JOIN maintenance_status ms ON r.status_id = ms.status_id
         WHERE r.request_id = :request_id AND r.resident_id = :resident_id
     ');
         $this->db->bind(':request_id', $requestId);
@@ -182,18 +178,8 @@ class M_maintenance
     }
 
 
-    public function isRequestEditable($requestId, $residentId)
-    {
-        $this->db->query('
-        SELECT status_id FROM requests 
-        WHERE request_id = :request_id AND resident_id = :resident_id
-    ');
-        $this->db->bind(':request_id', $requestId);
-        $this->db->bind(':resident_id', $residentId);
 
-        $result = $this->db->single();
-        return ($result && $result->status_id == 1); // Only editable if status is "Pending"
-    }
+
 
 
     public function updateRequestStatus($requestId, $statusId)
@@ -220,19 +206,46 @@ class M_maintenance
 
 
 
-    //*delete request*********************************************************************** */
+    //**************************************************************************************delete request************************************************************************ */
 
-
-
-
-    public function deleteRequest($requestId)
+    public function delete_request($requestId)
     {
-        $this->db->query('DELETE FROM requests WHERE request_id = :request_id');
-        $this->db->bind(':request_id', $requestId);
-        return $this->db->execute();
+        try {
+            $this->db->beginTransaction();
+
+            $this->db->query('DELETE FROM requests WHERE request_id = :request_id');
+            $this->db->bind(':request_id', $requestId);
+            $success = $this->db->execute();
+
+            if ($success && $this->db->rowCount() > 0) {
+                $this->db->commit();
+                return true;
+            }
+
+            $this->db->rollBack();
+            return false;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            error_log("Delete request error: " . $e->getMessage());
+            return false;
+        }
     }
 
 
+    public function isRequestEditable($requestId, $residentId)
+    {
+        $this->db->query('
+        SELECT 1 FROM requests 
+        WHERE request_id = :request_id AND resident_id = :resident_id
+    ');
+        $this->db->bind(':request_id', $requestId);
+        $this->db->bind(':resident_id', $residentId);
+
+        $row = $this->db->single();
+
+        // Just verify the request exists and belongs to this resident
+        return !empty($row);
+    }
 
 
     //************************************************************************************************************************************************************************************* */
@@ -258,29 +271,44 @@ class M_maintenance
         $this->db->query('SELECT * FROM maintenance_types');
         return $this->db->resultSet();
     }
-
     public function updateRequest($data)
     {
-        $this->db->query('
-        UPDATE requests SET 
-        type_id = :type_id, 
-        description = :description, 
-        urgency_level = :urgency_level 
-        WHERE request_id = :request_id
-    ');
+        try {
+            // First verify the request belongs to this resident
+            $this->db->query('SELECT resident_id FROM requests WHERE request_id = :request_id');
+            $this->db->bind(':request_id', $data['request_id']);
+            $request = $this->db->single();
 
-        $this->db->bind(':type_id', $data['type_id']);
-        $this->db->bind(':description', $data['description']);
-        $this->db->bind(':urgency_level', $data['urgency_level']);
-        $this->db->bind(':request_id', $data['request_id']);
+            // Check if the query returned a result and if resident_id matches
+            if (!$request || (is_array($request) && $request['resident_id'] != $data['resident_id'])) {
+                return false;
+            }
+            if (is_object($request) && $request->resident_id != $data['resident_id']) {
+                return false;
+            }
 
-        return $this->db->execute();
+            $this->db->query('
+            UPDATE requests 
+            SET type_id = :type_id, 
+                description = :description, 
+                urgency_level = :urgency_level,
+                updated_at = NOW()
+            WHERE request_id = :request_id
+        ');
+
+            $this->db->bind(':request_id', $data['request_id']);
+            $this->db->bind(':type_id', $data['type_id']);
+            $this->db->bind(':description', $data['description']);
+            $this->db->bind(':urgency_level', $data['urgency_level']);
+
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log('Database error in updateRequest: ' . $e->getMessage());
+            return false;
+        }
     }
 
-
-
-
-    //*resident requests of maintenance side***************************************************************************************************************************** */
+    //**********************************************resident requests of maintenance side****************************************************************************************************************************** */
 
 
 
@@ -300,7 +328,7 @@ class M_maintenance
             mm.name AS maintainer_name,
             r.status_id
         FROM requests r
-        JOIN residents res ON r.resident_id = res.user_id
+        JOIN residents res ON r.resident_id = res.id
         JOIN users u ON res.user_id = u.id
         JOIN maintenance_types mt ON r.type_id = mt.type_id
         JOIN maintenance_status ms ON r.status_id = ms.status_id

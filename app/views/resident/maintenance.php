@@ -422,7 +422,7 @@
             <span class="close-modal">&times;</span>
             <h2>Edit Maintenance Request</h2>
             <form id="editRequestForm">
-                <input type="hidden" id="editRequestId" name="requestId">
+                <input type="hidden" id="editRequestId" name="request_id" value="">
                 <div class="form-group">
                     <label for="editRequestType">Request Type</label>
                     <select id="editRequestType" name="requestType" required>
@@ -431,13 +431,16 @@
                             <option value="<?php echo $type->type_id; ?>"><?php echo htmlspecialchars($type->type_name); ?></option>
                         <?php endforeach; ?>
                     </select>
+
                     <span id="editRequestType-error" class="error-message"></span>
                 </div>
+
                 <div class="form-group">
                     <label for="editDescription">Description</label>
-                    <textarea id="editDescription" name="description" rows="4" required></textarea>
+                    <textarea name="description" id="editDescription" required></textarea>
                     <span id="editDescription-error" class="error-message"></span>
                 </div>
+
                 <div class="form-group">
                     <label for="editUrgency">Urgency Level</label>
                     <select id="editUrgency" name="urgency" required>
@@ -448,6 +451,7 @@
                     </select>
                     <span id="editUrgency-error" class="error-message"></span>
                 </div>
+
                 <button type="submit" class="btn-submit">Update Request</button>
             </form>
         </div>
@@ -560,6 +564,7 @@
                     const data = await response.json();
 
                     if (data.success) {
+                        location.reload();
                         showToast('Request submitted successfully!');
                         e.target.reset();
                         closeModal(modals.newRequest);
@@ -567,9 +572,7 @@
                     } else {
                         if (data.errors) {
                             for (const [field, message] of Object.entries(data.errors)) {
-                                const errorElement = document.getElementById($ {
-                                    field
-                                } - error);
+                                const errorElement = document.getElementById(`${field}-error`);
                                 if (errorElement) errorElement.textContent = message;
                             }
                         }
@@ -584,24 +587,34 @@
                 }
             });
 
-            // Edit Request
+
+            //*****************************************************************************edit****************************************************************************************************************************** */   
+            let editingRequestId = null;
+
+
             document.addEventListener('click', async function(e) {
                 if (e.target.classList.contains('btn-edit-request')) {
                     const requestId = e.target.getAttribute('data-request-id');
                     const editBtn = e.target;
                     const originalBtnText = editBtn.innerHTML;
 
+                    // Validate request ID
+                    console.log(requestId);
+                    if (!requestId) {
+                        showToast('Invalid request ID', false);
+                        return;
+                    }
+
                     editBtn.disabled = true;
                     editBtn.innerHTML = '<span class="spinner"></span> Loading...';
 
                     try {
-                        const response = await fetch(<?php echo URLROOT; ?> / resident / request_details / $ {
-                            requestId
-                        }, {
+                        const response = await fetch(`<?php echo URLROOT; ?>/resident/request_details/${requestId}`, {
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Accept': 'application/json'
-                            }
+                            },
+                            credentials: 'include'
                         });
 
                         if (response.redirected) {
@@ -609,10 +622,24 @@
                             return;
                         }
 
-                        const data = await response.json();
+                        if (!response.ok) {
+                            throw new Error(`Server returned ${response.status}`);
+                        }
+
+                        const contentType = response.headers.get('content-type');
+                        const rawText = await response.text();
+
+                        console.log("RAW RESPONSE TEXT:", rawText);
+
+                        if (!contentType || !contentType.includes('application/json')) {
+                            throw new Error("Invalid response format");
+                        }
+
+                        const data = JSON.parse(rawText);
 
                         if (data.success && data.request) {
-                            document.getElementById('editRequestId').value = data.request.request_id;
+                            editingRequestId = data.request.request_id;
+
                             document.getElementById('editRequestType').value = data.request.type_id;
                             document.getElementById('editDescription').value = data.request.description;
                             document.getElementById('editUrgency').value = data.request.urgency_level;
@@ -632,137 +659,155 @@
                 }
             });
 
-            // Submit Edit
-            // Submit Edit
-            document.getElementById('editRequestForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
+            // Ensure the form exists before adding event listener
 
-                const formElements = e.target.elements;
-                let isValid = true;
-                const fieldMap = {
-                    requestType: 'RequestType',
-                    description: 'Description',
-                    urgency: 'Urgency'
-                };
+            const editRequestForm = document.getElementById('editRequestForm');
+            if (editRequestForm) {
+                editRequestForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
 
-                // Clear previous errors
-                document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
+                    if (!editingRequestId) {
+                        showToast('No request selected for editing', false);
+                        return;
+                    }
 
-                // Validate form
-                if (!formElements.requestType.value) {
-                    document.getElementById('editRequestType-error').textContent = 'Please select a request type';
-                    isValid = false;
-                }
+                    const formData = new FormData(this);
+                    formData.append('request_id', editingRequestId);
 
-                if (!formElements.description.value.trim()) {
-                    document.getElementById('editDescription-error').textContent = 'Please enter a description';
-                    isValid = false;
-                }
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
 
-                if (!formElements.urgency.value) {
-                    document.getElementById('editUrgency-error').textContent = 'Please select an urgency level';
-                    isValid = false;
-                }
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
 
-                if (!isValid) return;
+                    try {
+                        const response = await fetch(`<?php echo URLROOT; ?>/resident/update_request/${editingRequestId}`, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
 
-                const requestId = formElements.requestId.value;
-                const formData = new FormData(e.target);
-                const submitBtn = e.target.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn.innerHTML;
+                        // First check if response is OK
+                        if (!response.ok) {
+                            // Clone the response to read it multiple times if needed
+                            const responseClone = response.clone();
 
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
-
-                try {
-                    const response = await fetch(<?php echo URLROOT; ?> / resident / update_request / $ {
-                        requestId
-                    }, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams(formData)
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        showToast('Request updated successfully!');
-                        closeModal(modals.editRequest);
-                        setTimeout(() => window.location.reload(), 1000);
-                    } else {
-                        if (data.errors) {
-                            for (const [field, message] of Object.entries(data.errors)) {
-                                const key = fieldMap[field] || field;
-                                const errorElement = document.getElementById(edit$ {
-                                    key
-                                } - error);
-                                if (errorElement) errorElement.textContent = message;
+                            // Try to parse as JSON first
+                            try {
+                                const errorData = await response.json();
+                                throw new Error(errorData.message || `Server returned ${response.status}`);
+                            } catch (jsonError) {
+                                // If JSON parsing fails, try as text
+                                const errorText = await responseClone.text();
+                                throw new Error(errorText || `Server returned ${response.status}`);
                             }
                         }
-                        throw new Error(data.message || 'Failed to update request');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showToast(error.message || 'Failed to update request', false);
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalBtnText;
-                }
-            });
 
-            // Delete Request
+                        // If response is OK, parse as JSON
+                        const data = await response.json();
+
+                        if (data.success) {
+                            showToast(data.message || 'Request updated successfully');
+                            closeModal(modals.editRequest);
+                            setTimeout(() => window.location.reload());
+                        } else {
+                            if (data.errors) {
+                                // Clear previous errors
+                                document.querySelectorAll('#editRequestModal .error-message').forEach(el => el.textContent = '');
+
+                                // Show new errors
+                                for (const [field, message] of Object.entries(data.errors)) {
+                                    const errorElement = document.getElementById(`edit${field.charAt(0).toUpperCase() + field.slice(1)}-error`);
+                                    if (errorElement) errorElement.textContent = message;
+                                }
+                            }
+                            throw new Error(data.message || 'Update failed');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        // Clean error message by removing HTML tags
+                        const cleanError = error.message.replace(/<[^>]*>?/gm, '');
+                        showToast(cleanError || 'Failed to update request', false);
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }
+                });
+            }
+
+
+            //**************************************************************** */ Delete Request Handler - First click shows modal***************************************************************************************************************
+
+
+
+
+
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('btn-delete-request')) {
                     const requestId = e.target.getAttribute('data-request-id');
                     document.getElementById('deleteRequestId').value = requestId;
-                    openModal(modals.deleteConfirm);
+                    openModal(document.getElementById('deleteConfirmModal'));
                 }
             });
 
-            document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
-                closeModal(modals.deleteConfirm);
-            });
-
-            document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            // Confirm Delete Button Handler
+            document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
                 const requestId = document.getElementById('deleteRequestId').value;
                 const deleteBtn = this;
-                const originalBtnText = deleteBtn.innerHTML;
+                const requestCard = document.querySelector(`.request-card[data-request-id="${requestId}"]`);
 
-                deleteBtn.disabled = true;
-                deleteBtn.innerHTML = '<span class="spinner"></span> Deleting...';
-
-                try {
-                    const response = await fetch(<?php echo URLROOT; ?> / resident / delete_request / $ {
-                        requestId
-                    }, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            _method: 'DELETE'
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        showToast('Request deleted successfully!');
-                        closeModal(modals.deleteConfirm);
-                        setTimeout(() => window.location.reload(), 1000);
-                    } else {
-                        throw new Error(data.message || 'Failed to delete request');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showToast(error.message || 'Failed to delete request', false);
-                } finally {
-                    deleteBtn.disabled = false;
-                    deleteBtn.innerHTML = originalBtnText;
+                if (!requestId) {
+                    showToast('Invalid request ID', false);
+                    return;
                 }
+
+                // Show loading state
+                const originalText = deleteBtn.innerHTML;
+                deleteBtn.innerHTML = '<span class="spinner"></span> Deleting...';
+                deleteBtn.disabled = true;
+
+                fetch(`<?php echo URLROOT; ?>/resident/delete_request/${requestId}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        // First check if response is JSON
+                        location.reload();
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            return response.json();
+                        }
+                        return response.text().then(text => {
+                            throw new Error(text || 'Failed to parse response');
+                        });
+                    })
+                    .then(data => {
+                        if (data && data.success) {
+
+                            showToast('Request deleted successfully!');
+
+                            if (requestCard) {
+                                requestCard.remove(); // Remove card from DOM
+                            }
+                            closeModal(document.getElementById('deleteConfirmModal'));
+                        } else {
+                            throw new Error(data?.message || 'Failed to delete request');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Delete Error:', error);
+                        showToast(error.message || 'Failed to delete request', false);
+                    })
+                    .finally(() => {
+                        deleteBtn.disabled = false;
+                        deleteBtn.innerHTML = originalText;
+                    });
+            });
+
+            // Cancel Delete Button
+            document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+                closeModal(document.getElementById('deleteConfirmModal'));
             });
         });
     </script>

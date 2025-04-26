@@ -5,6 +5,10 @@ class Resident extends Controller
     private $residentModel;
     private $listingModel;
     private $maintenanceModel;
+    private $announcementModel;
+    private $eventModel;
+    private $faciltyModel;
+    private $complaintModel;
 
     public function __construct()
     {
@@ -12,6 +16,7 @@ class Resident extends Controller
         $this->residentModel = $this->model('M_resident');
         $this->maintenanceModel = $this->model('M_maintenance');
         $this->checkResidentAuth();
+        $this->complaintModel = $this->model('M_Complaints');
 
         // Initialize any resident-specific models if needed
         // $this->residentModel = $this->model('M_Resident');
@@ -41,6 +46,7 @@ class Resident extends Controller
             'email' => $_SESSION['user_email'],
             'role' => $_SESSION['user_role']
         ];
+
 
         // Load resident dashboard view with data
         $this->view('resident/dashboard', $data);
@@ -97,7 +103,7 @@ class Resident extends Controller
     }
 
 
-    //resident request************************************************************************************* */
+    //***********************************************************************************resident request************************************************************************************** */
 
 
     public function maintenance()
@@ -120,7 +126,7 @@ class Resident extends Controller
 
 
 
-    //*create request*********************************************************** */
+    //**********************************************************************create request************************************************************ */
 
 
 
@@ -209,98 +215,164 @@ class Resident extends Controller
 
 
 
-    //edit request*********************************************************************** */
-
-
-    public function request_details($request_id)
+    //*********************************************************************************edit request************************************************************************ */
+    public function request_details($requestId)
     {
-        // Only allow access if user is logged in
-        // if (!isLoggedIn()) {
-        //     redirect('users/login');
-        // }
-
-        // Proceed to fetch and return request data
-        $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
-        $request = $this->maintenanceModel->getRequestDetails($request_id, $residentId);
-
+        if (ob_get_length()) {
+            ob_clean();
+        }
         header('Content-Type: application/json');
-        echo json_encode([
-            'success' => true,
-            'request' => $request
-        ]);
-    }
 
-    public function update_request($requestId)
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        try {
+            if (!isset($_SESSION['user_id'])) {
+                http_response_code(401);
+                echo json_encode(['success' => false, 'message' => 'User not logged in']);
+                return;
+            }
 
             $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
             if (!$residentId) {
-                echo json_encode(['success' => false, 'message' => 'Resident not found']);
-                return;
+                throw new Exception("Resident not found");
             }
 
-            // Verify the request belongs to the resident and is still editable
-            if (!$this->maintenanceModel->isRequestEditable($requestId, $residentId)) {
-                echo json_encode(['success' => false, 'message' => 'Request cannot be edited (either not yours or not pending)']);
-                return;
+            $request = $this->maintenanceModel->getRequestDetails($requestId, $residentId);
+            if (!$request) {
+                throw new Exception("Request not found");
             }
 
-            $data = [
-                'request_id' => $requestId,
-                'type_id' => trim($_POST['requestType']),
-                'description' => trim($_POST['description']),
-                'urgency_level' => trim($_POST['urgency'])
-            ];
+            echo json_encode(['success' => true, 'request' => $request]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Internal error',
+                'error' => $e->getMessage()
+            ]);
+        }
 
-            // Validate data
+        exit;
+    }
+    public function update_request($requestId)
+    {
+        // Clear any existing output
+        if (ob_get_length()) ob_clean();
+
+        // Set JSON header first
+        header('Content-Type: application/json');
+
+        try {
+            // Only accept POST requests
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception('Invalid request method', 405);
+            }
+
+            // Get resident ID
+            $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
+            if (!$residentId) {
+                throw new Exception('Resident not found or unauthorized', 403);
+            }
+
+            // Validate input
             $errors = [];
-            if (empty($data['type_id'])) {
-                $errors['requestType'] = 'Request type is required';
-            }
-            if (empty($data['description'])) {
-                $errors['description'] = 'Description is required';
-            }
-            if (empty($data['urgency_level'])) {
-                $errors['urgency'] = 'Urgency level is required';
-            }
+            $type = trim($_POST['requestType'] ?? '');
+            $desc = trim($_POST['description'] ?? '');
+            $urgency = trim($_POST['urgency'] ?? '');
+
+            if (empty($type)) $errors['requestType'] = 'Request type is required';
+            if (empty($desc)) $errors['description'] = 'Description is required';
+            if (empty($urgency)) $errors['urgency'] = 'Urgency level is required';
 
             if (!empty($errors)) {
-                echo json_encode(['success' => false, 'errors' => $errors]);
-                return;
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $errors
+                ]);
+                exit;
             }
 
-            if ($this->maintenanceModel->updateRequest($data)) {
-                echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
+            // Update the request
+            $updated = $this->maintenanceModel->updateRequest([
+                'request_id' => $requestId,
+                'resident_id' => $residentId,
+                'type_id' => $type,
+                'description' => $desc,
+                'urgency_level' => $urgency
+            ]);
+
+            if ($updated) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Request updated successfully'
+                ]);
             } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to update request']);
+                throw new Exception('Failed to update request', 500);
             }
+        } catch (Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
         }
+        exit;
     }
 
 
-
-
-    //*delete request******************************************************************** */
-
+    //**********************************************************************************delete request********************************************************************* */
 
     public function delete_request($requestId)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+        // Only allow DELETE requests
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            http_response_code(405); // Method Not Allowed
+            echo json_encode([
+                'success' => false,
+                'message' => 'Only DELETE requests are allowed'
+            ]);
+            return;
+        }
+
+        try {
             $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
 
-            // Verify the request belongs to the resident and is still deletable
-            if (!$this->maintenanceModel->isRequestEditable($requestId, $residentId)) {
-                echo json_encode(['success' => false, 'message' => 'Request cannot be deleted']);
+            if (empty($residentId)) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Resident not found'
+                ]);
                 return;
             }
 
-            if ($this->maintenanceModel->deleteRequest($requestId)) {
-                echo json_encode(['success' => true, 'message' => 'Request deleted successfully']);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to delete request']);
+            // Verify the request belongs to the resident and is still deletable
+            if (!$this->maintenanceModel->isRequestEditable($requestId, $residentId)) {
+                http_response_code(403); // Forbidden
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Request cannot be deleted (either not yours or not pending)"
+                ]);
+                return;
             }
+
+            if ($this->maintenanceModel->delete_request($requestId)) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Request deleted successfully'
+                ]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to delete request'
+                ]);
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ]);
         }
     }
 }

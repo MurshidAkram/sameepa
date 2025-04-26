@@ -102,12 +102,16 @@
                         </div>
 
                         <?php if ($data['event']['created_by'] != $_SESSION['user_id']): ?>
-                            <button id="joinButton"
-                                class="join-button <?php echo $data['isJoined'] ? 'joined' : ''; ?>"
-                                data-event-id="<?php echo $data['event']['id']; ?>"
-                                data-is-joined="<?php echo $data['isJoined'] ? 'true' : 'false'; ?>">
-                                <?php echo $data['isJoined'] ? 'Leave Event' : 'Join Event'; ?>
-                            </button>
+                            <?php if ($data['event']['is_active']): ?>
+                                <button id="joinButton"
+                                    class="join-button <?php echo $data['isJoined'] ? 'joined' : ''; ?>"
+                                    data-event-id="<?php echo $data['event']['id']; ?>"
+                                    data-is-joined="<?php echo $data['isJoined'] ? 'true' : 'false'; ?>">
+                                    <?php echo $data['isJoined'] ? 'Leave Event' : 'Join Event'; ?>
+                                </button>
+                            <?php else: ?>
+                                <button class="join-button disabled" disabled>Event Has Ended</button>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </div>

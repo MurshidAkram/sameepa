@@ -71,7 +71,7 @@
                         <div class="form-group">
                             <label for="date">Event Date:</label>
                             <input type="date" name="date" id="date" value="<?php echo $data['date']; ?>"
-                                min="<?php echo date('Y-m-d'); ?>" required class="form-control">
+                                min="<?php echo date('Y-m-d', strtotime('+4 days')); ?>" required class="form-control">
                         </div>
 
                         <div class="form-group">

@@ -24,6 +24,7 @@ class M_resident
         }
     }
 
+
     public function getResidentDetails($residentId)
     {
         $this->db->query('

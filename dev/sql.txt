@@ -16,6 +16,10 @@ CREATE TABLE events (
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
 );
 
+ALTER TABLE events 
+ADD COLUMN is_active BOOLEAN DEFAULT TRUE,
+ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+
 -- Event participants table to track who joined which event
 CREATE TABLE event_participants (
     id INT PRIMARY KEY AUTO_INCREMENT,

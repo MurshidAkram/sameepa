@@ -507,6 +507,14 @@
     background-color: #c82333;
 }
 
+
+
+
+.join-button.disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
 /* Responsive Design */
 @media (max-width: 1024px) {
     .event-view-content {
