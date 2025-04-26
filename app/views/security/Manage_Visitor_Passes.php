@@ -371,7 +371,7 @@ input:focus, textarea:focus {
                         <th>Resident Name</th>
                         <th>Resident Address</th>
                         <th>Phone Number</th>
-                        <th>Email Address</th>
+                        <!-- <th>Email Address</th> -->
                         <!-- <th>Action</th> -->
                     </tr>
                 </thead>
@@ -505,9 +505,9 @@ input:focus, textarea:focus {
                                 <td>${resident.name}</td>
                                 <td>${resident.address}</td>
                                 <td>${resident.phonenumber}</td>
-                                <td>${resident.email}</td>
+                              
                             `;
-                            resultsBody.appendChild(row);
+                            resultsBody.appendChild(row); //  <td>${resident.email}</td>
                         });
                         resultsTable.style.display = 'table';
                     } else {
