@@ -17,12 +17,12 @@ public function getTodayPasses() {
     return $this->db->resultSet();
 }
 
+
 public function getWeeklyVisitorFlow() {
     $endDate = date('Y-m-d');
     $startDate = date('Y-m-d', strtotime('-6 days'));
     
-    $this->db->query('
-        SELECT 
+    $this->db->query('SELECT 
             visit_date as date, 
             COUNT(*) as count,
             DAYNAME(visit_date) as day_name
@@ -71,14 +71,15 @@ public function getMonthlyIncidentTrends() {
     $startDate = date('Y-m-01'); // First day of current month
     $endDate = date('Y-m-t');   // Last day of current month
     
-    $this->db->query('
-        SELECT 
+      //ASC is acending order
+
+    $this->db->query('SELECT 
             type,
             COUNT(*) as count
         FROM incident_reports
         WHERE date BETWEEN :start_date AND :end_date
         GROUP BY type
-        ORDER BY count DESC
+        ORDER BY count DESC  
     ');
     
     $this->db->bind(':start_date', $startDate);
@@ -102,8 +103,7 @@ public function getMonthlyIncidentTrends() {
 public function getTodayDutyOfficers() {
     $today = date('Y-m-d');
     
-    $this->db->query('
-        SELECT 
+    $this->db->query('SELECT 
             u.id, 
             u.name, 
             ds.name as shift_name,
@@ -121,6 +121,7 @@ public function getTodayDutyOfficers() {
 }
 
 //****************************************************** Emergency contact******************************************************************* */
+
 public function getAllContactCategories() {
     $this->db->query("SELECT * FROM emergency_categories ORDER BY name");
     return $this->db->resultSet();
@@ -169,6 +170,7 @@ public function deleteContact($id) {
 }
 
 //**************************************************** Visitor passes************************************************************************************
+
 
 public function getVisitorPasses() {
     // Query today's visitor passes with formatted time
@@ -242,6 +244,7 @@ public function addVisitorPass($data) {
 
 
 //***************************************************resident contact*********************************** */
+
 public function searchResidentContacts($query)
 {
     $this->db->query("SELECT 
@@ -262,6 +265,7 @@ public function searchResidentContacts($query)
 
 
 // ************************************manage incident reports**********************************
+
 
 public function getAllIncidents() {
     $this->db->query('SELECT * FROM incident_reports ORDER BY date DESC, time DESC');
@@ -313,6 +317,8 @@ public function updateIncidentStatus($report_id, $status) {
 
 
 //********************************************manage duty shedule*********************************************************** */
+
+
 
     // Get all security officers (users with role_id = 5)
     public function getSecurityOfficers() {

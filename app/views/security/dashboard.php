@@ -6,7 +6,11 @@
   <title>Security Dashboard | <?php echo SITENAME; ?></title>
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css" />
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- this part use for display the graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+
+  
+
   <style>
   .dashboard-container {
   display: flex;
@@ -131,10 +135,15 @@
 }
   </style>
 </head>
+
+
+
 <body>
+
 <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
 <div class="dashboard-container">
+  
   <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
   <div class="main-content">
@@ -142,66 +151,95 @@
     
     
     <div class="compact-grid">
-      <!-- Visitor Card -->
+
+      <!--************************************************************** today  Visitor Card//********************************************************************************************************************** */ -->
+     
       <div class="compact-card visitor-card">
         <h3>Today's Visitors</h3>
-        <div class="metric-value" id="active-passes"><?php echo count($data['todayPasses']); ?></div>
+        <div class="metric-value" ><?php echo count($data['todayPasses']); ?></div>
         <p>Passes issued today</p>
     
         <table class="compact-table">
           <thead>
             <tr>
-              <th>Visitor</th>
-              <th>Resident</th>
+              <th>Visitor name</th>
+              <th>Resident name</th>
             </tr>
           </thead>
+          
           <tbody>
+
             <?php if (!empty($data['todayPasses'])) : ?>
-              <?php foreach (array_slice($data['todayPasses'], 0, 100) as $pass) : ?>
+
+              <?php foreach ($data['todayPasses'] as $pass) : ?>
+                <!-- foreach (array_slice($data['todayPasses'], 0, 100) as $pass) -->
                 <tr>
-                  <td><?php echo htmlspecialchars($pass->visitor_name); ?></td>
-                  <td><?php echo htmlspecialchars($pass->resident_name); ?></td>
+                  <td><?php echo ($pass->visitor_name); ?></td>
+                  <td><?php echo ($pass->resident_name); ?></td>
                 </tr>
               <?php endforeach; ?>
-              <?php if (count($data['todayPasses']) > 3) : ?>
+
+              
+              <!-- <?php if (count($data['todayPasses']) > 3) : ?>
                
-              <?php endif; ?>
+              <?php endif; ?> -->
+
             <?php else : ?>
-              <tr><td colspan="2">None today</td></tr>
+              <tr>
+                <td colspan="2">None today</td>
+              </tr>
+
             <?php endif; ?>
           </tbody>
         </table>
       </div>
 
+     
       <!-- Officers Card -->
       <div class="compact-card officer-card">
-        <h3>On Duty Officers</h3>
-        <div class="metric-value" id="on-duty"><?php echo count($data['onDutyOfficers']); ?></div>
+        <h3>On Today Duty Officers</h3>
+        <div class="metric-value"><?php echo count($data['onDutyOfficers']); ?></div>
         <p>Currently active</p>
         
         
         <table class="compact-table">
+
+        <thead>
+            <tr>
+              <th>Officer name</th>
+              <th>Shift name</th>
+            </tr>
+          </thead>
+
           <tbody>
             <?php foreach (array_slice($data['onDutyOfficers'], 0, 20) as $officer): ?>
               <tr>
-                <td><?php echo htmlspecialchars($officer->name); ?></td>
-                <td><?php echo htmlspecialchars($officer->shift_name); ?></td>
+                <td><?php echo ($officer->name); ?></td>
+                <td><?php echo ($officer->shift_name); ?></td>
               </tr>
+
             <?php endforeach; ?>
-            <?php if (count($data['onDutyOfficers']) > 5) : ?>
-             
-            <?php endif; ?>
+            
+            <!-- <?php if (count($data['onDutyOfficers']) > 5) : ?>
+              <?php endif; ?> -->
+              
           </tbody>
         </table>
       </div>
 
+      
+
       <!-- Incidents Card -->
+
       <div class="compact-card incident-card" style="position: relative;">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <div>
+ 
+  <div>
       <h3>Monthly Incidents</h3>
+      
       <?php if (!empty($data['incidentTrends']['data'])): ?>
         <div class="metric-value"><?php echo array_sum($data['incidentTrends']['data']); ?></div>
+
         <p>Total this month</p>
       <?php else: ?>
         <div class="metric-value">0</div>
@@ -211,11 +249,12 @@
   </div>
 
   <!-- Large Pie Chart (5x size) -->
-  <div style="width: 100%; height: 200px; margin: 10px 0;">
+  <div style="width: 90%; height: 200px; margin: 10px 0;">
     <canvas id="largeIncidentPieChart"></canvas>
   </div>
 
   <table class="compact-table">
+
     <thead>
       <tr>
         <th>Type</th>
@@ -223,25 +262,29 @@
         <th>%</th>
       </tr>
     </thead>
+    
     <tbody>
       <?php 
       $total = array_sum($data['incidentTrends']['data']);
       foreach (array_slice($data['incidentTrends']['labels'], 0, 100) as $index => $type): 
-        $percentage = $total > 0 ? round(($data['incidentTrends']['data'][$index] / $total) * 100, 1) : 0;
+        $percentage = $total > 0 ? round(($data['incidentTrends']['data'][$index] / $total) * 100, 1) : 0; // 1 is the need decimalplaces.
       ?>
         <tr>
           <td><?php echo htmlspecialchars($type); ?></td>
           <td><?php echo $data['incidentTrends']['data'][$index]; ?></td>
           <td><?php echo $percentage; ?>%</td>
         </tr>
+
       <?php endforeach; ?>
-      <?php if (count($data['incidentTrends']['labels']) > 5): ?>
+
+      <!-- <?php if (count($data['incidentTrends']['labels']) > 5): ?>
       
-      <?php endif; ?>
+      <?php endif; ?> -->
     </tbody>
   </table>
 </div>
     </div>
+    
 
     <!-- Compact Charts Row -->
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
