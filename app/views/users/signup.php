@@ -208,21 +208,7 @@
                         <label for="email">Email:</label>
                         <input type="email" name="email" id="email" value="<?php echo isset($data['email']) ? $data['email'] : ''; ?>">
                     </div>
-                    <div class="form-group">
-                        <label for="role">Role:</label>
-                        <select name="role" style="
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 1rem;
-    color: #333;
-    background-color: #fff;
-    transition: border-color 0.3s;" id="role">
-                            <option value="">Select Role</option>
-                            <option value="1">Resident</option>
-                        </select>
-                    </div>
+
                     <div class="form-group resident-only">
                         <label for="address">Address/House No:</label>
                         <input type="text" name="address" id="address" value="<?php echo isset($data['address']) ? $data['address'] : ''; ?>">
@@ -250,18 +236,7 @@
         <!-- <div class="form-image" style="background-image: url('<?php echo URLROOT; ?>/public/img/signup.jpg');"></div> -->
     </div>
 
-    <script>
-        // Show/hide the resident-only fields based on the selected role
-        const roleSelect = document.getElementById('role');
-        const residentOnlyFields = document.querySelectorAll('.resident-only');
-
-        roleSelect.addEventListener('change', () => {
-            residentOnlyFields.forEach(field => {
-                field.style.display = roleSelect.value === '1' ? 'block' : 'none';
-            });
-        });
-    </script>
-
+   
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 </body>
 

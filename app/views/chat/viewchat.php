@@ -269,9 +269,11 @@
         // Add event listener for report button
 const reportButton = document.querySelector('.report-btn');
 if (reportButton) {
+    // Get the other user's name from PHP
+    const otherUserName = <?php echo json_encode(is_object($data['otherUser']) ? $data['otherUser']->name : $data['otherUser']['name']); ?>;
     reportButton.addEventListener('click', function() {
-        // Redirect to the chat/myreports section
-        window.location.href = '<?php echo URLROOT; ?>/chat/myreports';
+        // Redirect to the createreport page with the username as a query parameter
+        window.location.href = '<?php echo URLROOT; ?>/chat/createreport?user=' + encodeURIComponent(otherUserName);
     });
 }
     </script>

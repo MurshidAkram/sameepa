@@ -6,7 +6,8 @@ function isLoggedIn()
 {
     return isset($_SESSION['user_id']);
 }
-
+//This function checks if a user is logged in by verifying
+// the existence of a 'user_id' key in the session array.
 
 function flash($name = '', $message = '', $class = 'alert alert-info', $dismissible = false)
 {

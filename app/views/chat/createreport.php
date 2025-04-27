@@ -54,7 +54,7 @@
                 <form action="<?php echo URLROOT; ?>/chat/submitreport" method="POST" class="report-form">
                     <div class="form-group">
                         <label for="reported_user_message">Reported User or Message Identifier:</label>
-                        <input type="text" id="reported_user_message" name="reported_user_message" required>
+                        <input type="text" id="reported_user_message" name="reported_user_message" value="<?php echo isset($_GET['user']) ? htmlspecialchars($_GET['user']) : (isset($data['reported_user_message']) ? htmlspecialchars($data['reported_user_message']) : ''); ?>" required>
                         <small>e.g., Username, Message ID, or description of the message location.</small>
                         <?php if (!empty($data['reported_user_message_err'])) : ?>
                             <p class="error-message"><?php echo $data['reported_user_message_err']; ?></p>

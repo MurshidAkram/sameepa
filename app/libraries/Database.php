@@ -11,7 +11,7 @@ class Database
     private $statement;
     private $error;
 
-    public function __construct()
+    public function __construct()// Initializes the database connection using the provided host, user, password, and database name.
     {
         $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
 
@@ -32,7 +32,7 @@ class Database
     }
 
     //prepared statement
-    public function query($sql)
+    public function query($sql) //This method prepares a SQL query for execution using a PDO
     {
         $this->statement = $this->dbh->prepare($sql);
     }
@@ -60,7 +60,7 @@ class Database
     }
 
     //execute the prepared statement
-    public function execute()
+    public function execute()//This function executes a previously prepared SQL statement using PDO. It returns a boolean value indicating whether the execution was successful or not
     {
         return $this->statement->execute();
     }
@@ -85,22 +85,22 @@ class Database
     {
         return $this->statement->rowCount();
     }
-    public function lastInsertId()
+    public function lastInsertId()//This function returns the ID of the last record inserted into the database
     {
         return $this->dbh->lastInsertId();
     }
 
-    public function beginTransaction()
+    public function beginTransaction()//This method starts a database transaction using the PDO
     {
         return $this->dbh->beginTransaction();
     }
 
-    public function commit()
+    public function commit()//This method commits a database transaction.
     {
         return $this->dbh->commit();
     }
 
-    public function rollBack()
+    public function rollBack()// It essentially reverses all changes made during a database transaction.
     {
         return $this->dbh->rollBack();
     }

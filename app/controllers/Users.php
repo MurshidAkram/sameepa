@@ -62,6 +62,7 @@ class Users extends Controller
 
     public function createUserSession($user)
     {
+        //$_SESSION superglobal array
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_role_id'] = $user['role_id'];
@@ -123,7 +124,7 @@ class Users extends Controller
             if ($file['type'] != 'application/pdf') {
                 $data['errors'][] = 'Only PDF files are allowed';
             }
-
+            //It creates a $userData array with the sanitized input data.
             $userData = [
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -136,6 +137,9 @@ class Users extends Controller
             // Validate form input based on the selected role
             $this->validateSignupForm($data, $userData);
 
+
+            //If there are no errors, it
+            //proceeds to register the user by calling the registerUser method of the userModel.
             if (empty($data['errors'])) {
                 $fileContent = file_get_contents($file['tmp_name']);
 

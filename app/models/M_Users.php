@@ -426,8 +426,6 @@ class M_Users
 
         // Generate a token
         $token = bin2hex(random_bytes(32));
-        // Generate a token
-        $token = bin2hex(random_bytes(32));
 
         // Check if a token already exists for this user
         $this->db->query('SELECT * FROM password_resets WHERE user_id = :user_id');
@@ -435,11 +433,11 @@ class M_Users
         $existingToken = $this->db->single();
 
         if ($existingToken) {
-            // Update existing token, setting expires_at using SQL function
-            $this->db->query('UPDATE password_resets SET token = :token, expires_at = NOW() + INTERVAL 1 HOUR WHERE user_id = :user_id');
+            // Update existing token, setting expires_at using SQL function (MySQL/MariaDB compatible)
+            $this->db->query('UPDATE password_resets SET token = :token, expires_at = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE user_id = :user_id');
         } else {
-            // Create new token, setting expires_at using SQL function
-            $this->db->query('INSERT INTO password_resets (user_id, token, expires_at) VALUES (:user_id, :token, NOW() + INTERVAL 1 HOUR)');
+            // Create new token, setting expires_at using SQL function (MySQL/MariaDB compatible)
+            $this->db->query('INSERT INTO password_resets (user_id, token, expires_at, created_at) VALUES (:user_id, :token, DATE_ADD(NOW(), INTERVAL 1 HOUR), NOW())');
         }
 
         $this->db->bind(':user_id', $user['id']);
