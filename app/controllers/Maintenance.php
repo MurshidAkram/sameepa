@@ -35,13 +35,13 @@ class Maintenance extends Controller
     {
         // Get request counts by status
         $statusCounts = $this->maintenanceModel->getRequestCountsByStatus();
-        
+
         // Get request counts by type
         $requestTypeData = $this->maintenanceModel->getRequestCountsByType();
-        
+
         // Get completed request counts by type
         $completedRequestData = $this->maintenanceModel->getCompletedRequestCountsByType();
-    
+
         // Pass necessary data for the dashboard
         $data = [
             'user_id' => $_SESSION['user_id'],
@@ -51,7 +51,7 @@ class Maintenance extends Controller
             'requestTypeData' => $requestTypeData,
             'completedRequestData' => $completedRequestData
         ];
-    
+
         // Load the dashboard view
         $this->view('maintenance/dashboard', $data);
     }
@@ -176,160 +176,167 @@ class Maintenance extends Controller
 
 
 
-   
-//*****************************************resident requests****************************************************************************************************************** */
+
+    //*****************************************resident requests****************************************************************************************************************** */
 
 
-public function Resident_Requests() {
-    // Get all maintenance requests
-    $requests = $this->maintenanceModel->getAllRequests();
-    
-    // Get request history (completed/cancelled requests)
-   // $history = $this->maintenanceModel->getRequestHistory();
-    
-    // Get maintenance types for filter dropdown
-    $types = $this->maintenanceModel->getMaintenanceTypes();
-    
-    // Get statuses for filter dropdown
-    $statuses = $this->maintenanceModel->getStatuses();
-    
-    // Get maintenance staff for assign dropdown
-   // $staff = $this->maintenanceModel->getMaintenanceStaff();
-    
-    $data = [
-        'requests' => $requests,
-        //'history' => $history,
-        'types' => $types,
-        'statuses' => $statuses,
-       // 'staff' => $staff
-    ];
-    
-    $this->view('maintenance/Resident_Requests', $data);
-}
+    public function Resident_Requests()
+    {
+        // Get all maintenance requests
+        $requests = $this->maintenanceModel->getAllRequests();
 
+        // Get request history (completed/cancelled requests)
+        // $history = $this->maintenanceModel->getRequestHistory();
 
-public function getSpecializations() {
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        $specializations = $this->maintenanceModel->getSpecializations();
-        echo json_encode($specializations);
-    }
-}
+        // Get maintenance types for filter dropdown
+        $types = $this->maintenanceModel->getMaintenanceTypes();
 
-public function getStaffBySpecialization() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Get the JSON input
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        
-        $specialization = $data['specialization'];
-        $staff = $this->maintenanceModel->getStaffBySpecialization($specialization);
-        
-        echo json_encode($staff);
-    }
-}
+        // Get statuses for filter dropdown
+        $statuses = $this->maintenanceModel->getStatuses();
 
+        // Get maintenance staff for assign dropdown
+        // $staff = $this->maintenanceModel->getMaintenanceStaff();
 
-public function updateStatus() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        
         $data = [
-            'requestId' => trim($_POST['requestId']),
-            'statusId' => trim($_POST['statusId'])
+            'requests' => $requests,
+            //'history' => $history,
+            'types' => $types,
+            'statuses' => $statuses,
+            // 'staff' => $staff
         ];
-        
-        // Debug
-        error_log("Request ID: {$data['requestId']}, Status ID: {$data['statusId']}");
-        
-        if ($this->maintenanceModel->updateRequestStatus($data['requestId'], $data['statusId'])) {
-            echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+
+        $this->view('maintenance/Resident_Requests', $data);
+    }
+
+
+    public function getSpecializations()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $specializations = $this->maintenanceModel->getSpecializations();
+            echo json_encode($specializations);
+        }
+    }
+
+    public function getStaffBySpecialization()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get the JSON input
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+
+            $specialization = $data['specialization'];
+            $staff = $this->maintenanceModel->getStaffBySpecialization($specialization);
+
+            echo json_encode($staff);
+        }
+    }
+
+
+    public function updateStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'requestId' => trim($_POST['requestId']),
+                'statusId' => trim($_POST['statusId'])
+            ];
+
+            // Debug
+            error_log("Request ID: {$data['requestId']}, Status ID: {$data['statusId']}");
+
+            if ($this->maintenanceModel->updateRequestStatus($data['requestId'], $data['statusId'])) {
+                echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+            }
+        }
+    }
+
+    public function assignMaintainer()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get the JSON input
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+
+            if ($this->maintenanceModel->assignMaintainer($data['requestId'], $data['staffId'])) {
+                echo json_encode(['success' => true, 'message' => 'Maintainer assigned successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to assign maintainer']);
+            }
+        }
+    }
+
+    public function getRequestDetails($requestId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $request = $this->maintenanceModel->getRequestDetails($requestId);
+            if ($request) {
+                echo json_encode(['success' => true, 'request' => $request]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Request not found']);
+            }
+        }
+    }
+
+    public function updateRequest($requestId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'request_id' => $requestId,
+                'type_id' => trim($_POST['typeId']),
+                'description' => trim($_POST['description']),
+                'urgency_level' => trim($_POST['urgency'])
+            ];
+
+            // Validate data
+            $errors = [];
+            if (empty($data['type_id'])) {
+                $errors['typeId'] = 'Request type is required';
+            }
+            if (empty($data['description'])) {
+                $errors['description'] = 'Description is required';
+            }
+            if (empty($data['urgency_level'])) {
+                $errors['urgency'] = 'Urgency level is required';
+            }
+
+            if (!empty($errors)) {
+                echo json_encode(['success' => false, 'errors' => $errors]);
+                return;
+            }
+
+            if ($this->maintenanceModel->updateRequest($data)) {
+                echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update request']);
+            }
+        }
+    }
+
+    public function deleteRequest($requestId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Check if request exists and is not completed
+            $request = $this->maintenanceModel->getRequestDetails($requestId);
+            if (!$request) {
+                echo json_encode(['success' => false, 'message' => 'Request not found']);
+                return;
+            }
+
+            if ($request->status_id == 3) { // Assuming 3 is the status_id for completed
+                echo json_encode(['success' => false, 'message' => 'Cannot delete completed requests']);
+                return;
+            }
+
+            if ($this->maintenanceModel->deleteRequest($requestId)) {
+                echo json_encode(['success' => true, 'message' => 'Request deleted successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to delete request']);
+            }
         }
     }
 }
-
-public function assignMaintainer() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Get the JSON input
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        
-        if ($this->maintenanceModel->assignMaintainer($data['requestId'], $data['staffId'])) {
-            echo json_encode(['success' => true, 'message' => 'Maintainer assigned successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to assign maintainer']);
-        }
-    }
-}
-
-public function getRequestDetails($requestId) {
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        $request = $this->maintenanceModel->getRequestDetails($requestId);
-        if ($request) {
-            echo json_encode(['success' => true, 'request' => $request]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Request not found']);
-        }
-    }
-}
-
-public function updateRequest($requestId) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        
-        $data = [
-            'request_id' => $requestId,
-            'type_id' => trim($_POST['typeId']),
-            'description' => trim($_POST['description']),
-            'urgency_level' => trim($_POST['urgency'])
-        ];
-        
-        // Validate data
-        $errors = [];
-        if (empty($data['type_id'])) {
-            $errors['typeId'] = 'Request type is required';
-        }
-        if (empty($data['description'])) {
-            $errors['description'] = 'Description is required';
-        }
-        if (empty($data['urgency_level'])) {
-            $errors['urgency'] = 'Urgency level is required';
-        }
-        
-        if (!empty($errors)) {
-            echo json_encode(['success' => false, 'errors' => $errors]);
-            return;
-        }
-
-        if ($this->maintenanceModel->updateRequest($data)) {
-            echo json_encode(['success' => true, 'message' => 'Request updated successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update request']);
-        }
-    }
-}
-
-public function deleteRequest($requestId) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Check if request exists and is not completed
-        $request = $this->maintenanceModel->getRequestDetails($requestId);
-        if (!$request) {
-            echo json_encode(['success' => false, 'message' => 'Request not found']);
-            return;
-        }
-
-        if ($request->status_id == 3) { // Assuming 3 is the status_id for completed
-            echo json_encode(['success' => false, 'message' => 'Cannot delete completed requests']);
-            return;
-        }
-
-        if ($this->maintenanceModel->deleteRequest($requestId)) {
-            echo json_encode(['success' => true, 'message' => 'Request deleted successfully']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to delete request']);
-        }
-    }
-}
-}
-   

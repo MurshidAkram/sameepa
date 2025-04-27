@@ -204,4 +204,18 @@ class M_Polls
             return false;
         }
     }
+
+    public function unvotedPolls($userID)
+    {
+        $this->db->query('SELECT p.*, u.name as creator_name 
+                     FROM polls p
+                     JOIN users u ON p.created_by = u.id
+                     WHERE p.id NOT IN (
+                         SELECT poll_id FROM poll_votes WHERE user_id = :user_id
+                     )
+                     AND p.end_date >= CURDATE()
+                     ORDER BY p.created_at DESC');
+        $this->db->bind(':user_id', $userID);
+        return $this->db->resultSet();
+    }
 }

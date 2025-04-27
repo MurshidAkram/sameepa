@@ -39,32 +39,28 @@
                     <table class="bookings-table">
                         <tr>
                             <th>Time</th>
-                            <th>Gym</th>
-                            <th>Pool</th>
-                            <th>Tennis Court</th>
+                            <th>Facility</th>
+                            <th>Duration (hrs)</th>
+                            <th>Booked By</th>
                         </tr>
                         <?php if (!empty($data['bookings'])): ?>
                             <?php foreach ($data['bookings'] as $booking): ?>
                                 <tr>
                                     <td><?php echo date('H:i', strtotime($booking->time)); ?></td>
-                                    <td><?php echo ($booking->gym > 0) ? $booking->gym : '-'; ?></td>
-                                    <td><?php echo ($booking->pool > 0) ? $booking->pool : '-'; ?></td>
-                                    <td><?php echo ($booking->tennis > 0) ? $booking->tennis : '-'; ?></td>
+                                    <td><?php echo htmlspecialchars($booking->facility_name); ?></td>
+                                    <td><?php echo htmlspecialchars($booking->duration); ?></td>
+                                    <td><?php echo htmlspecialchars($booking->booked_by); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="4">No bookings for today</td>
+                                <td colspan="4"> for today</td>
                             </tr>
                         <?php endif; ?>
                     </table>
                 </div>
 
-                <!-- Payment Card -->
-                <div class="card payment-card">
-                    <h2>Monthly Payments</h2>
-                    <canvas id="paymentChart"></canvas>
-                </div>
+               
 
                 <!-- Announcements Card -->
                 <!-- Announcements Card -->
@@ -81,13 +77,6 @@
                     </ul>
                 </div>
 
-                <!-- Complaints Chart -->
-                <!-- <div class="bar-chart-container">
-                        <h2>Complaints Status</h2>
-                        <canvas id="monthlyComplaintsChart"></canvas>
-                    </div> -->
-
-                <!-- Events Card -->
                 <div class="card events-card">
                     <h2>Today's Events</h2>
                     <ul>
@@ -108,6 +97,27 @@
                     </ul>
                 </div>
 
+
+                <div class="card complaint-card">
+                    <h2>Complaints</h2>
+                    <ul>
+                        <?php if (!empty($data['complaints'])): ?>
+                            <?php foreach ($data['complaints'] as $complaint): ?>
+                                <li>
+                                    <span class="complaint-title">
+                                        <?php echo htmlspecialchars($complaint->title ?? 'No Title'); ?>
+                                    </span>
+                                    <span class="complaint-time">
+                                        <?php echo htmlspecialchars($complaint->status ?? 'TBD'); ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li>No complaints </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+
             </div>
             </section>
         </main>
@@ -115,52 +125,6 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <!-- <script>
-        // Complaints Chart
-        const complaintsData = <?php echo json_encode($data['complaintsStats'] ?? []); ?>;
-        const barCtx = document.getElementById('monthlyComplaintsChart').getContext('2d');
-        new Chart(barCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Number of Complaints',
-                    data: complaintsData,
-                    backgroundColor: '#6a006a'
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        }); -->
-
-    // Payment Chart
-    const paymentStats = <?php echo json_encode($data['payments'] ?? ['paid' => 0, 'unpaid' => 0]); ?>;
-    const paymentCtx = document.getElementById('paymentChart').getContext('2d');
-    new Chart(paymentCtx, {
-    type: 'pie',
-    data: {
-    labels: ['Paid', 'Unpaid'],
-    datasets: [{
-    data: [paymentStats.paid, paymentStats.unpaid],
-    backgroundColor: ['#800080', '#e0e0e0']
-    }]
-    },
-    options: {
-    responsive: true,
-    plugins: {
-    legend: {
-    position: 'bottom'
-    }
-    }
-    }
-    });
-    </script>
 </body>
 
 </html>

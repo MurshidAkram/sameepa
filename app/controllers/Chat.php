@@ -51,12 +51,15 @@ class Chat extends Controller {
     
                 $lastMessage = $this->chatModel->getLastMessageByChatId($chat->id);
                 $unreadCount = $this->chatModel->getUnreadMessageCount($chat->id, $userId);
+                // Fetch profile picture for the other user
+                $profilePic = $this->chatModel->getProfileImage($otherUserId);
     
                 $chatData[] = [
                     'chat' => $chat,
                     'otherUser' => $otherUser,
                     'lastMessage' => $lastMessage,
-                    'unreadCount' => $unreadCount
+                    'unreadCount' => $unreadCount,
+                    'profilePic' => $profilePic // Pass the raw binary data
                 ];
             }
         }
@@ -68,7 +71,6 @@ class Chat extends Controller {
     
         $this->view('chat/index', $data);
     }
-    
     
     
     public function search() {
@@ -201,28 +203,34 @@ public function declineRequest()
 }
 
     
-    public function viewChat($userId) {
-        $chat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);
-        
-        if (!$chat) {
-            $chatId = $this->chatModel->createChat($_SESSION['user_id'], $userId);
-            $chat = $this->chatModel->getChatById($chatId);
-        }
-        
-        $otherUser = $this->userModel->getUserById($userId);
-        $chat_id = is_object($chat) ? $chat->id : $chat['id'];
-        $messages = $this->chatModel->getMessagesByChatId($chat_id);
-        $this->chatModel->markMessagesAsRead($chat_id, $_SESSION['user_id']);
-        
-        $data = [
-            'title' => 'Chat with ' . $otherUser['name'],
-            'chat' => $chat,
-            'otherUser' => $otherUser,
-            'messages' => $messages
-        ];
-        
-        $this->view('chat/viewChat', $data);
+public function viewChat($userId) {
+    $chat = $this->chatModel->getChatByUsers($_SESSION['user_id'], $userId);
+    
+    if (!$chat) {
+        $chatId = $this->chatModel->createChat($_SESSION['user_id'], $userId);
+        $chat = $this->chatModel->getChatById($chatId);
     }
+    
+    $otherUser = $this->userModel->getUserById($userId);
+    $chat_id = is_object($chat) ? $chat->id : $chat['id'];
+    $messages = $this->chatModel->getMessagesByChatId($chat_id);
+    $this->chatModel->markMessagesAsRead($chat_id, $_SESSION['user_id']);
+    
+    // Fetch the profile picture for the other user
+  // In viewChat method in Chat.php
+$profilePic = $this->chatModel->getProfileImage($userId);
+error_log('Profile pic for user ' . $userId . ': ' . (empty($profilePic) ? 'EMPTY' : 'EXISTS - size: ' . strlen($profilePic) . ' bytes'));
+    
+    $data = [
+        'title' => 'Chat with ' . (is_object($otherUser) ? $otherUser->name : $otherUser['name']),
+        'chat' => $chat, // Fixed typo: $check -> $chat
+        'otherUser' => $otherUser,
+        'messages' => $messages,
+        'profilePic' => $profilePic // Pass the raw binary data
+    ];
+    
+    $this->view('chat/viewChat', $data);
+}
     
     public function sendMessage() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -253,35 +261,32 @@ public function declineRequest()
     }
     
     public function image($userId) {
-        $user = $this->userModel->getUserById($userId);
-
-        if ($user && !empty($user->profile_picture)) {
-            $filePath = APPROOT . '/public/' . $user->profile_picture;
-
-            if (file_exists($filePath)) {
-                $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-                $contentType = 'image/jpeg'; // Default
-                switch (strtolower($fileExtension)) {
-                    case 'png':
-                        $contentType = 'image/png';
-                        break;
-                    case 'gif':
-                        $contentType = 'image/gif';
-                        break;
-                    // Add other image types if needed
-                }
-                header('Content-Type: ' . $contentType);
-                readfile($filePath);
-                exit(); // Stop further execution
-            } else {
-                // Log the missing file path for debugging
-                error_log("Profile picture file not found at path: " . $filePath);
+        // Get profile image data from the database
+        $profilePic = $this->chatModel->getProfileImage($userId);
+        
+        if ($profilePic && strlen($profilePic) > 0) {
+            // Try to determine image type
+            $imageData = @getimagesizefromstring($profilePic);
+            
+            if ($imageData !== false) {
+                header('Content-Type: ' . $imageData['mime']);
+                echo $profilePic;
+                exit;
             }
         }
-        // If user or profile picture is empty, or file doesn't exist, redirect to default
-        redirect('img/default.png');
-    }
     
+        // Serve the default image if no profile picture is found
+        $defaultImagePath = APPROOT . '/public/img/user-avatar.png';
+        if (file_exists($defaultImagePath)) {
+            header('Content-Type: image/png');
+            readfile($defaultImagePath);
+            exit;
+        }
+    
+        // If default image doesn't exist, return a 404
+        header('HTTP/1.1 404 Not Found');
+        exit('Default image not found');
+    }
     // Update message
 public function updateMessage() {
     if ($_SERVER['REQUEST_METHOD'] != 'POST') {

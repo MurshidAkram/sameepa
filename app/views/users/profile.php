@@ -80,7 +80,7 @@
                     ?>
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input type="text" name="address" id="address" value="<?php echo $data['address']; ?>">
+                            <input type="text" name="address" id="address" value="<?php echo $data['address']; ?> " readonly>
                         </div>
                         <div class="form-group">
                             <label for="phonenumber">Phone Number:</label>

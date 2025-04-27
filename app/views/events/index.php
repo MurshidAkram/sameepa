@@ -11,7 +11,26 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/events/events.css">
     <title>Community Events | <?php echo SITENAME; ?></title>
 </head>
+<style>
+    .event-badge {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
 
+    .event-badge.ended {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .event-badge.active {
+        background-color: #e3f2fd;
+        color: #1565c0;
+    }
+</style>
 
 <body>
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
@@ -44,7 +63,6 @@
 
             <div class="events-content">
                 <h1>Community Events</h1>
-                <!-- In index.php view, add this after the <h1> tag -->
                 <form class="events-search" method="GET" action="<?php echo URLROOT; ?>/events">
 
                     <input
@@ -64,7 +82,16 @@
                                     alt="<?php echo $event->title; ?>">
                             </div>
                             <div class="event-details">
-                                <h3 class="event-title"><?php echo $event->title; ?></h3>
+                                <h3 class="event-title">
+                                    <?php echo $event->title; ?>
+                                    <?php if (!$event->is_active): ?>
+                                        <span class="event-badge ended">Event Ended</span>
+                                    <?php else: ?>
+                                        <span class="event-badge active">Event Active</span>
+
+                                        <? ?>
+                                    <?php endif; ?>
+                                </h3>
                                 <div class="event-info">
                                     <p class="event-date">
                                         <i class="fas fa-calendar"></i>
@@ -111,7 +138,6 @@
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-    <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script>
         function deleteEvent(eventId) {

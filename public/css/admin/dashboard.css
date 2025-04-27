@@ -1,158 +1,301 @@
 /* dashboard.css */
 
-/* General styling for the dashboard page */
+/* General styling */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f8f8ff;
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .dashboard-container {
     display: flex;
+    flex: 1;
+    min-height: calc(100vh - 60px);
 }
 
 main {
-    width: 100%;
-    padding: 20px;
-    background-color: white;
-    color: #4d4d4d;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    overflow: auto;
+    margin-bottom: 2rem;
 }
 
-h1 {
+/* Dashboard Header */
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
     color: #800080;
+    font-size: 2rem;
+    margin: 0;
 }
 
-.user-count {
-    position: absolute;
-    top: 150px; /* Adjust this value based on your navbar height */
-    right: 20px;
-    background-color: #FCC4F0;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    border: 2px solid #800080; /* Add this line for the border */
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.user-count {
-    display: block;
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
+/* Dashboard Grid */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    min-height: 600px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 2rem;
 }
 
+/* Card Styles */
 .card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    border: 2px solid #000000;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 0;
+    overflow: hidden;
 }
 
 .card h2 {
-    color: #800080;
-    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.25rem;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f0f0f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.card:hover,
-.bar-chart-container,
-.user-count:hover {
-    transform: translateY(-5px);
-}
-
-  .payment-card {
-    grid-column: 3;
-    grid-row: 1 ;
-      text-align: center;
-      width: 90%;
-  }
-
-  .payment-details {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-  }
-
-  .payment-card:hover .payment-details {
-      display: block;
-  }
-
-.bookings-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.bookings-table th, .bookings-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-.bookings-table th {
-    background-color: #800080;
-    color: white;
-}
-
-.bookings-table .booked {
-    background-color: #47df20;
-    font-weight: bold;
-}
-
-.announcements-card ul, .events-card ul {
-    list-style-type: none;
+/* Lists */
+.card ul {
+    list-style: none;
     padding: 0;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
-.announcements-card li, .events-card li {
-    margin-bottom: 10px;
-    padding: 5px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-}
-
-.events-card li {
+.card li {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.event-time {
-    font-weight: bold;
-    color: #800080;
-}
-
-.bar-chart-container {
-    width: 100%;
-    height: 350px;
-    background-color: #f0f0f0;
-    padding: 25px;
+    min-height: 0;
+    margin-bottom: 0.5rem;
     border-radius: 8px;
-    box-sizing: border-box;
-    border: 2px solid #000000;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: #eaf5ff;
 }
 
-.bar-chart-container h2 {
-    color: #800080;
+.card li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
 }
 
-.bookings-card {
-    grid-column: 1 / span 2;
+/* Event Styles */
+.event-title {
+    font-weight: 500;
+    color: #2c3e50;
+    flex: 1;
+    margin-right: 1rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 4px;
 }
 
-.announcements-card,
+.event-datetime {
+    font-size: 0.875rem;
+    color: #6c757d;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-radius: 4px;
+}
+
+/* Stats Content */
+.stats-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: auto;
+    min-height: 0;
+}
+
+.stat-item {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    min-height: 0;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Card Background Gradients */
+.announcements-card {
+    border: 2px solid #F1BA88;
+    background-color: #f6e8db;
+}
+
 .events-card {
-    grid-column: auto;
+    border: 2px solid #03A791;
+    background-color: #bfe8e3;
+}
+
+.facilities-card {
+    border : 2px solid #d1b2c2;
+    background-color: #e8cddb   ;
+}
+
+.complaints-card {
+    border: 2px solid #d3b1b1;
+    background-color: #f3dada;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        min-height: auto;
+        gap: 2rem;
+    }
+
+    .stats-content {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        min-height: 200px;
+        margin-bottom: 1rem;
+    }
+
+    main {
+        padding: 1.5rem;
+    }
+}
+
+/* Enhance the facilities card to accommodate the new list */
+.facilities-card {
+    min-height: 300px;
+}
+
+.no-bookings-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    text-align: center;
+}
+
+.no-bookings-message p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Complaints Lists */
+.complaints-lists {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.complaints-card h2{
+    text-align: center;
+}
+
+.complaints-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.complaints-section h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.complaints-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.complaints-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #eaf5ff;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.complaint-title {
+    font-weight: 500;
+    color: #2c3e50;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.complaint-date {
+    font-size: 0.85rem;
+    color: #666;
+    white-space: nowrap;
+}
+
+.no-complaints {
+    color: #6c757d;
+    text-align: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .complaints-lists {
+        flex-direction: column;
+    }
+    
+    .complaints-section {
+        margin-bottom: 20px;
+    }
+    
+    .complaints-section:last-child {
+        margin-bottom: 0;
+    }
 }
