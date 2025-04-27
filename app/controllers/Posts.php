@@ -306,4 +306,61 @@ class Posts extends Controller
         }
         exit;
     }
+
+    public function reportPost($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'post_id' => $id,
+                'reported_by' => $_SESSION['user_id'],
+                'reason' => trim($_POST['reason'])
+            ];
+
+            if ($this->postModel->createReport($data)) {
+                redirect("posts/index");
+            } else {
+                die('Something went wrong.');
+            }
+        } else {
+            $data = [
+                'post_id' => $id
+            ];
+            $this->view('posts/reportPost', $data);
+        }
+    }
+
+    public function reported_posts()
+    {
+        // Check if user has admin or super admin role
+        if ($_SESSION['user_role_id'] >= 2) {
+            $reported_posts = $this->postModel->getReportedPosts();
+            $data = [
+                'reported_posts' => $reported_posts
+            ];
+            $this->view('posts/reported_posts', $data);
+        } else {
+            // flash('error', 'Unauthorized access');
+            redirect('posts/index');
+        }
+    }
+
+    public function ignore_report($id)
+    {
+        // Check if user has admin or super admin role
+        if ($_SESSION['user_role_id'] >= 2) {
+            if ($this->postModel->ignoreReport($id)) {
+                //flash('comment_message', 'Report ignored successfully.');
+                if ($_SESSION['user_role_id'] == 2) {
+                    redirect('posts/reported_posts');
+                } else {
+                    redirect('posts/reported_posts');
+                }
+            } else {
+                die('Something went wrong.');
+            }
+        } else {
+            //flash('error', 'Unauthorized access');
+            redirect('posts/reported_posts');
+        }
+    }
 }

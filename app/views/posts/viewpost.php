@@ -69,18 +69,20 @@
                             </button>
                         </div>
 
-                        <?php if ($data['is_creator'] || $data['is_admin']) : ?>
-                            <div class="post-management">
+                        <div class="post-management">
+                            <?php if ($data['is_creator']) : ?>
                                 <a href="<?php echo URLROOT; ?>/posts/update/<?php echo $data['post']['id']; ?>"
                                     class="btn btn-edit">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
+                            <?php elseif ($data['is_admin']) : ?>
                                 <button class="btn btn-delete delete-post"
                                     data-post-id="<?php echo $data['post']['id']; ?>">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
-                            </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+
                     </div>
                 </div>
 
@@ -179,7 +181,7 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        window.location.href = '<?php echo URLROOT; ?>/posts';
+                        window.location.href = '<?php echo URLROOT; ?>/posts/index';
                     } else {
                         alert(data.message || 'Failed to delete post');
                     }

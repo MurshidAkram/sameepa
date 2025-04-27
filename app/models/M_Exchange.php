@@ -170,7 +170,7 @@ class M_Exchange
             SELECT l.*, u.name AS posted_by_name, r.phonenumber AS number
             FROM listings l
             JOIN users u ON l.posted_by = u.id
-            JOIN residents r ON u.id = r.user_id
+            LEFT JOIN residents r ON u.id = r.user_id
             WHERE l.id = :id AND l.is_deleted != 1
         ');
         $this->db->bind(':id', $id);

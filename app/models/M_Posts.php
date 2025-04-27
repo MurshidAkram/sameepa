@@ -106,7 +106,7 @@ class M_Posts
 
             // Delete all reports for comments on this post
             $this->db->query('DELETE pr FROM post_reports pr
-                             INNER JOIN post_comments pc ON pr.post_comment_id = pc.id
+                             INNER JOIN post_comments pc ON pr.post_id = pc.id
                              WHERE pc.post_id = :id');
             $this->db->bind(':id', $id);
             $this->db->execute();
@@ -217,7 +217,7 @@ class M_Posts
             $this->db->beginTransaction();
 
             // Delete reports first
-            $this->db->query('DELETE FROM post_reports WHERE post_comment_id = :id');
+            $this->db->query('DELETE FROM post_reports WHERE post_id = :id');
             $this->db->bind(':id', $id);
             $this->db->execute();
 
@@ -258,5 +258,80 @@ class M_Posts
         $this->db->query('SELECT * FROM post_comments WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->single();
+    }
+
+
+
+    public function createReport($data)
+    {
+        // Start transaction
+        $this->db->beginTransaction();
+
+        try {
+            $this->db->query('INSERT INTO post_reports (post_id, reported_by, reason)
+                            VALUES(:post_id, :reported_by, :reason)');
+            $this->db->bind(':post_id', $data['post_id']);
+            $this->db->bind(':reported_by', $data['reported_by']);
+            $this->db->bind(':reason', $data['reason']);
+
+            $this->db->execute();
+
+            $this->db->query("UPDATE posts SET is_reported = 1 
+                             WHERE id = :post_id");
+            $this->db->bind(':post_id', $data['post_id']);
+            $this->db->execute();
+
+            // Commit transaction
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->rollback();
+            return false;
+        }
+    }
+
+    public function getReportedPosts()
+    {
+        $this->db->query("SELECT p.*, 
+                     u1.name AS author_name, 
+                     u2.name AS reporter_name,
+                     pr.id AS report_id, 
+                     pr.reason, 
+                     pr.reported_by, 
+                     pr.created_at AS report_date
+                     FROM posts p
+                     INNER JOIN post_reports pr ON p.id = pr.post_id
+                     JOIN users u1 ON p.created_by = u1.id
+                     JOIN users u2 ON pr.reported_by = u2.id
+                     WHERE p.is_reported = 1
+                     ORDER BY pr.created_at DESC");
+        return $this->db->resultSet();
+    }
+
+    public function ignoreReport($id)
+    {
+        // Start transaction
+        $this->db->beginTransaction();
+
+        try {
+            // Update the reported flag in posts
+            $this->db->query("UPDATE posts SET is_reported = 0 WHERE id = :id");
+            $this->db->bind(':id', $id);
+            $this->db->execute();
+
+            // Delete the report from post_reports
+            $this->db->query("DELETE FROM post_reports WHERE post_id = :id");
+            $this->db->bind(':id', $id);
+            $this->db->execute();
+
+            // Commit transaction
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->rollback();
+            return false;
+        }
     }
 }

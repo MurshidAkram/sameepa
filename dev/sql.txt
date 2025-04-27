@@ -116,6 +116,9 @@ CREATE TABLE posts (
 FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
 );
 
+ ALTER TABLE posts ADD is_reported BOOLEAN DEFAULT FALSE;
+
+
 CREATE TABLE post_reactions (
   id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   post_id int(11) NOT NULL,
@@ -127,7 +130,6 @@ CREATE TABLE post_reactions (
   UNIQUE KEY unique_reaction (post_id, user_id)
 );
 
--- First fix the post_comments table
 CREATE TABLE post_comments (
   id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   post_id int(11) NOT NULL,
@@ -140,15 +142,17 @@ CREATE TABLE post_comments (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE post_reports (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  post_comment_id INT NOT NULL,
-  reported_by INT NOT NULL,
-  reason TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (post_comment_id) REFERENCES post_comments(id) ON DELETE CASCADE,
-  FOREIGN KEY (reported_by) REFERENCES users(id) ON DELETE CASCADE
-);
+CREATE TABLE post_reports ( 
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    post_id INT NOT NULL, 
+    reported_by INT NOT NULL, 
+    reason TEXT NOT NULL, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE, 
+    FOREIGN KEY (reported_by) REFERENCES users(id) ON DELETE CASCADE 
+    );
+
+
 INSERT INTO Users (name, age)VALUES('murshid', 21);
 INSERT INTO Users (name, age)VALUES('amjad', 19);
 INSERT INTO Users (name, age)VALUES('polly', 3);

@@ -1,6 +1,7 @@
 <!-- app/views/chat/viewChat.php -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,36 +41,37 @@
                     </a>
                     <div class="name-card">
                         <div class="name-image">
-                            <?php 
+                            <?php
                             $otherUserId = is_object($data['otherUser']) ? $data['otherUser']->id : $data['otherUser']['id'];
                             $otherUserName = is_object($data['otherUser']) ? $data['otherUser']->name : $data['otherUser']['name'];
                             $profilePic = $data['profilePic'];
                             ?>
-                            
-                            <!-- Replace the current profile picture code with this -->
-<?php if (!empty($profilePic)): ?>
-    <img src="<?php echo URLROOT; ?>/chat/image/<?php echo $otherUserId; ?>" 
-         alt="Profile of <?php echo htmlspecialchars($otherUserName); ?>" 
-         style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #eaeaea;">
-<?php else: ?>
-    <div class="profile-image" 
-         style="background-color: #DDD; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;">
-        <span style="font-size: 16px; color: #888;"><?php echo strtoupper(substr($otherUserName, 0, 1)); ?></span>
-    </div>
-<?php endif; ?>
+
+                            <?php if (!empty($profilePic)): ?>
+                                <img src="<?php echo URLROOT; ?>/chat/image/<?php echo $otherUserId; ?>"
+                                    alt="Profile of <?php echo htmlspecialchars($otherUserName); ?>"
+                                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #eaeaea;">
+                            <?php else: ?>
+                                <div class="profile-image"
+                                    style="background-color: #DDD; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%;">
+                                    <span style="font-size: 16px; color: #888;"><?php echo strtoupper(substr($otherUserName, 0, 1)); ?></span>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <h3 class="title"><?php echo htmlspecialchars($otherUserName); ?></h3>
                     </div>
-                    <button class="icon-btn report-btn" title="Report User" aria-label="View my reports">
-        <i class="fas fa-flag"></i>
-    </button>
+                    <?php if ($_SESSION['user_id'] != $otherUserId && $_SESSION['user_role_id'] != 3): ?>
+                        <button class="icon-btn report-btn" title="Report User" aria-label="View my reports">
+                            <i class="fas fa-flag"></i>
+                        </button>
+                    <?php endif; ?>
                 </div>
 
                 <div class="chat-messages" id="chat-messages">
                     <?php foreach ($data['messages'] as $message): ?>
                         <?php
-                            $isSender = ($message->sender_id == $_SESSION['user_id']);
-                            $rowClass = $isSender ? 'sent' : 'received';
+                        $isSender = ($message->sender_id == $_SESSION['user_id']);
+                        $rowClass = $isSender ? 'sent' : 'received';
                         ?>
                         <div class="message-row <?php echo $rowClass; ?>" data-message-id="<?php echo $message->id; ?>">
                             <div class="message-bubble">
@@ -95,7 +97,7 @@
                         </div>
                     <?php endforeach; ?>
                 </div>
-                    
+
                 <form class="chat-form" action="<?php echo URLROOT; ?>/chat/sendMessage" method="POST">
                     <input type="hidden" name="chat_id" value="<?php echo is_object($data['chat']) ? $data['chat']->id : $data['chat']['id']; ?>">
                     <input type="hidden" name="recipient_id" value="<?php echo is_object($data['otherUser']) ? $data['otherUser']->id : $data['otherUser']['id']; ?>">
@@ -165,46 +167,46 @@
 
                         // Send update request
                         fetch('<?php echo URLROOT; ?>/chat/updateMessage', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                messageId: messageId,
-                                newMessage: newMessage
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    messageId: messageId,
+                                    newMessage: newMessage
+                                })
                             })
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok: ' + response.statusText);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                // Update the UI
-                                messageContent.innerHTML = newMessage;
-                                const messageMeta = messageRow.querySelector('.message-meta');
-                                if (messageMeta) {
-                                    if (!messageMeta.querySelector('.message-edited')) {
-                                        const editedSpan = document.createElement('span');
-                                        editedSpan.className = 'message-edited';
-                                        editedSpan.textContent = 'edited';
-                                        const timeSpan = messageMeta.querySelector('.message-time');
-                                        messageMeta.insertBefore(editedSpan, timeSpan);
-                                        messageMeta.insertBefore(document.createTextNode(' '), timeSpan);
-                                    }
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok: ' + response.statusText);
                                 }
-                            } else {
-                                alert(data.message || 'Failed to update message');
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    // Update the UI
+                                    messageContent.innerHTML = newMessage;
+                                    const messageMeta = messageRow.querySelector('.message-meta');
+                                    if (messageMeta) {
+                                        if (!messageMeta.querySelector('.message-edited')) {
+                                            const editedSpan = document.createElement('span');
+                                            editedSpan.className = 'message-edited';
+                                            editedSpan.textContent = 'edited';
+                                            const timeSpan = messageMeta.querySelector('.message-time');
+                                            messageMeta.insertBefore(editedSpan, timeSpan);
+                                            messageMeta.insertBefore(document.createTextNode(' '), timeSpan);
+                                        }
+                                    }
+                                } else {
+                                    alert(data.message || 'Failed to update message');
+                                    messageContent.innerHTML = currentText;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error updating message:', error);
+                                alert('An error occurred while updating the message: ' + error.message);
                                 messageContent.innerHTML = currentText;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error updating message:', error);
-                            alert('An error occurred while updating the message: ' + error.message);
-                            messageContent.innerHTML = currentText;
-                        });
+                            });
                     });
 
                     // Add event listener to cancel button
@@ -225,55 +227,56 @@
                         const messageId = formData.get('message_id');
 
                         fetch(this.action, {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => {
-                            const contentType = response.headers.get('content-type');
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => {
+                                const contentType = response.headers.get('content-type');
 
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok: ' + response.statusText);
-                            }
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok: ' + response.statusText);
+                                }
 
-                            if (contentType && contentType.includes('application/json')) {
-                                return response.json();
-                            } else {
-                                return response.text().then(text => {
-                                    console.error('Unexpected response (not JSON):', text);
-                                    throw new Error('Unexpected response from server.');
-                                });
-                            }
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                messageRow.style.transition = 'opacity 0.3s, transform 0.3s';
-                                messageRow.style.opacity = '0';
-                                messageRow.style.transform = 'translateX(20px)';
-                                
-                                setTimeout(() => {
-                                    messageRow.remove();
-                                }, 300);
-                            } else {
-                                alert(data.message || 'Failed to delete message');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error deleting message:', error);
-                            alert('An error occurred while deleting the message: ' + error.message);
-                        });
+                                if (contentType && contentType.includes('application/json')) {
+                                    return response.json();
+                                } else {
+                                    return response.text().then(text => {
+                                        console.error('Unexpected response (not JSON):', text);
+                                        throw new Error('Unexpected response from server.');
+                                    });
+                                }
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    messageRow.style.transition = 'opacity 0.3s, transform 0.3s';
+                                    messageRow.style.opacity = '0';
+                                    messageRow.style.transform = 'translateX(20px)';
+
+                                    setTimeout(() => {
+                                        messageRow.remove();
+                                    }, 300);
+                                } else {
+                                    alert(data.message || 'Failed to delete message');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error deleting message:', error);
+                                alert('An error occurred while deleting the message: ' + error.message);
+                            });
                     }
                 });
             });
         });
 
         // Add event listener for report button
-const reportButton = document.querySelector('.report-btn');
-if (reportButton) {
-    reportButton.addEventListener('click', function() {
-        // Redirect to the chat/myreports section
-        window.location.href = '<?php echo URLROOT; ?>/chat/myreports';
-    });
-}
+        const reportButton = document.querySelector('.report-btn');
+        if (reportButton) {
+            reportButton.addEventListener('click', function() {
+                // Redirect to the chat/myreports section
+                window.location.href = '<?php echo URLROOT; ?>/chat/myreports';
+            });
+        }
     </script>
 </body>
+
 </html>
