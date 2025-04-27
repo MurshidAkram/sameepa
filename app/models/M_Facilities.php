@@ -14,7 +14,7 @@ class M_Facilities
                          FROM facilities f 
                          LEFT JOIN admins a ON f.created_by = a.id
                          LEFT JOIN superadmins s ON f.created_by = s.id
-                         JOIN users u ON COALESCE(a.user_id, s.user_id) = u.id 
+                         LEFT JOIN users u ON COALESCE(a.user_id, s.user_id) = u.id 
                          ORDER BY f.created_at DESC');
         return $this->db->resultSet();
     }

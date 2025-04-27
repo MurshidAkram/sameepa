@@ -102,6 +102,7 @@
                                 </button>
                             <?php endif; ?>
                             <button id="groupChatButton" class="group-chat-button" 
+                                    style="display: <?php echo $data['isJoined'] ? 'block' : 'none'; ?>;"
                                     onclick="window.location.href='<?php echo URLROOT; ?>/groups/chat/<?php echo $data['group']['group_id']; ?>'">
                                 <i class="fas fa-comments"></i> Group Chat
                             </button>
@@ -135,6 +136,15 @@
                         
                         const memberCountElement = document.querySelector('.meta-item:nth-child(2) span');
                         memberCountElement.textContent = `${data.memberCount} Members`;
+
+                        const groupChatButton = document.getElementById('groupChatButton');
+                        if (groupChatButton) {
+                            if (!isJoined) {
+                                groupChatButton.style.display = 'block';
+                            } else {
+                                groupChatButton.style.display = 'none';
+                            }
+                        }
                     } else {
                         alert('Failed to update group participation. Please try again.');
                     }
