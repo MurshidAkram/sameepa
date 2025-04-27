@@ -168,7 +168,6 @@
     font-weight: 600;
 }
 
-/* Admin action buttons */
 .admin-actions {
     display: flex;
     gap: 1rem;
@@ -219,7 +218,6 @@
     margin-bottom: 1.5rem;
 }
 
-/* Enhanced Facility Cards with Images - New Design */
 .facilities-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -238,7 +236,7 @@
     flex-direction: column;
     height: 90%;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    padding-top: 5rem; /* Add padding to the top of the card */
+    padding-top: 5rem; 
 }
 
 .facility-card:hover {
@@ -423,7 +421,6 @@
     box-shadow: none;
 }
 
-/* Status badge position */
 .facility-card .status-badge {
     position: absolute;
     top: 1rem;

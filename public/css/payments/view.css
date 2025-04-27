@@ -46,7 +46,6 @@
     background: #9a009a;
 }
 
-/* Payment Details Card */
 .payment-details-card {
     background-color: white;
     border-radius: 8px;
@@ -75,7 +74,6 @@
     color: #333;
 }
 
-/* Payment Info Grid */
 .payment-info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -96,7 +94,6 @@
     color: #333;
 }
 
-/* User Details */
 .user-details h2 {
     font-size: 1.25rem;
     color: #333;

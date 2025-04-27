@@ -90,7 +90,7 @@
                     <tbody>
                         <?php if(isset($data['requests']) && !empty($data['requests'])): ?>
                             <?php 
-                            // Get only the first 5 records
+                            //only first 5 records
                             $recentRequests = array_slice($data['requests'], 0, 5);
                             foreach($recentRequests as $request): ?>
                             <tr>

@@ -106,7 +106,7 @@ class M_Groups
     {
         $this->db->query('SELECT COUNT(*) as member_count FROM group_members');
         $result = $this->db->single();
-        return (int)$result['member_count']; // Convert array access to integer return
+        return (int)$result['member_count']; //convert array access to integer return
     }
     
     public function getTotalDiscussionsCount() 
@@ -117,17 +117,14 @@ class M_Groups
     }
     
     public function deleteGroup($id) {
-        // First delete related records from group_members
         $this->db->query('DELETE FROM group_members WHERE group_id = :id');
         $this->db->bind(':id', $id);
         $this->db->execute();
 
-        // Then delete related records from groups_report
         $this->db->query('DELETE FROM groups_report WHERE group_id = :id');
         $this->db->bind(':id', $id);
         $this->db->execute();
 
-        // Finally delete the group
         $this->db->query('DELETE FROM groups WHERE group_id = :id');
         $this->db->bind(':id', $id);
         return $this->db->execute();
@@ -251,10 +248,8 @@ class M_Groups
         $this->db->query('SELECT * FROM group_chats WHERE id = :id');
         $this->db->bind(':id', $messageId);
         
-        // Return as an object for consistency
         $result = $this->db->single();
         
-        // If result is an array, convert it to an object
         if (is_array($result)) {
             $result = (object)$result;
         }
@@ -266,12 +261,10 @@ class M_Groups
         try {
             $this->db->beginTransaction();
             
-            // First remove any reports for this message
             $this->db->query('DELETE FROM reported_group_message WHERE message_id = :message_id');
             $this->db->bind(':message_id', $messageId);
             $this->db->execute();
             
-            // Then delete the message itself
             $this->db->query('DELETE FROM group_chats WHERE id = :id');
             $this->db->bind(':id', $messageId);
             $result = $this->db->execute();

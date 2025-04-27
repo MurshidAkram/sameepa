@@ -128,12 +128,11 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        // Update button state
+                        //button state
                         button.dataset.isJoined = !isJoined;
                         button.classList.toggle('joined');
                         button.textContent = isJoined ? 'Join Group' : 'Leave Group';
                         
-                        // Update member count with server-provided value
                         const memberCountElement = document.querySelector('.meta-item:nth-child(2) span');
                         memberCountElement.textContent = `${data.memberCount} Members`;
                     } else {

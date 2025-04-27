@@ -14,7 +14,6 @@
     
     <div class="dashboard-container">
         <?php 
-        // Load appropriate side panel based on user role
         switch($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -65,7 +64,6 @@
                 }
                 </script>
 
-                <!-- Add enctype attribute to the form -->
                 <form action="<?php echo URLROOT; ?>/facilities/create" method="POST" enctype="multipart/form-data" onsubmit="return validateFacilityForm()">
 
                     <div class="form-group">

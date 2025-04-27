@@ -10,6 +10,43 @@
     margin-bottom: 2rem;
 }
 
+/* Flash Message Styles */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert .close {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 1rem;
+}
+
+.alert .close:hover {
+    opacity: 0.7;
+}
+
 .search-container {
     display: flex;
     gap: 0.5rem;
@@ -168,7 +205,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     color: white;
-    text-decoration: none; /* Add this for anchor tags */
+    text-decoration: none; /* for anchor tags */
 }
 
 .fbtnbook.unavailable {
@@ -228,7 +265,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: #0056b3;  /* Different color to distinguish */
+    background: #0056b3; 
     color: white;
     border-radius: 4px;
     text-decoration: none;

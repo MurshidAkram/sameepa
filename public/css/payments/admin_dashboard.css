@@ -52,7 +52,6 @@
     font-size: 1.1rem;
 }
 
-/* Stats Cards */
 .payments-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -87,7 +86,6 @@
     color: #800080;
 }
 
-/* Single Chart Container */
 .single-chart-container {
     margin-bottom: 2rem;
     height: 400px;

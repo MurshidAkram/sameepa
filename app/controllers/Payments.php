@@ -21,20 +21,15 @@ class Payments extends Controller {
     public function index() {
         redirect('payments/requests');
     }
-    // Admin dashboard method
     public function admin_dashboard($page = 1) {
-        // Check if user is admin or superadmin
         if ($_SESSION['user_role_id'] != 3) {
             redirect('pages/index');
         }
         
-        // Get recent payment requests
         $requests = $this->paymentModel->getAllPaymentRequestsWithResidentNames();
         
-        // Get statistics for dashboard
         $monthlyData = $this->paymentModel->getMonthlyPaymentData();
         
-        // Get new statistics
         $mostActiveDay = $this->paymentModel->getMostActiveDayThisMonth();
         $requestsThisMonth = $this->paymentModel->getRequestCountThisMonth();
         $totalAmountThisMonth = $this->paymentModel->getTotalAmountThisMonth();
@@ -57,7 +52,6 @@ class Payments extends Controller {
             redirect('users/login');
         }
 
-        // Get payment request data
         $paymentRequest = $this->paymentModel->getPaymentRequestById($id);
         
         if (!$paymentRequest) {
@@ -65,17 +59,14 @@ class Payments extends Controller {
             redirect('payments/requests');
         }
 
-        // Get user's address
         $userAddress = $this->paymentModel->getResidentAddress($_SESSION['user_id']);
         if (!$userAddress) {
             flash('payment_error', 'You are not registered as a resident', 'alert alert-danger');
             redirect('payments/requests');
         }
 
-        // Convert address to string if it's an object
         $userAddressStr = is_object($userAddress) ? $userAddress->address : $userAddress['address'];
 
-        // Validate that the user's address matches the payment request address
         if ($userAddressStr !== $paymentRequest->address) {
             flash('payment_error', 'You are not authorized to pay this request', 'alert alert-danger');
             redirect('payments/requests');
@@ -86,8 +77,8 @@ class Payments extends Controller {
             redirect('payments/requests');
         }
 
-        // Get the amount in cents (Stripe requires amounts in smallest currency unit)
-        $amount = $paymentRequest->amount * 100; // Convert to cents
+        //amount in cents (Stripe requires amounts in smallest currency unit)
+        $amount = $paymentRequest->amount * 100;
 
         try {
             $paymentIntent = \Stripe\PaymentIntent::create([
@@ -124,7 +115,6 @@ class Payments extends Controller {
             $paymentIntent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
             
             if ($paymentIntent->status === 'succeeded') {
-                // Update payment request status
                 $paymentRequestId = $paymentIntent->metadata->payment_request_id;
                 $this->paymentModel->updatePaymentRequestStatus(
                     $paymentRequestId,
@@ -169,7 +159,6 @@ class Payments extends Controller {
                 $paymentIntent = $event->data->object;
                 // Handle successful payment
                 break;
-            // Add other event types as needed
             default:
                 // Unexpected event type
                 http_response_code(400);
@@ -179,8 +168,6 @@ class Payments extends Controller {
         http_response_code(200);
     }
     
-    // View a specific payment
-    // Change this method name from 'view' to 'viewPayment'
     public function viewPayment($id) {
         if (!isLoggedIn()) {
             redirect('users/login');
@@ -193,7 +180,6 @@ class Payments extends Controller {
             redirect('payments/requests');
         }
 
-        // Get user information
         $user = $this->userModel->getUserById($_SESSION['user_id']);
         
         $data = [
@@ -204,7 +190,6 @@ class Payments extends Controller {
         $this->view('payments/view', $data);
     }
 
-    // Generate payment receipt
     public function receipt($id) {
         if (!isLoggedIn()) {
             redirect('users/login');
@@ -217,7 +202,6 @@ class Payments extends Controller {
             redirect('payments/requests');
         }
 
-        // Get user information
         $user = $this->userModel->getUserById($_SESSION['user_id']);
         
         $data = [
@@ -228,25 +212,22 @@ class Payments extends Controller {
         $this->view('payments/receipt', $data);
     }
     
-    // Export payments data
     public function export() {
-        // Check if user is admin or superadmin
         if ($_SESSION['user_role_id'] != 3) {
             redirect('pages/index');
         }
         
         $payments = $this->paymentModel->getAllPaymentRequestsWithResidentNames();
         
-        // Set headers for CSV download
+        //headers for CSV download
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="payment_requests_export_' . date('Y-m-d') . '.csv"');
         
         $output = fopen('php://output', 'w');
         
-        // Add CSV headers
+        //add CSV headers
         fputcsv($output, ['ID', 'Address', 'Amount', 'Description', 'Due Date', 'Status', 'Created By', 'Created At', 'Paid At','Transaction ID']);
         
-        // Add data rows
         foreach ($payments as $payment) {
             fputcsv($output, [
                 $payment->id,
@@ -265,39 +246,13 @@ class Payments extends Controller {
         fclose($output);
         exit;
     }
-    
-    // Payment reports page
-    public function reports() {
-        // Check if user is admin or superadmin
-        if ($_SESSION['user_role_id'] != 3) {
-            redirect('pages/index');
-        }
-        
-        // Get statistics for reports
-        $stats = $this->paymentModel->getPaymentStatistics();
-        $monthlyData = $this->paymentModel->getMonthlyPaymentData();
-        $addressData = $this->paymentModel->getPaymentsByAddressData();
-        
-        $data = [
-            'total_amount' => $stats['total_amount'] ?? 0,
-            'completed_payments' => $stats['completed_count'] ?? 0,
-            'pending_payments' => $stats['pending_count'] ?? 0,
-            'failed_payments' => $stats['failed_count'] ?? 0,
-            'monthly_data' => $monthlyData,
-            'address_data' => $addressData
-        ];
-        
-        $this->view('payments/reports', $data);
-    }
 
     public function delete($id) {
-        // Check if user is admin or superadmin
         if ($_SESSION['user_role_id'] != 3) {
             redirect('pages/index');
         }
         
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Get request before deletion to check if it exists
             $request = $this->paymentModel->getPaymentRequestById($id);
             
             if (!$request) {
@@ -305,7 +260,6 @@ class Payments extends Controller {
                 redirect('payments/requests');
             }
             
-            // Delete request
             if ($this->paymentModel->deletePaymentRequest($id)) {
                 flash('payment_message', 'Payment request deleted successfully', 'alert alert-success');
             } else {
@@ -319,12 +273,10 @@ class Payments extends Controller {
     }
 
     public function all() {
-        // Check if user is admin or superadmin
         if ($_SESSION['user_role_id'] != 2 && $_SESSION['user_role_id'] != 3) {
             redirect('pages/index');
         }
         
-        // Get all payment requests with user information
         $requests = $this->paymentModel->getAllPaymentRequestsWithResidentNames();
         
         $data = [
@@ -333,17 +285,15 @@ class Payments extends Controller {
         
         $this->view('payments/all', $data);
     }
-    // Admin view to create payment requests
+
     public function create_request() {
         if ($_SESSION['user_role_id'] != 3) {
             redirect('pages/index');
         }
         
-        // Get all residents with their addresses
         $residents = $this->userModel->getResidentsWithAddresses();
         
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             
             $data = [
@@ -359,7 +309,6 @@ class Payments extends Controller {
                 'due_date_err' => ''
             ];
             
-            // Validate data
             if (empty($data['address'])) {
                 $data['address_err'] = 'Please select an address';
             }
@@ -376,7 +325,6 @@ class Payments extends Controller {
                 $data['due_date_err'] = 'Please select a due date';
             }
             
-            // Make sure no errors
             if (empty($data['address_err']) && empty($data['amount_err']) && 
                 empty($data['description_err']) && empty($data['due_date_err'])) {
                 
@@ -387,11 +335,9 @@ class Payments extends Controller {
                     die('Something went wrong');
                 }
             } else {
-                // Load view with errors
                 $this->view('payments/create_request', $data);
             }
         } else {
-            // Initialize data for GET request
             $data = [
                 'address' => '',
                 'amount' => '',
@@ -408,16 +354,12 @@ class Payments extends Controller {
         }
     }
     
-    // View all payment requests
     public function requests() {
-        // Check if user is logged in
         if (!isLoggedIn()) {
             redirect('users/login');
         }
 
-        // Get requests based on user role
         if ($_SESSION['user_role_id'] == 1) {
-            // For residents, get their address first
             $resident = $this->paymentModel->getResidentAddress($_SESSION['user_id']);
             if (!$resident) {
                 flash('payment_error', 'You are not registered as a resident', 'alert alert-danger');
@@ -426,7 +368,6 @@ class Payments extends Controller {
             $userAddress = is_array($resident) ? $resident['address'] : $resident->address;
             $requests = $this->paymentModel->getPendingRequestsByAddress($userAddress);
         } else {
-            // For admins, get all pending requests
             $requests = $this->paymentModel->getAllPendingRequests();
         }
 
@@ -437,14 +378,11 @@ class Payments extends Controller {
         $this->view('payments/requests', $data);
     }
     
-    // Process payment for a request
     public function pay_request($id) {
-        // Check if user is logged in
         if (!isLoggedIn()) {
             redirect('users/login');
         }
 
-        // Get payment request data
         $request = $this->paymentModel->getPaymentRequestById($id);
         
         if (!$request) {
@@ -452,7 +390,6 @@ class Payments extends Controller {
             redirect('payments/requests');
         }
 
-        // Check if request is already paid
         if ($request->status == 'paid') {
             flash('payment_error', 'This request has already been paid', 'alert alert-warning');
             redirect('payments/requests');
@@ -466,14 +403,11 @@ class Payments extends Controller {
         $this->view('payments/pay_request', $data);
     }
     
-    // Handle successful payment for a request
     public function request_success($id) {
-        // Check if user is logged in
         if (!isLoggedIn()) {
             redirect('users/login');
         }
 
-        // Get payment request data
         $request = $this->paymentModel->getPaymentRequestById($id);
         
         if (!$request) {
@@ -481,23 +415,20 @@ class Payments extends Controller {
             redirect('payments/requests');
         }
 
-        // Validate payment request for checkout
         if (!$this->paymentModel->validatePaymentRequestForCheckout($id, $_SESSION['user_id'])) {
             flash('payment_error', 'You are not authorized to pay this request', 'alert alert-danger');
             redirect('payments/requests');
         }
 
-        // Get payment intent from Stripe
+        //from stripe
         if (isset($_GET['payment_intent'])) {
             try {
                 $paymentIntent = \Stripe\PaymentIntent::retrieve($_GET['payment_intent']);
                 
                 if ($paymentIntent->status === 'succeeded') {
-                    // Get resident address for the payment record
                     $resident = $this->paymentModel->getResidentAddress($_SESSION['user_id']);
                     $userAddress = is_array($resident) ? $resident['address'] : $resident->address;
 
-                    // Record payment in database
                     $paymentData = [
                         'user_id' => $_SESSION['user_id'],
                         'home_address' => $userAddress,
@@ -509,10 +440,8 @@ class Payments extends Controller {
                     ];
                     
                     if ($this->paymentModel->addPayment($paymentData)) {
-                        // Get the payment ID
                         $payment = $this->paymentModel->getPaymentByTransactionId($paymentIntent->id);
                         
-                        // Update payment request status
                         if ($this->paymentModel->updatePaymentRequestStatus($id, 'paid', $payment->id)) {
                             flash('payment_success', 'Payment completed successfully!', 'alert alert-success');
                         } else {
@@ -533,13 +462,11 @@ class Payments extends Controller {
     }
 
     public function delete_request($id) {
-        // Check if user is admin
         if ($_SESSION['user_role_id'] != 3) {
             redirect('pages/index');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Get request before deletion to check if it exists
             $request = $this->paymentModel->getPaymentRequestById($id);
             
             if (!$request) {
@@ -547,13 +474,11 @@ class Payments extends Controller {
                 redirect('payments/requests');
             }
             
-            // Check if request is already paid
             if ($request->status == 'paid') {
                 flash('payment_request_message', 'Cannot delete a paid request', 'alert alert-warning');
                 redirect('payments/requests');
             }
             
-            // Delete request
             if ($this->paymentModel->deletePaymentRequest($id)) {
                 flash('payment_request_message', 'Payment request deleted successfully', 'alert alert-success');
             } else {
@@ -566,13 +491,11 @@ class Payments extends Controller {
         }
     }
 
-    // View payment history
     public function history() {
         if (!isLoggedIn()) {
             redirect('users/login');
         }
 
-        // Get user's address if resident
         if ($_SESSION['user_role_id'] == 1) {
             $resident = $this->paymentModel->getResidentAddress($_SESSION['user_id']);
             if (!$resident) {

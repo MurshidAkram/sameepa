@@ -173,23 +173,18 @@ function deleteMessage(messageId) {
             }
         })
         .then(response => {
-            // First check if the response is OK
             if (!response.ok) {
                 throw new Error('Server returned status ' + response.status);
             }
             
-            // Get the content type
             const contentType = response.headers.get('content-type');
             
-            // If it's JSON, parse it
             if (contentType && contentType.includes('application/json')) {
                 return response.json();
             }
             
-            // Otherwise, get the text and try to parse it as JSON
             return response.text().then(text => {
                 try {
-                    // Try to extract JSON from the response if it contains HTML
                     const jsonMatch = text.match(/\{.*\}/);
                     if (jsonMatch) {
                         return JSON.parse(jsonMatch[0]);

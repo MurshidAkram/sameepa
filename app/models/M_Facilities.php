@@ -10,10 +10,11 @@ class M_Facilities
 
     public function getAllFacilities()
     {
-        $this->db->query('SELECT f.*, a.user_id, u.name as creator_name 
+        $this->db->query('SELECT DISTINCT f.*, COALESCE(a.user_id, s.user_id) as user_id, u.name as creator_name 
                          FROM facilities f 
-                         JOIN admins a ON f.created_by = a.id
-                         JOIN users u ON a.user_id = u.id 
+                         LEFT JOIN admins a ON f.created_by = a.id
+                         LEFT JOIN superadmins s ON f.created_by = s.id
+                         JOIN users u ON COALESCE(a.user_id, s.user_id) = u.id 
                          ORDER BY f.created_at DESC');
         return $this->db->resultSet();
     }
@@ -47,10 +48,11 @@ class M_Facilities
 
     public function getFacilityById($id)
     {
-        $this->db->query('SELECT f.*, a.user_id, u.name as creator_name 
+        $this->db->query('SELECT DISTINCT f.*, COALESCE(a.user_id, s.user_id) as user_id, u.name as creator_name 
                          FROM facilities f 
-                         JOIN admins a ON f.created_by = a.id
-                         JOIN users u ON a.user_id = u.id 
+                         LEFT JOIN admins a ON f.created_by = a.id
+                         LEFT JOIN superadmins s ON f.created_by = s.id
+                         JOIN users u ON COALESCE(a.user_id, s.user_id) = u.id 
                          WHERE f.id = :id');
         $this->db->bind(':id', $id);
         $result = $this->db->single();
@@ -68,37 +70,32 @@ class M_Facilities
 
     public function updateFacility($data)
     {
-        // Start with the base SQL without image fields
         $sql = 'UPDATE facilities SET 
             name = :name, 
             description = :description, 
             capacity = :capacity, 
             status = :status';
 
-        // If there's a new image, add image fields to the SQL
         if (!empty($data['image_data'])) {
             $sql .= ', image_data = :image_data, image_type = :image_type';
         }
 
-        // Complete the SQL
         $sql .= ' WHERE id = :id';
 
         $this->db->query($sql);
 
-        // Bind the standard values
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':description', $data['description']);
         $this->db->bind(':capacity', $data['capacity']);
         $this->db->bind(':status', $data['status']);
 
-        // If there's a new image, bind the image values
+        //new image
         if (!empty($data['image_data'])) {
             $this->db->bind(':image_data', $data['image_data']);
             $this->db->bind(':image_type', $data['image_type']);
         }
 
-        // Execute
         return $this->db->execute();
     }
 

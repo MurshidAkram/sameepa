@@ -81,7 +81,7 @@
                         </div>
                         <div class="form-group">
                             <label for="editDuration">Duration (hours):</label>
-                            <input type="number" id="editDuration" name="duration" min="1" max="24" required>
+                            <input type="number" id="editDuration" name="duration" min="1" max="8" required>
                         </div>
                         <button type="submit" class="fac-btn-submit">Update Booking</button>
                     </form>
@@ -99,13 +99,11 @@
               const modal = document.getElementById('editBookingModal');
               document.getElementById('bookingId').value = bookingId;
             
-              // Find the booking row and extract data
               const bookingRow = event.target.closest('tr');
               const date = bookingRow.cells[1].textContent;
               const time = bookingRow.cells[2].textContent;
               const duration = bookingRow.cells[3].textContent;
             
-              // Format and set the values
               document.getElementById('editBookingDate').value = date;
               document.getElementById('editBookingTime').value = time;
               document.getElementById('editDuration').value = duration;
@@ -133,7 +131,6 @@
     e.preventDefault();
     const bookingId = document.getElementById('bookingId').value;
     
-    // Create FormData object
     const formData = new FormData();
     formData.append('booking_date', document.getElementById('editBookingDate').value);
     formData.append('booking_time', document.getElementById('editBookingTime').value);
@@ -142,7 +139,7 @@
     try {
         const response = await fetch(`<?php echo URLROOT; ?>/facilities/updateBooking/${bookingId}`, {
             method: 'POST',
-            body: formData // Send as FormData
+            body: formData
         });
 
         if (!response.ok) {
@@ -170,15 +167,15 @@
           };
 
           let sortDirections = {
-              0: 'asc', // Facility Name
-              1: 'asc', // Booking Date
-              2: 'asc', // Booking Time
-              3: 'asc'  // Duration
+              0: 'asc', //facility name
+              1: 'asc', //booking ddate
+              2: 'asc', //booking time
+              3: 'asc'  //dduration
           };
 
           function sortTable(n) {
               let table = document.querySelector(".bookings-table");
-              let rows = Array.from(table.rows).slice(1); // Convert to array, skip header
+              let rows = Array.from(table.rows).slice(1);
               let direction = sortDirections[n] === 'asc' ? 1 : -1;
 
               // Sort the rows
@@ -187,21 +184,21 @@
                   let y = b.cells[n].textContent.trim();
 
                   switch(n) {
-                      case 1: // Booking Date
+                      case 1: //booking date
                           return direction * (new Date(x) - new Date(y));
-                      case 2: // Booking Time
+                      case 2: //booking time
                           return direction * (new Date('1970/01/01 ' + x) - new Date('1970/01/01 ' + y));
-                      case 3: // Duration
+                      case 3: //duration
                           return direction * (Number(x) - Number(y));
-                      default: // Facility Name
+                      default: //facility name
                           return direction * x.localeCompare(y);
                   }
               });
 
-              // Update sort direction for next click
+              //sort direction
               sortDirections[n] = sortDirections[n] === 'asc' ? 'desc' : 'asc';
 
-              // Update arrow indicators
+              //arrow indicators
               let headers = table.getElementsByTagName('th');
               for(let i = 0; i < headers.length - 1; i++) {
                   headers[i].textContent = headers[i].textContent.replace(/[↑↓]/, '');
@@ -210,7 +207,7 @@
                   }
               }
 
-              // Reorder the table
+              //reorder table
               let tbody = table.getElementsByTagName('tbody')[0];
               rows.forEach(row => tbody.appendChild(row));
           }

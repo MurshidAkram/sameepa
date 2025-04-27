@@ -13,7 +13,7 @@
 .header-actions {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end; /* Align buttons to the right */
+    justify-content: flex-end; 
 }
 
 .btn-back,
@@ -43,10 +43,9 @@
     transform: translateY(-2px);
 }
 
-/* Filter and Search */
 .filter-search-container {
     display: flex;
-    justify-content: flex-end; /* Change from space-between to flex-end */
+    justify-content: flex-end; 
     margin-bottom: 2rem;
 }
 
@@ -91,7 +90,6 @@
     cursor: pointer;
 }
 
-/* Table Styles */
 .payments-table-container {
     background-color: white;
     border-radius: 8px;
@@ -170,7 +168,6 @@
     font-style: italic;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 1200px) {
     .filter-search-container {
         flex-direction: column;

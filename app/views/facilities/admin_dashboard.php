@@ -73,6 +73,8 @@
                 </div>
             </div>
 
+            <?php flash('facility_message'); ?>
+
             <div class="facilities-table-container">
                 <div class="table-header">
                     <h2>All Facilities</h2>
@@ -141,6 +143,9 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        const URLROOT = '<?php echo URLROOT; ?>';
+    </script>
     <script src="<?php echo URLROOT; ?>/js/facilities_admin.js"></script>
 </body>
 </html>

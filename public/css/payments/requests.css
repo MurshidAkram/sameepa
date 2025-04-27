@@ -190,7 +190,6 @@
     border: 1px solid #ffeeba;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .page-header {
         flex-direction: column;

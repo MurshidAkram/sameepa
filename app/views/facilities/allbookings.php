@@ -67,7 +67,7 @@
                         </div>
                         <div class="form-group">
                             <label for="editDuration">Duration (hours):</label>
-                            <input type="number" id="editDuration" name="duration" min="1" max="24" required>
+                            <input type="number" id="editDuration" name="duration" min="1" max="8" required>
                         </div>
                         <button type="submit" class="fac-btn-submit">Update Booking</button>
                     </form>
@@ -79,11 +79,11 @@
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
           <script>
           let sortDirections = {
-              0: 'asc', // Facility Name
-              1: 'asc', // Booked By
-              2: 'asc', // Booking Date
-              3: 'asc', // Booking Time
-              4: 'asc'  // Duration
+              0: 'asc', //facility name
+              1: 'asc', //booked by
+              2: 'asc', //booking date
+              3: 'asc', //booking time
+              4: 'asc'  //duration
           };
 
           function sortTable(n) {
@@ -96,21 +96,21 @@
                   let y = b.cells[n].textContent.trim();
 
                   switch(n) {
-                      case 2: // Booking Date
+                      case 2: 
                           return direction * (new Date(x) - new Date(y));
-                      case 3: // Booking Time
+                      case 3: 
                           return direction * (new Date('1970/01/01 ' + x) - new Date('1970/01/01 ' + y));
-                      case 4: // Duration
+                      case 4: 
                           return direction * (Number(x) - Number(y));
-                      default: // Facility Name and Booked By (text fields)
+                      default: 
                           return direction * x.localeCompare(y);
                   }
               });
 
-              // Update sort direction for next click
+              //sort direction for next click
               sortDirections[n] = sortDirections[n] === 'asc' ? 'desc' : 'asc';
 
-              // Update arrow indicators
+              //arrow indicators
               let headers = table.getElementsByTagName('th');
               for(let i = 0; i < headers.length - 1; i++) {
                   headers[i].textContent = headers[i].textContent.replace(/[↑↓]/, '');
@@ -131,13 +131,11 @@
               const modal = document.getElementById('editBookingModal');
               document.getElementById('bookingId').value = bookingId;
     
-              // Find the booking row and extract data
               const bookingRow = event.target.closest('tr');
               const date = bookingRow.cells[2].textContent;
               const time = bookingRow.cells[3].textContent;
               const duration = bookingRow.cells[4].textContent;
     
-              // Format and set the values
               document.getElementById('editBookingDate').value = date;
               document.getElementById('editBookingTime').value = time;
               document.getElementById('editDuration').value = duration;
@@ -149,7 +147,6 @@
     e.preventDefault();
     const bookingId = document.getElementById('bookingId').value;
     
-    // Create FormData object
     const formData = new FormData();
     formData.append('booking_date', document.getElementById('editBookingDate').value);
     formData.append('booking_time', document.getElementById('editBookingTime').value);
@@ -158,7 +155,7 @@
     try {
         const response = await fetch(`<?php echo URLROOT; ?>/facilities/updateBooking/${bookingId}`, {
             method: 'POST',
-            body: formData // Send as FormData
+            body: formData 
         });
 
         if (!response.ok) {

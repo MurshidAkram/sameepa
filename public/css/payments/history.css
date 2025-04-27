@@ -99,7 +99,6 @@
     font-style: italic;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .page-header {
         flex-direction: column;
@@ -140,7 +139,7 @@
 
 .filter-search-container {
     display: flex;
-    justify-content: flex-end; /* Change from space-between to flex-end */
+    justify-content: flex-end; 
     margin-bottom: 2rem;
 }
 

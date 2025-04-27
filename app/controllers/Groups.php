@@ -4,13 +4,11 @@ class Groups extends Controller
     protected $groupsModel;
     public function __construct()
     {
-        // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
             $this->userModel = $this->model('User');
         }
 
-        // Check if user has appropriate role
         if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
             redirect('users/login');
         }
@@ -37,9 +35,7 @@ class Groups extends Controller
                 'errors' => []
             ];
     
-            // Handle file upload
             if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
-                // Check for upload errors
                 if ($_FILES['image']['error'] === UPLOAD_ERR_INI_SIZE || 
                     $_FILES['image']['error'] === UPLOAD_ERR_FORM_SIZE) {
                     $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
@@ -48,21 +44,18 @@ class Groups extends Controller
                     $data['errors'][] = 'There was an error uploading the image. Error code: ' . $_FILES['image']['error'];
                 }
                 else {
-                    // Check file size (1MB limit)
-                    $maxSize = 1 * 1024 * 1024; // 1MB in bytes
+                    //1MB limit
+                    $maxSize = 1 * 1024 * 1024; 
                     if ($_FILES['image']['size'] > $maxSize) {
                         $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
                     } 
                     else {
-                        // Check file type
                         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
                         if (!in_array($_FILES['image']['type'], $allowedTypes)) {
                             $data['errors'][] = 'Invalid file type. Only JPG, PNG, and GIF images are allowed.';
                         } 
                         else {
-                            // All checks passed, process the image
                             try {
-                                // Get the file size
                                 $fileSize = filesize($_FILES['image']['tmp_name']);
                                 
                                 // Check if file size is within MySQL's max_allowed_packet limit
@@ -103,7 +96,6 @@ class Groups extends Controller
                 $this->view('groups/create', $data);
             }
         } else {
-            // Initial GET request
             $data = [
                 'title' => '',
                 'category' => '',
@@ -114,7 +106,6 @@ class Groups extends Controller
         }
     }
 
-      // Add this method to serve images
       public function getImage($id) {
         $group = $this->groupsModel->getGroupById($id);
         if ($group && $group->image_data) {
@@ -197,9 +188,7 @@ class Groups extends Controller
                 'errors' => []
             ];
     
-            // Handle file upload if a new image is provided
             if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
-                // Check for upload errors
                 if ($_FILES['image']['error'] === UPLOAD_ERR_INI_SIZE || 
                     $_FILES['image']['error'] === UPLOAD_ERR_FORM_SIZE) {
                     $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
@@ -208,25 +197,21 @@ class Groups extends Controller
                     $data['errors'][] = 'There was an error uploading the image. Error code: ' . $_FILES['image']['error'];
                 }
                 else {
-                    // Check file size (1MB limit)
-                    $maxSize = 1 * 1024 * 1024; // 1MB in bytes
+                    $maxSize = 1 * 1024 * 1024;
                     if ($_FILES['image']['size'] > $maxSize) {
                         $data['errors'][] = 'The uploaded image is too large. Maximum size is 1MB.';
                     } 
                     else {
-                        // Check file type
                         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
                         if (!in_array($_FILES['image']['type'], $allowedTypes)) {
                             $data['errors'][] = 'Invalid file type. Only JPG, PNG, and GIF images are allowed.';
                         } 
                         else {
-                            // All checks passed, process the image
                             try {
-                                // Get the file size
                                 $fileSize = filesize($_FILES['image']['tmp_name']);
                                 
                                 // Check if file size is within MySQL's max_allowed_packet limit
-                                if ($fileSize > 1048576) { // 1MB in bytes
+                                if ($fileSize > 1048576) { 
                                     $data['errors'][] = 'Image is too large for database storage. Please use an image smaller than 1MB.';
                                 } else {
                                     $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
@@ -250,7 +235,6 @@ class Groups extends Controller
                         }
                     }
                 } catch (PDOException $e) {
-                    // Handle database errors
                     if (strpos($e->getMessage(), 'max_allowed_packet') !== false) {
                         $data['errors'][] = 'The image is too large for the database. Please use a smaller image (less than 1MB).';
                     } else {
@@ -263,7 +247,6 @@ class Groups extends Controller
                 $this->view('groups/update', $data);
             }
         } else {
-            // GET request - show edit form
             $group = $this->groupsModel->getGroupById($id);
             
             if (!$group) {
@@ -431,22 +414,17 @@ class Groups extends Controller
         }
     }
     
-    // Modify the reported_messages method to accept a group ID parameter
     public function reported_messages($groupId = null) {
-        // If no group ID is provided, redirect to admin dashboard
         if (!$groupId) {
             redirect('groups/admin_dashboard');
         }
         
-        // Get the group details to display in the view
         $group = $this->groupsModel->getGroupById($groupId);
         
-        // If group doesn't exist, redirect to admin dashboard
         if (!$group) {
             redirect('groups/admin_dashboard');
         }
         
-        // Get reported messages for this specific group
         $reported_messages = $this->groupsModel->getReportedMessagesByGroupId($groupId);
         
         $data = [
@@ -474,7 +452,6 @@ class Groups extends Controller
     }
     
 public function deleteOwnMessage($messageId) {
-    // Turn off PHP warnings and notices for this request
     error_reporting(0);
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -486,7 +463,6 @@ public function deleteOwnMessage($messageId) {
             exit;
         }
         
-        // Check if $message is an array or object and access user_id accordingly
         $userId = is_array($message) ? $message['user_id'] : $message->user_id;
         
         if ($userId != $_SESSION['user_id']) {

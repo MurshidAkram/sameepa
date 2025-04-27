@@ -25,7 +25,6 @@
         ?>
 
         <main class="reported-main">
-           <!-- Add this to the top of the reported_messages.php view -->
             <div class="top-page">
                 <a href="<?php echo URLROOT; ?>/groups/admin_dashboard" class="back-button">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard

@@ -19,7 +19,6 @@
     padding-top: 20px;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .create-request-container {
         padding: 1.5rem;
