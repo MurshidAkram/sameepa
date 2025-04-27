@@ -8,21 +8,20 @@ class M_Events
         $this->db = new Database;
     }
 
-    // In M_Events.php, update the getAllEvents method:
     public function getAllEvents($search = '')
     {
         $sql = 'SELECT e.*, u.name as creator_name 
-            FROM events e 
-            JOIN users u ON e.created_by = u.id 
-            WHERE 1=1 ';
+        FROM events e 
+        JOIN users u ON e.created_by = u.id 
+        WHERE e.is_deleted = FALSE ';
 
         if (!empty($search)) {
             $sql .= 'AND (e.title LIKE :search 
-                 OR e.description LIKE :search 
-                 OR e.location LIKE :search) ';
+             OR e.description LIKE :search 
+             OR e.location LIKE :search) ';
         }
 
-        $sql .= 'ORDER BY e.updated_at DESC, e.created_at DESC';
+        $sql .= 'ORDER BY e.date DESC, e.time DESC';
 
         $this->db->query($sql);
 
@@ -30,7 +29,15 @@ class M_Events
             $this->db->bind(':search', '%' . $search . '%');
         }
 
-        return $this->db->resultSet();
+        $events = $this->db->resultSet();
+
+        // Updating is_active status based on current date
+        $today = date('Y-m-d');
+        foreach ($events as $event) {
+            $event->is_active = ($event->date >= $today);
+        }
+
+        return $events;
     }
 
     public function createEvent($data)
@@ -64,6 +71,13 @@ class M_Events
                          WHERE e.id = :id');
         $this->db->bind(':id', $id);
         return $this->db->single();
+
+        if ($event) {
+            $today = date('Y-m-d');
+            $event['is_active'] = ($event['date'] >= $today);
+        }
+
+        return $event;
     }
 
     public function getEventImage($id)
@@ -103,6 +117,10 @@ class M_Events
 
     public function joinEvent($eventId, $userId)
     {
+        if (!$this->isEventActive($eventId)) {
+            return false; // Cannot join inactive events
+        }
+
         $this->db->query('INSERT INTO event_participants (event_id, user_id, joined_at) VALUES (:event_id, :user_id, NOW())');
         $this->db->bind(':event_id', $eventId);
         $this->db->bind(':user_id', $userId);
@@ -124,7 +142,7 @@ class M_Events
         $this->db->query('SELECT e.*, u.name as creator_name 
                          FROM events e 
                          JOIN users u ON e.created_by = u.id 
-                         WHERE e.created_by = :user_id 
+                         WHERE e.created_by = :user_id AND e.is_deleted = FALSE
                          ORDER BY e.date ASC');
         $this->db->bind(':user_id', $userId);
         return $this->db->resultSet();
@@ -149,7 +167,7 @@ class M_Events
         $this->db->execute();
 
         // Then delete the event
-        $this->db->query('DELETE FROM events WHERE id = :event_id');
+        $this->db->query('UPDATE events SET is_deleted = TRUE WHERE id = :event_id');
         $this->db->bind(':event_id', $eventId);
         return $this->db->execute();
     }
@@ -209,7 +227,18 @@ class M_Events
         return $result['total'];
     }
 
-    /* public function getEventsByStatus($status)
+    public function isEventActive($eventId)
+    {
+        $event = $this->getEventById($eventId);
+        if ($event) {
+            $today = date('Y-m-d');
+            return $event['date'] >= $today;
+        }
+        return false;
+    }
+
+    //SENUJA for admin dashboard
+    public function getEventsByStatus($status)
     {
         $today = date('Y-m-d');
 
@@ -230,6 +259,7 @@ class M_Events
         return $this->db->resultSet();
     }
 
+    /*
     public function getAllEventsForAdmin($search = '')
     {
         $sql = 'SELECT e.*, u.name as creator_name,
@@ -292,24 +322,25 @@ class M_Events
     } */
 
     //DONE BY SANKAVI FOR THE SUPER ADMIN DASHBOARD
-    // public function getTodayEvents()
-    // {
-    //     try {
-    //         // Set specific date instead of today (for testing)
-    //         $specificDate = '2024-11-30';
+    public function getTodaysEvents()
+    {
+        try {
+            // Set specific date instead of today (for testing)
+            $specificDate = '2025-04-30';
 
-    //         $this->db->query('
-    //             SELECT 
-    //                 title AS event_title,
-    //                 time AS event_time
-    //             FROM events
-    //             WHERE DATE(date) = :today
-    //             ORDER BY time
-    //         ');
-    //         $this->db->bind(':today', $specificDate);
-    //         return $this->db->resultSet();
-    //     } catch (Exception $e) {
-    //         error_log("Error fetching today's events: " . $e->getMessage());
-    //         return [];
-    //     }
+            $this->db->query('
+                SELECT 
+                    title AS event_title,
+                    time AS event_time
+                FROM events
+                WHERE DATE(date) = :today
+                ORDER BY time
+            ');
+            $this->db->bind(':today', $specificDate);
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log("Error fetching today's events: " . $e->getMessage());
+            return [];
+        }
+    }
 }

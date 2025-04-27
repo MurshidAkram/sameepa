@@ -120,8 +120,22 @@ class Events extends Controller
         // Validate Date
         if (empty($data['date'])) {
             $data['errors'][] = 'Please enter event date';
-        } elseif (strtotime($data['date']) < strtotime(date('Y-m-d'))) {
-            $data['errors'][] = 'Event date cannot be in the past';
+        } else {
+            if (strtotime($data['date']) < strtotime(date('Y-m-d'))) {
+                $data['errors'][] = 'Event date cannot be in the past';
+            }
+            $threeDaysLater = strtotime('+3 days', strtotime(date('Y-m-d')));
+            if (strtotime($data['date']) < $threeDaysLater) {
+                $data['errors'][] = 'Events must be created at least 3 days in advance';
+            } else {
+                $originalEvent = $this->eventModel->getEventById($data['id']);
+                if ($originalEvent && strtotime($originalEvent['date']) < strtotime(date('Y-m-d'))) {
+                    // If the original event is in the past, don't allow changing the date
+                    if ($data['date'] != $originalEvent['date']) {
+                        $data['errors'][] = 'Cannot change the date of an event that has already passed';
+                    }
+                }
+            }
         }
 
         // Validate Time
@@ -149,7 +163,7 @@ class Events extends Controller
         }
 
 
-        // Return default image if no image found
+        // Returning default image if no image found
         header("Content-Type: image/png");
         readfile(APPROOT . '/public/img/default-event.png');
     }
@@ -179,11 +193,15 @@ class Events extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $event = $this->eventModel->getEventById($id);
 
-
             if (!$event) {
-                die('Event not found');
+                echo json_encode(['success' => false, 'message' => 'Event not found']);
+                exit;
             }
 
+            if (!$event['is_active']) {
+                echo json_encode(['success' => false, 'message' => 'This event has already ended and cannot be joined']);
+                exit;
+            }
 
             if ($this->eventModel->joinEvent($id, $_SESSION['user_id'])) {
                 echo json_encode(['success' => true]);
@@ -288,6 +306,7 @@ class Events extends Controller
             redirect('events/index');
         }
 
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -327,7 +346,6 @@ class Events extends Controller
             // If no errors, update event
             if (empty($data['errors'])) {
                 if ($this->eventModel->updateEvent($data)) {
-                    //flash('event_message', 'Event Updated Successfully');
                     redirect('events/viewevent/' . $id);
                 } else {
                     die('Something went wrong');
@@ -342,6 +360,10 @@ class Events extends Controller
 
             if (!$event) {
                 redirect('events/index');
+            }
+
+            if (!$event['is_active']) {
+                redirect('events/viewevent/' . $id);
             }
 
             // Init data

@@ -84,7 +84,7 @@ class M_Announcements
                   WHERE a.status = :status';
 
         if (!empty($searchTerm)) {
-            $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+            $query .= ' AND (a.title LIKE :searchTerm OR a.content LIKE :searchTerm)';
         }
 
         $query .= ' ORDER BY a.updated_at DESC';
@@ -133,8 +133,10 @@ class M_Announcements
             $this->db->query('
                 SELECT title
                 FROM announcements
+                WHERE status = :status
                 ORDER BY created_at DESC
             ');
+            $this->db->bind(':status', 'active');
             return $this->db->resultSet();
         } catch (Exception $e) {
             error_log("Error fetching announcements: " . $e->getMessage());
@@ -190,6 +192,14 @@ class M_Announcements
     //     if (!empty($searchTerm)) {
     //         $this->db->bind(':searchTerm', '%' . $searchTerm . '%');
     //     }
+
+    //     return $this->db->resultSet();
+    // }
+
+    // public function getActiveAnnouncements() {
+    //     $this->db->query("SELECT id, title, content, created_by, created_at 
+    //                       FROM announcements 
+    //                       ORDER BY created_at DESC");
 
     //     return $this->db->resultSet();
     // }
