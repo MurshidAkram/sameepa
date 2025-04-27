@@ -1,4 +1,4 @@
- .dashboard-container {
+.dashboard-container {
     display: flex;
 }
 
@@ -68,8 +68,8 @@
 .groups-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; 
-    justify-content: flex-start; 
+    gap: 20px;
+    justify-content: flex-start;
 }
 
 .groups-search {
@@ -106,7 +106,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    max-width: 100%;
+    width: 500px;
+    height: 420px;
+    display: flex;
+    flex-direction: column;
 }
 
 .group-card:hover {
@@ -114,12 +117,19 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); 
 }
 
+.group-image img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
 
 .group-details {
-    padding: 20px; 
+    flex: 1;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-   
+    justify-content: space-between;
 }
 
 .group-title {
