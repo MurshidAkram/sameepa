@@ -65,11 +65,14 @@
                         <div class="form-group">
                             <label>Status</label>
                             <?php if (in_array($_SESSION['user_role_id'], [2, 3]) && $data['complaint']->status !== 'resolved'): ?>
-                                <select id="statusSelect">
-                                    <option value="pending" <?php echo $data['complaint']->status === 'pending' ? 'selected' : ''; ?>>Pending</option>
-                                    <option value="in_progress" <?php echo $data['complaint']->status === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
-                                    <option value="resolved" <?php echo $data['complaint']->status === 'resolved' ? 'selected' : ''; ?>>Resolved</option>
-                                </select>
+                                <form action="<?php echo URLROOT; ?>/complaints/updateStatus" method="POST">
+                                    <input type="hidden" name="complaint_id" value="<?php echo $data['complaint']->id; ?>">
+                                    <select name="status" onchange="this.form.submit()">
+                                        <option value="pending" <?php echo $data['complaint']->status === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                                        <option value="in_progress" <?php echo $data['complaint']->status === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
+                                        <option value="resolved" <?php echo $data['complaint']->status === 'resolved' ? 'selected' : ''; ?>>Resolved</option>
+                                    </select>
+                                </form>
                             <?php else: ?>
                                 <input type="text" value="<?php echo ucfirst($data['complaint']->status); ?>" readonly>
                             <?php endif; ?>
@@ -96,11 +99,25 @@
 
                         <?php if (in_array($_SESSION['user_role_id'], [2, 3]) && $data['complaint']->status !== 'resolved') : ?>
                             <div class="add-response-section">
-                                <div class="form-group">
-                                    <label>Add Response</label>
-                                    <textarea id="newResponse"></textarea>
-                                </div>
-                                <button id="submitResponse" class="btn btn-primary">Submit Response</button>
+                                <form action="<?php echo URLROOT; ?>/complaints/addResponse" method="POST">
+                                    <input type="hidden" name="complaint_id" value="<?php echo $data['complaint']->id; ?>">
+
+                                    <div class="form-group">
+                                        <label>Add Response</label>
+                                        <textarea name="response" required></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Update Status</label>
+                                        <select name="status">
+                                            <option value="pending" <?php echo $data['complaint']->status === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                                            <option value="in_progress" <?php echo $data['complaint']->status === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
+                                            <option value="resolved" <?php echo $data['complaint']->status === 'resolved' ? 'selected' : ''; ?>>Resolved</option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Submit Response</button>
+                                </form>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -110,50 +127,6 @@
     </div>
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-
-    <?php if (in_array($_SESSION['user_role_id'], [2, 3]) && $data['complaint']->status !== 'resolved'): ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const submitResponseBtn = document.getElementById('submitResponse');
-                const statusSelect = document.getElementById('statusSelect');
-
-                if (submitResponseBtn) {
-                    submitResponseBtn.addEventListener('click', async () => {
-                        const responseText = document.getElementById('newResponse').value;
-                        const newStatus = statusSelect.value;
-
-                        if (!responseText.trim()) {
-                            alert('Please enter a response');
-                            return;
-                        }
-
-                        try {
-                            const response = await fetch('<?php echo URLROOT; ?>/complaints/addResponse', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    complaint_id: <?php echo $data['complaint']->id; ?>,
-                                    response: responseText,
-                                    status: newStatus
-                                })
-                            });
-
-                            const result = await response.json();
-                            if (result.success) {
-                                location.reload();
-                            } else {
-                                alert('Error saving response');
-                            }
-                        } catch (error) {
-                            console.error('Error saving response:', error);
-                        }
-                    });
-                }
-            });
-        </script>
-    <?php endif; ?>
 </body>
 
 </html>

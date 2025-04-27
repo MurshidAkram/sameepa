@@ -20,6 +20,7 @@
         // Load appropriate side panel based on user role
         $role_panels = [
             1 => '/views/inc/components/side_panel_resident.php',
+            2 => '/views/inc/components/side_panel_admin.php',
             4 => '/views/inc/components/side_panel_maintenance.php',
             5 => '/views/inc/components/side_panel_security.php'
         ];

@@ -229,7 +229,9 @@ class M_Forums
         return $this->db->resultSet();
     }
 
-    public function getForumsWithStats()
+
+
+    /* public function getForumsWithStats()
     {
         $this->db->query("SELECT f.*, 
                         u.name as creator_name,
@@ -259,6 +261,5 @@ class M_Forums
                       ORDER BY f.created_at DESC");
     $this->db->bind(':search', '%' . $searchTerm . '%');
     return $this->db->resultSet();
-}
-
+} */
 }

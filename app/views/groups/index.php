@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/side_panel.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/resident/dashboard.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/groups/groups.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/groups/groups.css">
     <title>Community Groups | <?php echo SITENAME; ?></title>
 </head>
 
@@ -58,7 +58,7 @@
                         <div class="group-card">
                             <div class="group-image">
                                 <img src="data:<?php echo $group->image_type; ?>;base64,<?php echo base64_encode($group->image_data); ?>"
-                                alt="<?php echo $group->group_name; ?>">
+                                    alt="<?php echo $group->group_name; ?>">
                             </div>
                             <div class="group-details">
                                 <h3 class="group-title"><?php echo $group->group_name; ?></h3>
@@ -77,7 +77,7 @@
                                         <i class="fas fa-users"></i>
                                         <?php echo $this->groupsModel->getMemberCount($group->group_id); ?> Members
                                     </span>
-                                    <a href="<?php echo URLROOT; ?>/groups/viewgroup/<?php echo $group->group_id; ?>" 
+                                    <a href="<?php echo URLROOT; ?>/groups/viewgroup/<?php echo $group->group_id; ?>"
                                         class="btn-view-group">View Group</a>
                                 </div>
                             </div>
@@ -101,33 +101,32 @@
         function deleteGroup(groupId) {
             if (confirm('Are you sure you want to delete this group?')) {
                 fetch(`<?php echo URLROOT; ?>/groups/delete/${groupId}`, {
-                    method: 'POST'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    } else {
-                        alert(data.message || 'Failed to delete group');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting the group');
-                });
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Failed to delete group');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the group');
+                    });
             }
         }
         document.getElementById('searchGroups').addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase();
             const groupCards = document.querySelectorAll('.group-card');
-            
+
             groupCards.forEach(card => {
                 const groupName = card.querySelector('.group-title').textContent.toLowerCase();
                 const groupCategory = card.querySelector('.group-category').textContent.toLowerCase();
                 card.style.display = (groupName.includes(searchText) || groupCategory.includes(searchText)) ? '' : 'none';
             });
         });
-
     </script>
 </body>
 

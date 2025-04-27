@@ -90,10 +90,8 @@ class Complaints extends Controller
                 ];
 
                 if ($this->complaintsModel->createComplaint($complaintData)) {
-                    flash('complaint_message', 'Complaint Created Successfully');
                     redirect('complaints/mycomplaints');
                 } else {
-                    flash('complaint_message', 'Something went wrong', 'alert alert-danger');
                     redirect('complaints/create');
                 }
             } else {
@@ -168,6 +166,7 @@ class Complaints extends Controller
     public function getComplaintDetails($id)
     {
         if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $id)) {
+            header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
             return;
         }
@@ -178,36 +177,74 @@ class Complaints extends Controller
             header('Content-Type: application/json');
             echo json_encode(['success' => true, 'data' => $complaint]);
         } else {
+            header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => 'Complaint not found']);
         }
     }
-
     public function addResponse()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('complaints');
         }
 
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+        $complaintId = $_POST['complaint_id'] ?? null;
+        $response = $_POST['response'] ?? null;
+        $status = $_POST['status'] ?? null;
 
-        if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $data['complaint_id'])) {
-            echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
+        if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $complaintId)) {
+            flash('complaint_message', 'Unauthorized access', 'alert alert-danger');
+            redirect('complaints/dashboard');
             return;
         }
 
         $responseData = [
-            'complaint_id' => $data['complaint_id'],
+            'complaint_id' => $complaintId,
             'admin_id' => $_SESSION['user_id'],
-            'response' => $data['response'],
-            'status' => $data['status'] ?? null
+            'response' => $response,
+            'status' => $status
         ];
 
         if ($this->complaintsModel->addResponse($responseData)) {
-            echo json_encode(['success' => true]);
+            flash('complaint_message', 'Response added successfully', 'alert alert-success');
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to add response']);
+            flash('complaint_message', 'Failed to add response', 'alert alert-danger');
         }
+
+        // Redirect back to the complaint page
+        redirect('complaints/viewcomplaint/' . $complaintId);
+    }
+
+    public function updateStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !in_array($_SESSION['user_role_id'], [2, 3])) {
+            redirect('complaints');
+        }
+
+        $complaintId = $_POST['complaint_id'] ?? null;
+        $status = $_POST['status'] ?? null;
+
+        if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $complaintId)) {
+            flash('complaint_message', 'Unauthorized access', 'alert alert-danger');
+            redirect('complaints/dashboard');
+            return;
+        }
+
+        // Add an empty response with the status change
+        $responseData = [
+            'complaint_id' => $complaintId,
+            'admin_id' => $_SESSION['user_id'],
+            'response' => 'Status updated to: ' . ucfirst($status),
+            'status' => $status
+        ];
+
+        if ($this->complaintsModel->addResponse($responseData)) {
+            flash('complaint_message', 'Status updated successfully', 'alert alert-success');
+        } else {
+            flash('complaint_message', 'Failed to update status', 'alert alert-danger');
+        }
+
+        // Redirect back to the complaint page
+        redirect('complaints/viewcomplaint/' . $complaintId);
     }
 
 
@@ -219,14 +256,12 @@ class Complaints extends Controller
 
         // Check if user can access this complaint
         if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $id)) {
-            flash('complaint_message', 'Unauthorized access', 'alert alert-danger');
             redirect('complaints/' . (in_array($_SESSION['user_role_id'], [2, 3]) ? 'dashboard' : 'mycomplaints'));
         }
 
         $complaint = $this->complaintsModel->getComplaintDetails($id);
 
         if (!$complaint) {
-            flash('complaint_message', 'Complaint not found', 'alert alert-danger');
             redirect('complaints/' . (in_array($_SESSION['user_role_id'], [2, 3]) ? 'dashboard' : 'mycomplaints'));
         }
 

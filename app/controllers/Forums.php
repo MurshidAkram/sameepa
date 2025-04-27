@@ -105,7 +105,6 @@ class Forums extends Controller
                 'comment' => trim($_POST['comment'])
             ];
             if ($this->forumsModel->createComment($commentData)) {
-                // flash('comment_message', 'Comment posted successfully.');
                 $comments = $this->forumsModel->getCommentsByForumId($id);
                 $data['comments'] = $comments;
             } else {

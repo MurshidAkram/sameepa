@@ -162,7 +162,6 @@
                 break;
         }
         ?>
-
         <main class="polls-main">
             <div class="create-poll-container">
                 <h1>Create New Poll</h1>

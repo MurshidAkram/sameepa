@@ -1,7 +1,4 @@
 -- Events table to store event information
-
-
-
 CREATE TABLE events (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -226,7 +223,7 @@ CREATE TABLE complaints (
 CREATE TABLE complaint_responses (
     id INT PRIMARY KEY AUTO_INCREMENT,
     complaint_id INT NOT NULL,
-    user_id INT NOT NULL,
+    admin_id INT NOT NULL,
     response TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (complaint_id) REFERENCES complaints(id) ON DELETE CASCADE,

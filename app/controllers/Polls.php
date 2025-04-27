@@ -190,7 +190,6 @@ class Polls extends Controller
         $choiceId = $_POST['choice_id'] ?? null;
 
         if (!$choiceId) {
-            flash('poll_error', 'Please select an option to vote');
             redirect("polls/viewpoll/$pollId");
         }
 
@@ -203,9 +202,7 @@ class Polls extends Controller
 
         // Record the vote
         if ($this->pollsModel->votepoll($pollId, $choiceId, $_SESSION['user_id'])) {
-            flash('poll_message', 'Your vote has been recorded');
         } else {
-            flash('poll_error', 'Something went wrong recording your vote');
         }
 
         redirect("polls/viewpoll/$pollId");

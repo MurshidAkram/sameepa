@@ -104,34 +104,36 @@ class M_Complaints
 
     public function getComplaintDetails($complaintId)
     {
-        $this->db->query('SELECT c.*, u.name as user_name,
-                    (SELECT GROUP_CONCAT(
-                        JSON_OBJECT(
-                            "id", cr.id,
-                            "response", cr.response,
-                            "admin_name", admin.name,
-                            "created_at", cr.created_at
-                        )
-                    ) 
-                    FROM complaint_responses cr
-                    JOIN users admin ON cr.admin_id = admin.id
-                    WHERE cr.complaint_id = c.id
-                    ORDER BY cr.created_at DESC) as responses
-                    FROM complaints c
-                    JOIN users u ON c.user_id = u.id
-                    WHERE c.id = :id');
+        // Get the basic complaint information
+        $this->db->query('SELECT c.*, u.name as user_name
+                     FROM complaints c
+                     JOIN users u ON c.user_id = u.id
+                     WHERE c.id = :id');
 
         $this->db->bind(':id', $complaintId);
-        $result = $this->db->single();
+        $complaint = $this->db->single();
 
-        if ($result) {
-            // Convert result to object if it's an array
-            $result = (object)$result;
-            // Parse the JSON responses string into an array
-            $result->responses = $result->responses ? json_decode('[' . $result->responses . ']') : [];
+        if (!$complaint) {
+            return null;
         }
 
-        return $result;
+        // Convert to object if it's an array
+        $complaint = (object)$complaint;
+
+        // Get the responses in a separate query
+        $this->db->query('SELECT cr.*, admin.name as admin_name
+                     FROM complaint_responses cr
+                     JOIN users admin ON cr.admin_id = admin.id
+                     WHERE cr.complaint_id = :complaint_id
+                     ORDER BY cr.created_at DESC');
+
+        $this->db->bind(':complaint_id', $complaintId);
+        $responses = $this->db->resultSet();
+
+        // Add the responses to the complaint object
+        $complaint->responses = $responses ?: [];
+
+        return $complaint;
     }
 
     public function addResponse($data)

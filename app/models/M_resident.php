@@ -1,24 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php
 class M_resident
 {
@@ -66,6 +45,3 @@ class M_resident
         return $this->db->single();
     }
 }
-
-
-?>
