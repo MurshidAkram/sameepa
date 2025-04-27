@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.init();
     generateTimeSlots();
 
-    // Update time slots when date changes
+    // Update time slots
     dateInput.addEventListener('change', async function() {
         const selectedDate = this.value;
         await showTimeSlots(selectedDate);
@@ -110,7 +110,6 @@ class Calendar {
 }
 
 async function handleDateClick(date) {
-    // Set the date in the booking form
     document.getElementById('booking_date').value = date;
 
     const response = await fetch(`${URLROOT}/facilities/getBookedTimes/${facilityId}/${date}`);
@@ -160,6 +159,35 @@ bookingForm.addEventListener('submit', async function(e) {
         time: document.getElementById('booking_time').value,
         duration: document.getElementById('duration').value
     };
+
+    // between 9:00 AM and 9:00 PM
+    const bookingTime = formData.time;
+    const [hours, minutes] = bookingTime.split(':').map(Number);
+    const bookingHour = hours;
+    
+    if (bookingHour < 9 || bookingHour >= 21) {
+        document.getElementById('booking-error').textContent = 
+            'Bookings can only be made between 9:00 AM and 9:00 PM';
+        return;
+    }
+
+    //end time  exceed 9:00 PM
+    const endHour = bookingHour + parseInt(formData.duration);
+    if (endHour > 21) {
+        document.getElementById('booking-error').textContent = 
+            'Booking duration would extend beyond 9:00 PM. Please adjust your booking time or duration.';
+        return;
+    }
+
+    //booking is not in the past
+    const bookingDateTime = new Date(formData.date + 'T' + formData.time);
+    const currentDateTime = new Date();
+    
+    if (bookingDateTime < currentDateTime) {
+        document.getElementById('booking-error').textContent = 
+            'Cannot book facilities for past times. Please select a future date and time.';
+        return;
+    }
 
     const response = await fetch(`${URLROOT}/facilities/checkOverlap`, {
         method: 'POST',

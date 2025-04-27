@@ -326,6 +326,34 @@ class Facilities extends Controller
                 'duration' => $_POST['duration']
             ];
 
+            // between 9:00 AM and 9:00 PM
+            $bookingTime = $bookingData['booking_time'];
+            $bookingHour = (int)substr($bookingTime, 0, 2);
+            
+            if ($bookingHour < 9 || $bookingHour >= 21) {
+                $_SESSION['error_message'] = 'Bookings can only be made between 9:00 AM and 9:00 PM';
+                redirect('facilities/book/' . $id);
+                return;
+            }
+
+            //xceed 9:00 PM
+            $endHour = $bookingHour + (int)$bookingData['duration'];
+            if ($endHour > 21) {
+                $_SESSION['error_message'] = 'Booking duration would extend beyond 9:00 PM. Please adjust your booking time or duration.';
+                redirect('facilities/book/' . $id);
+                return;
+            }
+
+            //not in the past
+            $bookingDateTime = new DateTime($bookingData['booking_date'] . ' ' . $bookingData['booking_time']);
+            $currentDateTime = new DateTime();
+            
+            if ($bookingDateTime < $currentDateTime) {
+                $_SESSION['error_message'] = 'Cannot book facilities for past times. Please select a future date and time.';
+                redirect('facilities/book/' . $id);
+                return;
+            }
+
             $overlap = $this->facilityModel->checkBookingOverlap(
                 $id,
                 $bookingData['booking_date'],
@@ -408,20 +436,43 @@ class Facilities extends Controller
 
         $this->view('facilities/allbookings', $data);
     }
-    public function updateBooking($id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $bookingData = [
-                'id' => $id,
-                'booking_date' => $_POST['booking_date'],
-                'booking_time' => $_POST['booking_time'],
-                'duration' => $_POST['duration']
-            ];
-    
-            if ($this->facilityModel->updateBooking($bookingData)) {
-                echo json_encode(['success' => true]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Database update failed']);
+    public function updateBooking($bookingId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $bookingDate = $_POST['booking_date'];
+                $bookingTime = $_POST['booking_time'];
+                $duration = $_POST['duration'];
+                
+                //between 9:00 AM and 9:00 PM
+                $bookingHour = (int)date('H', strtotime($bookingTime));
+                if ($bookingHour < 9 || $bookingHour >= 21) {
+                    throw new Exception('Bookings can only be made between 9:00 AM and 9:00 PM');
+                }
+                
+                //exceed 9:00 PM
+                $endHour = $bookingHour + (int)$duration;
+                if ($endHour > 21) {
+                    throw new Exception('Booking duration would extend beyond 9:00 PM. Please adjust your booking time or duration.');
+                }
+                
+                //booking is not in the past
+                $bookingDateTime = new DateTime($bookingDate . ' ' . $bookingTime);
+                $currentDateTime = new DateTime();
+                
+                if ($bookingDateTime < $currentDateTime) {
+                    throw new Exception('Cannot book facilities for past times. Please select a future date and time.');
+                }
+                
+                $result = $this->facilityModel->updateBooking($bookingId, $bookingDate, $bookingTime, $duration);
+                
+                if ($result) {
+                    echo json_encode(['success' => true, 'message' => 'Booking updated successfully']);
+                } else {
+                    throw new Exception('Failed to update booking. Please try again.');
+                }
+            } catch (Exception $e) {
+                error_log('Booking update error: ' . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             }
         } else {
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);

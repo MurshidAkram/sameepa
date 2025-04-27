@@ -77,7 +77,10 @@
     </div>   
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
-          <script>
+    <script>
+        const URLROOT = '<?php echo URLROOT; ?>';
+    </script>
+    <script>
           let sortDirections = {
               0: 'asc', //facility name
               1: 'asc', //booked by
@@ -144,41 +147,69 @@
           }
 
           document.getElementById('editBookingForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const bookingId = document.getElementById('bookingId').value;
-    
-    const formData = new FormData();
-    formData.append('booking_date', document.getElementById('editBookingDate').value);
-    formData.append('booking_time', document.getElementById('editBookingTime').value);
-    formData.append('duration', document.getElementById('editDuration').value);
+              e.preventDefault();
+              const bookingId = document.getElementById('bookingId').value;
+              
+              const formData = new FormData();
+              formData.append('booking_date', document.getElementById('editBookingDate').value);
+              formData.append('booking_time', document.getElementById('editBookingTime').value);
+              formData.append('duration', document.getElementById('editDuration').value);
+              
+              //between 9:00 AM and 9:00 PM
+              const bookingTime = document.getElementById('editBookingTime').value;
+              const [hours, minutes] = bookingTime.split(':').map(Number);
+              const bookingHour = hours;
+              
+              if (bookingHour < 9 || bookingHour >= 21) {
+                  alert('Bookings can only be made between 9:00 AM and 9:00 PM');
+                  return;
+              }
 
-    try {
-        const response = await fetch(`<?php echo URLROOT; ?>/facilities/updateBooking/${bookingId}`, {
-            method: 'POST',
-            body: formData 
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        
-        if (result.success) {
-            window.location.reload();
-        } else {
-            alert(result.message || 'Failed to update booking');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while updating the booking');
-    }
-});
+              //exceed 9:00 PM
+              const duration = parseInt(document.getElementById('editDuration').value);
+              const endHour = bookingHour + duration;
+              if (endHour > 21) {
+                  alert('Booking duration would extend beyond 9:00 PM. Please adjust your booking time or duration.');
+                  return;
+              }
+              
+              // not in the past
+              const bookingDate = document.getElementById('editBookingDate').value;
+              const bookingDateTime = new Date(bookingDate + 'T' + bookingTime);
+              const currentDateTime = new Date();
+              
+              if (bookingDateTime < currentDateTime) {
+                  alert('Cannot book facilities for past times. Please select a future date and time.');
+                  return;
+              }
+              
+              try {
+                  const response = await fetch(`${URLROOT}/facilities/updateBooking/${bookingId}`, {
+                      method: 'POST',
+                      body: formData
+                  });
+                  
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+                  
+                  const result = await response.json();
+                  
+                  if (result.success) {
+                      window.location.reload();
+                  } else {
+                      alert(result.message || 'Failed to update booking');
+                  }
+              } catch (error) {
+                  console.error('Error:', error);
+                  alert('An error occurred while updating the booking: ' + error.message);
+              }
+          });
 
           async function removeBooking(bookingId) {
               if (confirm('Are you sure you want to remove this booking?')) {
                   try {
-                      const response = await fetch(`<?php echo URLROOT; ?>/facilities/cancelBooking/${bookingId}`, {
+                      const response = await fetch(`${URLROOT}/facilities/cancelBooking/${bookingId}`, {
                           method: 'POST'
                       });
 

@@ -184,20 +184,54 @@ class M_Facilities
                           ORDER BY b.booking_date DESC');
         return $this->db->resultSet();
     }
-    public function updateBooking($data)
+
+    public function updateBooking($bookingId, $bookingDate, $bookingTime, $duration)
     {
-        $this->db->query('UPDATE bookings SET 
-                          booking_date = :booking_date, 
-                          booking_time = :booking_time, 
-                          duration = :duration
-                          WHERE id = :id');
-
-        $this->db->bind(':id', $data['id']);
-        $this->db->bind(':booking_date', $data['booking_date']);
-        $this->db->bind(':booking_time', $data['booking_time']);
-        $this->db->bind(':duration', $data['duration']);
-
-        return $this->db->execute();
+        try {
+            $this->db->query('SELECT * FROM bookings WHERE id = :id');
+            $this->db->bind(':id', $bookingId);
+            $booking = $this->db->single();
+            
+            if (!$booking) {
+                throw new Exception('Booking not found');
+            }
+            
+            $this->db->query('SELECT * FROM bookings 
+                             WHERE id != :id 
+                             AND booking_date = :booking_date 
+                             AND (
+                                 (booking_time <= :booking_time AND DATE_ADD(booking_time, INTERVAL duration HOUR) > :booking_time)
+                                 OR 
+                                 (booking_time < DATE_ADD(:booking_time, INTERVAL :duration HOUR) AND booking_time >= :booking_time)
+                             )');
+            
+            $this->db->bind(':id', $bookingId);
+            $this->db->bind(':booking_date', $bookingDate);
+            $this->db->bind(':booking_time', $bookingTime);
+            $this->db->bind(':duration', $duration);
+            
+            $conflictingBookings = $this->db->resultSet();
+            
+            if (!empty($conflictingBookings)) {
+                throw new Exception('This time slot conflicts with an existing booking. Please choose a different time.');
+            }
+            
+            $this->db->query('UPDATE bookings 
+                             SET booking_date = :booking_date, 
+                                 booking_time = :booking_time, 
+                                 duration = :duration
+                             WHERE id = :id');
+            
+            $this->db->bind(':id', $bookingId);
+            $this->db->bind(':booking_date', $bookingDate);
+            $this->db->bind(':booking_time', $bookingTime);
+            $this->db->bind(':duration', $duration);
+            
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log('Facility model updateBooking error: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function deleteBooking($id)
