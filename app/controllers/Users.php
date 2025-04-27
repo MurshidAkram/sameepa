@@ -76,7 +76,7 @@ class Users extends Controller
     {
         switch ($roleId) {
             case 1: // Resident
-                header('Location: ' . URLROOT . '/posts/index');
+                header('Location: ' . URLROOT . '/resident/dashboard');
                 break;
             case 2: // Admin
                 header('Location: ' . URLROOT . '/admin/dashboard');
@@ -103,14 +103,12 @@ class Users extends Controller
     public function signup()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-
             $data = [
                 'name' => trim($_POST['name']),
                 'email' => trim($_POST['email']),
                 'password' => trim($_POST['password']),
                 'confirm_password' => trim($_POST['confirm_password']),
-                'role_id' => trim($_POST['role']),
+                'role_id' => 1,
                 'address' => trim($_POST['address']),
                 'phonenumber' => trim($_POST['phonenumber']),
                 'errors' => []
@@ -234,6 +232,39 @@ class Users extends Controller
         }
         if (strlen($data['address']) > 255) {
             $data['errors'][] = 'Address cannot exceed 255 characters';
+        }
+    }
+
+    private function validateAdminSignupForm(&$data, &$userData)
+    {
+        if (empty($data['name'])) {
+            $data['errors'][] = 'Name is required';
+        }
+        if (empty($data['email'])) {
+            $data['errors'][] = 'Email is required';
+        } else {
+            if ($this->userModel->findUserByEmail($data['email'])) {
+                $data['errors'][] = 'Email already exists';
+            }
+        }
+        if (empty($data['role_id'])) {
+            $data['errors'][] = 'Please select a user role';
+        }
+        if (!empty($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $data['errors'][] = 'Please enter a valid email address';
+        }
+        if (empty($data['password'])) {
+            $data['errors'][] = 'Password is required';
+        } elseif (empty($data['confirm_password'])) {
+            $data['errors'][] = 'Please confirm your password';
+        } elseif ($data['password'] !== $data['confirm_password']) {
+            $data['errors'][] = 'Passwords do not match';
+        }
+        if (!empty($data['password']) && strlen($data['password']) < 6) {
+            $data['errors'][] = 'Password must be at least 6 characters long';
+        }
+        if (strlen($data['name']) > 50) {
+            $data['errors'][] = 'Name cannot exceed 50 characters';
         }
     }
 
@@ -461,6 +492,8 @@ class Users extends Controller
         }
         exit();
     }
+
+
     public function createUser()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -472,21 +505,17 @@ class Users extends Controller
                 'password' => trim($_POST['password']),
                 'confirm_password' => trim($_POST['confirm_password']),
                 'role_id' => trim($_POST['role']),
-                'address' => trim($_POST['address']),
-                'phonenumber' => trim($_POST['phonenumber']),
                 'errors' => []
             ];
             // Validate input fields
-            $this->validateSignupForm($data, $userData);
+            $this->validateAdminSignupForm($data, $userData);
             // If validation passes, register the user
             if (empty($data['errors'])) {
                 $userData = [
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'password' => password_hash($data['password'], PASSWORD_DEFAULT), // Hash the password
-                    'role_id' => $data['role_id'],
-                    'address' => $data['address'],
-                    'phonenumber' => $data['phonenumber']
+                    'role_id' => $data['role_id']
                 ];
                 // Attempt to register the user
                 if ($this->userModel->registerUser($userData)) {
@@ -508,8 +537,6 @@ class Users extends Controller
                 'password' => '',
                 'confirm_password' => '',
                 'role_id' => '',
-                'address' => '',
-                'phonenumber' => '',
                 'errors' => []
             ];
             $this->view('users/createUser', $data);

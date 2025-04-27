@@ -251,20 +251,20 @@
                         </ul>
                         <a href="<?php echo URLROOT; ?>/facilities/allmybookings" class="btn-view">View Bookings</a>
                     </div>
-                    <div class="overview-card events">
-                        <h2>Polls you havent voted in</h2>
+                    <div class="overview-card maintenance">
+                        <h2>Active Forums</h2>
                         <ul>
-                            <?php if (!empty($data['unvotedPolls'])): ?>
-                                <?php foreach ($data['unvotedPolls'] as $unvotedPolls): ?>
+                            <?php if (!empty($data['activeForums'])): ?>
+                                <?php foreach ($data['activeForums'] as $activeForums): ?>
                                     <li>
-                                        <span class="event-title"><?php echo htmlspecialchars($unvotedPolls->title); ?></span>
+                                        <span class="event-title"><?php echo htmlspecialchars($activeForums->title); ?></span>
                                     </li>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <li>YOu have voted in all active Polls</li>
+                                <li>No active Forums</li>
                             <?php endif; ?>
                         </ul>
-                        <a href="<?php echo URLROOT; ?>/polls/index" class="btn-view">Vote in Polls</a>
+                        <a href="<?php echo URLROOT; ?>/forums/index" class="btn-view">Go to Forums</a>
                     </div>
                 </div>
             </section>

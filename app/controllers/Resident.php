@@ -10,6 +10,7 @@ class Resident extends Controller
     private $faciltyModel;
     private $complaintModel;
     private $pollsModel;
+    private $forumsModel;
 
     public function __construct()
     {
@@ -22,6 +23,7 @@ class Resident extends Controller
         $this->eventModel = $this->model('M_Events');
         $this->pollsModel = $this->model('M_Polls');
         $this->faciltyModel = $this->model('M_Facilities');
+        $this->forumsModel = $this->model('M_Forums');
 
         // Initialize any resident-specific models if needed
         // $this->residentModel = $this->model('M_Resident');
@@ -52,6 +54,7 @@ class Resident extends Controller
         $types = $this->maintenanceModel->getMaintenanceTypes();
         $unvotedPolls = $this->pollsModel->unvotedPolls($_SESSION['user_id']);
         $mybookings = $this->faciltyModel->getallmyBookings($_SESSION['user_id']);
+        $activeForums = $this->forumsModel->getAllForums();
 
         // Get any necessary data for the dashboard
         $data = [
@@ -61,6 +64,7 @@ class Resident extends Controller
             'types' => $types,
             'unvotedPolls' => $unvotedPolls,
             'mybookings' => $mybookings,
+            'activeForums' => $activeForums,
             'user_id' => $_SESSION['user_id'],
             'email' => $_SESSION['user_email'],
             'role' => $_SESSION['user_role']

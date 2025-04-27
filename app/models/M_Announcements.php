@@ -84,7 +84,7 @@ class M_Announcements
                   WHERE a.status = :status';
 
         if (!empty($searchTerm)) {
-            $query .= ' WHERE a.title LIKE :searchTerm OR a.content LIKE :searchTerm';
+            $query .= ' AND (a.title LIKE :searchTerm OR a.content LIKE :searchTerm)';
         }
 
         $query .= ' ORDER BY a.updated_at DESC';
