@@ -43,6 +43,11 @@
                     <a href="<?php echo URLROOT; ?>/posts/myposts" class="btn btn-secondary">
                         <i class="fas fa-list"></i> My Posts
                     </a>
+                    <?php if ($_SESSION['user_role_id'] >= 2) : ?>
+                        <a href="<?php echo URLROOT; ?>/posts/reported_posts" class="btn btn-primary" style="background:#cddf07">
+                            Post Reports
+                        </a>
+                    <?php endif ?>
                 </div>
             </div>
 
@@ -118,7 +123,12 @@
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </div>
-                                    <?php endif; ?>
+                                    <?php else: ?>
+                                        <a href="<?php echo URLROOT; ?>/posts/reportPost/<?php echo $post->id; ?>"
+                                            class="btn btn-edit" style="background: #cddf07">
+                                            <i class="fas fa-edit"></i> Report
+                                        </a>
+                                    <?php endif ?>
                                 </div>
                             </div>
                         </div>

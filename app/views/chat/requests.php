@@ -39,10 +39,10 @@
                     <a href="<?php echo URLROOT; ?>/chat/index" class="<?php echo ($current_page == 'index' ? 'active' : ''); ?>">My Chats</a>
                     <a href="<?php echo URLROOT; ?>/chat/search" class="<?php echo ($current_page == 'search' ? 'active' : ''); ?>">Search Users</a>
                     <a href="<?php echo URLROOT; ?>/chat/requests" class="<?php echo ($current_page == 'requests' ? 'active' : ''); ?>">Chat Requests</a>
-                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>" 
-   class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
-    <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
-</a>
+                    <a href="<?php echo ($_SESSION['user_role_id'] == 3) ? URLROOT . '/chat/report' : URLROOT . '/chat/myreports'; ?>"
+                        class="<?php echo ($current_page == (($_SESSION['user_role_id'] == 3) ? 'view Reports' : 'Report')) ? 'active' : ''; ?>">
+                        <?php echo ($_SESSION['user_role_id'] == 3) ? 'Reports' : 'Report'; ?>
+                    </a>
                 </nav>
             </aside>
 
@@ -58,10 +58,12 @@
                                 </div>
                                 <div class="group-details">
                                     <h3 class="group-title"><?php echo htmlspecialchars($request->name); ?></h3>
-                                    
-                                    <button class="icon-btn report-btn" title="Report User" aria-label="View my reports">
-        <i class="fas fa-flag"></i>
-    </button>
+
+                                    <?php if ($_SESSION['user_role_id'] != 3): ?>
+                                        <button class="icon-btn report-btn" title="Report User" aria-label="View my reports">
+                                            <i class="fas fa-flag"></i>
+                                        </button>
+                                    <?php endif; ?>
                                     <div class="group-actions" id="actions-<?php echo $request->id; ?>">
                                         <button onclick="acceptRequest(<?php echo $request->id; ?>, <?php echo $request->sender_id; ?>)"
                                             class="btn-update-group">Accept</button>
@@ -96,30 +98,37 @@
             display: flex;
             align-items: center;
         }
+
         .group-image {
             width: 60px;
             height: 60px;
             margin-right: 15px;
         }
+
         .group-image img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
+
         .group-details {
             flex: 1;
         }
+
         .group-title {
             margin: 0 0 10px 0;
             font-size: 1.1em;
             color: #333;
         }
+
         .group-actions {
             display: flex;
             gap: 10px;
         }
-        .btn-update-group, .btn-delete-group {
+
+        .btn-update-group,
+        .btn-delete-group {
             padding: 8px 16px;
             border: none;
             border-radius: 4px;
@@ -127,20 +136,25 @@
             font-weight: 500;
             transition: background-color 0.3s;
         }
+
         .btn-update-group {
             background-color: #4CAF50;
             color: white;
         }
+
         .btn-delete-group {
             background-color: #f44336;
             color: white;
         }
+
         .btn-update-group:hover {
             background-color: #45a049;
         }
+
         .btn-delete-group:hover {
             background-color: #da190b;
         }
+
         .btn-start-chat {
             background-color: #4CAF50;
             color: white;
@@ -150,9 +164,11 @@
             display: inline-block;
             transition: background-color 0.3s;
         }
+
         .btn-start-chat:hover {
             background-color: #45a049;
         }
+
         .no-groups {
             text-align: center;
             padding: 20px;
@@ -160,6 +176,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-view-group {
             display: inline-block;
             margin-top: 10px;
@@ -170,98 +187,100 @@
             text-decoration: none;
             transition: background-color 0.3s;
         }
+
         .btn-view-group:hover {
             background-color: #45a049;
         }
 
         .chat-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 15px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eaeaea;
-}
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+        }
 
-.report-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: #dc3545;
-    padding: 5px;
-    transition: color 0.2s ease;
-}
+        .report-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #dc3545;
+            padding: 5px;
+            transition: color 0.2s ease;
+        }
 
-.report-btn:hover {
-    color: #b02a37;
-}
+        .report-btn:hover {
+            color: #b02a37;
+        }
 
-.report-btn i {
-    margin: 0;
-}
+        .report-btn i {
+            margin: 0;
+        }
     </style>
 
-<script>
-function acceptRequest(requestId, senderId) {
-    fetch("<?php echo URLROOT; ?>/chat/acceptRequest", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `request_id=${requestId}&sender_id=${senderId}`
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            const actionsDiv = document.getElementById("actions-" + requestId);
-            actionsDiv.innerHTML = `<a href="${data.start_chat_url}" class="btn-start-chat">Start Chat</a>`;
-        } else {
-            alert("Failed to accept request.");
+    <script>
+        function acceptRequest(requestId, senderId) {
+            fetch("<?php echo URLROOT; ?>/chat/acceptRequest", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: `request_id=${requestId}&sender_id=${senderId}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const actionsDiv = document.getElementById("actions-" + requestId);
+                        actionsDiv.innerHTML = `<a href="${data.start_chat_url}" class="btn-start-chat">Start Chat</a>`;
+                    } else {
+                        alert("Failed to accept request.");
+                    }
+                });
         }
-    });
-}
 
-function declineRequest(requestId) {
-    fetch("<?php echo URLROOT; ?>/chat/declineRequest", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `request_id=${requestId}`
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            const requestCard = document.getElementById("request-" + requestId);
-            if (requestCard) {
-                requestCard.remove();
-            }
+        function declineRequest(requestId) {
+            fetch("<?php echo URLROOT; ?>/chat/declineRequest", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: `request_id=${requestId}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const requestCard = document.getElementById("request-" + requestId);
+                        if (requestCard) {
+                            requestCard.remove();
+                        }
 
-            // Optional: check if no more requests are left
-            if (document.querySelectorAll('.group-card').length === 0) {
-                const contentDiv = document.querySelector('.groups-content .groups-grid');
-                contentDiv.innerHTML = `
+                        // Optional: check if no more requests are left
+                        if (document.querySelectorAll('.group-card').length === 0) {
+                            const contentDiv = document.querySelector('.groups-content .groups-grid');
+                            contentDiv.innerHTML = `
                     <div class="no-groups">
                         <p>No pending chat requests.</p>
                         <a href="<?php echo URLROOT; ?>/chat/search" class="btn-view-group">Find Users to Chat</a>
                     </div>
                 `;
-            }
-        } else {
-            alert("Failed to decline request.");
+                        }
+                    } else {
+                        alert("Failed to decline request.");
+                    }
+                });
         }
-    });
-}
-// Add event listener for report button
-const reportButton = document.querySelector('.report-btn');
-if (reportButton) {
-    reportButton.addEventListener('click', function() {
-        // Redirect to the chat/myreports section
-        window.location.href = '<?php echo URLROOT; ?>/chat/myreports';
-    });
-}
-</script>
+        // Add event listener for report button
+        const reportButton = document.querySelector('.report-btn');
+        if (reportButton) {
+            reportButton.addEventListener('click', function() {
+                // Redirect to the chat/myreports section
+                window.location.href = '<?php echo URLROOT; ?>/chat/myreports';
+            });
+        }
+    </script>
 
 </body>
+
 </html>
