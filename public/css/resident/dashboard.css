@@ -93,6 +93,10 @@ p {
     border-top: 4px solid #FFC107;
 }
 
+.polls {
+    border-top: 4px solid #df1e1e;
+}
+
 /* Profile Form Styles */
 .profile-section {
     background-color: white;

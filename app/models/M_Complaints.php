@@ -244,4 +244,16 @@ class M_Complaints
             return [];
         }
     }
+
+    public function getComplaintsByStatus($status)
+    {
+        $this->db->query('SELECT c.*, u.name as user_name 
+                          FROM complaints c 
+                          JOIN users u ON c.user_id = u.id 
+                          WHERE c.status = :status 
+                          ORDER BY c.created_at DESC');
+
+        $this->db->bind(':status', $status);
+        return $this->db->resultSet();
+    }
 }

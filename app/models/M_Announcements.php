@@ -133,8 +133,10 @@ class M_Announcements
             $this->db->query('
                 SELECT title
                 FROM announcements
+                WHERE status = :status
                 ORDER BY created_at DESC
             ');
+            $this->db->bind(':status', 'active');
             return $this->db->resultSet();
         } catch (Exception $e) {
             error_log("Error fetching announcements: " . $e->getMessage());
@@ -198,7 +200,7 @@ class M_Announcements
     //     $this->db->query("SELECT id, title, content, created_by, created_at 
     //                       FROM announcements 
     //                       ORDER BY created_at DESC");
-        
+
     //     return $this->db->resultSet();
     // }
 

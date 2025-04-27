@@ -236,28 +236,32 @@ class M_Facilities
         return $this->db->resultSet();
     }
 
-    public function checkBookingOverlap($facilityId, $date, $startTime, $duration)
+    public function checkBookingOverlap($facilityId, $date, $startTime, $duration, $excludeBookingId = null)
     {
-        $this->db->query('SELECT * FROM bookings 
-                          WHERE facility_id = :facility_id 
-                          AND booking_date = :date 
-                          AND (
-                              (TIME_TO_SEC(:start_time) BETWEEN 
-                                  TIME_TO_SEC(booking_time) 
-                                  AND TIME_TO_SEC(booking_time) + (duration * 3600))
-                              OR 
-                              (TIME_TO_SEC(:start_time) + (:duration * 3600) BETWEEN 
-                                  TIME_TO_SEC(booking_time) 
-                                  AND TIME_TO_SEC(booking_time) + (duration * 3600))
-                              OR 
-                              (TIME_TO_SEC(:start_time) <= TIME_TO_SEC(booking_time) 
-                               AND TIME_TO_SEC(:start_time) + (:duration * 3600) >= TIME_TO_SEC(booking_time) + (duration * 3600))
-                              )');
+        $query = 'SELECT * FROM bookings 
+                  WHERE facility_id = :facility_id 
+                  AND booking_date = :date 
+                  AND id != :exclude_id
+                  AND (
+                      (TIME_TO_SEC(:start_time) BETWEEN 
+                          TIME_TO_SEC(booking_time) 
+                          AND TIME_TO_SEC(booking_time) + (duration * 3600))
+                      OR 
+                      (TIME_TO_SEC(:start_time) + (:duration * 3600) BETWEEN 
+                          TIME_TO_SEC(booking_time) 
+                          AND TIME_TO_SEC(booking_time) + (duration * 3600))
+                      OR 
+                      (TIME_TO_SEC(:start_time) <= TIME_TO_SEC(booking_time) 
+                       AND TIME_TO_SEC(:start_time) + (:duration * 3600) >= TIME_TO_SEC(booking_time) + (duration * 3600))
+                      )';
+
+        $this->db->query($query);
 
         $this->db->bind(':facility_id', $facilityId);
         $this->db->bind(':date', $date);
         $this->db->bind(':start_time', $startTime);
         $this->db->bind(':duration', $duration);
+        $this->db->bind(':exclude_id', $excludeBookingId ?? 0);
 
         return $this->db->single();
     }
@@ -302,10 +306,11 @@ class M_Facilities
         $this->db->bind(':status', $status);
         return $this->db->resultSet();
     }
+
     public function getTodaysBookings()
     {
         $today = date('2025-04-24');
-        
+
         $this->db->query("SELECT 
                             booking_time as time,
                             facility_name,
@@ -314,9 +319,24 @@ class M_Facilities
                           FROM bookings 
                           WHERE booking_date = :today
                           ORDER BY booking_time ASC");
-        
+
         $this->db->bind(':today', $today);
-        
+    }
+
+    public function getBookingById($id)
+    {
+        $this->db->query('SELECT * FROM bookings WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    public function getTodayBookings()
+    {
+        $this->db->query('SELECT b.*, f.name as facility_name 
+                          FROM bookings b 
+                          JOIN facilities f ON b.facility_id = f.id 
+                          WHERE b.booking_date = CURDATE()
+                          ORDER BY b.booking_time ASC');
         return $this->db->resultSet();
     }
 }

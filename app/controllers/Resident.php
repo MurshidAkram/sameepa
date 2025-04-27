@@ -9,6 +9,7 @@ class Resident extends Controller
     private $eventModel;
     private $faciltyModel;
     private $complaintModel;
+    private $pollsModel;
 
     public function __construct()
     {
@@ -17,6 +18,10 @@ class Resident extends Controller
         $this->maintenanceModel = $this->model('M_maintenance');
         $this->checkResidentAuth();
         $this->complaintModel = $this->model('M_Complaints');
+        $this->announcementModel = $this->model('M_Announcements');
+        $this->eventModel = $this->model('M_Events');
+        $this->pollsModel = $this->model('M_Polls');
+        $this->faciltyModel = $this->model('M_Facilities');
 
         // Initialize any resident-specific models if needed
         // $this->residentModel = $this->model('M_Resident');
@@ -40,8 +45,22 @@ class Resident extends Controller
 
     public function dashboard()
     {
+        $announcements = $this->announcementModel->getActiveAnnouncements();
+        $events = $this->eventModel->getJoinedEvents($_SESSION['user_id']);
+        $residentId = $this->residentModel->getResidentIdByUserId($_SESSION['user_id']);
+        $requests = $this->maintenanceModel->getResidentRequests($residentId);
+        $types = $this->maintenanceModel->getMaintenanceTypes();
+        $unvotedPolls = $this->pollsModel->unvotedPolls($_SESSION['user_id']);
+        $mybookings = $this->faciltyModel->getallmyBookings($_SESSION['user_id']);
+
         // Get any necessary data for the dashboard
         $data = [
+            'events' => $events,
+            'announcements' => $announcements,
+            'requests' => $requests,
+            'types' => $types,
+            'unvotedPolls' => $unvotedPolls,
+            'mybookings' => $mybookings,
             'user_id' => $_SESSION['user_id'],
             'email' => $_SESSION['user_email'],
             'role' => $_SESSION['user_role']
@@ -52,55 +71,8 @@ class Resident extends Controller
         $this->view('resident/dashboard', $data);
     }
 
-    /*public function announcements()
-    {
-        // Load resident dashboard view
-        $this->view('resident/announcements');
-    }*/
-
-    /*public function events()
-    {
-        // Load resident dashboard view
-        $this->view('resident/events');
-    }*/
-
-    public function visitor_passes()
-    {
-        $this->view('resident/visitor_passes');
-    }
-
-    public function facilities()
-    {
-        $this->view('resident/facilities');
-    }
 
 
-    public function external_services()
-    {
-        $this->view('resident/external_services');
-    }
-
-    public function payments()
-    {
-        $this->view('resident/payments');
-    }
-
-    public function reports()
-    {
-        $this->view('resident/reports');
-    }
-
-
-
-    /*  public function complaints()
-    {
-        $this->view('resident/complaints');
-    } */
-
-    public function incident()
-    {
-        $this->view('resident/incident');
-    }
 
 
     //***********************************************************************************resident request************************************************************************************** */

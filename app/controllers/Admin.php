@@ -2,16 +2,25 @@
 
 class Admin extends Controller
 {
-    private $adminModel;
+
+    private $announcementModel;
+    private $eventModel;
+    private $facilityModel;
+    private $complaintModel;
     private $securityModel;
+    private $adminModel;
 
     public function __construct()
     {
         $this->checkAdminAuth();
 
         // Initialize models
+        $this->announcementModel = $this->model('M_Announcements');
+        $this->eventModel = $this->model('M_Events');
+        $this->facilityModel = $this->model('M_Facilities');
+        $this->complaintModel = $this->model('M_Complaints');
         $this->adminModel = $this->model('M_admin_security_duties');
-        $this->securityModel = $this->model('M_security'); // Assuming you have this model
+        $this->securityModel = $this->model('M_security');
     }
 
     private function checkAdminAuth()
@@ -32,110 +41,60 @@ class Admin extends Controller
 
     public function dashboard()
     {
+        // Get announcements
+        $announcements = $this->announcementModel->getActiveAnnouncements();
+
+        // Get upcoming events and sort by date and time
+        $events = $this->eventModel->getEventsByStatus('upcoming');
+
+        // Sort events by date and time (nearest first)
+        usort($events, function ($a, $b) {
+            $datetimeA = strtotime($a->date . ' ' . $a->time);
+            $datetimeB = strtotime($b->date . ' ' . $b->time);
+            $now = time();
+
+            // Calculate time differences from now
+            $diffA = $datetimeA - $now;
+            $diffB = $datetimeB - $now;
+
+            // Only consider future events
+            if ($diffA < 0 && $diffB < 0) return 0;
+            if ($diffA < 0) return 1;
+            if ($diffB < 0) return -1;
+
+            return $diffA - $diffB;
+        });
+
+        // Take only the first 5 nearest upcoming events
+        $events = array_slice($events, 0, 5);
+
+        // Get today's specific bookings
+        $todayBookingsList = $this->facilityModel->getTodayBookings();
+
+        // Get complaint stats
+        $complaintStats = $this->complaintModel->getDashboardStats();
+        $openComplaints = $complaintStats['pending'];
+        $resolvedComplaints = $complaintStats['resolved'];
+
+        // Get open and in-progress complaints
+        $openComplaintsList = $this->complaintModel->getComplaintsByStatus('pending');
+        $inProgressComplaintsList = $this->complaintModel->getComplaintsByStatus('in_progress');
+
+        // Prepare data for the view
         $data = [
-            'user_id' => $_SESSION['user_id'],
-            'email' => $_SESSION['user_email'],
-            'role' => $_SESSION['user_role']
+            'announcements' => $announcements,
+            'events' => $events,
+            'today_bookings_list' => $todayBookingsList,
+            'open_complaints' => $openComplaints,
+            'resolved_complaints' => $resolvedComplaints,
+            'open_complaints_list' => $openComplaintsList,
+            'in_progress_complaints_list' => $inProgressComplaintsList
         ];
+
+        // Load admin dashboard view with data
         $this->view('admin/dashboard', $data);
     }
 
-    public function payments()
-    {
-        $this->view('admin/payments');
-    }
-
-    public function complaints()
-    {
-        $this->view('admin/complaints');
-    }
-
-    public function forums()
-    {
-        $this->view('admin/forums');
-    }
-
-    public function users()
-    {
-        $this->view('admin/users');
-    }
-
-    public function groups()
-    {
-        $this->view('resident/groups');
-    }
-
-    public function exchange()
-    {
-        $this->view('admin/exchange');
-    }
-
-    public function create_booking() {
-        $this->view('admin/create_booking');
-    }
-    
-    public function view_complaint_history(){
-        $this->view('admin/view_complaint_history');
-    }
-
-    public function viewAnnouncementHistory() {
-        $data = [
-            'title' => 'Announcement History'
-        ];
-        $this->view('admin/view_announcement_history', $data);
-    }
-
-    public function view_event_history(){
-        $this->view('admin/view_event_history');
-    }
-
-    public function view_facilities_history(){
-        $this->view('admin/view_facilities_history');
-    }
-
-    public function create_announcement() {
-        $this->view('admin/create_announcement');
-    }
-
-    public function create_facility() {
-        $this->view('admin/create_facility');
-    }
-
-    public function create_event() {
-        $this->view('admin/create_event');
-    }
-
-    public function create_new_user(){
-        $this->view('admin/create_new_user');
-    }
-
-    public function create_forum(){
-        $this->view('admin/create_forum');
-    }
-
-    public function create_group(){
-        $this->view('admin/create_group');
-    }
-
-    public function view_forum(){
-        $this->view('admin/view_forum');
-    }
-
-    public function view_group(){
-        $this->view('admin/view_group');
-    }
-
-    public function create_payment(){
-        $this->view('admin/create_payment');
-    }
-
-    public function view_complaint(){
-        $this->view('admin/view_complaint');
-    }
-
-    public function update_complaint(){
-        $this->view('admin/update_complaint');
-    }
 
     //********************************** Security Duty Management **********************************
 
@@ -156,21 +115,21 @@ class Admin extends Controller
         $this->view('admin/Manage_security_duties', $data);
     }
 
-    public function getOfficerDuties($officerId) 
+    public function getOfficerDuties($officerId)
     {
         $duties = $this->securityModel->getOfficerDuties($officerId);
-        
+
         header('Content-Type: application/json');
         echo json_encode($duties);
         exit;
     }
 
-    public function addDuty() 
+    public function addDuty()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            
+
             $data = [
                 'officer_id' => trim($_POST['officer_id']),
                 'duty_date' => trim($_POST['duty_date']),
@@ -179,32 +138,32 @@ class Admin extends Controller
                 'duty_date_err' => '',
                 'shift_id_err' => ''
             ];
-            
+
             // Validate data
             if (empty($data['officer_id'])) {
                 $data['officer_id_err'] = 'Please select an officer';
             }
-            
+
             if (empty($data['duty_date'])) {
                 $data['duty_date_err'] = 'Please select a date';
             } elseif (strtotime($data['duty_date']) < strtotime(date('Y-m-d'))) {
                 $data['duty_date_err'] = 'Cannot assign duties for past dates';
             }
-            
+
             if (empty($data['shift_id'])) {
                 $data['shift_id_err'] = 'Please select a shift';
             }
-            
+
             // Check if officer already has a duty on this date
             if ($this->securityModel->isOfficerScheduled($data['officer_id'], $data['duty_date'])) {
                 $data['duty_date_err'] = 'This officer already has a duty on this date';
             }
-            
+
             // Check if shift already has 3 officers
             if ($this->securityModel->getShiftCount($data['duty_date'], $data['shift_id']) >= 3) {
                 $data['shift_id_err'] = 'This shift already has 3 officers assigned';
             }
-            
+
             // Make sure no errors
             if (empty($data['officer_id_err']) && empty($data['duty_date_err']) && empty($data['shift_id_err'])) {
                 // Add duty
@@ -225,7 +184,7 @@ class Admin extends Controller
                 if (!empty($data['officer_id_err'])) $errors[] = $data['officer_id_err'];
                 if (!empty($data['duty_date_err'])) $errors[] = $data['duty_date_err'];
                 if (!empty($data['shift_id_err'])) $errors[] = $data['shift_id_err'];
-                
+
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
                 exit;
@@ -236,7 +195,7 @@ class Admin extends Controller
         }
     }
 
-    public function editShift() 
+    public function editShift()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $officer_id = isset($_POST['officer_id']) ? $_POST['officer_id'] : null;
@@ -269,7 +228,7 @@ class Admin extends Controller
         }
     }
 
-    public function deleteDuty() 
+    public function deleteDuty()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $officer_id = isset($_POST['officer_id']) ? $_POST['officer_id'] : null;
@@ -294,10 +253,10 @@ class Admin extends Controller
         }
     }
 
-    public function getCalendarData($startDate, $endDate) 
+    public function getCalendarData($startDate, $endDate)
     {
         $schedule = $this->securityModel->getScheduleForPeriod($startDate, $endDate);
-        
+
         header('Content-Type: application/json');
         echo json_encode($schedule);
         exit;

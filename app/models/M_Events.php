@@ -237,7 +237,8 @@ class M_Events
         return false;
     }
 
-    /* public function getEventsByStatus($status)
+    //SENUJA for admin dashboard
+    public function getEventsByStatus($status)
     {
         $today = date('Y-m-d');
 
@@ -258,6 +259,7 @@ class M_Events
         return $this->db->resultSet();
     }
 
+    /*
     public function getAllEventsForAdmin($search = '')
     {
         $sql = 'SELECT e.*, u.name as creator_name,
