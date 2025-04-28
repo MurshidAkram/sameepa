@@ -931,7 +931,7 @@
                 const localDate = new Date(dutyDateInput);
                 const dutyDate = formatDateForServer(localDate);
 
-                // Validate date is not in the past
+            
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 const selectedDate = new Date(dutyDate);
@@ -952,20 +952,20 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Show success message
+                           
                             alert('Duty assigned successfully!');
-                            // Reload the page
+                          
                             window.location.reload();
                         } else {
                             alert(data.message || 'Add Duty Successfull ');
-                            // Reload the page even on error (if data might have been saved)
+                           
                             window.location.reload();
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
                         alert('Add Duty Successfull.');
-                        // Reload the page on network errors too
+                     
                         window.location.reload();
                     });
             }
@@ -978,9 +978,9 @@
             }
 
             function editDuty(officerId, dutyDate, currentShiftId) {
-                // First validate the date is not in the past
+            
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // Set to start of day
+                today.setHours(0, 0, 0, 0);
 
                 const dutyDateObj = new Date(dutyDate);
 
@@ -993,7 +993,7 @@
                 const newShiftId = prompt('Enter new shift ID (1-Morning, 2-Afternoon, 3-Night):', currentShiftId);
 
                 if (!newShiftId || newShiftId == currentShiftId) {
-                    return; // No change or cancelled
+                    return; 
                 }
 
                 // Confirm the change with user
@@ -1013,7 +1013,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('Duty updated successfully!');
-                            window.location.reload(); // Always reload to ensure UI consistency
+                            window.location.reload(); 
                         } else {
                             alert(data.message || 'Duty updated successfully!');
                         }
@@ -1026,19 +1026,19 @@
             }
 
             function deleteDuty(officerId, dutyDate) {
-                // First validate the date is in the future (not today or past)
+              
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // Set to start of day
+                today.setHours(0, 0, 0, 0); 
 
                 const dutyDateObj = new Date(dutyDate);
 
-                // Check if date is today or in the past
+           
                 if (dutyDateObj <= today) {
                     alert('Cannot delete duties for past dates.');
                     return;
                 }
 
-                // Confirm deletion with user
+              
                 if (!confirm('Are you sure you want to delete this future duty assignment?')) {
                     return;
                 }
@@ -1055,7 +1055,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('Duty deleted successfully!');
-                            window.location.reload(); // Refresh the page
+                            window.location.reload();
                         } else {
                             alert(data.message || 'Failed to delete duty');
                         }
@@ -1094,8 +1094,8 @@
             }
 
             function showSuccessMessage(message) {
-                // You can implement a toast notification or flash message here
-                alert(message); // Temporary solution - replace with a proper notification system
+              
+                alert(message); 
             }
 
             // API functions

@@ -300,35 +300,26 @@
             <div class="contacts-container">
                 <?php foreach ($data['contactsByCategory'] as $categoryData): ?>
                     <div class="category-card" onclick="toggleContacts(this, <?php echo $categoryData['category']->id; ?>)">
-                        <div class="category-header">
-                            <!-- <div class="category-icon">
+                       
+                    <div class="category-header">
+                        
+                            <div class="category-icon">
                                 <i class="fas fa-<?php echo $categoryData['category']->icon; ?>"></i>
-                            </div> -->
+                            </div>
                             <h2 class="category-title"><?php echo $categoryData['category']->name; ?></h2>
                         </div>
                         
                         <div class="contacts-grid">
                             <?php foreach ($categoryData['contacts'] as $contact): ?>
+                                
                                 <div class="contact-item">
                                     <div class="contact-name"><?php echo htmlspecialchars($contact->name); ?></div>
                                     <div class="contact-phone"><?php echo htmlspecialchars($contact->phone); ?></div>
+
                                     <?php if (!empty($contact->description)): ?>
                                         <div class="contact-description"><?php echo htmlspecialchars($contact->description); ?></div>
                                     <?php endif; ?>
-                                    <!-- <div class="contact-actions">
-                                        <a href="tel:<?php echo htmlspecialchars($contact->phone); ?>" class="btn-call">
-                                            <i class="fas fa-phone"></i> Call
-                                        </a>
-                                        <button class="btn-edit" onclick="openEditModal(
-                                            '<?php echo $contact->id; ?>',
-                                            '<?php echo htmlspecialchars($contact->name); ?>', 
-                                            '<?php echo htmlspecialchars($contact->phone); ?>',
-                                            '<?php echo htmlspecialchars($contact->description); ?>',
-                                            event
-                                        )">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </button>
-                                    </div> -->
+                                   
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -338,174 +329,35 @@
         </div>
     </div>
 
-    <!-- Edit Contact Modal -->
-    <div id="editContactModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('editContactModal')">&times;</span>
-            <h3>Edit Emergency Contact</h3>
-            <form id="editContactForm">
-                <div class="form-group">
-                    <label for="editContactName">Name:</label>
-                    <input type="text" id="editContactName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editContactPhone">Phone:</label>
-                    <input type="text" id="editContactPhone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editContactDescription">Description:</label>
-                    <textarea id="editContactDescription" rows="3"></textarea>
-                </div>
-                
-                <input type="hidden" id="editContactId">
-                
-                <div class="form-actions">
-                    <button type="button" class="btn cancel-btn" onclick="closeModal('editContactModal')">Cancel</button>
-                    <button type="submit" class="btn save-btn">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+   
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
     <script>
-      // Store all contacts data from PHP
+    
+      
 const allContacts = <?php echo json_encode($data['contactsByCategory']); ?>;
 let currentCategoryId = null;
 
 // Toggle contacts visibility when clicking a category card
-function toggleContacts(card, categoryId, categoryName, categoryIcon) {
-    // Close all other open category cards
-    document.querySelectorAll('.category-card').forEach(item => {
+function toggleContacts(card, categoryId, categoryName, categoryIcon) {      
+                                                                               
+     // Close all other open category cards                                   
+                                                                            
+   
+     document.querySelectorAll('.category-card').forEach(item => {
         item.classList.remove('active');
-    });
-
+    });                                                                            
     // Toggle the clicked card
     card.classList.add('active');
 
     // Show contacts
     showCategoryContacts(categoryId, categoryName, categoryIcon);
+                                                                              
+   
+
+   
 }
 
-// Show contacts for a specific category
-function showCategoryContacts(categoryId, categoryName, categoryIcon) {
-    // Update display header
-    document.getElementById('displayCategoryTitle').textContent = categoryName;
-    document.getElementById('displayCategoryIcon').className = `fas fa-${categoryIcon}`;
-
-    // Find and show contacts
-    const categoryData = allContacts.find(cat => cat.category.id == categoryId);
-    const contacts = categoryData ? categoryData.contacts : [];
-    const contactsList = document.getElementById('contactsList');
-    contactsList.innerHTML = '';
-
-    contacts.forEach(contact => {
-        const contactItem = document.createElement('div');
-        contactItem.className = 'contact-item';
-        contactItem.innerHTML = `
-            <div class="contact-name">${contact.name}</div>
-            <div class="contact-phone">${contact.phone}</div>
-            ${contact.description ? `<div class="contact-description">${contact.description}</div>` : ''}
-            <div class="contact-actions">
-                <a href="tel:${contact.phone}" class="btn-call">
-                    <i class="fas fa-phone"></i> Call
-                </a>
-                <button class="btn-edit" onclick="openEditModal(
-                    '${contact.id}',
-                    '${contact.name.replace(/'/g, "\\'")}',
-                    '${contact.phone}',
-                    '${contact.description ? contact.description.replace(/'/g, "\\'") : ''}',
-                    event
-                )">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-            </div>
-        `;
-        contactsList.appendChild(contactItem);
-    });
-
-    document.getElementById('contactsDisplay').style.display = 'block';
-    document.getElementById('contactsDisplay').scrollIntoView({ behavior: 'smooth' });
-
-    currentCategoryId = categoryId;
-}
-
-// Open a modal
-function openModal(modalId) {
-    document.getElementById(modalId).classList.add('active');
-    document.getElementById(modalId).style.display = 'block';
-}
-
-// Close a modal
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('active');
-    document.getElementById(modalId).style.display = 'none';
-}
-
-// Open the edit modal with contact details
-function openEditModal(id, name, phone, description, event) {
-    event.stopPropagation();
-    document.getElementById('editContactId').value = id;
-    document.getElementById('editContactName').value = name;
-    document.getElementById('editContactPhone').value = phone;
-    document.getElementById('editContactDescription').value = description || '';
-    openModal('editContactModal');
-}
-
-// Save edited contact
-document.getElementById('editContactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const id = document.getElementById('editContactId').value;
-    const name = document.getElementById('editContactName').value;
-    const phone = document.getElementById('editContactPhone').value;
-    const description = document.getElementById('editContactDescription').value;
-
-    const data = { id, name, phone, description };
-
-    fetch(`<?php echo URLROOT; ?>/security/Edit_Contact/${id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Contact updated successfully');
-            closeModal('editContactModal');
-
-            // Refresh contacts for current category
-            if (currentCategoryId) {
-                const currentCategory = allContacts.find(cat => cat.category.id == currentCategoryId);
-                if (currentCategory) {
-                    showCategoryContacts(
-                        currentCategoryId,
-                        currentCategory.category.name,
-                        currentCategory.category.icon
-                    );
-                }
-            }
-        } else {
-            alert('Failed to update contact');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while updating the contact.');
-    });
-});
-
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-    if (event.target.classList.contains('modal')) {
-        closeModal('editContactModal');
-    }
-});
-
-     
     </script>
 </body>
 </html>

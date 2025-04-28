@@ -172,7 +172,7 @@
             <?php if (!empty($data['todayPasses'])) : ?>
 
               <?php foreach ($data['todayPasses'] as $pass) : ?>
-                <!-- foreach (array_slice($data['todayPasses'], 0, 100) as $pass) -->
+              
                 <tr>
                   <td><?php echo ($pass->visitor_name); ?></td>
                   <td><?php echo ($pass->resident_name); ?></td>
@@ -267,7 +267,7 @@
       <?php 
       $total = array_sum($data['incidentTrends']['data']);
       foreach (array_slice($data['incidentTrends']['labels'], 0, 100) as $index => $type): 
-        $percentage = $total > 0 ? round(($data['incidentTrends']['data'][$index] / $total) * 100, 1) : 0; // 1 is the need decimalplaces.
+        $percentage = $total > 0 ? round(($data['incidentTrends']['data'][$index] / $total) * 100, 1) : 0; 
       ?>
         <tr>
           <td><?php echo htmlspecialchars($type); ?></td>
@@ -284,7 +284,6 @@
   </table>
 </div>
     </div>
-    
 
     <!-- Compact Charts Row -->
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
@@ -309,9 +308,11 @@
 
 
 <script>
+
 // Initialize all charts
 function initializeCharts() {
-  // Weekly Visitor Flow - Small bar chart
+
+
   new Chart(document.getElementById('visitorFlowCanvas').getContext('2d'), {
     type: 'bar',
     data: {
@@ -333,6 +334,7 @@ function initializeCharts() {
   });
 
   // Incident Trends - Small horizontal bar chart
+
   new Chart(document.getElementById('incidentTrendsCanvas').getContext('2d'), {
     type: 'bar',
     data: {
@@ -343,98 +345,29 @@ function initializeCharts() {
       }]
     },
     options: {
-      indexAxis: 'y',
+      indexAxis: 'x',
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+      plugins: { legend: { display: false } }, 
       scales: {
         x: { beginAtZero: true }
       }
     }
   });
 
-  // Mini Visitor Chart - Tiny line chart
-  const visitorCountByHour = calculateVisitorCountByHour(<?php echo json_encode($data['todayPasses']); ?>);
-  new Chart(document.getElementById('miniVisitorChart').getContext('2d'), {
-    type: 'line',
-    data: {
-      labels: visitorCountByHour.labels,
-      datasets: [{
-        data: visitorCountByHour.data,
-        borderColor: '#9b59b6',
-        borderWidth: 1,
-        fill: false,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { x: { display: false }, y: { display: false } }
-    }
-  });
-
-  // Mini Officer Chart - Tiny bar chart
-  new Chart(document.getElementById('miniOfficerChart').getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: <?php echo json_encode($data['miniOfficer']['labels']); ?>,
-      datasets: [{
-        data: <?php echo json_encode($data['miniOfficer']['data']); ?>,
-        backgroundColor: '#3498db'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { x: { display: false }, y: { display: false } }
-    }
-  });
-
-  // Mini Incident Chart - Tiny doughnut chart
-  new Chart(document.getElementById('miniIncidentChart').getContext('2d'), {
-    type: 'doughnut',
-    data: {
-      labels: <?php echo json_encode($data['incidentTrends']['labels']); ?>,
-      datasets: [{
-        data: <?php echo json_encode($data['incidentTrends']['data']); ?>,
-        backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      cutout: '70%'
-    }
-  });
+  
 }
 
-// Helper function to calculate visitor count by hour
-function calculateVisitorCountByHour(passes) {
-  const hours = Array.from({length: 24}, (_, i) => i);
-  const counts = Array(24).fill(0);
-  
-  passes.forEach(pass => {
-    if (pass.visit_time) {
-      const hour = new Date('1970-01-01T' + pass.visit_time).getHours();
-      counts[hour]++;
-    }
-  });
-  
-  return {
-    labels: hours.map(h => h + ':00'),
-    data: counts
-  };
-}
 
 document.addEventListener('DOMContentLoaded', initializeCharts);
+
+
+
 // Initialize the large pie chart (5x size)
 document.addEventListener('DOMContentLoaded', function() {
-  const ctx = document.getElementById('largeIncidentPieChart').getContext('2d');
-  new Chart(ctx, {
+
+ 
+  new Chart(document.getElementById('largeIncidentPieChart').getContext('2d'), {
     type: 'pie',
     data: {
       labels: <?php echo json_encode($data['incidentTrends']['labels']); ?>,
@@ -456,10 +389,10 @@ document.addEventListener('DOMContentLoaded', function() {
         legend: {
           position: 'right',
           labels: {
-            boxWidth: 12,
-            padding: 10,
+            boxWidth: 30,
+            padding: 20,
             font: {
-              size: 10
+              size: 15
             }
           }
         },

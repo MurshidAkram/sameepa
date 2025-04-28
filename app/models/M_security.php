@@ -41,6 +41,7 @@ public function getWeeklyVisitorFlow() {
     $data = [];
     
     // Fill all 7 days (even if no data)
+    //follow function can change bar chart labels(like => sun,mon,tue,......)
     for ($i = 6; $i >= 0; $i--) {
         $date = date('Y-m-d', strtotime("-$i days"));
         $dayName = date('D', strtotime($date));
@@ -201,7 +202,7 @@ public function getVisitorPasses() {
                   FROM visitor_passes 
                   WHERE visit_date < CURDATE()
                   ORDER BY visit_date DESC, visit_time DESC
-                  LIMIT 100"; // Limit to 100 most recent for performance
+                  LIMIT 100"; 
     $this->db->query($queryHistory);
     $historyResult = $this->db->resultSet();
 
@@ -255,11 +256,11 @@ public function searchResidentContacts($query)
                         u.id as user_id
                       FROM users u
                       JOIN residents r ON u.id = r.user_id
-                      WHERE (u.name LIKE :q OR r.address LIKE :q)
+                      WHERE (u.name LIKE :q OR r.address LIKE :q )
                         AND u.role_id = 1"); // Assuming role_id 1 is for residents
 
-    $this->db->bind(':q', '%' . $query . '%');
-    return $this->db->resultSet();
+    $this->db->bind(':q', '%' . $query . '%'); //The LIKE clause in SQL uses the percent (%) symbols to represent wildcards, meaning "any characters before or after the search term".
+    return $this->db->resultSet();             //If the search query is john, this would turn into '%john%', matching names or addresses that contain the word "john" anywhere.
 }
 
 
@@ -275,6 +276,7 @@ public function getAllIncidents() {
         return [
             'report_id' => $incident->report_id,
             'type' => $incident->type,
+            'pri'=> $incident->pri,
             'date' => $incident->date,
             'time' => $incident->time,
             'location' => $incident->location,
@@ -288,10 +290,11 @@ public function getAllIncidents() {
 
 public function addIncident($data) {
     $this->db->query("INSERT INTO incident_reports 
-                     (type, date, time, location, description, status)
-                     VALUES (:type, :date, :time, :location, :description, :status)");
+                     (type, pri , date, time, location, description, status)
+                     VALUES (:type, :pri, :date, :time, :location, :description, :status)");
 
     $this->db->bind(':type', $data['type']);
+    $this->db->bind(':pri', $data['pri']);
     $this->db->bind(':date', $data['date']);
     $this->db->bind(':time', $data['time']);
     $this->db->bind(':location', $data['location']);

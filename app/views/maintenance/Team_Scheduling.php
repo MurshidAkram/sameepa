@@ -584,14 +584,14 @@
             const memberForm = document.getElementById('memberForm');
             const teamProfileSection = document.querySelector('.team-profile');
             const phoneInput = document.getElementById('phone_number');
-            const phoneRegex = /^\d{10}$/; // Regex for exactly 10 digits
+            const phoneRegex = /^\d{10}$/; 
             let editingMemberId = null;
 
             // Open modal for adding a new member
             addMemberBtn.addEventListener('click', () => {
-                editingMemberId = null; // Reset editing mode
+                editingMemberId = null;
                 memberModal.classList.add('active');
-                memberForm.reset(); // Reset the form
+                memberForm.reset();
                 document.getElementById('modalTitle').textContent = 'Add New Member';
             });
 
@@ -601,7 +601,6 @@
                     const card = e.target.closest('.team-profile-card');
                     editingMemberId = card.dataset.id;
 
-                    // Populate the form with existing data
                     const name = card.querySelector('.member-name').textContent;
                     const specialization = card.querySelector('.member-specialization').textContent.split(': ')[1];
                     const experience = card.querySelector('.member-experience').textContent.split(': ')[1].replace(' years', '');
@@ -621,17 +620,16 @@
             memberForm.addEventListener('submit', (e) => {
                 e.preventDefault();
 
-                // Validate phone number
+               
                 if (!phoneRegex.test(phoneInput.value)) {
                     alert('Please enter a valid 10-digit phone number');
                     return;
                 }
 
-                // Here you would typically send the data to your server
-                // For demonstration, we'll just refresh the page after a short delay
+               
                 setTimeout(() => {
                     window.location.reload();
-                }, 500); // Small delay to allow user to see the success state if needed
+                }, 500);
             });
 
             // Close modal
@@ -648,19 +646,19 @@
                 }
             });
 
-            // Handle form submission for adding/editing a member
+            
             memberForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const phoneNumber = phoneInput.value.trim();
 
-                // Final validation before submitting
+                
                 if (!phoneRegex.test(phoneNumber)) {
                     alert('Phone number must be exactly 10 digits.');
-                    return; // Stop form submission
+                    return; 
                 }
 
-                const formData = new FormData(this); // Collect form data, including files
+                const formData = new FormData(this); 
                 const url = editingMemberId ?
                     `<?php echo URLROOT; ?>/maintenance/editMember/${editingMemberId}` :
                     `<?php echo URLROOT; ?>/maintenance/addMember`;
@@ -673,7 +671,7 @@
                     .then(data => {
                         if (data.success) {
                             if (editingMemberId) {
-                                // Update the existing card dynamically
+                            
                                 const card = document.querySelector(`.team-profile-card[data-id="${editingMemberId}"]`);
                                 card.querySelector('.member-name').textContent = data.name;
                                 card.querySelector('.member-specialization').textContent = `Specialization: ${data.specialization}`;
@@ -684,7 +682,7 @@
                                     card.querySelector('.profile-img img').src = data.profile_image;
                                 }
                             } else {
-                                // Add a new card dynamically
+                            
                                 const newCard = `
                             <div class="team-profile-card" data-id="${data.id}">
                                 <div class="profile-img">
@@ -727,7 +725,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    card.remove(); // Remove card from the DOM
+                                    card.remove(); 
                                 } else {
                                     alert('Error deleting member');
                                 }
@@ -737,7 +735,7 @@
                 }
             });
 
-            // Search functionality
+         
             document.getElementById('searchBtn').addEventListener('click', function() {
                 const query = document.getElementById('searchBar').value.trim().toLowerCase();
 
@@ -748,9 +746,9 @@
                         const specialization = card.querySelector('.member-specialization').textContent.toLowerCase();
 
                         if (name.includes(query) || specialization.includes(query)) {
-                            card.style.display = ''; // Show matching cards
+                            card.style.display = ''; 
                         } else {
-                            card.style.display = 'none'; // Hide non-matching cards
+                            card.style.display = 'none';
                         }
                     });
                 } else {

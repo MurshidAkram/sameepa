@@ -714,3 +714,27 @@ INSERT INTO maintenance_types (type_name) VALUES
 ('General Maintenance');
 
 ALTER TABLE users ADD COLUMN is_deleted TINYINT(1) DEFAULT 0 NOT NULL AFTER is_active;
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE incident_reports (
+    report_id INT PRIMARY KEY AUTO_INCREMENT,
+    type VARCHAR(50) NOT NULL,
+    pri VARCHAR(50) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    status VARCHAR(30) NOT NULL CHECK (status IN ('Open', 'In Progress', 'Closed', 'Resolved', 'Pending')),
+    location VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

@@ -210,15 +210,10 @@ footer {
         <main>
             <!-- Dashboard Header -->
             <header class="dashboard-header">
-                <!-- <div class="user-info">
-                    <p>Welcome, <strong><?php echo $_SESSION['user_name']; ?></strong></p>
-                    <p id="current-date-time"></p>
-                </div> -->
+               
 
                 <div class="dashboard-controls">
-                    <!-- <div class="quick-links">
-                        <a href="<?php echo URLROOT; ?>/maintenance/requests">View All Requests</a>
-                    </div> -->
+                  
                 </div>
             </header>
 
@@ -256,15 +251,7 @@ footer {
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Current date and time
-        // const dateTimeElement = document.getElementById('current-date-time');
-        // function updateDateTime() {
-        //     const now = new Date();
-        //     dateTimeElement.textContent = now.toLocaleString();
-        // }
-        // setInterval(updateDateTime, 1000);
-        
-        // Request Types Chart
+      
         const requestTypeCtx = document.getElementById('request-type-chart').getContext('2d');
         new Chart(requestTypeCtx, {
             type: 'pie',
@@ -305,7 +292,7 @@ footer {
             }
         });
 
-        // Completed Requests by Type Chart
+      
         const completedRequestCtx = document.getElementById('completed-requests-chart').getContext('2d');
         new Chart(completedRequestCtx, {
             type: 'pie',

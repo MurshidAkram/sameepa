@@ -561,9 +561,7 @@
                                         <td><?php echo $officer->id; ?></td>
                                         <td><?php echo $officer->name; ?></td>
                                         <td>
-                                            <!-- <button class="btn btn-success" onclick="openAddDutyModal(<?php echo $officer->id; ?>, '<?php echo $officer->name; ?>')">
-                                                <i class="fas fa-plus"></i> Add Duty
-                                            </button> -->
+                                           
                                             <button class="btn btn-warning" onclick="viewOfficerDuties(<?php echo $officer->id; ?>)">
                                                 <i class="fas fa-edit"></i> View Duties
                                             </button>
@@ -616,7 +614,7 @@
 
             <div class="calendar-container">
                 <div class="calendar-header">
-                    <h2 class="calendar-title" id="calendarTitle">April 2023</h2>
+                    <h2 class="calendar-title" id="calendarTitle">April 2025</h2>
                     <div class="calendar-nav">
                         <button class="btn btn-primary" onclick="previousMonth()"><i class="fas fa-chevron-left"></i></button>
                         <button class="btn btn-primary" onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
@@ -628,43 +626,7 @@
             </div>
         </div>
 
-        <!-- Add Duty Modal -->
-        <!-- <div class="modal" id="addDutyModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Add Duty Schedule</h3>
-                    <button class="close" onclick="closeModal('addDutyModal')">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="addDutyForm">
-                        <input type="hidden" id="addOfficerId">
-                        <div class="form-group">
-                            <label for="addOfficerName">Officer Name</label>
-                            <input type="text" class="form-control" id="addOfficerName" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="addDutyDate">Date</label>
-                            <input type="date" class="form-control" id="addDutyDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="addShift">Shift</label>
-                            <select class="form-control" id="addShift" required>
-                                <?php foreach ($data['shifts'] as $shift): ?>
-                                    <option value="<?php echo $shift->id; ?>">
-                                        <?php echo $shift->name . ' (' . substr($shift->start_time, 0, 5) . ' - ' . substr($shift->end_time, 0, 5) . ')'; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-
-                    <button class="btn btn-primary" onclick="saveDuty()">Save</button>
-                </div>
-            </div>
-        </div> -->
+       
 
         <!-- View Duties Modal -->
         <div class="modal" id="viewDutiesModal">
@@ -710,7 +672,7 @@
                 const calendar = document.getElementById('calendar');
                 calendar.innerHTML = '';
 
-                // Add day headers
+               
                 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 days.forEach(day => {
                     const dayHeader = document.createElement('div');
@@ -763,7 +725,7 @@
                 console.log("Fetching duties for:", dateStr);
                 fetchDutiesForDate(dateStr).then(duties => {
                     console.log("Received duties:", duties);
-                    // Clear existing duties (except day number)
+               
                     const dayNumber = dayCell.querySelector('.calendar-day-number');
                     dayCell.innerHTML = '';
                     if (dayNumber) dayCell.appendChild(dayNumber);
@@ -865,18 +827,18 @@
                         if (data.success) {
                             // Show success message
                             alert('Duty assigned successfully!');
-                            // Reload the page
+                           
                             window.location.reload();
                         } else {
                             alert(data.message || 'Add Duty Successfull ');
-                            // Reload the page even on error (if data might have been saved)
+                            
                             window.location.reload();
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
                         alert('Add Duty Successfull.');
-                        // Reload the page on network errors too
+                      
                         window.location.reload();
                     });
             }
@@ -891,7 +853,7 @@
             function editDuty(officerId, dutyDate, currentShiftId) {
                 // First validate the date is not in the past
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // Set to start of day
+                today.setHours(0, 0, 0, 0); 
 
                 const dutyDateObj = new Date(dutyDate);
 
@@ -900,11 +862,11 @@
                     return;
                 }
 
-                // Get new shift ID from user
+                
                 const newShiftId = prompt('Enter new shift ID (1-Morning, 2-Afternoon, 3-Night):', currentShiftId);
 
                 if (!newShiftId || newShiftId == currentShiftId) {
-                    return; // No change or cancelled
+                    return;
                 }
 
                 // Confirm the change with user
@@ -924,7 +886,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('Duty updated successfully!');
-                            window.location.reload(); // Always reload to ensure UI consistency
+                            window.location.reload(); 
                         } else {
                             alert(data.message || 'Duty updated successfully!');
                         }
@@ -937,19 +899,19 @@
             }
 
             function deleteDuty(officerId, dutyDate) {
-                // First validate the date is in the future (not today or past)
+                
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // Set to start of day
+                today.setHours(0, 0, 0, 0); 
 
                 const dutyDateObj = new Date(dutyDate);
 
-                // Check if date is today or in the past
+               
                 if (dutyDateObj <= today) {
                     alert('Cannot delete duties for past dates.');
                     return;
                 }
 
-                // Confirm deletion with user
+             
                 if (!confirm('Are you sure you want to delete this future duty assignment?')) {
                     return;
                 }
@@ -966,7 +928,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('Duty deleted successfully!');
-                            window.location.reload(); // Refresh the page
+                            window.location.reload();
                         } else {
                             alert(data.message || 'Failed to delete duty');
                         }
@@ -1005,11 +967,11 @@
             }
 
             function showSuccessMessage(message) {
-                // You can implement a toast notification or flash message here
-                alert(message); // Temporary solution - replace with a proper notification system
+              
+                alert(message); 
             }
 
-            // API functions
+           
             function fetchDutiesForDate(date) {
                 return fetch(`<?php echo URLROOT; ?>/security/getCalendarData/${date}/${date}`)
                     .then(response => response.json())

@@ -384,7 +384,7 @@
     }
 }
 
-// When specialization changes, load maintainers
+
 specializationSelect.addEventListener('change', async function() {
     if (!this.value) {
         maintainerSelect.innerHTML = '<option value="">Select a maintainer</option>';
@@ -477,7 +477,7 @@ assignForm.addEventListener('submit', async function(e) {
     }
 });
 
-        // Table filtering
+      
         function filterTable() {
             const searchTerm = searchInput.value.toLowerCase();
             const typeFilterValue = typeFilter.value;
@@ -494,12 +494,12 @@ assignForm.addEventListener('submit', async function(e) {
             });
         }
 
-        // Event listeners for filters
+   
         searchInput.addEventListener('input', filterTable);
         typeFilter.addEventListener('change', filterTable);
         statusFilter.addEventListener('change', filterTable);
 
-        // Toast notification
+      
         function showToast(message, type) {
             const toast = document.createElement('div');
             toast.className = `toast toast-${type} show`;
@@ -512,7 +512,6 @@ assignForm.addEventListener('submit', async function(e) {
             }, 3000);
         }
 
-        // Close modals when clicking outside
         window.addEventListener('click', function(e) {
             if (e.target === statusModal) statusModal.style.display = 'none';
             if (e.target === assignModal) assignModal.style.display = 'none';

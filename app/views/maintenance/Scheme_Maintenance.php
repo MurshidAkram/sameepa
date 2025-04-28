@@ -191,61 +191,12 @@
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <div class="dashboard-container">
-        <!-- Side Panel -->
+    
         <?php require APPROOT . '/views/inc/components/side_panel_maintenance.php'; ?>
 
-        <!-- Main Content -->
-        <!-- Main Content -->
         <main class="main-content">
             <h1>Scheme Maintenance</h1>
 
-            <!-- Maintenance Task List -->
-            <h2>Maintenance Task List</h2>
-
-            <!-- Search Bar for Maintenance Task List -->
-            <div class="search-container">
-                <input type="text" id="task-search" placeholder="Search tasks..." onkeyup="filterTasks()">
-            </div>
-
-            <table class="task-table" id="task-table">
-                <thead>
-                    <tr>
-                        <th>Task ID</th>
-                        <th>Type</th>
-
-                        <th>Priority</th>
-                        <th>Frequency</th>
-                        <th>Assigned Maintainer</th>
-                        <th>Specialization</th>
-                    </tr>
-                </thead>
-            
-            </table>
-
-            <!-- Maintenance History -->
-            <h2>Maintenance History</h2>
-
-            <!-- Search Bar for Maintenance History -->
-            <div class="search-container">
-                <input type="text" id="history-search" placeholder="Search history..." onkeyup="filterHistory()">
-            </div>
-
-            <div class="task-card-container" id="history-container">
-                <div class="task-card">
-                    <h3>Common Area - HVAC System</h3>
-                    <p>Last Maintenance Date: 2024-08-15</p>
-                    <p>Issue: Filter Replacement</p>
-                    <p>Actions Taken: Replaced filters and adjusted settings</p>
-                    <p>Status: Completed</p>
-                </div>
-                <div class="task-card">
-                    <h3>Electrical Room - Main Circuit</h3>
-                    <p>Last Maintenance Date: 2024-07-10</p>
-                    <p>Issue: Overload Protection</p>
-                    <p>Actions Taken: Installed new breaker</p>
-                    <p>Status: Completed</p>
-                </div>
-            </div>
         </main>
 
     </div>

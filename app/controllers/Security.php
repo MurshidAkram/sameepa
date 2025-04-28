@@ -138,6 +138,7 @@ class Security extends Controller
             $visitDateTime = new DateTime($data['visit_date'] . ' ' . $data['visit_time']);
 
             // Check if visit date is in the past
+
             if ($visitDateTime < $currentDateTime) {
                 echo json_encode([
                     'success' => false,
@@ -179,7 +180,10 @@ class Security extends Controller
 
 
 //*******************************************Emergency_Contacts*************************************************************************************************** */
+
+
 public function Emergency_Contacts() {
+
     $categories = $this->securityModel->getAllContactCategories();
     $contactsByCategory = [];
     
@@ -193,6 +197,7 @@ public function Emergency_Contacts() {
     $data = ['contactsByCategory' => $contactsByCategory];
     $this->view('security/Emergency_Contacts', $data);
 }
+
 
 public function Edit_Contact($id) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -255,12 +260,13 @@ public function Delete_Contact($id) {
 }
 
     //*****************************************Search Resident_Contacts in Manage_Visitor_Passes***************************************************************************************************** */
+
     public function Resident_Contacts()
     {
         // Check if this is a search request
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search_query'])) {
             // Handle the AJAX search request
-            $query = trim($_GET['search_query']);
+            $query = trim($_GET['search_query']);//Get the search term from the URL and remove any unwanted spaces around it.
 
             // Validate input
             if (empty($query)) {
@@ -269,7 +275,7 @@ public function Delete_Contact($id) {
             }
 
             // Sanitize input
-            $query = filter_var($query, FILTER_SANITIZE_STRING);
+            $query = filter_var($query, FILTER_SANITIZE_STRING);//Clean the input to prevent bad characters, SQL Injection, or XSS attacks.
 
             // Get search results from model
             $results = $this->securityModel->searchResidentContacts($query);
@@ -277,6 +283,7 @@ public function Delete_Contact($id) {
             // Return JSON response
             header('Content-Type: application/json');
             echo json_encode($results);
+
             exit;
         }
 
@@ -326,7 +333,7 @@ public function Delete_Contact($id) {
             $postData = json_decode($rawData, true) ?? $_POST;
 
             // Validate required fields
-            $requiredFields = ['type', 'date', 'time', 'location', 'status'];
+            $requiredFields = ['type', 'date', 'time', 'location','pri', 'status'];
             foreach ($requiredFields as $field) {
                 if (empty($postData[$field])) {
                     throw new Exception("Field '$field' is required");
@@ -335,10 +342,13 @@ public function Delete_Contact($id) {
 
             $data = [
                 'type' => htmlspecialchars(trim($postData['type'])),
+                
+
                 'date' => htmlspecialchars(trim($postData['date'])),
                 'time' => htmlspecialchars(trim($postData['time'])),
                 'location' => htmlspecialchars(trim($postData['location'])),
                 'description' => htmlspecialchars(trim($postData['description'] ?? '')),
+                'pri' => htmlspecialchars(trim($postData['pri'])),
                 'status' => htmlspecialchars(trim($postData['status']))
             ];
 
@@ -419,6 +429,7 @@ public function Delete_Contact($id) {
 
 
     //**********************************************Manage_Duty_Schedule************************************************************************************************ */
+    
     public function Manage_Duty_Schedule()
     {
         // Get all security officers, shifts, and today's schedule

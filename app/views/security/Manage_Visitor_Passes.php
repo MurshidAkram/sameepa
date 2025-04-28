@@ -348,6 +348,7 @@ input:focus, textarea:focus {
     <?php require APPROOT . '/views/inc/components/navbar.php'; ?>
 
     <!-- //*********************************resident contact search part************************** */ -->
+     
     <div class="dashboard-container">
     <?php require APPROOT . '/views/inc/components/side_panel_security.php'; ?>
 
@@ -356,13 +357,15 @@ input:focus, textarea:focus {
         <section id="search-section">
             <h3 class="too">Find Resident Contact</h3>
             <h4 class="tooh">Find residents details using their name or address</h4>
-            <form method="GET" class="search-residents-form" onsubmit="searchResidentContact(event)">
-                <div class="form-group">
+           
+            <form method="GET" class="search-residents-form" onsubmit="searchResidentContact(event)">   
+            <div class="form-group">
                     <label for="search_query" style="display: none;">Search by Name or Address:</label>
                     <input type="text" id="search_query" name="search_query" placeholder="Enter name or address" required>
                 </div>
                 <button type="submit" class="btn">Search</button>
             </form>
+            
 
             <!-- Search Results Table -->
             <table class="resident-contacts-table" id="search-results" style="display: none;">
@@ -371,10 +374,10 @@ input:focus, textarea:focus {
                         <th>Resident Name</th>
                         <th>Resident Address</th>
                         <th>Phone Number</th>
-                        <!-- <th>Email Address</th> -->
-                        <!-- <th>Action</th> -->
+                       
                     </tr>
                 </thead>
+
                 <tbody id="results-body">
                     <!-- JavaScript will populate this area with search results -->
                 </tbody>
@@ -383,7 +386,8 @@ input:focus, textarea:focus {
     </main>
 </div>
 
-    <!-- *********************************visitor pass management part *************************************************************visitor pass management part **************************** -->
+    <!-- *********************************visitor pass management part **************************************visitor pass management part **************************** -->
+  
     <div class="dashboard-container1">
         
 
@@ -395,12 +399,16 @@ input:focus, textarea:focus {
                 <button id="openModalBtn" class="btn-submit">Create Visitor Pass</button>
 
 <!-- Modal for Creating Visitor Pass -->
+ 
 <div class="modal" id="visitorPassModal">
     <div class="modal-header">
         <h3>Create New Visitor Pass</h3>
+       
         <span class="close btn cancel-btn" id="closeVisitorModal">&times;</span>
     </div>
-    <form class="modal-form" id="visitorPassForm" action="<?php echo URLROOT; ?>/security/Add_Visitor_Pass" method="POST">
+
+    <form class="modal-form" id="visitorPassForm">
+
         <label for="visitor_name">Visitor Name:</label>
         <input type="text" id="visitor_name" name="visitor_name" required>
 
@@ -422,7 +430,7 @@ input:focus, textarea:focus {
         <label for="purpose">Purpose of Visit:</label>
         <input id="purpose" name="purpose" rows="3" required></input>
 
-        <!-- Hidden field for resident ID -->
+       
         <input type="hidden" id="resident_id" name="resident_id">
 
         <div class="modal-buttons">
@@ -489,25 +497,27 @@ input:focus, textarea:focus {
             event.preventDefault();
             const query = document.getElementById('search_query').value.toLowerCase();
 
-            // Perform the AJAX request
+          
             fetch('<?php echo URLROOT; ?>/security/Resident_Contacts?search_query=' + query)
                 .then(response => response.json())
                 .then(data => {
-                    // Populate the table with search results
+
+                  
                     const resultsTable = document.getElementById('search-results');
                     const resultsBody = document.getElementById('results-body');
                     resultsBody.innerHTML = '';
 
-                    if (data.length > 0) {
+                    if (data.length > 0) { 
                         data.forEach(resident => {
                             const row = document.createElement('tr');
                             row.innerHTML = ` 
                                 <td>${resident.name}</td>
                                 <td>${resident.address}</td>
                                 <td>${resident.phonenumber}</td>
+                                
                               
                             `;
-                            resultsBody.appendChild(row); //  <td>${resident.email}</td>
+                            resultsBody.appendChild(row); 
                         });
                         resultsTable.style.display = 'table';
                     } else {
@@ -524,17 +534,20 @@ input:focus, textarea:focus {
 
 //******************************************************Add Visitor pass **************************************** */      
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => { 
+
     // Modal handlers
     const modal = document.getElementById('visitorPassModal');
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('cancelBtn');
 
+
     // Open Modal
     if (openModalBtn) {
-        openModalBtn.addEventListener('click', () => {
+        openModalBtn.addEventListener('click', () => { 
             modal.style.display = 'block';
-            // Set minimum date/time for the form
+
+           
             setMinDateTime();
         });
     }
@@ -553,42 +566,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Set minimum date/time for the form inputs
+    
     function setMinDateTime() {
+
         const now = new Date();
         const dateInput = document.getElementById('visit_date');
         const timeInput = document.getElementById('visit_time');
         
         // Format date as YYYY-MM-DD
         const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
+      
+        const month = String(now.getMonth() + 1).padStart(2, '0'); 
         const day = String(now.getDate()).padStart(2, '0');
-        dateInput.min = `${year}-${month}-${day}`;
-        
+        dateInput.min = `${year}-${month}-${day}`; 
+        dateInput.max = `${year}-${month}-${day}`;
+  
+
         // Format time as HH:MM
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         timeInput.min = `${hours}:${minutes}`;
+      
+        
+
+
     }
 
-    // Fetch and populate data for today and history passes
+
     fetchVisitorPassData();
 
-    // Handle form submission for adding a new visitor pass
     const visitorPassForm = document.getElementById('visitorPassForm');
     if (visitorPassForm) {
         visitorPassForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent the default form submission
+            e.preventDefault(); 
 
-            // Get form values
+            
             const visitDate = document.getElementById('visit_date').value;
             const visitTime = document.getElementById('visit_time').value;
             
-            // Create Date objects for comparison
+           
             const currentDateTime = new Date();
             const visitDateTime = new Date(`${visitDate}T${visitTime}`);
             
-            // Validate date and time
+         
             if (visitDateTime < currentDateTime) {
                 alert('Cannot create visitor pass for past date/time');
                 return;
@@ -596,7 +616,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let formData = new FormData(this);
 
-            // Sending the form data via POST
             fetch('<?php echo URLROOT; ?>/security/Add_Visitor_Pass', {
                 method: 'POST',
                 body: formData
@@ -605,11 +624,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 if (data.success) {
                     alert('Visitor Pass Added Successfully!');
-                    // Refresh the tables after successful addition
+                    
                     fetchVisitorPassData();
-                    // Close the modal
+                 
                     modal.style.display = 'none';
-                    // Reset the form
+                   
                     visitorPassForm.reset();
                 } else {
                     alert('Error: ' + data.message);
@@ -621,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Add search functionality for both tables
+
     const searchTodayPass = document.getElementById('searchTodayPass');
     if (searchTodayPass) {
         searchTodayPass.addEventListener('input', function() {
@@ -637,28 +656,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Fetch visitor pass data (today and history) from the server
+
 const fetchVisitorPassData = () => {
     fetch('<?php echo URLROOT; ?>/security/Manage_Visitor_Passes', {
         headers: {
-            'X-Requested-With': 'XMLHttpRequest' // Indicate this is an AJAX request
+            'X-Requested-With': 'XMLHttpRequest' 
         }
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            const todayPassesData = data.todayPasses;  // Data for today's passes
-            const historyPassesData = data.historyPasses;  // Data for historical passes
+            const todayPassesData = data.todayPasses; 
+            const historyPassesData = data.historyPasses; 
 
-            // Populate both tables with dynamic data
-            populateTable('todayPasses', todayPassesData);  // Today's passes
-            populateTable('historyPasses', historyPassesData);  // Historical passes
+            populateTable('todayPasses', todayPassesData);  
+            populateTable('historyPasses', historyPassesData); 
         } else {
             console.error('Error fetching data:', data.message);
         }
     })
     .catch(error => {
-        console.error('Error fetching data:', error);  // Log any fetch errors
+        console.error('Error fetching data:', error); 
     });
 };
 
@@ -666,7 +684,7 @@ const fetchVisitorPassData = () => {
 const populateTable = (tableBodyId, data) => {
     const tableBody = document.getElementById(tableBodyId);
     if (tableBody && Array.isArray(data)) {
-        // Map through the data and create the table rows dynamically
+      
         tableBody.innerHTML = data.map(pass => `
             <tr>
                 <td>${pass.visitor_name}</td>
@@ -711,20 +729,19 @@ const filterTable = (tableBodyId, searchText) => {
 //******************************************************close form******************************************************** */
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Get the modal and close button elements
+   
     const modal = document.getElementById('visitorPassModal');
     const closeBtn = document.getElementById('closeVisitorModal');
     
-    // Close modal when clicking the × button
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
             modal.style.display = 'none';
-            // Optional: Reset the form if needed
+           
             document.getElementById('visitorPassForm').reset();
         });
     }
     
-    // Optional: Close when clicking outside the modal
+   
     window.addEventListener('click', function(event) {
         if (event.target === modal) {
             modal.style.display = 'none';

@@ -199,8 +199,33 @@
             color: #666;
         }
 
+        .pri-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: capitalize;
+
+        }
+
+        .red {
+            background-color: #ff7675;
+            color: black;
+        }
+        
+
+        .blue {
+            background-color: #74b9ff;
+            color: black;
+        }
+
+        .green {
+            background-color: #55efc4;
+            color: black;
+        }
         /* Status Badges */
         .status-badge {
+            
             padding: 5px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -210,27 +235,27 @@
 
         .status-open {
             background-color: #ff7675;
-            color: white;
+            color: black;
         }
 
         .status-in-progress {
             background-color: #74b9ff;
-            color: white;
+            color: black;
         }
 
         .status-resolved {
             background-color: #55efc4;
-            color: white;
+            color: black;
         }
 
         .status-closed {
             background-color: #a29bfe;
-            color: white;
+            color: black;
         }
 
         .status-pending {
             background-color: #ffeaa7;
-            color: #333;
+            color: black;
         }
 
         /* Modals */
@@ -472,7 +497,7 @@
             <h3 class="title">Manage Incident Reports</h3>
             <button class="btn-create" onclick="showIncidentForm()">Create Incident Report</button>
 
-            <!-- Search and Filters -->
+          
             <div class="search-filters">
                 <div class="search-bar">
                     <input type="text" id="date_search" placeholder="Search by date...">
@@ -509,7 +534,7 @@
                 </div>
             </div>
 
-            <!-- Incident Table -->
+          
             <div class="table-container">
                 <table id="incidentTable" class="incident-table">
                     <thead>
@@ -519,17 +544,18 @@
                             <th>Time</th>
                             <th>Location</th>
                             <th>Description</th>
+                            <th>Priority</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Will be populated by JavaScript -->
+                     
                     </tbody>
                 </table>
             </div>
 
-            <!-- View Incident Modal (Simplified to show only description) -->
+          
             <div id="viewIncidentModal" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeModal('viewIncidentModal')">&times;</span>
@@ -538,12 +564,13 @@
                 </div>
             </div>
 
-            <!-- Incident Form Modal -->
+        
             <div id="incidentFormModal" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeIncidentForm()">&times;</span>
                     <h3 id="incidentFormTitle">Report New Incident</h3>
                     <form id="incidentForm">
+
                         <div class="form-group">
                             <label for="incident_type">Incident Type:</label>
                             <select id="incident_type" name="type" required>
@@ -554,6 +581,17 @@
                                 <option value="vandalism">Vandalism</option>
                                 <option value="medical">Medical Emergency</option>
                                 <option value="security_breach">Security Breach</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="incident_pri">Priority level:</label>
+                            <select id="incident_pri" name="pri" required>
+                                <option value="">Select Priority level</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                               
                             </select>
                         </div>
 
@@ -602,27 +640,29 @@
 
 
     <script>
-        // Global variable to store incidents
+        
         let incidentsData = [];
 
-        // Initialize when DOM is loaded
+        
         document.addEventListener('DOMContentLoaded', function() {
+           
+           
             loadIncidents();
 
-            // Set up form submission
+            
             document.getElementById('incidentForm').addEventListener('submit', handleFormSubmit);
 
-            // Set up search/filter listeners
+           
             document.getElementById('date_search').addEventListener('input', filterIncidents);
             document.getElementById('incident_type_filter').addEventListener('change', filterIncidents);
             document.getElementById('incident_status_filter').addEventListener('change', filterIncidents);
             document.getElementById('incident_location_filter').addEventListener('input', filterIncidents);
 
-            // Set current date as default for new incidents
+            
             document.getElementById('incident_date').valueAsDate = new Date();
         });
 
-        // Load incidents from server
+      
         async function loadIncidents() {
             try {
                 showLoading(true);
@@ -649,7 +689,7 @@
             }
         }
 
-        // Render incidents in the table with description preview
+      
         function renderIncidentTable(incidents) {
             const tableBody = document.createElement('tbody');
 
@@ -664,12 +704,13 @@
                     const row = document.createElement('tr');
                     row.dataset.id = incident.report_id;
 
-                    // Split description into multiple lines if it contains newlines
+                  
                     const descriptionLines = incident.description.split('\n');
                     const shortDescription = descriptionLines[0].substring(0, 50) + (descriptionLines[0].length > 50 ? '...' : '');
 
                     row.innerHTML = `
                 <td>${capitalizeFirstLetter(incident.type.replace('_', ' '))}</td>
+               
                 <td>${formatDate(incident.date)}</td>
                 <td>${formatTime(incident.time)}</td>
                 <td>${escapeHtml(incident.location)}</td>
@@ -679,6 +720,8 @@
                         ${descriptionLines.length > 1 ? '<span class="more-lines-indicator">(+' + (descriptionLines.length - 1) + ' more lines)</span>' : ''}
                     </div>
                 </td>
+                
+                  <td><span class="pri-badge ${getPriClass(incident.pri)}">${incident.pri}</span></td>
                 <td><span class="status-badge ${getStatusClass(incident.status)}">${incident.status}</span></td>
                 <td class="actions">
                     <button class="btn-view" onclick="viewIncident(${incident.report_id})">View</button>
@@ -689,23 +732,23 @@
                 });
             }
 
-            // Replace table body
+           
             const table = document.getElementById('incidentTable');
             const oldBody = table.querySelector('tbody');
             if (oldBody) table.removeChild(oldBody);
             table.appendChild(tableBody);
         }
 
-        // View incident description only
+     
         function viewIncident(id) {
             const incident = incidentsData.find(i => i.report_id == id);
             if (!incident) return;
 
-            // Clear previous content
+           
             const descContent = document.getElementById('viewIncidentDescription');
             descContent.innerHTML = '';
 
-            // Split description by newlines and create paragraphs for each line
+         
             const descriptionLines = incident.description.split('\n');
             descriptionLines.forEach(line => {
                 if (line.trim() !== '') {
@@ -715,14 +758,14 @@
                 }
             });
 
-            // Update modal title to show incident type
+           
             document.querySelector('#viewIncidentModal h3').textContent = `${capitalizeFirstLetter(incident.type.replace('_', ' '))} Incident Description`;
 
-            // Show modal
+            
             document.getElementById('viewIncidentModal').style.display = 'block';
         }
 
-        // Handle form submission
+     
         async function handleFormSubmit(e) {
             e.preventDefault();
 
@@ -733,10 +776,12 @@
                 const isEditing = form.dataset.editingId ? true : false;
                 const formData = {
                     type: document.getElementById('incident_type').value,
+                    pri: document.getElementById('incident_pri').value,
                     date: document.getElementById('incident_date').value,
                     time: document.getElementById('incident_time').value,
                     location: document.getElementById('incident_location').value,
                     description: document.getElementById('incident_description').value,
+                    
                     status: document.getElementById('incident_status').value
                 };
 
@@ -781,7 +826,7 @@
                 }
 
                 closeIncidentForm();
-                await loadIncidents(); // Refresh the table
+                await loadIncidents(); 
 
             } catch (error) {
                 console.error('Error submitting form:', error);
@@ -805,18 +850,22 @@
 
             // Populate form
             document.getElementById('incident_type').value = incident.type;
+           
             document.getElementById('incident_date').value = incident.date;
             document.getElementById('incident_time').value = incident.time;
             document.getElementById('incident_location').value = incident.location;
             document.getElementById('incident_description').value = incident.description;
+            document.getElementById('incident_pri').value = incident.pri;
             document.getElementById('incident_status').value = incident.status;
 
             // Disable all fields except status
             document.getElementById('incident_type').disabled = true;
+           
             document.getElementById('incident_date').disabled = true;
             document.getElementById('incident_time').disabled = true;
             document.getElementById('incident_location').disabled = true;
             document.getElementById('incident_description').disabled = true;
+            document.getElementById('incident_pri').disabled = true;
 
             // Show only the status field
             document.querySelectorAll('#incidentForm .form-group').forEach(group => {
@@ -872,7 +921,7 @@
 
         function formatTime(timeString) {
             if (!timeString) return '';
-            return timeString.substring(0, 5); // Display HH:MM
+            return timeString.substring(0, 5);
         }
 
         function getStatusClass(status) {
@@ -885,6 +934,17 @@
             };
             return statusMap[status.toLowerCase()] || 'status-default';
         }
+
+        function getPriClass(pri) {
+            const priMap = {
+                'high': 'red',
+                'medium': 'green',
+                'low': 'blue',
+                
+            };
+            return priMap[pri.toLowerCase()] || 'status-default';
+        }
+
 
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
@@ -908,7 +968,7 @@
             const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-success';
             alertDiv.textContent = message;
-            // document.body.appendChild(alertDiv);
+            
             setTimeout(() => alertDiv.remove(), 3000);
         }
 
@@ -924,27 +984,25 @@
         function showIncidentForm() {
             const form = document.getElementById('incidentForm');
 
-            // Reset form
             form.reset();
 
-            // Enable all fields
+            
             document.querySelectorAll('#incidentForm input, #incidentForm select, #incidentForm textarea').forEach(el => {
                 el.disabled = false;
             });
 
-            // Show all form groups
+          
             document.querySelectorAll('#incidentForm .form-group').forEach(group => {
                 group.style.display = 'block';
             });
 
-            // Set default values
+         
             document.getElementById('incident_date').valueAsDate = new Date();
             document.getElementById('incident_status').value = 'Open';
 
             // Update form title
             document.getElementById('incidentFormTitle').textContent = 'Report New Incident';
 
-            // Remove editing ID if exists
             if (form.dataset.editingId) {
                 delete form.dataset.editingId;
             }
