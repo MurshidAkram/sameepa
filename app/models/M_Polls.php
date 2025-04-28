@@ -23,12 +23,10 @@ class M_Polls
 
             $this->db->execute();
 
-            // Get the ID of the created poll
             $pollId = $this->db->lastInsertId();
 
-            // insert all the choices
             foreach ($data['choices'] as $choice) {
-                if (!empty(trim($choice))) { // Only insert non-empty choices
+                if (!empty(trim($choice))) {
                     $this->db->query("INSERT INTO poll_choices (poll_id, choice_text) 
                                     VALUES (:poll_id, :choice_text)");
 
@@ -39,11 +37,9 @@ class M_Polls
                 }
             }
 
-            // If everything worked, commit the transaction
             $this->db->commit();
             return true;
         } catch (Exception $e) {
-            // If anything went wrong, rollback changes
             $this->db->rollBack();
             error_log("Error creating poll: " . $e->getMessage());
             return false;
@@ -66,13 +62,11 @@ class M_Polls
         return $this->db->resultSet();
     }
 
-    // Check if poll has ended
     public function hasPollEnded($endDate)
     {
         return strtotime($endDate) < strtotime('today');
     }
 
-    // Get user's vote for a specific poll
     public function getUserVote($pollId, $userId)
     {
         $this->db->query("SELECT choice_id FROM poll_votes 
@@ -124,14 +118,12 @@ class M_Polls
         $this->db->beginTransaction();
 
         try {
-            // Delete existing vote if any
             $this->db->query("DELETE FROM poll_votes 
                          WHERE poll_id = :poll_id AND user_id = :user_id");
             $this->db->bind(':poll_id', $pollId);
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
 
-            // Insert new vote
             $this->db->query("INSERT INTO poll_votes (poll_id, choice_id, user_id) 
                          VALUES (:poll_id, :choice_id, :user_id)");
             $this->db->bind(':poll_id', $pollId);
@@ -181,7 +173,6 @@ class M_Polls
         $this->db->beginTransaction();
 
         try {
-            //delete poll choices
             $this->db->query("DELETE FROM poll_choices WHERE poll_id = :poll_id");
             $this->db->bind(':poll_id', $id);
             $this->db->execute();

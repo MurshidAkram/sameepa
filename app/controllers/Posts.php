@@ -5,15 +5,12 @@ class Posts extends Controller
 
     public function __construct()
     {
-        // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
             exit();
         }
 
-        // Check if user has appropriate role (1: Resident, 2: Admin, 3: SuperAdmin)
         if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
-            //flash('error', 'Unauthorized access');
             redirect('users/login');
         }
 
@@ -25,7 +22,6 @@ class Posts extends Controller
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
         $posts = $this->postModel->getAllPosts($search);
 
-        // If logged-in user exists, get their reactions to posts
         foreach ($posts as &$post) {
             $userReaction = $this->postModel->getUserReaction($post->id, $_SESSION['user_id']);
             $post->user_reaction = $userReaction ? $userReaction['reaction_type'] : null;
@@ -56,12 +52,10 @@ class Posts extends Controller
                 'errors' => []
             ];
 
-            // Handle image upload if present
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                 $allowed = ['image/jpeg', 'image/png', 'image/gif'];
 
                 if (in_array($_FILES['image']['type'], $allowed)) {
-                    // Read image data
                     $data['image_data'] = file_get_contents($_FILES['image']['tmp_name']);
                     $data['image_type'] = $_FILES['image']['type'];
                 } else {
@@ -69,13 +63,10 @@ class Posts extends Controller
                 }
             }
 
-            // Validate data
             $this->validatePostData($data);
 
-            // If no errors, create post
             if (empty($data['errors'])) {
                 if ($this->postModel->createPost($data)) {
-                    //flash('post_message', 'Post Created Successfully');
                     redirect('posts');
                 } else {
                     die('Something went wrong');
@@ -115,20 +106,17 @@ class Posts extends Controller
 
     public function update($id)
     {
-        // Check if user is the post creator 
-        // OR if an admin/super admin is trying to update a resident's post
+
         $post = $this->postModel->getPostById($id);
 
         if (!$post) {
             redirect('posts');
         }
 
-        // Condition for update:
-        // 1. User is the post creator 
+
         if (
             $post['created_by'] == $_SESSION['user_id']
         ) {
-            // Existing update logic remains the same
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Sanitize POST data
                 $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -143,7 +131,6 @@ class Posts extends Controller
                     'errors' => []
                 ];
 
-                // Handle image upload if present
                 if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                     $allowed = ['image/jpeg', 'image/png', 'image/gif'];
 
@@ -218,7 +205,6 @@ class Posts extends Controller
             exit;
         }
 
-        // Return default image if no image found
         header("Content-Type: image/png");
         readfile(APPROOT . '/public/img/default-post.png');
     }
@@ -233,7 +219,6 @@ class Posts extends Controller
             ];
 
             if ($this->postModel->addReaction($data)) {
-                // Return JSON response for AJAX
                 header('Content-Type: application/json');
                 echo json_encode(['success' => true]);
             } else {
@@ -331,7 +316,6 @@ class Posts extends Controller
 
     public function reported_posts()
     {
-        // Check if user has admin or super admin role
         if ($_SESSION['user_role_id'] >= 2) {
             $reported_posts = $this->postModel->getReportedPosts();
             $data = [
@@ -339,17 +323,14 @@ class Posts extends Controller
             ];
             $this->view('posts/reported_posts', $data);
         } else {
-            // flash('error', 'Unauthorized access');
             redirect('posts/index');
         }
     }
 
     public function ignore_report($id)
     {
-        // Check if user has admin or super admin role
         if ($_SESSION['user_role_id'] >= 2) {
             if ($this->postModel->ignoreReport($id)) {
-                //flash('comment_message', 'Report ignored successfully.');
                 if ($_SESSION['user_role_id'] == 2) {
                     redirect('posts/reported_posts');
                 } else {
@@ -359,7 +340,6 @@ class Posts extends Controller
                 die('Something went wrong.');
             }
         } else {
-            //flash('error', 'Unauthorized access');
             redirect('posts/reported_posts');
         }
     }

@@ -6,15 +6,12 @@ class Forums extends Controller
 
     public function __construct()
     {
-        // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
             exit();
         }
 
-        // Check if user has appropriate role (1: Resident, 2: Admin, 3: SuperAdmin)
         if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
-            //flash('error', 'Unauthorized access');
             redirect('users/login');
         }
 
@@ -46,7 +43,6 @@ class Forums extends Controller
                 $data['errors'][] = 'Please enter a forum description.';
             }
 
-            // If no errors, create the forum
             if (empty($data['errors'])) {
                 if ($this->forumsModel->createForum($data)) {
                     if ($_SESSION['user_role_id'] == 2) {
@@ -77,7 +73,6 @@ class Forums extends Controller
 
     public function delete($id)
     {
-        // Check if user has admin or super admin role
         if ($_SESSION['user_role_id'] >= 2) {
             if ($this->forumsModel->deleteForum($id)) {
                 redirect('forums/index');
@@ -118,7 +113,6 @@ class Forums extends Controller
 
     public function reported_comments($forum_id)
     {
-        // Check if user has admin or super admin role
         if ($_SESSION['user_role_id'] >= 2) {
             $reported_comments = $this->forumsModel->getReportedCommentsByForumId($forum_id);
             $data = [
@@ -127,7 +121,6 @@ class Forums extends Controller
             ];
             $this->view('forums/reported_comments', $data);
         } else {
-            // flash('error', 'Unauthorized access');
             redirect('forums/index');
         }
     }
@@ -142,7 +135,6 @@ class Forums extends Controller
             ];
 
             if ($this->forumsModel->reportComment($data)) {
-                // flash('comment_message', 'Comment reported successfully.');
                 $comment = $this->forumsModel->getCommentById($id);
                 redirect("forums/view_forum/{$comment['forum_id']}");
             } else {
@@ -158,17 +150,15 @@ class Forums extends Controller
 
     public function delete_reported_comment($id)
     {
-        // Check if user has admin or super admin role
         if ($_SESSION['user_role_id'] >= 2) {
             // Get the forum_id before deleting the comment
             $comment = $this->forumsModel->getCommentById($id);
             if ($comment && $this->forumsModel->deleteReportedComment($id)) {
-                redirect('forums/reported_comments/' . $comment['forum_id']); // Redirect back to reported comments page
+                redirect('forums/reported_comments/' . $comment['forum_id']);
             } else {
                 die('Something went wrong.');
             }
         } else {
-            //flash('error', 'Unauthorized access');
             redirect('forums/index');
         }
     }
@@ -178,7 +168,6 @@ class Forums extends Controller
         // Check if user has admin or super admin role
         if ($_SESSION['user_role_id'] >= 2) {
             if ($this->forumsModel->ignoreReport($id)) {
-                //flash('comment_message', 'Report ignored successfully.');
                 if ($_SESSION['user_role_id'] == 2) {
                     redirect('forums/index');
                 } else {
@@ -188,7 +177,6 @@ class Forums extends Controller
                 die('Something went wrong.');
             }
         } else {
-            //flash('error', 'Unauthorized access');
             redirect('forums/index');
         }
     }
@@ -199,7 +187,6 @@ class Forums extends Controller
         $forum_id = $comment['forum_id'];
         if ($comment['user_id'] == $_SESSION['user_id'] || $_SESSION['user_role_id'] >= 2) {
             if ($this->forumsModel->deleteComment($id)) {
-                // flash('comment_message', 'Comment deleted successfully.');
                 $comments = $this->forumsModel->getCommentsByForumId($forum_id);
                 $data = [
                     'forum' => $this->forumsModel->getForumById($forum_id),
@@ -210,7 +197,6 @@ class Forums extends Controller
                 die('Something went wrong.');
             }
         } else {
-            // flash('error', 'Unauthorized access');
             redirect('forums/index');
         }
     }
@@ -222,14 +208,11 @@ class Forums extends Controller
         $this->view('forums/myforums', $data);
     }
 
-    // In Forums.php controller, add this method:
 
     public function deletemyForum($id)
     {
-        // First get the forum to check ownership
         $forum = $this->forumsModel->getForumById($id);
 
-        // Check if forum exists and belongs to the current user
         if ($forum && $forum['created_by'] == $_SESSION['user_id']) {
             try {
                 if ($this->forumsModel->deleteForum($id)) {
@@ -239,45 +222,10 @@ class Forums extends Controller
                 }
             } catch (Exception $e) {
                 error_log("Error in deletemyForum: " . $e->getMessage());
-                //flash('error', 'An error occurred while deleting the forum.');
                 redirect('forums/myforums');
             }
         } else {
-            //flash('error', 'Unauthorized access');
             redirect('forums/myforums');
         }
     }
-
-    /*   public function admin_dashboard()
-    {
-        if ($_SESSION['user_role_id'] < 2) {
-            redirect('forums/index');
-        }
-
-        $forums = $this->forumsModel->getForumsWithStats();
-        $data = [
-            'forums' => $forums,
-            'title' => 'Forums Management'
-        ];
-
-        $this->view('forums/admin_dashboard', $data);
-    }
-    public function getForumIdByCommentId($commentId)
-    {
-        $comment = $this->forumsModel->getCommentById($commentId);
-        if ($comment) {
-            redirect('forums/view_forum/' . $comment['forum_id']);
-        }
-        redirect('forums');
-    }
-    public function searchForums()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $searchTerm = trim($_POST['search']);
-            $forums = $this->forumsModel->searchForums($searchTerm);
-
-            header('Content-Type: application/json');
-            echo json_encode($forums);
-        }
-    } */
 }

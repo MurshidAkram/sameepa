@@ -142,7 +142,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <script>
-        // Handle post reactions
         document.querySelectorAll('.btn-react').forEach(button => {
             button.addEventListener('click', async function() {
                 const postId = this.dataset.postId;
@@ -168,7 +167,6 @@
             });
         });
 
-        // Handle post deletion
         document.querySelector('.delete-post')?.addEventListener('click', async function() {
             const postId = this.dataset.postId;
 
@@ -192,7 +190,6 @@
             }
         });
 
-        // Handle comment submission
         document.getElementById('comment-form')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const commentTextarea = this.querySelector('textarea');
@@ -220,7 +217,6 @@
             }
         });
 
-        // Handle comment deletion
         document.querySelectorAll('.delete-comment').forEach(button => {
             button.addEventListener('click', async function() {
                 const commentId = this.dataset.commentId;

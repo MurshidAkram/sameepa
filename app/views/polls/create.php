@@ -11,7 +11,6 @@
     <title>Create Poll | <?php echo SITENAME; ?></title>
 
     <style>
-        /* i added inline styling to improve the look */
         .create-poll-container {
             background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
             border: 1px solid #d1d9e6;
@@ -149,7 +148,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';

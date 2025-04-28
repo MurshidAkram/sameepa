@@ -1,4 +1,3 @@
-<!-- app/views/forums/index.php -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +16,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';

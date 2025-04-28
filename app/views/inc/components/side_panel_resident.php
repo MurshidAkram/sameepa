@@ -15,8 +15,6 @@
                 <li><a href="<?php echo URLROOT; ?>/facilities/index">Facility Booking</a></li>
                 <li><a href="<?php echo URLROOT; ?>/payments/requests">Payment Requests</a></li>
                 <li><a href="<?php echo URLROOT; ?>/resident/maintenance">Maintenance</a></li>
-                <!-- <li><a href="<?php echo URLROOT; ?>/resident/visitor_passes">Visitor Passes</a></li> -->
-                <!-- <li><a href="<?php echo URLROOT; ?>/resident/reports">Security</a></li> -->
 
 
         </ul>

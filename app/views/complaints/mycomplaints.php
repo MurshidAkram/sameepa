@@ -17,7 +17,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         $role_panels = [
             1 => '/views/inc/components/side_panel_resident.php',
             2 => '/views/inc/components/side_panel_admin.php',

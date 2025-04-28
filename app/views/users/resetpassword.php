@@ -6,14 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password | <?php echo SITENAME; ?></title>
     <style>
-        /* Reset default styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Body styling */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.7;
@@ -22,17 +20,15 @@
             overflow-x: hidden;
         }
 
-        /* Form container */
         .form-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 120px); /* Adjust for header/footer */
+            min-height: calc(100vh - 120px);
             padding: 30px 15px;
             animation: fadeIn 0.5s ease-in;
         }
 
-        /* Form content */
         .form-content {
             background: #ffffff;
             padding: 40px;
@@ -50,7 +46,6 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
-        /* Form heading */
         .form-content h2 {
             font-size: 2rem;
             font-weight: 600;
@@ -59,7 +54,6 @@
             margin-bottom: 25px;
         }
 
-        /* Form group */
         .form-group {
             margin-bottom: 25px;
         }
@@ -84,16 +78,15 @@
 
         .form-group input:focus {
             outline: none;
-            border-color:#800080;
+            border-color: #800080;
             box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
             background: #ffffff;
         }
 
-        /* Submit button */
         button[type="submit"] {
             width: 100%;
             padding: 14px;
-            background:#800080;
+            background: #800080;
             color: #ffffff;
             font-size: 1.1rem;
             font-weight: 500;
@@ -104,7 +97,7 @@
         }
 
         button[type="submit"]:hover {
-            background:#800080;
+            background: #800080;
             transform: translateY(-1px);
         }
 
@@ -113,7 +106,6 @@
             box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
         }
 
-        /* Error messages */
         .form-errors {
             background: #fff5f5;
             color: #9b2c2c;
@@ -136,7 +128,6 @@
             margin: 0;
         }
 
-        /* Form image */
         .form-image {
             width: 100%;
             max-width: 420px;
@@ -152,18 +143,30 @@
             transform: scale(1.02);
         }
 
-        /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        /* Responsive design */
         @media (max-width: 768px) {
             .form-container {
                 flex-direction: column;
@@ -178,7 +181,7 @@
             }
 
             .form-image {
-                display: none; /* Hide image on mobile */
+                display: none;
             }
 
             .form-content h2 {
@@ -202,8 +205,8 @@
             }
         }
 
-        /* Accessibility */
-        .form-group input:focus, button[type="submit"]:focus {
+        .form-group input:focus,
+        button[type="submit"]:focus {
             outline: 2px solid#800080;
             outline-offset: 2px;
         }

@@ -48,23 +48,12 @@
     background-color: #fff;
     transition: border-color 0.3s;">
                             <option value="">Select Role</option>
-                            <!-- <option value="1">Resident</option> -->
                             <option value="2">Admin</option>
                             <option value="3">SuperAdmin</option>
                             <option value="4">Maintenance</option>
                             <option value="5">Security</option>
-                            <!--                             <option value="6">External Service Provider</option>
- -->
                         </select>
                     </div>
-                    <!-- <div class="form-group resident-only">
-                        <label for="address">Address:</label>
-                        <input type="text" name="address" id="address" value="<?php echo isset($data['address']) ? $data['address'] : ''; ?>">
-                    </div>
-                    <div class="form-group resident-only">
-                        <label for="phonenumber">Phone No.</label>
-                        <input type="text" name="phonenumber" id="phonenumber" value="<?php echo isset($data['phonenumber']) ? $data['phonenumber'] : ''; ?>">
-                    </div> -->
                     <div class="form-group">
                         <label for="password">Password:</label>
                         <input type="password" name="password" id="password">
@@ -81,7 +70,6 @@
     </div>
 
     <script>
-        // Show/hide the resident-only fields based on the selected role
         const roleSelect = document.getElementById('role');
         const residentOnlyFields = document.querySelectorAll('.resident-only');
 
@@ -103,7 +91,6 @@
             color: #333;
         }
 
-        /* Headings */
         h1,
         h2,
         h3,
@@ -118,7 +105,6 @@
             display: inline-block;
         }
 
-        /* Dashboard Container */
         .dashboard-container {
             display: flex;
             flex-direction: row;
@@ -128,7 +114,6 @@
 
 
 
-        /* Main Content */
         main {
             flex-grow: 1;
             background: #fff;
@@ -219,7 +204,6 @@
             margin: 5px 0;
         }
 
-        /* public/css/components/form-styles.css */
 
         .profile-container {
             max-width: 900px;
@@ -259,7 +243,6 @@
             margin-top: 2rem;
         }
 
-        /* Navbar profile picture styles */
         .profile-pic {
             width: 40px;
             height: 40px;

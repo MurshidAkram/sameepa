@@ -18,7 +18,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -48,9 +47,6 @@
             <main class="content">
                 <div class="create-event-container">
                     <h1>Create New Event</h1>
-
-                    <?php //flash('event_message'); 
-                    ?>
 
                     <?php if (!empty($data['errors'])): ?>
                         <div class="error-messages">

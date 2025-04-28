@@ -6,14 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | <?php echo SITENAME; ?></title>
     <style>
-        /* Reset default styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Body styling with twilight glow background */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.7;
@@ -22,17 +20,15 @@
             overflow-x: hidden;
         }
 
-        /* Form container */
         .form-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 120px); /* Adjust for header/footer */
+            min-height: calc(100vh - 120px);
             padding: 30px 15px;
             animation: fadeIn 0.5s ease-in;
         }
 
-        /* Form content */
         .form-content {
             background: #ffffff;
             padding: 40px;
@@ -50,7 +46,6 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
-        /* Form wrapper */
         .form-wrapper {
             text-align: center;
         }
@@ -68,7 +63,6 @@
             margin-bottom: 25px;
         }
 
-        /* Form group */
         .form-group {
             margin-bottom: 25px;
             text-align: left;
@@ -99,7 +93,6 @@
             background: #ffffff;
         }
 
-        /* Submit button (changed to blue) */
         button.form-submit {
             width: 100%;
             padding: 14px;
@@ -123,7 +116,6 @@
             box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
         }
 
-        /* Forgot password link */
         a[href*="forgotpassword"] {
             display: inline-block;
             margin-top: 15px;
@@ -134,7 +126,7 @@
         }
 
         a[href*="forgotpassword"]:hover {
-            color:#800080;
+            color: #800080;
             text-decoration: underline;
         }
 
@@ -143,7 +135,6 @@
             outline-offset: 2px;
         }
 
-        /* Error messages */
         .form-errors {
             background: #fff5f5;
             color: #9b2c2c;
@@ -166,7 +157,6 @@
             margin: 0;
         }
 
-        /* Flash message (for signup_message) */
         .flash-message {
             background: #e6fffa;
             color: #2c7a7b;
@@ -188,11 +178,10 @@
             font-size: 1.2rem;
         }
 
-        /* Form image (increased height) */
         .form-image {
             width: 100%;
             max-width: 420px;
-            height: 500px; /* Increased from 420px */
+            height: 500px;
             background-size: cover;
             background-position: center;
             border-radius: 12px;
@@ -204,18 +193,30 @@
             transform: scale(1.02);
         }
 
-        /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        /* Responsive design */
         @media (max-width: 768px) {
             .form-container {
                 flex-direction: column;
@@ -230,7 +231,7 @@
             }
 
             .form-image {
-                display: none; /* Hide image on mobile */
+                display: none;
             }
 
             .form-wrapper h1 {
@@ -258,8 +259,9 @@
             }
         }
 
-        /* Accessibility */
-        .form-group input:focus, button.form-submit:focus, a[href*="forgotpassword"]:focus {
+        .form-group input:focus,
+        button.form-submit:focus,
+        a[href*="forgotpassword"]:focus {
             outline: 2px solid #800080;
             outline-offset: 2px;
         }

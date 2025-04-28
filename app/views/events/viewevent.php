@@ -17,7 +17,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -140,7 +139,6 @@
 
 
                 if (data.success) {
-                    // Reload the current page
                     window.location.reload();
                 } else {
                     alert('Failed to update event participation. Please try again.');
@@ -159,7 +157,6 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Check user role and redirect accordingly
                             <?php if ($_SESSION['user_role_id'] == 2): ?>
                                 window.location.href = '<?php echo URLROOT; ?>/events/index';
                             <?php else: ?>

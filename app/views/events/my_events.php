@@ -124,7 +124,6 @@
         </main>
     </div>
 
-    <!-- Participants Modal -->
     <div id="participantsModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -141,7 +140,6 @@
             const modal = document.getElementById('participantsModal');
             const participantsList = document.getElementById('participantsList');
 
-            // Fetch participants
             fetch(`<?php echo URLROOT; ?>/events/getParticipants/${eventId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -177,7 +175,6 @@
             }
         }
 
-        // Modal close functionality
         const modal = document.getElementById('participantsModal');
         const span = document.getElementsByClassName('close')[0];
 
@@ -192,8 +189,16 @@
         }
     </script>
 
+
+
+
+
+
+
+
+
+
     <style>
-        /* Modal Base Styles */
         .modal {
             display: none;
             position: fixed;
@@ -234,7 +239,7 @@
             color: #000;
         }
 
-        /* Participants List Styles */
+
         #participantsList {
             margin-top: 20px;
             max-height: 300px;
@@ -256,7 +261,6 @@
             border-bottom: none;
         }
 
-        /* Modal Animation */
         @keyframes modalFadeIn {
             from {
                 opacity: 0;

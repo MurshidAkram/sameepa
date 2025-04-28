@@ -24,7 +24,6 @@
                 <h1>Complaints Dashboard</h1>
             </div>
 
-            <!-- Dashboard Stats -->
             <div class="dashboard-stats">
                 <div class="stat-card">
                     <h3>Total Complaints</h3>
@@ -54,7 +53,6 @@
 
             </div>
 
-            <!-- Complaints Tables -->
             <?php
             $sections = [
                 'resident' => ['title' => 'Resident Complaints', 'role_id' => 1],
@@ -62,7 +60,6 @@
                 'security' => ['title' => 'Security Staff Complaints', 'role_id' => 5]
             ];
 
-            // Add admin complaints section for superadmin only
             if ($_SESSION['user_role_id'] == 3) {
                 $sections['admin'] = ['title' => 'Admin Complaints', 'role_id' => 2];
             }

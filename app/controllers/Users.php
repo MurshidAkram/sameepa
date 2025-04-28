@@ -11,13 +11,11 @@ class Users extends Controller
 
     public function index()
     {
-        // Redirect to login if not logged in
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . URLROOT . '/users/login');
             exit();
         }
 
-        // If logged in, redirect to appropriate dashboard based on role
         $this->redirectToDashboard($_SESSION['user_role_id']);
     }
 
@@ -30,7 +28,6 @@ class Users extends Controller
                 'errors' => []
             ];
 
-            // Validate form input
             if (empty($data['email']) || empty($data['password'])) {
                 $data['errors'][] = 'Please fill in all fields';
             }
@@ -67,7 +64,6 @@ class Users extends Controller
         $_SESSION['user_role_id'] = $user['role_id'];
         $_SESSION['name'] = $user['name'];
 
-        // Retrieve the user's role name
         $roleName = $this->userModel->getRoleName($user['role_id']);
         $_SESSION['user_role'] = $roleName;
     }
@@ -131,7 +127,6 @@ class Users extends Controller
                 'phonenumber' => $data['phonenumber']
             ];
 
-            // Validate form input based on the selected role
             $this->validateSignupForm($data, $userData);
 
             if (empty($data['errors'])) {
@@ -148,8 +143,7 @@ class Users extends Controller
                     'verification_filename' => $file['name']
                 ];
                 if ($this->userModel->registerUser($userData)) {
-                    // Redirect to the login page
-                    if ($data['role_id'] != 3) { // Exclude SuperAdmin (role_id 3)
+                    if ($data['role_id'] != 3) {
                         flash('signup_message', 'Your account has been created. Please wait for super admin activation.', 'alert alert-info');
                     }
                     header('Location: ' . URLROOT . '/users/login');
@@ -158,7 +152,6 @@ class Users extends Controller
                     $data['errors'][] = 'Something went wrong. Please try again.';
                 }
             }
-            // Load the view with errors
             $this->view('users/signup', $data);
         } else {
             $this->view('users/signup');
@@ -167,7 +160,6 @@ class Users extends Controller
 
     private function validateSignupForm(&$data, &$userData)
     {
-        // Validate form input based on the selected role
         switch ($data['role_id']) {
             case '1': // Resident
                 $this->validateResidentFields($data, $userData);
@@ -268,31 +260,24 @@ class Users extends Controller
         }
     }
 
-    // Users.php
     public function logout()
     {
-        // Unset all session variables
         session_unset();
-        // Destroy the session
         session_destroy();
-        // Destroy the session
         session_destroy();
 
-        // Redirect to the login page
         header('Location: ' . URLROOT . '/users/login');
         exit();
     }
 
     public function profile()
     {
-        // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
         }
 
         $userData = $this->userModel->getUserById($_SESSION['user_id']);
 
-        // Get additional data based on role
         $additionalData = [];
         if ($_SESSION['user_role_id'] == 1) { // Resident
             $additionalData = $this->userModel->getResidentByUserId($_SESSION['user_id']);
@@ -339,12 +324,9 @@ class Users extends Controller
         if (empty($data['errors'])) {
             // Update user data
             if ($this->userModel->updateUser($data)) {
-                //flash('profile_message', 'Profile updated successfully', 'success');
             } else {
-                //flash('profile_message', 'Something went wrong', 'error');
             }
         } else {
-            //flash('profile_message', $data['errors'][0], 'error');
         }
 
         redirect('users/profile');
@@ -371,9 +353,7 @@ class Users extends Controller
         $imageData = file_get_contents($file['tmp_name']);
 
         if ($this->userModel->updateProfilePicture($_SESSION['user_id'], $imageData)) {
-            //flash('profile_message', 'Profile picture updated successfully', 'success');
         } else {
-            //flash('profile_message', 'Failed to update profile picture', 'error');
         }
 
         redirect('users/profile');
@@ -393,7 +373,6 @@ class Users extends Controller
 
     public function manageUsers()
     {
-        // Check if user is SuperAdmin
         if (!isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
             header('Location: ' . URLROOT);
             exit();
@@ -420,7 +399,6 @@ class Users extends Controller
 
         $userId = $_POST['user_id'];
         if ($this->userModel->activateUser($userId)) {
-            // Send email notification to user (implement this)
             header('Location: ' . URLROOT . '/users/manageUsers?success=activated');
         } else {
             header('Location: ' . URLROOT . '/users/manageUsers?error=activation_failed');
@@ -446,12 +424,10 @@ class Users extends Controller
 
     public function getUserDetails($userId)
     {
-        // Fetch user details from the database
         $user = $this->userModel->getUserById($userId);
         $verificationDoc = $this->userModel->getUserVerificationDocument($userId);
         $users = $this->userModel->getResidentAddressAndPhone($userId);
 
-        // Initialize response array
         $response = [
             'name' => $user['name'] ?? '',
             'email' => $user['email'] ?? '',
@@ -461,33 +437,24 @@ class Users extends Controller
             'role_verification_document' => null
         ];
 
-        // Only add document if it exists and is not empty
         if (!empty($verificationDoc['role_verification_document'])) {
-            // Convert binary to base64
             $response['role_verification_document'] = base64_encode($verificationDoc['role_verification_document']);
         }
 
-        // Send JSON response
         header('Content-Type: application/json');
         echo json_encode($response);
         exit();
     }
-    // In your UsersController (or relevant controller)
     public function rejectUser()
     {
-        // Check if the request is POST and the user role is valid (e.g., admin role)
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
-            header('Location: ' . URLROOT); // Redirect to homepage if unauthorized
+            header('Location: ' . URLROOT);
             exit();
         }
-        // Ensure user_id is set in the POST request
         $userId = isset($_POST['user_id']) ? intval($_POST['user_id']) : null;
-        // Validate that user_id is provided and is a valid number
         if ($userId && $this->userModel->deletePendingUser($userId)) {
-            // Redirect to manageUsers with success message
             header('Location: ' . URLROOT . '/users/manageUsers?success=rejected');
         } else {
-            // Redirect to manageUsers with error message
             header('Location: ' . URLROOT . '/users/manageUsers?error=rejection_failed');
         }
         exit();
@@ -497,7 +464,6 @@ class Users extends Controller
     public function createUser()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             $data = [
                 'name' => trim($_POST['name']),
@@ -507,9 +473,7 @@ class Users extends Controller
                 'role_id' => trim($_POST['role']),
                 'errors' => []
             ];
-            // Validate input fields
             $this->validateAdminSignupForm($data, $userData);
-            // If validation passes, register the user
             if (empty($data['errors'])) {
                 $userData = [
                     'name' => $data['name'],
@@ -517,20 +481,16 @@ class Users extends Controller
                     'password' => password_hash($data['password'], PASSWORD_DEFAULT), // Hash the password
                     'role_id' => $data['role_id']
                 ];
-                // Attempt to register the user
                 if ($this->userModel->registerUser($userData)) {
-                    // Set success flash message and redirect
                     flash('user_created', 'User created successfully!');
                     redirect('users/manageUsers');
-                    return; // Exit to prevent further processing
+                    return;
                 } else {
                     $data['errors'][] = 'Something went wrong. Please try again.';
                 }
             }
-            // Reload the view with data and any validation errors
             $this->view('users/createUser', $data);
         } else {
-            // Initialize form data for GET requests
             $data = [
                 'name' => '',
                 'email' => '',
@@ -545,7 +505,6 @@ class Users extends Controller
 
     public function deleteActivatedUser()
     {
-        // Check if user is SuperAdmin and request is POST
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SESSION['user_role_id']) || $_SESSION['user_role_id'] != 3) {
             header('Location: ' . URLROOT);
             exit();
@@ -553,10 +512,8 @@ class Users extends Controller
 
         $userId = $_POST['user_id'];
         if ($this->userModel->deleteActivatedUser($userId)) {
-            // Redirect with success message
             header('Location: ' . URLROOT . '/users/manageUsers?success=user_deleted');
         } else {
-            // Redirect with error message
             header('Location: ' . URLROOT . '/users/manageUsers?error=deletion_failed');
         }
         exit();
@@ -572,7 +529,6 @@ class Users extends Controller
             return;
         }
 
-        // Update the address in the database
         if ($this->userModel->updateAddress($userId, $newAddress)) {
             echo json_encode(['success' => true]);
         } else {
@@ -587,25 +543,19 @@ class Users extends Controller
         ];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Process form
             $email = trim($_POST['email']);
 
-            // Validate email
             if (empty($email)) {
                 $data['errors'][] = 'Please enter your email address';
             } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $data['errors'][] = 'Please enter a valid email address';
             } else {
-                // Check if email exists
                 $result = $this->userModel->createPasswordResetToken($email);
 
                 if ($result) {
-                    // Load PHPMailer
                     if (file_exists(APPROOT . '/vendor/autoload.php')) {
-                        // If using Composer
                         require_once APPROOT . '/vendor/autoload.php';
                     } else {
-                        // If manually installed
                         require_once dirname(__DIR__) . '/libraries/PHPMailer/src/Exception.php';
                         require_once dirname(__DIR__) . '/libraries/PHPMailer/src/PHPMailer.php';
                         require_once dirname(__DIR__) . '/libraries/PHPMailer/src/SMTP.php';
@@ -632,19 +582,16 @@ class Users extends Controller
     public function resetpassword($token = null)
     {
         error_log("Reset password function accessed. Token: " . $token);
-        // If no token is provided in the URL, check POST data
         if (empty($token) && isset($_POST['token'])) {
             $token = $_POST['token'];
             error_log("Token found in POST data: " . $token);
         }
 
-        // If still no token, redirect to forgot password page
         if (empty($token)) {
             error_log("No token found, redirecting to forgot password.");
             redirect('users/forgotpassword');
         }
 
-        // Verify token is valid
         $tokenData = $this->userModel->verifyPasswordResetToken($token);
         error_log("Token verification result for token " . $token . ": " . ($tokenData ? "Success" : "Failure"));
 
@@ -654,16 +601,13 @@ class Users extends Controller
         ];
 
         if (!$tokenData) {
-            // If token is invalid or expired, set an error message and don't proceed with password reset form
             $data['errors'][] = 'Invalid or expired token. Please request a new password reset link.';
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && $tokenData) {
-            // Process form only if token is valid and request is POST
             $newPassword = trim($_POST['new_password']);
             $confirmPassword = trim($_POST['confirm_password']);
 
-            // Validate passwords
             if (empty($newPassword) || empty($confirmPassword)) {
                 $data['errors'][] = 'Please enter and confirm your new password';
             } elseif ($newPassword !== $confirmPassword) {
@@ -673,7 +617,6 @@ class Users extends Controller
             }
 
             if (empty($data['errors'])) {
-                // Reset password
                 if ($this->userModel->resetPassword($tokenData['user_id'], $newPassword)) {
                     flash('login_message', 'Your password has been reset. You can now log in with your new password.');
                     redirect('users/login');
@@ -692,7 +635,6 @@ class Users extends Controller
             $user = $this->userModel->getUserById($id);
 
             if ($user) {
-                // Get the full user details including address
                 $userDetails = $this->userModel->getResidentAddressAndPhone($id);
 
                 if ($userDetails) {

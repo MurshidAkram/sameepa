@@ -26,7 +26,7 @@
                         class="btn btn-secondary">Back</a>
                     <?php
                     $canDelete = ($_SESSION['user_id'] == $data['complaint']->user_id && $data['complaint']->status === 'pending');
-                    /* || in_array($_SESSION['user_role_id'], [2, 3]); */
+
 
                     if ($canDelete): ?>
                         <form action="<?php echo URLROOT; ?>/complaints/delete/<?php echo $data['complaint']->id; ?>" method="POST" style="display: inline;">
@@ -101,7 +101,6 @@
                             <div class="add-response-section">
                                 <form action="<?php echo URLROOT; ?>/complaints/addResponse" method="POST">
                                     <input type="hidden" name="complaint_id" value="<?php echo $data['complaint']->id; ?>">
-
                                     <div class="form-group">
                                         <label>Add Response</label>
                                         <textarea name="response" required></textarea>

@@ -29,7 +29,6 @@ class M_Users
         if ($this->db->execute()) {
             $userId = $this->db->lastInsertId();
 
-            // Handle different user types based on the role ID
             switch ($userData['role_id']) {
                 case '1': // Resident
                     $residentData = [
@@ -75,7 +74,6 @@ class M_Users
 
     private function registerResident($residentData)
     {
-        // Insert resident data into the `residents` table
         $this->db->query('INSERT INTO residents (user_id, address, phonenumber) VALUES (:user_id, :address, :phonenumber)');
         $this->db->bind(':user_id', $residentData['user_id']);
         $this->db->bind(':address', $residentData['address']);
@@ -90,7 +88,6 @@ class M_Users
 
     private function registerAdmin($adminData)
     {
-        // Insert admin data into the `admins` table
         $this->db->query('INSERT INTO admins (user_id) VALUES (:user_id)');
         $this->db->bind(':user_id', $adminData['user_id']);
 
@@ -103,7 +100,6 @@ class M_Users
 
     private function registerSuperAdmin($superAdminData)
     {
-        // Insert super admin data into the `super_admins` table
         $this->db->query('INSERT INTO superadmins (user_id) VALUES (:user_id)');
         $this->db->bind(':user_id', $superAdminData['user_id']);
 
@@ -116,7 +112,6 @@ class M_Users
 
     private function registerMaintenance($maintenanceData)
     {
-        // Insert maintenance data into the `maintenance` table
         $this->db->query('INSERT INTO maintenance (user_id) VALUES (:user_id)');
         $this->db->bind(':user_id', $maintenanceData['user_id']);
 
@@ -129,7 +124,6 @@ class M_Users
 
     private function registerSecurity($securityData)
     {
-        // Insert security data into the `security` table
         $this->db->query('INSERT INTO security (user_id) VALUES (:user_id)');
         $this->db->bind(':user_id', $securityData['user_id']);
 
@@ -142,7 +136,6 @@ class M_Users
 
     private function registerExternalServiceProvider($externalServiceProviderData)
     {
-        // Insert external service provider data into the `external_service_providers` table
         $this->db->query('INSERT INTO external_service_providers (user_id) VALUES (:user_id)');
         $this->db->bind(':user_id', $externalServiceProviderData['user_id']);
 
@@ -224,7 +217,6 @@ class M_Users
         $this->db->beginTransaction();
 
         try {
-            // Updating basic user information
             $sql = 'UPDATE users SET name = :name, email = :email';
             if (!empty($data['new_password'])) {
                 $sql .= ', password = :password';
@@ -242,7 +234,6 @@ class M_Users
 
             $this->db->execute();
 
-            // Update role-specific information if user is a resident
             if ($_SESSION['user_role_id'] == 1 && isset($data['address']) && isset($data['phonenumber'])) {
                 $this->db->query('UPDATE residents SET address = :address, phonenumber = :phonenumber WHERE user_id = :user_id');
                 $this->db->bind(':address', $data['address']);
@@ -273,7 +264,6 @@ class M_Users
         $this->db->beginTransaction();
 
         try {
-            // Delete role-specific data first
             $roleId = $_SESSION['user_role_id'];
             switch ($roleId) {
                 case 1:
@@ -341,20 +331,16 @@ class M_Users
     public function deletePendingUser($userId)
     {
         try {
-            // Start transaction
             $this->db->beginTransaction();
 
-            // Soft delete by setting is_deleted to 1
             $this->db->query("UPDATE users SET is_rejected = 1 WHERE id = :user_id");
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
 
-            // Commit transaction
             $this->db->commit();
 
             return true;
         } catch (Exception $e) {
-            // Rollback transaction on error
             $this->db->rollBack();
             return false;
         }
@@ -371,12 +357,10 @@ class M_Users
         try {
             $this->db->beginTransaction();
 
-            // First, check which role tables to delete from
             $this->db->query("SELECT role_id FROM users WHERE id = :user_id");
             $this->db->bind(':user_id', $userId);
             $userRole = $this->db->single();
 
-            // Delete from corresponding role table based on role_id
             switch ($userRole['role_id']) {
                 case 1: // Resident
                     $this->db->query("DELETE FROM residents WHERE user_id = :user_id");
@@ -398,7 +382,6 @@ class M_Users
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
 
-            // Then delete from users table
             $this->db->query("DELETE FROM users WHERE id = :user_id");
             $this->db->bind(':user_id', $userId);
             $this->db->execute();
@@ -426,51 +409,44 @@ class M_Users
     {
         try {
             $this->db->query('SELECT COUNT(*) AS activeUsersCount FROM users WHERE is_active = 1');
-            $result = $this->db->single(); // Fetch a single row
+            $result = $this->db->single();
 
             if (!$result) {
                 error_log("Database query failed or returned empty result.");
-                return 0; // Default to 0 in case of failure
+                return 0;
             }
 
-            error_log("Fetched Active Users: " . print_r($result, true)); // Debugging output
+            error_log("Fetched Active Users: " . print_r($result, true));
 
-            return (int) $result['activeUsersCount']; // Ensure returning an integer
+            return (int) $result['activeUsersCount'];
         } catch (Exception $e) {
             error_log("Error fetching active users: " . $e->getMessage());
-            return 0; // Return 0 on failure
+            return 0;
         }
     }
 
     public function createPasswordResetToken($email)
     {
-        // Check if the user exists
         $user = $this->findUserByEmail($email);
         if (!$user) {
             return false;
         }
 
-        // Generate a token
         $token = bin2hex(random_bytes(32));
-        // Generate a token
         $token = bin2hex(random_bytes(32));
 
-        // Check if a token already exists for this user
         $this->db->query('SELECT * FROM password_resets WHERE user_id = :user_id');
         $this->db->bind(':user_id', $user['id']);
         $existingToken = $this->db->single();
 
         if ($existingToken) {
-            // Update existing token, setting expires_at using SQL function
             $this->db->query('UPDATE password_resets SET token = :token, expires_at = NOW() + INTERVAL 1 HOUR WHERE user_id = :user_id');
         } else {
-            // Create new token, setting expires_at using SQL function
             $this->db->query('INSERT INTO password_resets (user_id, token, expires_at) VALUES (:user_id, :token, NOW() + INTERVAL 1 HOUR)');
         }
 
         $this->db->bind(':user_id', $user['id']);
         $this->db->bind(':token', $token);
-        // No need to bind expires_at here as it's set by SQL function
 
         if ($this->db->execute()) {
             return [
@@ -501,7 +477,6 @@ class M_Users
 
     public function resetPassword($userId, $newPassword)
     {
-        // Update the user's password
         $this->db->query('UPDATE users SET password = :password WHERE id = :id');
         $this->db->bind(':password', password_hash($newPassword, PASSWORD_DEFAULT));
         $this->db->bind(':id', $userId);
@@ -509,7 +484,6 @@ class M_Users
         $success = $this->db->execute();
 
         if ($success) {
-            // Delete the reset token
             $this->db->query('DELETE FROM password_resets WHERE user_id = :user_id');
             $this->db->bind(':user_id', $userId);
             $this->db->execute();

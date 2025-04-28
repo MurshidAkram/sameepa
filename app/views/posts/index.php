@@ -16,7 +16,6 @@
 
     <div class="dashboard-container">
         <?php
-        // Load appropriate side panel based on user role
         switch ($_SESSION['user_role_id']) {
             case 1:
                 require APPROOT . '/views/inc/components/side_panel_resident.php';
@@ -144,11 +143,9 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <script>
-        // Handle post reactions
         document.querySelectorAll('.btn-react').forEach(button => {
             button.addEventListener('click', async function() {
                 const postId = this.dataset.postId;
@@ -174,7 +171,6 @@
             });
         });
 
-        // Handle post deletion
         document.querySelectorAll('.delete-post').forEach(button => {
             button.addEventListener('click', async function() {
                 const postId = this.dataset.postId;

@@ -35,29 +35,6 @@ class M_Complaints
         return $this->db->execute();
     }
 
-    public function getComplaintById($id, $userId = null)
-    {
-        $query = 'SELECT c.*, u.name as user_name,
-                  (SELECT response FROM complaint_responses 
-                   WHERE complaint_id = c.id 
-                   ORDER BY created_at DESC LIMIT 1) as latest_response
-                  FROM complaints c 
-                  JOIN users u ON c.user_id = u.id
-                  WHERE c.id = :id';
-
-        if ($userId) {
-            $query .= ' AND c.user_id = :user_id';
-        }
-
-        $this->db->query($query);
-        $this->db->bind(':id', $id);
-        if ($userId) {
-            $this->db->bind(':user_id', $userId);
-        }
-
-        return $this->db->single();
-    }
-
     public function getComplaintsByRole($roleId, $adminId = null)
     {
         $query = 'SELECT c.*, u.name as user_name 
@@ -104,7 +81,6 @@ class M_Complaints
 
     public function getComplaintDetails($complaintId)
     {
-        // Get the basic complaint information
         $this->db->query('SELECT c.*, u.name as user_name
                      FROM complaints c
                      JOIN users u ON c.user_id = u.id
@@ -117,10 +93,8 @@ class M_Complaints
             return null;
         }
 
-        // Convert to object if it's an array
         $complaint = (object)$complaint;
 
-        // Get the responses in a separate query
         $this->db->query('SELECT cr.*, admin.name as admin_name
                      FROM complaint_responses cr
                      JOIN users admin ON cr.admin_id = admin.id
@@ -130,7 +104,6 @@ class M_Complaints
         $this->db->bind(':complaint_id', $complaintId);
         $responses = $this->db->resultSet();
 
-        // Add the responses to the complaint object
         $complaint->responses = $responses ?: [];
 
         return $complaint;

@@ -18,7 +18,6 @@ class Complaints extends Controller
 
     public function index()
     {
-        // Redirect based on user role
         if (in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('complaints/dashboard');
         } else {
@@ -28,7 +27,6 @@ class Complaints extends Controller
 
     public function dashboard()
     {
-        // Only admins and superadmins can access dashboard
         if (!in_array($_SESSION['user_role_id'], [2, 3])) {
             redirect('complaints/mycomplaints');
         }
@@ -44,7 +42,6 @@ class Complaints extends Controller
             ]
         ];
 
-        // Add admin complaints for superadmin
         if ($_SESSION['user_role_id'] == 3) {
             $data['complaints']['admin'] = $this->complaintsModel->getComplaintsByRole(2);
         }
@@ -54,16 +51,13 @@ class Complaints extends Controller
 
     public function create()
     {
-        // Check if user is allowed to create complaints
         if (!in_array($_SESSION['user_role_id'], [1, 2, 4, 5])) {
             redirect('complaints/dashboard');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            // Init data
             $data = [
                 'title' => trim($_POST['title']),
                 'description' => trim($_POST['description']),
@@ -95,11 +89,9 @@ class Complaints extends Controller
                     redirect('complaints/create');
                 }
             } else {
-                // Load view with errors
                 $this->view('complaints/create', $data);
             }
         } else {
-            // Init data
             $data = [
                 'title' => '',
                 'description' => '',
@@ -107,7 +99,6 @@ class Complaints extends Controller
                 'description_err' => ''
             ];
 
-            // Load view
             $this->view('complaints/create', $data);
         }
     }
@@ -117,48 +108,8 @@ class Complaints extends Controller
         $complaints = $this->complaintsModel->getUserComplaints($_SESSION['user_id']);
 
         $data = [
-            'complaints' => $complaints,
-            'title_err' => '',
-            'description_err' => ''
+            'complaints' => $complaints
         ];
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-            $complaintData = [
-                'user_id' => $_SESSION['user_id'],
-                'title' => trim($_POST['title']),
-                'description' => trim($_POST['description'])
-            ];
-
-            // Validate
-            if (empty($complaintData['title'])) {
-                $data['title_err'] = 'Please enter title';
-            }
-            if (empty($complaintData['description'])) {
-                $data['description_err'] = 'Please enter description';
-            }
-
-            if (empty($data['title_err']) && empty($data['description_err'])) {
-                if ($this->complaintsModel->createComplaint($complaintData)) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => true]);
-                    return;
-                } else {
-                    echo json_encode(['success' => false, 'message' => 'Something went wrong']);
-                    return;
-                }
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'errors' => [
-                        'title' => $data['title_err'],
-                        'description' => $data['description_err']
-                    ]
-                ]);
-                return;
-            }
-        }
 
         $this->view('complaints/mycomplaints', $data);
     }
@@ -192,7 +143,6 @@ class Complaints extends Controller
         $status = $_POST['status'] ?? null;
 
         if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $complaintId)) {
-            flash('complaint_message', 'Unauthorized access', 'alert alert-danger');
             redirect('complaints/dashboard');
             return;
         }
@@ -204,13 +154,9 @@ class Complaints extends Controller
             'status' => $status
         ];
 
-        if ($this->complaintsModel->addResponse($responseData)) {
-            flash('complaint_message', 'Response added successfully', 'alert alert-success');
-        } else {
-            flash('complaint_message', 'Failed to add response', 'alert alert-danger');
-        }
+        $this->complaintsModel->addResponse($responseData);
 
-        // Redirect back to the complaint page
+
         redirect('complaints/viewcomplaint/' . $complaintId);
     }
 
@@ -224,12 +170,10 @@ class Complaints extends Controller
         $status = $_POST['status'] ?? null;
 
         if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $complaintId)) {
-            flash('complaint_message', 'Unauthorized access', 'alert alert-danger');
             redirect('complaints/dashboard');
             return;
         }
 
-        // Add an empty response with the status change
         $responseData = [
             'complaint_id' => $complaintId,
             'admin_id' => $_SESSION['user_id'],
@@ -237,13 +181,8 @@ class Complaints extends Controller
             'status' => $status
         ];
 
-        if ($this->complaintsModel->addResponse($responseData)) {
-            flash('complaint_message', 'Status updated successfully', 'alert alert-success');
-        } else {
-            flash('complaint_message', 'Failed to update status', 'alert alert-danger');
-        }
+        $this->complaintsModel->addResponse($responseData);
 
-        // Redirect back to the complaint page
         redirect('complaints/viewcomplaint/' . $complaintId);
     }
 
@@ -254,7 +193,6 @@ class Complaints extends Controller
             redirect('complaints/' . (in_array($_SESSION['user_role_id'], [2, 3]) ? 'dashboard' : 'mycomplaints'));
         }
 
-        // Check if user can access this complaint
         if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $id)) {
             redirect('complaints/' . (in_array($_SESSION['user_role_id'], [2, 3]) ? 'dashboard' : 'mycomplaints'));
         }
@@ -278,7 +216,6 @@ class Complaints extends Controller
             redirect('complaints/mycomplaints');
         }
 
-        // Check if complaint exists and user can access it
         if (!$this->complaintsModel->canAccessComplaint($_SESSION['user_id'], $_SESSION['user_role_id'], $id)) {
             redirect('complaints/mycomplaints');
         }

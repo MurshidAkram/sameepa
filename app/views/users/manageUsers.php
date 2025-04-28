@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Add Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,10 +12,8 @@
     <title>User Management | <?php echo SITENAME; ?></title>
 </head>
 <style>
-    /* Modal General Styles */
     .user-modal {
         display: none;
-        /* Hidden by default */
         position: fixed;
         z-index: 1000;
         left: 0;
@@ -25,7 +22,6 @@
         height: 100%;
         overflow: auto;
         background-color: rgba(0, 0, 0, 0.4);
-        /* Semi-transparent background */
     }
 
     .user-modal-content {
@@ -39,7 +35,6 @@
         position: relative;
     }
 
-    /* Close Button */
     .close-btn {
         color: #aaa;
         float: right;
@@ -54,18 +49,15 @@
         text-decoration: none;
     }
 
-    /* Header */
     .user-modal-content h2 {
         margin-bottom: 20px;
         font-size: 24px;
         color: #333;
         text-align: center;
         border-bottom: 2px solid #800080;
-        /* Purple underline */
         padding-bottom: 10px;
     }
 
-    /* Details Section */
     .user-modal-content p {
         margin: 10px 0;
         font-size: 16px;
@@ -89,71 +81,45 @@
         color: #555;
     }
 
-    /* button {
-    font-size: 16px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-} */
 
-    /* Edit Address Button */
+
     #editAddressButton {
         background-color: #007bff;
-        /* Blue background */
         color: #fff;
-        /* White text */
         border: 1px solid #0056b3;
-        /* Darker blue border */
     }
 
     #editAddressButton:hover {
         background-color: #0056b3;
-        /* Darker blue on hover */
         transform: scale(1.05);
-        /* Slight zoom effect */
     }
 
     #editAddressButton:active {
         background-color: #003d80;
-        /* Even darker blue on click */
         transform: scale(1);
-        /* Reset scale on click */
     }
 
-    /* Save Address Button */
     #saveAddressButton {
         background-color: #800080;
-        /* Green background */
         color: #fff;
-        /* White text */
         border: 1px solid #1e7e34;
-        /* Darker green border */
     }
 
     #saveAddressButton:hover {
         background-color: #800080;
-        /* Darker green on hover */
         color: #800080;
         transform: scale(1.05);
-        /* Slight zoom effect */
     }
 
     #saveAddressButton:active {
         background-color: #800080;
-        /* Even darker green on click */
         transform: scale(1);
-        /* Reset scale on click */
     }
 
-    /* Alignment for Buttons */
     button+button {
         margin-left: 10px;
-        /* Space between buttons */
     }
 
-    /* Edit Address Section */
     .user-modal #editAddressSection {
         margin-top: 20px;
         background-color: #f9f9f9;
@@ -180,15 +146,12 @@
 
     #editAddressInput:focus {
         border-color: #800080;
-        /* Purple border for focus */
         box-shadow: 0 0 5px rgba(128, 0, 128, 0.5);
     }
 
-    /* Save Address Button */
     #saveAddressButton {
         display: inline-block;
         background-color: #800080;
-        /* Purple button */
         color: #fff;
         padding: 10px 20px;
         font-size: 16px;
@@ -200,7 +163,6 @@
 
     #saveAddressButton:hover {
         background-color: #660066;
-        /* Darker purple on hover */
     }
 </style>
 
@@ -212,7 +174,6 @@
 
         <main>
             <div class="dashboard-overview">
-                <!-- Pending Users Section -->
                 <section class="settings-section">
                     <div class="section">
                         <h2>Pending Registration Requests</h2>
@@ -265,14 +226,12 @@
                     <?php endif; ?>
                 </section>
 
-                <!-- Active Users Sections -->
                 <?php
                 $userTypes = [
                     'residents' => ['title' => 'Residents', 'icon' => 'fas fa-home'],
                     'admins' => ['title' => 'Administrators', 'icon' => 'fas fa-user-tie'],
                     'security' => ['title' => 'Security Staff', 'icon' => 'fas fa-shield-alt'],
                     'maintenance' => ['title' => 'Maintenance Staff', 'icon' => 'fas fa-wrench']
-                    // 'external' => ['title' => 'External Service Providers', 'icon' => 'fas fa-handshake']
                 ];
 
                 foreach ($userTypes as $key => $type) : ?>
@@ -310,10 +269,7 @@
                                                         <button type="submit" class="btn-activate"><i class="fas fa-check-circle"></i></button>
                                                     </form>
                                                 <?php endif; ?>
-                                                <!-- <form action="<?php echo URLROOT; ?>/users/deleteActivatedUser" method="POST" style="display: inline;" onsubmit="return confirmDelete();">
-                                                    <input type="hidden" name="user_id" value="<?php echo $user->id; ?>">
-                                                    <button type="submit" class="btn-delete"><i class="fas fa-trash-alt"></i></button>
-                                                </form> -->
+
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -331,20 +287,13 @@
 
     <?php require APPROOT . '/views/inc/components/footer.php'; ?>
 
-    <!-- Modal for viewing user details -->
-    <!-- Modal for viewing and editing user details -->
+
     <div id="userModal" class="user-modal">
         <div class="user-modal-content">
             <span class="close-btn" onclick="closeUserModal()">×</span>
             <h2>User Details</h2>
             <div id="userDetailsContent">
-                <!-- User Details will be dynamically loaded here -->
             </div>
-            <!-- <div id="editAddressSection" style="display: none;">
-            <h3>Edit Address</h3>
-            <input type="text" id="editAddressInput" placeholder="Enter new address">
-            <button onclick="saveAddress()">Save Address</button>
-        </div> -->
         </div>
     </div>
 
@@ -370,7 +319,6 @@
                     <p><strong>Email:</strong> ${data.email}</p>
                 `;
 
-                        // Only show address for residents
                         if (data.verification_filename) {
                             userDetails += `
 
@@ -407,10 +355,9 @@
 
         function enableAddressEdit(userId, currentAddress) {
             const addressInput = document.getElementById('editAddressInput');
-            addressInput.value = currentAddress; // Pre-fill with current address
+            addressInput.value = currentAddress;
             document.getElementById('editAddressSection').style.display = "block";
 
-            // Save the userId for the saveAddress function
             addressInput.dataset.userId = userId;
         }
 

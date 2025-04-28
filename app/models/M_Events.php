@@ -31,7 +31,6 @@ class M_Events
 
         $events = $this->db->resultSet();
 
-        // Updating is_active status based on current date
         $today = date('Y-m-d');
         foreach ($events as $event) {
             $event->is_active = ($event->date >= $today);
@@ -118,7 +117,7 @@ class M_Events
     public function joinEvent($eventId, $userId)
     {
         if (!$this->isEventActive($eventId)) {
-            return false; // Cannot join inactive events
+            return false;
         }
 
         $this->db->query('INSERT INTO event_participants (event_id, user_id, joined_at) VALUES (:event_id, :user_id, NOW())');
@@ -161,12 +160,10 @@ class M_Events
 
     public function deleteEvent($eventId)
     {
-        // First delete all participants
         $this->db->query('DELETE FROM event_participants WHERE event_id = :event_id');
         $this->db->bind(':event_id', $eventId);
         $this->db->execute();
 
-        // Then delete the event
         $this->db->query('UPDATE events SET is_deleted = TRUE WHERE id = :event_id');
         $this->db->bind(':event_id', $eventId);
         return $this->db->execute();
@@ -259,73 +256,11 @@ class M_Events
         return $this->db->resultSet();
     }
 
-    /*
-    public function getAllEventsForAdmin($search = '')
-    {
-        $sql = 'SELECT e.*, u.name as creator_name,
-                CASE 
-                    WHEN e.date > CURDATE() THEN "upcoming"
-                    WHEN e.date = CURDATE() THEN "ongoing"
-                    ELSE "completed"
-                END as status
-                FROM events e 
-                JOIN users u ON e.created_by = u.id 
-                WHERE 1=1 ';
-
-        if (!empty($search)) {
-            $sql .= 'AND (e.title LIKE :search 
-                    OR e.description LIKE :search 
-                    OR e.location LIKE :search) ';
-        }
-
-        $sql .= 'ORDER BY e.date ASC';
-
-        $this->db->query($sql);
-
-        if (!empty($search)) {
-            $this->db->bind(':search', '%' . $search . '%');
-        }
-
-        return $this->db->resultSet();
-    }
-    public function searchFacilities($searchTerm)
-    {
-        $this->db->query('SELECT * FROM events 
-                        WHERE name LIKE :search 
-                        OR description LIKE :search');
-        $this->db->bind(':search', '%' . $searchTerm . '%');
-        return $this->db->resultSet();
-    }
-
-    public function filterEventsByStatus($status)
-    {
-        if ($status === 'all') {
-            return $this->getAllEventsForAdmin();
-        }
-
-        $this->db->query('SELECT e.*, u.name as creator_name,
-                        CASE 
-                            WHEN e.date > CURDATE() THEN "upcoming"
-                            WHEN e.date = CURDATE() THEN "ongoing"
-                            ELSE "completed"
-                        END as status
-                        FROM events e 
-                        JOIN users u ON e.created_by = u.id 
-                        WHERE 
-                            CASE 
-                                WHEN e.date > CURDATE() THEN "upcoming"
-                                WHEN e.date = CURDATE() THEN "ongoing"
-                                ELSE "completed"
-                            END = :status');
-        $this->db->bind(':status', $status);
-        return $this->db->resultSet();
-    } */
 
     //DONE BY SANKAVI FOR THE SUPER ADMIN DASHBOARD
     public function getTodaysEvents()
     {
         try {
-            // Set specific date instead of today (for testing)
             $specificDate = '2025-04-30';
 
             $this->db->query('

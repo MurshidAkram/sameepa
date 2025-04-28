@@ -8,7 +8,6 @@ class M_Posts
         $this->db = new Database;
     }
 
-    // Get all posts with reactions count, creator name, and search functionality
     public function getAllPosts($search = '')
     {
         $sql = 'SELECT p.*, u.name as creator_name,
@@ -36,7 +35,6 @@ class M_Posts
         return $this->db->resultSet();
     }
 
-    // Create new post
     public function createPost($data)
     {
         $this->db->query('INSERT INTO posts (description, date, time, image_data, image_type, created_by) 
@@ -53,7 +51,6 @@ class M_Posts
         return $this->db->execute();
     }
 
-    // Get post by ID with reactions count and creator name
     public function getPostById($id)
     {
         $this->db->query('SELECT p.*, u.name as creator_name,
@@ -68,7 +65,6 @@ class M_Posts
         return $this->db->single();
     }
 
-    // Update post
     public function updatePost($data)
     {
         if (!empty($data['image_data'])) {
@@ -98,30 +94,25 @@ class M_Posts
         return $this->db->execute();
     }
 
-    // Delete post and all associated data
     public function deletePost($id)
     {
         try {
             $this->db->beginTransaction();
 
-            // Delete all reports for comments on this post
             $this->db->query('DELETE pr FROM post_reports pr
                              INNER JOIN post_comments pc ON pr.post_id = pc.id
                              WHERE pc.post_id = :id');
             $this->db->bind(':id', $id);
             $this->db->execute();
 
-            // Delete all comments
             $this->db->query('DELETE FROM post_comments WHERE post_id = :id');
             $this->db->bind(':id', $id);
             $this->db->execute();
 
-            // Delete all reactions
             $this->db->query('DELETE FROM post_reactions WHERE post_id = :id');
             $this->db->bind(':id', $id);
             $this->db->execute();
 
-            // Delete the post
             $this->db->query('DELETE FROM posts WHERE id = :id');
             $this->db->bind(':id', $id);
             $this->db->execute();
@@ -135,16 +126,13 @@ class M_Posts
         }
     }
 
-    // Add/Update reaction
     public function addReaction($data)
     {
-        // First remove any existing reaction from this user
         $this->db->query('DELETE FROM post_reactions WHERE post_id = :post_id AND user_id = :user_id');
         $this->db->bind(':post_id', $data['post_id']);
         $this->db->bind(':user_id', $data['user_id']);
         $this->db->execute();
 
-        // Add new reaction
         $this->db->query('INSERT INTO post_reactions (post_id, user_id, reaction_type) 
                          VALUES (:post_id, :user_id, :reaction_type)');
         $this->db->bind(':post_id', $data['post_id']);
@@ -153,7 +141,6 @@ class M_Posts
         return $this->db->execute();
     }
 
-    // Get user's reaction to a post
     public function getUserReaction($postId, $userId)
     {
         $this->db->query('SELECT reaction_type FROM post_reactions 
@@ -163,7 +150,6 @@ class M_Posts
         return $this->db->single();
     }
 
-    // Get post image
     public function getPostImage($id)
     {
         $this->db->query('SELECT image_data, image_type FROM posts WHERE id = :id');
@@ -171,7 +157,6 @@ class M_Posts
         return $this->db->single();
     }
 
-    // Get posts by user
     public function getPostsByUserId($userId)
     {
         $this->db->query('SELECT p.*, u.name as creator_name,
@@ -189,7 +174,6 @@ class M_Posts
         return $this->db->resultSet();
     }
 
-    // Comment methods
     public function addComment($data)
     {
         $this->db->query('INSERT INTO post_comments (post_id, user_id, comment) 
@@ -235,7 +219,6 @@ class M_Posts
         }
     }
 
-    // Check if user is post creator
     public function isPostCreator($postId, $userId)
     {
         $this->db->query('SELECT * FROM posts WHERE id = :post_id AND created_by = :user_id');
@@ -264,7 +247,6 @@ class M_Posts
 
     public function createReport($data)
     {
-        // Start transaction
         $this->db->beginTransaction();
 
         try {
@@ -315,12 +297,10 @@ class M_Posts
         $this->db->beginTransaction();
 
         try {
-            // Update the reported flag in posts
             $this->db->query("UPDATE posts SET is_reported = 0 WHERE id = :id");
             $this->db->bind(':id', $id);
             $this->db->execute();
 
-            // Delete the report from post_reports
             $this->db->query("DELETE FROM post_reports WHERE post_id = :id");
             $this->db->bind(':id', $id);
             $this->db->execute();

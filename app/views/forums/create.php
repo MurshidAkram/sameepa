@@ -72,7 +72,7 @@
 
                     <div class="form-actions">
                         <?php if ($_SESSION['user_role_id'] == 2): ?>
-                            <a href="<?php echo URLROOT; ?>/forums/admin_dashboard" class="btn btn-cancel">Cancel</a>
+                            <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-cancel">Cancel</a>
                         <?php else: ?>
                             <a href="<?php echo URLROOT; ?>/forums/index" class="btn btn-cancel">Cancel</a>
                         <?php endif; ?>

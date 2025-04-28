@@ -9,7 +9,6 @@ class Polls extends Controller
             redirect('users/login');
         }
 
-        // Check if user has appropriate role
         if (!in_array($_SESSION['user_role_id'], [1, 2, 3])) {
             redirect('users/login');
         }
@@ -21,12 +20,9 @@ class Polls extends Controller
     {
         $polls = $this->pollsModel->getAllPolls();
 
-        // Prepare data for each poll
         foreach ($polls as &$poll) {
-            // Check if poll has ended
             $poll->has_ended = $this->pollsModel->hasPollEnded($poll->end_date);
 
-            // Check if current user has voted
             if (isset($_SESSION['user_id'])) {
                 $userVote = $this->pollsModel->getUserVote($poll->id, $_SESSION['user_id']);
                 $poll->user_has_voted = !empty($userVote);
@@ -49,7 +45,6 @@ class Polls extends Controller
 
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            // Prepare data array
             $data = [
                 'title' => trim($_POST['title']),
                 'description' => trim($_POST['description']),
@@ -98,7 +93,6 @@ class Polls extends Controller
                 }
             }
 
-            // Making sure no errors
             if (
                 empty($data['title_err']) && empty($data['description_err']) &&
                 empty($data['end_date_err']) && empty($data['choices_err'])
@@ -115,7 +109,6 @@ class Polls extends Controller
                 $this->view('polls/create', $data);
             }
         } else {
-            // Init data
             $data = [
                 'title' => '',
                 'description' => '',
@@ -148,7 +141,7 @@ class Polls extends Controller
 
         $choices = $this->pollsModel->getPollChoices($id);
 
-        // Calculate percentages and get voters for each choice
+        //percentage
         $totalVotes = 0;
         foreach ($choices as &$choice) {
             $totalVotes += $choice->vote_count;
@@ -217,7 +210,7 @@ class Polls extends Controller
         }
 
 
-        if ($poll->created_by == $_SESSION['user_id'] || $_SESSION['user_role_id'] >= 2) {
+        if ($poll['created_by'] == $_SESSION['user_id'] || $_SESSION['user_role_id'] >= 2) {
             if ($this->pollsModel->deletePoll($id)) {
                 redirect('polls/mypolls');
             } else {
