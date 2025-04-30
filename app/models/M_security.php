@@ -40,8 +40,8 @@ public function getWeeklyVisitorFlow() {
     $labels = [];
     $data = [];
     
-    // Fill all 7 days (even if no data)
-    //follow function can change bar chart labels(like => sun,mon,tue,......)
+    
+   
     for ($i = 6; $i >= 0; $i--) {
         $date = date('Y-m-d', strtotime("-$i days"));
         $dayName = date('D', strtotime($date));
@@ -69,10 +69,10 @@ public function getWeeklyVisitorFlow() {
 }
 
 public function getMonthlyIncidentTrends() {
-    $startDate = date('Y-m-01'); // First day of current month
-    $endDate = date('Y-m-t');   // Last day of current month
+    $startDate = date('Y-m-01'); 
+    $endDate = date('Y-m-t');  
     
-      //ASC is acending order
+      
 
     $this->db->query('SELECT 
             type,
@@ -174,7 +174,7 @@ public function deleteContact($id) {
 
 
 public function getVisitorPasses() {
-    // Query today's visitor passes with formatted time
+    
     $queryToday = "SELECT 
                     visitor_name,
                     visitor_count,
@@ -189,7 +189,7 @@ public function getVisitorPasses() {
     $this->db->query($queryToday);
     $todayResult = $this->db->resultSet();
 
-    // Query historical visitor passes with formatted date
+   
     $queryHistory = "SELECT 
                     visitor_name,
                     visitor_count,
@@ -215,7 +215,7 @@ public function getVisitorPasses() {
 
 
 public function addVisitorPass($data) {
-    // Additional validation at model level
+    
     $currentDateTime = new DateTime();
     $visitDateTime = new DateTime($data['visit_date'] . ' ' . $data['visit_time']);
     
@@ -257,10 +257,10 @@ public function searchResidentContacts($query)
                       FROM users u
                       JOIN residents r ON u.id = r.user_id
                       WHERE (u.name LIKE :q OR r.address LIKE :q )
-                        AND u.role_id = 1"); // Assuming role_id 1 is for residents
+                        AND u.role_id = 1"); 
 
-    $this->db->bind(':q', '%' . $query . '%'); //The LIKE clause in SQL uses the percent (%) symbols to represent wildcards, meaning "any characters before or after the search term".
-    return $this->db->resultSet();             //If the search query is john, this would turn into '%john%', matching names or addresses that contain the word "john" anywhere.
+    $this->db->bind(':q', '%' . $query . '%'); 
+    return $this->db->resultSet();            
 }
 
 
@@ -397,7 +397,7 @@ public function isShiftFull($shift_id, $duty_date) {
     $this->db->bind(':shift_id', $shift_id);
     $this->db->bind(':duty_date', $duty_date);
     $row = $this->db->single();
-    return $row->count >= 3; // Assuming max 3 officers per shift
+    return $row->count >= 3; 
 }
 
 

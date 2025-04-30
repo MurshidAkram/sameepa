@@ -9,21 +9,20 @@ class Security extends Controller
     {
         $this->checkSecurityAuth();
 
-        // Initialize the maintenance model
         $this->securityModel = $this->model('M_security');
     }
 
     private function checkSecurityAuth()
     {
-        // Check if user is logged in
+       
         if (!isset($_SESSION['user_id'])) {
             header('Location: ' . URLROOT . '/users/login');
             exit();
         }
 
-        // Check if user is a resident (role_id = 1)
+       
         if (!in_array($_SESSION['user_role_id'], [2, 3, 5])) {
-            // Redirect to unauthorized page
+            
             header('Location: ' . URLROOT . '/pages/unauthorized');
             exit();
         }
@@ -43,16 +42,16 @@ class Security extends Controller
             'onDutyOfficers' => $this->securityModel->getTodayDutyOfficers(),
             'incidentTrends' => $this->securityModel->getMonthlyIncidentTrends(),
             'visitorFlow' => $this->securityModel->getWeeklyVisitorFlow(),
-            'miniOfficer' => $this->getMiniOfficerData() // Helper method for mini chart
+            'miniOfficer' => $this->getMiniOfficerData() 
         ];
 
-        // Load the dashboard view
+   
         $this->view('security/dashboard', $data);
     }
 
     public function getChartData()
     {
-        // Get updated data for AJAX requests
+       
         $data = [
             'success' => true,
             'activePasses' => count($this->securityModel->getTodayPasses()),
@@ -69,14 +68,14 @@ class Security extends Controller
 
     private function getMiniOfficerData()
     {
-        // Simple data for mini officer chart
+        
         $officers = $this->securityModel->getTodayDutyOfficers();
         $labels = [];
         $data = [];
 
         foreach ($officers as $officer) {
             $labels[] = $officer->name;
-            $data[] = 1; // Just showing presence
+            $data[] = 1; 
         }
 
         return [
@@ -90,17 +89,17 @@ class Security extends Controller
 
     public function Manage_Visitor_Passes()
     {
-        // Get passes data from model
+        
         $passes = $this->securityModel->getVisitorPasses();
 
-        // Check if this is an AJAX request
+     
         if ($this->isAjaxRequest()) {
             header('Content-Type: application/json');
             echo json_encode($passes);
             exit;
         }
 
-        // Regular view loading
+       
         $data = [
             'todayPasses' => $passes['todayPasses'],
             'historyPasses' => $passes['historyPasses']
@@ -122,7 +121,7 @@ class Security extends Controller
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            // Collect form data
+          
             $data = [
                 'visitor_name' => trim($_POST['visitor_name']),
                 'visitor_count' => trim($_POST['visitor_count']),
@@ -133,11 +132,11 @@ class Security extends Controller
                 'purpose' => trim($_POST['purpose'])
             ];
 
-            // Validate date and time
+          
             $currentDateTime = new DateTime();
             $visitDateTime = new DateTime($data['visit_date'] . ' ' . $data['visit_time']);
 
-            // Check if visit date is in the past
+          
 
             if ($visitDateTime < $currentDateTime) {
                 echo json_encode([
@@ -147,11 +146,11 @@ class Security extends Controller
                 exit();
             }
 
-            // Add visitor pass to the database
+           
             $newPassId = $this->securityModel->addVisitorPass($data);
 
             if ($newPassId) {
-                // Success JSON Response
+                
                 echo json_encode([
                     'success' => true,
                     'id' => $newPassId,
@@ -165,7 +164,7 @@ class Security extends Controller
                 ]);
                 exit();
             } else {
-                // Failure JSON Response
+              
                 echo json_encode([
                     'success' => false,
                     'message' => 'Database error: Failed to insert visitor pass.'
@@ -174,7 +173,7 @@ class Security extends Controller
             }
         }
 
-        // If not a POST request, load the form view
+     
         $this->view('security/Manage_Visitor_Passes');
     }
 
@@ -263,32 +262,32 @@ public function Delete_Contact($id) {
 
     public function Resident_Contacts()
     {
-        // Check if this is a search request
+        
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search_query'])) {
-            // Handle the AJAX search request
-            $query = trim($_GET['search_query']);//Get the search term from the URL and remove any unwanted spaces around it.
+           
+            $query = trim($_GET['search_query']);
 
-            // Validate input
+            
             if (empty($query)) {
                 echo json_encode(['error' => 'Search query cannot be empty']);
                 return;
             }
 
-            // Sanitize input
-            $query = filter_var($query, FILTER_SANITIZE_STRING);//Clean the input to prevent bad characters, SQL Injection, or XSS attacks.
+            
+            $query = filter_var($query, FILTER_SANITIZE_STRING);
 
-            // Get search results from model
+            
             $results = $this->securityModel->searchResidentContacts($query);
 
-            // Return JSON response
+            
             header('Content-Type: application/json');
             echo json_encode($results);
 
             exit;
         }
 
-        // Load the regular view
-        $this->view('security/Resident_Contacts'); // Changed to correct view name
+   
+        $this->view('security/Resident_Contacts');
     }
     //******************************************Manage_Incident_Reports******************************************************************************************* */
 
@@ -408,7 +407,7 @@ public function Delete_Contact($id) {
                 throw new Exception('Invalid report ID');
             }
 
-            // Update status in database
+            
             if ($this->securityModel->updateIncidentStatus($report_id, $data['status'])) {
                 echo json_encode([
                     'success' => true,
@@ -432,7 +431,7 @@ public function Delete_Contact($id) {
     
     public function Manage_Duty_Schedule()
     {
-        // Get all security officers, shifts, and today's schedule
+        
         $officers = $this->securityModel->getSecurityOfficers();
         $shifts = $this->securityModel->getShifts();
         $todaySchedule = $this->securityModel->getTodaySchedule();
@@ -443,7 +442,7 @@ public function Delete_Contact($id) {
             'todaySchedule' => $todaySchedule
         ];
 
-        // Load the view with the schedule data
+      
         $this->view('security/Manage_Duty_Schedule', $data);
     }
 
@@ -459,7 +458,7 @@ public function Delete_Contact($id) {
     public function addDuty()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST data
+            
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $data = [
@@ -471,7 +470,7 @@ public function Delete_Contact($id) {
                 'shift_id_err' => ''
             ];
 
-            // Validate data
+            
             if (empty($data['officer_id'])) {
                 $data['officer_id_err'] = 'Please select an officer';
             }
@@ -486,32 +485,32 @@ public function Delete_Contact($id) {
                 $data['shift_id_err'] = 'Please select a shift';
             }
 
-            // Check if officer already has a duty on this date
+           
             if ($this->securityModel->isOfficerScheduled($data['officer_id'], $data['duty_date'])) {
                 $data['duty_date_err'] = 'This officer already has a duty on this date';
             }
 
-            // Check if shift already has 3 officers
+           
             if ($this->securityModel->getShiftCount($data['duty_date'], $data['shift_id']) >= 3) {
                 $data['shift_id_err'] = 'This shift already has 3 officers assigned';
             }
 
-            // Make sure no errors
+         
             if (empty($data['officer_id_err']) && empty($data['duty_date_err']) && empty($data['shift_id_err'])) {
-                // Add duty
+               
                 if ($this->securityModel->addDuty($data)) {
-                    // Return success JSON
+                   
                     header('Content-Type: application/json');
                     echo json_encode(['success' => true, 'message' => 'Duty added successfully']);
                     exit;
                 } else {
-                    // Return error JSON
+                  
                     header('Content-Type: application/json');
                     echo json_encode(['success' => false, 'message' => 'Something went wrong']);
                     exit;
                 }
             } else {
-                // Return error JSON with validation messages
+             
                 $errors = [];
                 if (!empty($data['officer_id_err'])) $errors[] = $data['officer_id_err'];
                 if (!empty($data['duty_date_err'])) $errors[] = $data['duty_date_err'];
@@ -522,7 +521,7 @@ public function Delete_Contact($id) {
                 exit;
             }
         } else {
-            // Redirect to security page if not POST
+           
             redirect('security');
         }
     }
@@ -541,7 +540,7 @@ public function Delete_Contact($id) {
                 exit;
             }
 
-            // Check if the new shift is already full
+           
             if ($this->securityModel->isShiftFull($new_shift_id, $duty_date)) {
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => 'This shift is already full']);
